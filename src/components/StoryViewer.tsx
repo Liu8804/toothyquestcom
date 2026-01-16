@@ -1,6 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Sparkles, Heart } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useStoryNarration } from "@/hooks/useStoryNarration";
+import { useEffect } from "react";
 import type { Story } from "@/data/stories";
 
 interface StoryViewerProps {
@@ -20,6 +22,27 @@ const StoryViewer = ({
   onNext,
   onPrevious,
 }: StoryViewerProps) => {
+  const { isPlaying, isLoading, isPaused, error, play, pause, resume, stop } = useStoryNarration();
+
+  // Stop narration when story changes or modal closes
+  useEffect(() => {
+    return () => stop();
+  }, [story.id, stop]);
+
+  const handlePlayNarration = () => {
+    const fullText = `${story.title}. ${story.story} What we learned: ${story.lesson}`;
+    play(fullText);
+  };
+
+  const handleToggleNarration = () => {
+    if (isPlaying && !isPaused) {
+      pause();
+    } else if (isPaused) {
+      resume();
+    } else {
+      handlePlayNarration();
+    }
+  };
   return (
     <AnimatePresence>
       <motion.div
@@ -71,13 +94,71 @@ const StoryViewer = ({
 
           {/* Content */}
           <div className="p-6 md:p-8">
-            {/* Title */}
-            <div className="flex items-center gap-3 mb-6">
-              <span className="text-4xl">{story.emoji}</span>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
-                {story.title}
-              </h2>
+            {/* Title and Audio Controls */}
+            <div className="flex items-center justify-between gap-3 mb-6">
+              <div className="flex items-center gap-3">
+                <span className="text-4xl">{story.emoji}</span>
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
+                  {story.title}
+                </h2>
+              </div>
+              
+              {/* Audio narration button */}
+              <Button
+                onClick={handleToggleNarration}
+                disabled={isLoading}
+                variant="outline"
+                size="sm"
+                className={`rounded-full gap-2 transition-all ${
+                  isPlaying ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""
+                }`}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="hidden sm:inline">Loading...</span>
+                  </>
+                ) : isPlaying && !isPaused ? (
+                  <>
+                    <Pause className="w-4 h-4" />
+                    <span className="hidden sm:inline">Pause</span>
+                    {/* Animated sound waves */}
+                    <div className="flex items-center gap-0.5 ml-1">
+                      {[1, 2, 3].map((i) => (
+                        <motion.div
+                          key={i}
+                          className="w-0.5 bg-primary-foreground rounded-full"
+                          animate={{ height: [4, 12, 4] }}
+                          transition={{
+                            duration: 0.5,
+                            repeat: Infinity,
+                            delay: i * 0.1,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </>
+                ) : isPaused ? (
+                  <>
+                    <Play className="w-4 h-4" />
+                    <span className="hidden sm:inline">Resume</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="w-4 h-4" />
+                    <span className="hidden sm:inline">Listen</span>
+                  </>
+                )}
+              </Button>
             </div>
+            
+            {/* Error message */}
+            {error && (
+              <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-xl text-sm flex items-center gap-2">
+                <VolumeX className="w-4 h-4" />
+                {error}
+              </div>
+            )}
 
             {/* Story text */}
             <div className="relative mb-6">
