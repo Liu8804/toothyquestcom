@@ -1,10 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play, MessageCircle } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play, MessageCircle, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStoryNarration } from "@/hooks/useStoryNarration";
+import { useQuestProgress } from "@/hooks/useQuestProgress";
+import { useSoundEffects, SOUND_PROMPTS } from "@/hooks/useSoundEffects";
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import toothyMascot from "@/assets/toothy-mascot.png";
+import QuestCompleteCelebration from "./QuestCompleteCelebration";
 
 interface StoryViewerProps {
   story: Story;
@@ -24,7 +28,15 @@ const StoryViewer = ({
   onPrevious,
 }: StoryViewerProps) => {
   const { isPlaying, isLoading, isPaused, error, play, pause, resume, stop } = useStoryNarration();
+  const { user } = useAuth();
+  const { completeQuest, isQuestCompleted, selectedChild } = useQuestProgress();
+  const { playSound } = useSoundEffects();
   const [showIntro, setShowIntro] = useState(true);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationData, setCelebrationData] = useState<{ xp: number; badges: any[] }>({ xp: 10, badges: [] });
+  const [isCompleting, setIsCompleting] = useState(false);
+
+  const questCompleted = isQuestCompleted(story.id);
 
   // Reset intro when story changes
   useEffect(() => {
@@ -51,8 +63,25 @@ const StoryViewer = ({
     }
   };
 
-  const handleStartStory = () => {
+  const handleStartStory = async () => {
     setShowIntro(false);
+    // Play story start sound
+    playSound(SOUND_PROMPTS.storyStart, 2);
+  };
+
+  const handleCompleteQuest = async () => {
+    if (!user || !selectedChild || questCompleted || isCompleting) return;
+    
+    setIsCompleting(true);
+    const result = await completeQuest(story.id, 10);
+    setIsCompleting(false);
+    
+    if (result.success) {
+      setCelebrationData({ xp: 10, badges: result.newBadges });
+      setShowCelebration(true);
+      // Play completion sound
+      playSound(SOUND_PROMPTS.questComplete, 3);
+    }
   };
   return (
     <AnimatePresence>
@@ -311,6 +340,42 @@ const StoryViewer = ({
               <p className="text-foreground/80 font-medium italic">"{story.questEnding}"</p>
             </motion.div>
 
+            {/* Complete Quest Button */}
+            {user && selectedChild && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="mt-4"
+              >
+                {questCompleted ? (
+                  <div className="flex items-center justify-center gap-2 p-4 bg-accent/20 rounded-2xl text-accent">
+                    <Trophy className="w-5 h-5" />
+                    <span className="font-display font-bold">Quest Completed! +10 XP</span>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={handleCompleteQuest}
+                    disabled={isCompleting}
+                    className="w-full rounded-2xl font-display font-bold bg-gradient-to-r from-star to-accent text-white hover:opacity-90"
+                    size="lg"
+                  >
+                    {isCompleting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Completing...
+                      </>
+                    ) : (
+                      <>
+                        <Trophy className="w-5 h-5 mr-2" />
+                        Complete Quest & Earn 10 XP
+                      </>
+                    )}
+                  </Button>
+                )}
+              </motion.div>
+            )}
+
             {/* Navigation */}
             <div className="flex items-center justify-between mt-8 pt-6 border-t border-border">
               <Button
@@ -325,11 +390,11 @@ const StoryViewer = ({
 
               {/* Progress dots */}
               <div className="flex gap-2">
-                {Array.from({ length: totalStories }).map((_, i) => (
+                {Array.from({ length: Math.min(totalStories, 10) }).map((_, i) => (
                   <div
                     key={i}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      i === currentIndex
+                      i === currentIndex % 10
                         ? "w-6 bg-primary"
                         : "bg-muted-foreground/30"
                     }`}
@@ -350,6 +415,15 @@ const StoryViewer = ({
           </div>
         </motion.div>
       </motion.div>
+
+      {/* Celebration Modal */}
+      <QuestCompleteCelebration
+        isOpen={showCelebration}
+        questTitle={story.title}
+        xpEarned={celebrationData.xp}
+        newBadges={celebrationData.badges}
+        onClose={() => setShowCelebration(false)}
+      />
     </AnimatePresence>
   );
 };
