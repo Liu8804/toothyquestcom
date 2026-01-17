@@ -26,10 +26,10 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   };
 
   const features = [
-    { emoji: "🦷", text: "All 30+ dental quests" },
+    { emoji: "🎯", text: "25 more exciting quests" },
     { emoji: "🎮", text: "6 fun educational games" },
+    { emoji: "🏆", text: "All rewards & surprises" },
     { emoji: "📖", text: "Every bedtime story" },
-    { emoji: "🏆", text: "All badges & achievements" },
     { emoji: "✨", text: "Unlimited brushing adventures" },
   ];
 
@@ -94,15 +94,24 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
               </motion.div>
 
               <h2 className="font-display text-2xl font-bold text-white mb-2">
-                Unlock Full Adventure
+                Unlock the Full ToothyQuest Adventure
               </h2>
               <p className="text-white/90 text-sm">
-                Get access to all ToothyQuest content!
+                Your child completed the first 5 quests!
               </p>
             </div>
 
             {/* Content */}
             <div className="p-6 space-y-6">
+              {/* Message */}
+              <div className="text-center space-y-2">
+                <p className="text-foreground font-medium">
+                  Unlock 25 more quests, games, rewards, and surprises.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  One-time purchase. No subscriptions.
+                </p>
+              </div>
               {/* Already purchased state */}
               {isPurchased ? (
                 <motion.div

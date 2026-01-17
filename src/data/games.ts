@@ -30,8 +30,8 @@ export const games: Game[] = [
   {
     id: "tooth_defender",
     name: "Tooth Defender",
-    shortDescription: "Protect your teeth with healthy choices!",
-    instructionsKids: "Drag good items to the teeth. Swipe bad items away.",
+    shortDescription: "Drag healthy items to your teeth and swipe away the bad ones!",
+    instructionsKids: "Drag healthy items to your teeth and swipe away the bad ones!",
     instructionsParents: "This game teaches children to recognize healthy and unhealthy habits for strong teeth.",
     winMessage: "Awesome choices! Your teeth are safe!",
     loseMessage: "Oops! Try again and pick the healthy items.",
@@ -43,8 +43,8 @@ export const games: Game[] = [
   {
     id: "floss_hero",
     name: "Floss Hero",
-    shortDescription: "Trace the floss and clean between teeth!",
-    instructionsKids: "Trace the floss line slowly between each tooth.",
+    shortDescription: "Trace the floss line gently between each tooth.",
+    instructionsKids: "Trace the floss line gently between each tooth.",
     instructionsParents: "This game improves fine motor skills and teaches proper flossing technique.",
     winMessage: "You did it! Super flossing!",
     loseMessage: "Slow and gentle wins the quest!",
@@ -56,8 +56,8 @@ export const games: Game[] = [
   {
     id: "sugar_bug_chase",
     name: "Sugar Bug Chase",
-    shortDescription: "Stop sugar bugs from reaching the teeth!",
-    instructionsKids: "Tap the sugar bugs before they reach the teeth.",
+    shortDescription: "Tap the sugar bugs before they reach your teeth!",
+    instructionsKids: "Tap the sugar bugs before they reach your teeth!",
     instructionsParents: "This game helps children understand how sugar affects dental health.",
     winMessage: "Yay! You stopped the sugar bugs!",
     loseMessage: "The bugs escaped — try again!",
@@ -69,8 +69,8 @@ export const games: Game[] = [
   {
     id: "build_a_smile",
     name: "Build-A-Smile",
-    shortDescription: "Build the healthiest smile!",
-    instructionsKids: "Choose the best teeth, gums, and healthy items.",
+    shortDescription: "Choose teeth, gums, and healthy items to build the perfect smile.",
+    instructionsKids: "Choose teeth, gums, and healthy items to build the perfect smile.",
     instructionsParents: "This creative game reinforces positive dental choices through play.",
     winMessage: "What a beautiful smile!",
     loseMessage: "Let's rebuild and try again!",
@@ -82,8 +82,8 @@ export const games: Game[] = [
   {
     id: "quest_match",
     name: "Quest Match",
-    shortDescription: "Match the dental items!",
-    instructionsKids: "Flip the cards and find matching pairs.",
+    shortDescription: "Flip the cards and find matching pairs of dental items!",
+    instructionsKids: "Flip the cards and find matching pairs of dental items!",
     instructionsParents: "This memory game strengthens recall while teaching dental vocabulary.",
     winMessage: "All matched! Amazing memory!",
     loseMessage: "Try again — you're getting better!",
@@ -97,8 +97,6 @@ export const games: Game[] = [
 export const globalGameText = {
   starsEarned: "You earned stars for helping your smile!",
   lockedGame: "Complete the first 5 quests or unlock the full adventure to play this game!",
+  lockedContent: "Complete more quests or unlock full access to play!",
   unlockButton: "Unlock All Games",
 };
-
-// Games that are locked until purchase (index >= FREE_GAME_LIMIT)
-export const FREE_GAME_LIMIT = 2;

@@ -3,7 +3,8 @@ import { toast } from 'sonner';
 
 export const PRODUCT_ID = 'toothyquest_full_unlock';
 export const FREE_QUEST_LIMIT = 5;
-export const FREE_GAME_LIMIT = 2;
+// Games are locked until 5 quests completed OR purchase made
+export const QUESTS_REQUIRED_FOR_GAMES = 5;
 
 interface PurchaseState {
   isPurchased: boolean;
@@ -120,11 +121,16 @@ export const usePurchase = () => {
     }
   }, []);
 
-  const isContentLocked = useCallback((contentIndex: number, contentType: 'quest' | 'game' = 'quest'): boolean => {
+  const isContentLocked = useCallback((contentIndex: number, contentType: 'quest' | 'game' = 'quest', completedQuestsCount: number = 0): boolean => {
     if (purchaseState.isPurchased) return false;
     
-    const limit = contentType === 'game' ? FREE_GAME_LIMIT : FREE_QUEST_LIMIT;
-    return contentIndex >= limit;
+    if (contentType === 'game') {
+      // Games are locked until 5 quests completed OR purchase
+      return completedQuestsCount < QUESTS_REQUIRED_FOR_GAMES;
+    }
+    
+    // Quests after first 5 are locked
+    return contentIndex >= FREE_QUEST_LIMIT;
   }, [purchaseState.isPurchased]);
 
   return {
