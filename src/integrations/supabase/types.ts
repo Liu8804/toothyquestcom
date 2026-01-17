@@ -136,6 +136,90 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_challenge_progress: {
+        Row: {
+          challenge_date: string
+          challenge_id: string
+          child_id: string
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          current_count: number
+          id: string
+        }
+        Insert: {
+          challenge_date?: string
+          challenge_id: string
+          child_id: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          current_count?: number
+          id?: string
+        }
+        Update: {
+          challenge_date?: string
+          challenge_id?: string
+          child_id?: string
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          current_count?: number
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_challenge_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "daily_challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_challenge_progress_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_challenges: {
+        Row: {
+          challenge_type: string
+          created_at: string
+          description: string
+          emoji: string
+          id: string
+          is_active: boolean
+          target_count: number
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          challenge_type: string
+          created_at?: string
+          description: string
+          emoji?: string
+          id?: string
+          is_active?: boolean
+          target_count?: number
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          challenge_type?: string
+          created_at?: string
+          description?: string
+          emoji?: string
+          id?: string
+          is_active?: boolean
+          target_count?: number
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       earned_achievements: {
         Row: {
           achievement_id: string

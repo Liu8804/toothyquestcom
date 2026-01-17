@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
-import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX } from "lucide-react";
+import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useAuth } from "@/hooks/useAuth";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { stories } from "@/data/stories";
 import { useState } from "react";
 import AddChildModal from "./AddChildModal";
+import DailyChallengesPanel from "./DailyChallengesPanel";
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -27,6 +29,9 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
     loading,
   } = useQuestProgress();
   const [showAddChild, setShowAddChild] = useState(false);
+  const [showDailyChallenges, setShowDailyChallenges] = useState(false);
+  
+  const { getCompletedCount, getChallengesWithProgress } = useDailyChallenges(selectedChild?.id);
 
   const completedQuests = questProgress.length;
   const totalQuests = stories.length;
@@ -172,13 +177,16 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-gradient-to-br from-star to-star/80 text-foreground rounded-3xl p-6 shadow-card"
+                className="bg-gradient-to-br from-star to-star/80 text-foreground rounded-3xl p-6 shadow-card cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => setShowDailyChallenges(true)}
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <TrendingUp className="w-8 h-8" />
-                  <span className="text-4xl font-display font-bold">{recentActivity.length}</span>
+                  <Flame className="w-8 h-8" />
+                  <span className="text-4xl font-display font-bold">
+                    {getCompletedCount()}/{getChallengesWithProgress().length}
+                  </span>
                 </div>
-                <p className="text-foreground/80">This Week</p>
+                <p className="text-foreground/80">Daily Challenges</p>
               </motion.div>
             </div>
 
@@ -288,6 +296,11 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
       </div>
 
       <AddChildModal isOpen={showAddChild} onClose={() => setShowAddChild(false)} />
+      <DailyChallengesPanel 
+        isOpen={showDailyChallenges} 
+        onClose={() => setShowDailyChallenges(false)} 
+        childId={selectedChild?.id}
+      />
     </motion.div>
   );
 };

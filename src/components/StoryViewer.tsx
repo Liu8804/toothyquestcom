@@ -4,11 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useStoryNarration } from "@/hooks/useStoryNarration";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useSoundEffects, SOUND_PROMPTS } from "@/hooks/useSoundEffects";
+import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import toothyMascot from "@/assets/toothy-mascot.png";
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
+import ConfettiCelebration from "./ConfettiCelebration";
+import DailyChallengeNotification from "./DailyChallengeNotification";
 
 interface StoryViewerProps {
   story: Story;
@@ -31,10 +34,17 @@ const StoryViewer = ({
   const { user } = useAuth();
   const { completeQuest, isQuestCompleted, selectedChild } = useQuestProgress();
   const { playSound } = useSoundEffects();
+  const { incrementProgress } = useDailyChallenges(selectedChild?.id);
   const [showIntro, setShowIntro] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [celebrationData, setCelebrationData] = useState<{ xp: number; badges: any[] }>({ xp: 10, badges: [] });
   const [isCompleting, setIsCompleting] = useState(false);
+  const [challengeNotification, setChallengeNotification] = useState<{
+    show: boolean;
+    title: string;
+    xp: number;
+  } | null>(null);
 
   const questCompleted = isQuestCompleted(story.id);
 
@@ -79,11 +89,33 @@ const StoryViewer = ({
     if (result.success) {
       setCelebrationData({ xp: 10, badges: result.newBadges });
       setShowCelebration(true);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
       // Play completion sound
       playSound(SOUND_PROMPTS.questComplete, 3);
+
+      // Track daily challenge progress for stories
+      const challengeResult = await incrementProgress("story");
+      if (challengeResult?.completed) {
+        setTimeout(() => {
+          setChallengeNotification({
+            show: true,
+            title: challengeResult.challengeTitle,
+            xp: challengeResult.xpEarned,
+          });
+        }, 1500);
+      }
     }
   };
   return (
+    <>
+      <ConfettiCelebration isActive={showConfetti} />
+      <DailyChallengeNotification
+        isOpen={challengeNotification?.show || false}
+        challengeTitle={challengeNotification?.title || ""}
+        xpEarned={challengeNotification?.xp || 0}
+        onClose={() => setChallengeNotification(null)}
+      />
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
@@ -425,6 +457,7 @@ const StoryViewer = ({
         onClose={() => setShowCelebration(false)}
       />
     </AnimatePresence>
+    </>
   );
 };
 
