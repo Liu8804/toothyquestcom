@@ -64,12 +64,12 @@ export const HeroSection = () => {
             </motion.div>
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-              Make Dental Visits{" "}
-              <span className="text-gradient-hero">Fun & Exciting!</span>
+              Welcome to{" "}
+              <span className="text-gradient-hero">ToothyQuest!</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
-              Join Toothy on magical adventures, play games, and discover that going to the dentist can be the best part of your day! 🌟
+              Join your friendly tooth mascot on exciting quests to learn about dental health! Explore brushing, flossing, healthy eating, and more while earning rewards for every adventure. Let's make dental care fun! 🌟
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">

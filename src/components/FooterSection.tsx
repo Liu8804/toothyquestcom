@@ -15,12 +15,12 @@ export const FooterSection = () => {
           <ToothyMascot size="sm" className="mx-auto mb-6" />
           
           <h3 className="font-display text-2xl font-bold text-foreground mb-4">
-            Keep Smiling, Little Hero! 🌟
+            Keep Going, Hero! 🌟
           </h3>
           
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Remember, taking care of your teeth makes you a real superhero! 
-            See you on your next adventure!
+            Every quest you complete helps you grow a healthier, stronger smile! 
+            Don't forget your daily adventures—your teeth will thank you!
           </p>
 
           <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
