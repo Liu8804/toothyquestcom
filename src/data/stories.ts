@@ -10,6 +10,58 @@ export interface Story {
 }
 
 export const stories: Story[] = [
+  // === FREE QUESTS 1-5 ===
+  {
+    id: "sparkle-start",
+    title: "Quest 1 – Sparkle Start",
+    toothyIntro: "Welcome to ToothyQuest! Let's begin your smile adventure!",
+    story: "Welcome to ToothyQuest! Today is the start of something amazing. Toothy the tooth mascot bounced excitedly. \"I'm so happy you're here!\" he said. \"Together, we'll learn how to keep your smile sparkling bright.\" He showed you the magical world of teeth — each one ready to shine. \"Your first quest is simple,\" Toothy smiled. \"Just say hello to your teeth in the mirror!\"",
+    lesson: "Every great adventure starts with a single step.",
+    questEnding: "You've started your smile adventure!",
+    illustrationPath: "/stories/smile-quest.png",
+    emoji: "⭐",
+  },
+  {
+    id: "brushing-basics",
+    title: "Quest 2 – Brushing Basics",
+    toothyIntro: "Time to learn the magic of brushing!",
+    story: "Toothy held up a sparkling toothbrush. \"This is your magic wand!\" he said. \"Let me show you how to use it.\" He demonstrated gentle circles on each tooth. \"Top teeth... bottom teeth... front... and back!\" The toothbrush danced across all the teeth, making them sparkle. \"Remember,\" Toothy said, \"gentle brushing is the best brushing!\"",
+    lesson: "Learn how to brush all your teeth gently and carefully.",
+    questEnding: "Now you know the brushing basics!",
+    illustrationPath: "/stories/brush-bounce.png",
+    emoji: "🪥",
+  },
+  {
+    id: "floss-fun",
+    title: "Quest 3 – Floss Fun",
+    toothyIntro: "Let's discover the secret spaces between teeth!",
+    story: "\"Did you know there are tiny spaces between your teeth?\" Toothy asked. He pulled out a strand of magical floss. \"This helps clean where brushes can't reach!\" He gently slid the floss between two teeth. \"Swoosh!\" Hidden bits of food floated away. \"See?\" Toothy cheered. \"Flossing is like a treasure hunt — finding hidden things to clean!\"",
+    lesson: "Practice flossing between your teeth to keep them clean.",
+    questEnding: "You've learned the art of flossing!",
+    illustrationPath: "/stories/captain-floss.png",
+    emoji: "🧵",
+  },
+  {
+    id: "healthy-bites",
+    title: "Quest 4 – Healthy Bites",
+    toothyIntro: "Not all foods are the same for your teeth!",
+    story: "Toothy set up a table with different foods. \"Some foods help your teeth grow strong!\" He pointed to apples, carrots, and cheese. \"These are tooth friends!\" Then he pointed to candy and soda. \"These are okay sometimes, but they can invite sugar bugs.\" The teeth nodded wisely. \"Choose tooth friends often,\" Toothy said, \"and your smile will thank you!\"",
+    lesson: "Learn which foods are good for your teeth.",
+    questEnding: "You know which foods help your smile!",
+    illustrationPath: "/stories/apple-crunch.png",
+    emoji: "🥕",
+  },
+  {
+    id: "first-adventure-complete",
+    title: "Quest 5 – First Adventure Complete",
+    toothyIntro: "You've done something amazing!",
+    story: "Toothy jumped with joy! \"You did it!\" he cheered. \"You've completed your first five quests!\" All the teeth in the mouth clapped and sparkled. \"You've learned to brush, floss, and choose healthy foods,\" Toothy said proudly. A golden star appeared above. \"This is your Smile Star — proof that you're a true ToothyQuest hero!\" The adventure was just beginning...",
+    lesson: "Great job! You finished your first five quests!",
+    questEnding: "You're ready for even bigger adventures!",
+    illustrationPath: "/stories/shiny-club.png",
+    emoji: "🏆",
+  },
+  // === PAID QUESTS 6+ ===
   {
     id: "brave-little-tooth",
     title: "The Brave Little Tooth",
