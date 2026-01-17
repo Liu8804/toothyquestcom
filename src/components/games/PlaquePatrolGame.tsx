@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Game } from "@/data/games";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface PlaquePatrolGameProps {
   game: Game;
@@ -20,6 +21,7 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [gameStarted, setGameStarted] = useState(false);
   const [totalBugs] = useState(15);
+  const { playSound } = useGameSounds();
 
   const spawnBug = useCallback(() => {
     const newBug: PlaqueBug = {
@@ -34,6 +36,7 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   const tapBug = (bugId: number) => {
     setBugs(prev => prev.filter(b => b.id !== bugId));
     setScore(prev => prev + 1);
+    playSound("tap");
   };
 
   useEffect(() => {
