@@ -33,7 +33,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     };
   }, []);
 
-  const play = useCallback(async (text: string) => {
+  const play = useCallback((text: string) => {
     // Stop any current playback
     if (audioRef.current) {
       audioRef.current.pause();
@@ -49,54 +49,67 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     setIsPlaying(false);
     setIsPaused(false);
 
-    try {
-      // Use ElevenLabs TTS for high-quality narration
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ 
-            text,
-            voiceId: "pFZP5JQG7iQjIQuC4Bku" // Lily - child-friendly voice
-          }),
-        }
-      );
+    // Create audio element immediately on user gesture to avoid autoplay blocking
+    const audio = new Audio();
+    audioRef.current = audio;
 
-      if (!response.ok) {
-        throw new Error(`TTS request failed: ${response.status}`);
-      }
+    audio.onended = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+    };
 
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      audioUrlRef.current = audioUrl;
+    audio.onerror = () => {
+      setIsLoading(false);
+      setIsPlaying(false);
+      setIsPaused(false);
+      setError("Sorry, there was an error playing the story.");
+    };
 
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
-
-      audio.onended = () => {
-        setIsPlaying(false);
-        setIsPaused(false);
-      };
-
-      audio.onerror = () => {
-        setIsPlaying(false);
-        setIsPaused(false);
-        setError("Sorry, there was an error playing the story.");
-      };
-
-      await audio.play();
+    audio.oncanplaythrough = () => {
       setIsLoading(false);
       setIsPlaying(true);
-    } catch (err) {
-      console.error("ElevenLabs TTS error:", err);
-      setIsLoading(false);
-      setError("Failed to generate narration. Please try again.");
-    }
+      // Play is already triggered by the fetch completion
+    };
+
+    // Fetch the audio
+    fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ 
+          text,
+          voiceId: "pFZP5JQG7iQjIQuC4Bku" // Lily - child-friendly voice
+        }),
+      }
+    )
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`TTS request failed: ${response.status}`);
+        }
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        audioUrlRef.current = audioUrl;
+
+        if (audioRef.current) {
+          audioRef.current.src = audioUrl;
+          // Use play with user interaction context
+          audioRef.current.play().catch((playError) => {
+            console.error("Playback error:", playError);
+            setIsLoading(false);
+            setError("Unable to play audio. Please try again.");
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("ElevenLabs TTS error:", err);
+        setIsLoading(false);
+        setError("Failed to generate narration. Please try again.");
+      });
   }, []);
 
   const pause = useCallback(() => {
@@ -108,7 +121,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
 
   const resume = useCallback(() => {
     if (audioRef.current && isPaused) {
-      audioRef.current.play();
+      audioRef.current.play().catch(console.error);
       setIsPaused(false);
     }
   }, [isPaused]);
