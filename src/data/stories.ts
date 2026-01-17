@@ -9,6 +9,9 @@ export interface Story {
   emoji: string;
 }
 
+// Use logo asset path - will be imported in components
+export const LOGO_PATH = "/toothyquest-logo.jpeg";
+
 export const stories: Story[] = [
   // === FREE QUESTS 1-5 ===
   {
