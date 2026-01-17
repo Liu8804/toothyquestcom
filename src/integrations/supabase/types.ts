@@ -242,19 +242,20 @@ export type Database = {
       }
     }
     Views: {
-      admin_stats: {
-        Row: {
-          total_badges: number | null
-          total_brushing_sessions: number | null
-          total_children: number | null
-          total_quests_completed: number | null
-          total_users: number | null
-          total_xp_earned: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_admin_stats: {
+        Args: never
+        Returns: {
+          total_badges: number
+          total_brushing_sessions: number
+          total_children: number
+          total_quests_completed: number
+          total_users: number
+          total_xp_earned: number
+        }[]
+      }
       get_child_total_xp: { Args: { child_uuid: string }; Returns: number }
       has_role: {
         Args: {
