@@ -6,6 +6,7 @@ import StoryCard from "@/components/StoryCard";
 import StoryViewer from "@/components/StoryViewer";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
+import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
 
 const StoryModeSection = () => {
@@ -14,6 +15,7 @@ const StoryModeSection = () => {
   
   const { questProgress, isQuestCompleted } = useQuestProgress();
   const { isPurchased, isContentLocked } = usePurchase();
+  const { playSound } = useGameSounds();
   
   const completedQuestsCount = questProgress.length;
   const progressPercentage = (completedQuestsCount / stories.length) * 100;
@@ -21,9 +23,11 @@ const StoryModeSection = () => {
   const handleOpenStory = (index: number) => {
     // Check if content is locked
     if (isContentLocked(index, 'quest')) {
+      playSound("locked");
       setShowPurchaseModal(true);
       return;
     }
+    playSound("tap");
     setSelectedStoryIndex(index);
   };
 
@@ -36,10 +40,12 @@ const StoryModeSection = () => {
       const nextIndex = selectedStoryIndex + 1;
       // Check if next story is locked
       if (isContentLocked(nextIndex, 'quest')) {
+        playSound("locked");
         setShowPurchaseModal(true);
         handleCloseStory();
         return;
       }
+      playSound("tap");
       setSelectedStoryIndex(nextIndex);
     }
   };

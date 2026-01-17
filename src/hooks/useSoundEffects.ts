@@ -16,6 +16,9 @@ export const SOUND_PROMPTS = {
   buttonClick: "soft pop click sound effect",
   storyStart: "magical book opening whoosh sound effect",
   xpGain: "coin collect sparkle sound effect for game",
+  questUnlock: "magical unlock sparkle whoosh sound effect for kids game",
+  purchaseSuccess: "triumphant celebration fanfare with sparkles for kids",
+  lockedContent: "soft mysterious lock clicking sound effect",
 } as const;
 
 export const useSoundEffects = (): UseSoundEffectsReturn => {
