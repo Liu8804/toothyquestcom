@@ -96,6 +96,9 @@ export const games: Game[] = [
 
 export const globalGameText = {
   starsEarned: "You earned stars for helping your smile!",
-  lockedGame: "Complete more quests or unlock full access to play!",
+  lockedGame: "Complete the first 5 quests or unlock the full adventure to play this game!",
   unlockButton: "Unlock All Games",
 };
+
+// Games that are locked until purchase (index >= FREE_GAME_LIMIT)
+export const FREE_GAME_LIMIT = 2;

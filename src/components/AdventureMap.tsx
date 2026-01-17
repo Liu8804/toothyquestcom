@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Star, Lock, Check, Sparkles } from "lucide-react";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
+import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { stories } from "@/data/stories";
+import PurchaseModal from "@/components/PurchaseModal";
 
 interface AdventureMapProps {
   onSelectQuest?: (questId: string) => void;
@@ -10,14 +13,18 @@ interface AdventureMapProps {
 
 const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
   const { questProgress, isQuestCompleted } = useQuestProgress();
+  const { isPurchased, isContentLocked } = usePurchase();
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
   const completedCount = questProgress.length;
   const totalQuests = stories.length;
 
-  // Create path points for quests
+  // Create path points for quests with purchase-based locking
   const questPoints = stories.slice(0, 10).map((story, index) => {
     const isCompleted = isQuestCompleted(story.id);
-    const isUnlocked = index === 0 || isQuestCompleted(stories[index - 1]?.id);
+    const progressUnlocked = index === 0 || isQuestCompleted(stories[index - 1]?.id);
+    const purchaseLocked = isContentLocked(index, 'quest');
+    const isUnlocked = progressUnlocked && !purchaseLocked;
     const isCurrent = isUnlocked && !isCompleted;
 
     return {
@@ -27,13 +34,24 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
       isCompleted,
       isUnlocked,
       isCurrent,
+      isPurchaseLocked: purchaseLocked,
       x: 10 + (index % 2 === 0 ? 20 : 60),
       y: 10 + index * 9,
     };
   });
 
+  const handleQuestClick = (quest: typeof questPoints[0]) => {
+    if (quest.isPurchaseLocked) {
+      setShowPurchaseModal(true);
+    } else if (quest.isUnlocked) {
+      onSelectQuest?.(quest.id);
+    }
+  };
+
   return (
-    <div className={`relative w-full max-w-md mx-auto ${className}`}>
+    <>
+      <PurchaseModal isOpen={showPurchaseModal} onClose={() => setShowPurchaseModal(false)} />
+      <div className={`relative w-full max-w-md mx-auto ${className}`}>
       {/* Map background */}
       <div className="relative bg-gradient-to-b from-mint/20 via-bubble/20 to-primary/20 rounded-3xl p-6 min-h-[500px] overflow-hidden shadow-card">
         {/* Floating decorations */}
@@ -108,8 +126,8 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
             transition={{ delay: 0.1 * index, type: "spring" }}
           >
             <motion.button
-              onClick={() => quest.isUnlocked && onSelectQuest?.(quest.id)}
-              disabled={!quest.isUnlocked}
+              onClick={() => handleQuestClick(quest)}
+              disabled={!quest.isUnlocked && !quest.isPurchaseLocked}
               className={`relative w-14 h-14 rounded-full flex items-center justify-center shadow-card transition-all ${
                 quest.isCompleted
                   ? "bg-gradient-to-br from-star to-accent"
@@ -180,7 +198,8 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
           </div>
         </motion.div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

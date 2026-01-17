@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown } from "lucide-react";
-import { games, Game, globalGameText } from "@/data/games";
+import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown, Lock, Unlock } from "lucide-react";
+import { games, Game, globalGameText, FREE_GAME_LIMIT } from "@/data/games";
 import GameCard from "./GameCard";
 import PlaquePatrolGame from "./PlaquePatrolGame";
 import ToothDefenderGame from "./ToothDefenderGame";
@@ -11,12 +11,14 @@ import BuildASmileGame from "./BuildASmileGame";
 import QuestMatchGame from "./QuestMatchGame";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
+import PurchaseModal from "@/components/PurchaseModal";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGameProgress } from "@/hooks/useGameProgress";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
+import { usePurchase } from "@/hooks/usePurchase";
 
 interface GamesModalProps {
   isOpen: boolean;
@@ -30,6 +32,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("games");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [challengeNotification, setChallengeNotification] = useState<{
     show: boolean;
     title: string;
@@ -37,6 +40,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   } | null>(null);
   
   const { user } = useAuth();
+  const { isPurchased, isContentLocked } = usePurchase();
   const { 
     achievements, 
     earnedAchievements, 
@@ -57,6 +61,12 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   } = useGameSounds();
 
   const { incrementProgress } = useDailyChallenges(childId);
+
+  // Add lock status to games based on purchase
+  const gamesWithLockStatus = games.map((game, index) => ({
+    ...game,
+    isLocked: isContentLocked(index, 'game'),
+  }));
 
   useEffect(() => {
     if (isOpen && selectedGame) {
@@ -108,7 +118,11 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     setNewAchievements([]);
   };
 
-  const handleGameSelect = (game: Game) => {
+  const handleGameSelect = (game: Game, isLocked: boolean) => {
+    if (isLocked) {
+      setShowPurchaseModal(true);
+      return;
+    }
     playSound("tap");
     setSelectedGame(game);
     fetchLeaderboard(game.id);
@@ -151,6 +165,10 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         xpEarned={challengeNotification?.xp || 0}
         onClose={() => setChallengeNotification(null)}
       />
+      <PurchaseModal 
+        isOpen={showPurchaseModal} 
+        onClose={() => setShowPurchaseModal(false)} 
+      />
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -192,6 +210,17 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                 </div>
               )}
               <div className="flex items-center gap-2">
+                {!isPurchased && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowPurchaseModal(true)}
+                    className="gap-2 text-primary border-primary hover:bg-primary/10"
+                  >
+                    <Unlock className="w-4 h-4" />
+                    Unlock All
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -338,15 +367,47 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
 
                   <TabsContent value="games">
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {games.map((game, index) => (
+                      {gamesWithLockStatus.map((game, index) => (
                         <GameCard
                           key={game.id}
                           game={game}
-                          onClick={() => handleGameSelect(game)}
+                          onClick={() => handleGameSelect(game, game.isLocked || false)}
                           delay={index * 0.1}
                         />
                       ))}
                     </div>
+                    
+                    {/* Unlock All Games Banner */}
+                    {!isPurchased && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-6 p-4 bg-gradient-to-r from-primary/10 via-bubble/10 to-star/10 rounded-2xl border border-primary/20"
+                      >
+                        <div className="flex items-center justify-between gap-4 flex-wrap">
+                          <div className="flex items-center gap-3">
+                            <div className="p-2 bg-primary/20 rounded-full">
+                              <Lock className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="font-bold text-foreground">
+                                {games.length - FREE_GAME_LIMIT} more games locked
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Unlock the full adventure to play all games!
+                              </p>
+                            </div>
+                          </div>
+                          <Button 
+                            onClick={() => setShowPurchaseModal(true)}
+                            className="gap-2 bg-gradient-to-r from-primary to-star hover:opacity-90"
+                          >
+                            <Crown className="w-4 h-4" />
+                            Unlock All
+                          </Button>
+                        </div>
+                      </motion.div>
+                    )}
                   </TabsContent>
 
                   <TabsContent value="achievements">
