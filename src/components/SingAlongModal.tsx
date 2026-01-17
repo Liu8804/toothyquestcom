@@ -55,11 +55,14 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
     }
   }, [isOpen]);
 
+  // Background music loading - gracefully handles when music API is unavailable
   const loadBackgroundMusic = useCallback(async (songId: string) => {
     if (musicLoaded[songId]) return musicLoaded[songId];
     
-    setIsLoadingMusic(true);
+    // Skip music loading if we already know it's not available
+    // Music generation requires special ElevenLabs permissions
     try {
+      setIsLoadingMusic(true);
       const prompt = musicPrompts[songId] || "Happy children's music, playful and fun";
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-music`,
@@ -78,7 +81,9 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
       );
 
       if (!response.ok) {
-        throw new Error(`Music request failed: ${response.status}`);
+        // Music generation not available - continue without it
+        console.log("Background music not available, continuing with vocals only");
+        return null;
       }
 
       const audioBlob = await response.blob();
@@ -86,7 +91,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
       setMusicLoaded(prev => ({ ...prev, [songId]: audioUrl }));
       return audioUrl;
     } catch (error) {
-      console.error("Failed to load background music:", error);
+      console.log("Background music unavailable, using vocals only");
       return null;
     } finally {
       setIsLoadingMusic(false);

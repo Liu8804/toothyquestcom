@@ -16,101 +16,111 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  // Check for speech synthesis support
-  const isSpeechSupported = typeof window !== "undefined" && "speechSynthesis" in window;
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (isSpeechSupported) {
-        window.speechSynthesis.cancel();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (audioUrlRef.current) {
+        URL.revokeObjectURL(audioUrlRef.current);
+        audioUrlRef.current = null;
       }
     };
-  }, [isSpeechSupported]);
+  }, []);
 
-  const play = useCallback((text: string) => {
-    if (!isSpeechSupported) {
-      setError("Speech synthesis is not supported in your browser.");
-      return;
+  const play = useCallback(async (text: string) => {
+    // Stop any current playback
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
     }
 
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel();
     setError(null);
     setIsLoading(true);
+    setIsPlaying(false);
+    setIsPaused(false);
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Configure voice settings for child-friendly narration
-    utterance.rate = 0.9; // Slightly slower for kids
-    utterance.pitch = 1.1; // Slightly higher pitch
-    utterance.volume = 1;
+    try {
+      // Use ElevenLabs TTS for high-quality narration
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ 
+            text,
+            voiceId: "pFZP5JQG7iQjIQuC4Bku" // Lily - child-friendly voice
+          }),
+        }
+      );
 
-    // Try to find a friendly voice
-    const voices = window.speechSynthesis.getVoices();
-    const preferredVoice = voices.find(
-      (v) => v.name.includes("Samantha") || 
-             v.name.includes("Victoria") ||
-             v.name.includes("Karen") ||
-             v.name.includes("Google") ||
-             v.lang.startsWith("en")
-    );
-    
-    if (preferredVoice) {
-      utterance.voice = preferredVoice;
-    }
+      if (!response.ok) {
+        throw new Error(`TTS request failed: ${response.status}`);
+      }
 
-    utterance.onstart = () => {
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      audioUrlRef.current = audioUrl;
+
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setIsPlaying(false);
+        setIsPaused(false);
+      };
+
+      audio.onerror = () => {
+        setIsPlaying(false);
+        setIsPaused(false);
+        setError("Sorry, there was an error playing the story.");
+      };
+
+      await audio.play();
       setIsLoading(false);
       setIsPlaying(true);
-      setIsPaused(false);
-    };
-
-    utterance.onend = () => {
-      setIsPlaying(false);
-      setIsPaused(false);
-    };
-
-    utterance.onerror = (event) => {
+    } catch (err) {
+      console.error("ElevenLabs TTS error:", err);
       setIsLoading(false);
-      setIsPlaying(false);
-      setIsPaused(false);
-      if (event.error !== "interrupted") {
-        setError("Sorry, there was an error playing the story.");
-      }
-    };
-
-    utteranceRef.current = utterance;
-
-    // Small delay to ensure voices are loaded
-    setTimeout(() => {
-      window.speechSynthesis.speak(utterance);
-    }, 100);
-  }, [isSpeechSupported]);
+      setError("Failed to generate narration. Please try again.");
+    }
+  }, []);
 
   const pause = useCallback(() => {
-    if (isSpeechSupported && isPlaying) {
-      window.speechSynthesis.pause();
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause();
       setIsPaused(true);
     }
-  }, [isSpeechSupported, isPlaying]);
+  }, [isPlaying]);
 
   const resume = useCallback(() => {
-    if (isSpeechSupported && isPaused) {
-      window.speechSynthesis.resume();
+    if (audioRef.current && isPaused) {
+      audioRef.current.play();
       setIsPaused(false);
     }
-  }, [isSpeechSupported, isPaused]);
+  }, [isPaused]);
 
   const stop = useCallback(() => {
-    if (isSpeechSupported) {
-      window.speechSynthesis.cancel();
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
       setIsPlaying(false);
       setIsPaused(false);
     }
-  }, [isSpeechSupported]);
+  }, []);
 
   return {
     isPlaying,
