@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import toothyMascot from "@/assets/toothy-mascot.png";
+import toothyLogo from "@/assets/toothyquest-logo.jpeg";
 
 interface ChatWithToothyProps {
   isOpen: boolean;
@@ -397,9 +397,9 @@ Remember: You're talking to children ages 3-9, so be gentle, patient, and super 
               className="relative"
             >
               <img 
-                src={toothyMascot} 
-                alt="Toothy" 
-                className="w-32 h-32 object-contain"
+                src={toothyLogo} 
+                alt="ToothyQuest" 
+                className="w-32 h-32 object-cover rounded-full border-4 border-primary shadow-lg"
               />
               {isSpeaking && (
                 <div className="absolute -top-2 -right-2">

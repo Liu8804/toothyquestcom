@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Game } from "@/data/games";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface QuestMatchGameProps {
   game: Game;
@@ -30,6 +31,7 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [matchedPairs, setMatchedPairs] = useState(0);
+  const { playSound } = useGameSounds();
 
   const initializeGame = () => {
     const shuffledCards = [...cardPairs, ...cardPairs]
@@ -70,7 +72,7 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
     );
     setCards(newCards);
     setFlippedCards([...flippedCards, uniqueId]);
-
+    playSound("tap");
     if (flippedCards.length === 1) {
       setMoves(m => m + 1);
       const firstCard = cards.find(c => c.uniqueId === flippedCards[0]);
@@ -78,6 +80,7 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
 
       if (firstCard && secondCard && firstCard.id === secondCard.id) {
         // Match found
+        playSound("success");
         setTimeout(() => {
           setCards(prev =>
             prev.map(c =>

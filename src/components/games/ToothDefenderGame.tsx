@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Game } from "@/data/games";
-
+import { useGameSounds } from "@/hooks/useGameSounds";
 interface ToothDefenderGameProps {
   game: Game;
   onComplete: (won: boolean, stars: number) => void;
@@ -24,6 +24,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   const [lives, setLives] = useState(3);
   const [gameStarted, setGameStarted] = useState(false);
   const [totalCaught, setTotalCaught] = useState(0);
+  const { playSound } = useGameSounds();
 
   useEffect(() => {
     if (!gameStarted) return;
@@ -83,8 +84,10 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
     if (item.isHealthy) {
       setScore(prev => prev + 10);
       setTotalCaught(prev => prev + 1);
+      playSound("success");
     } else {
       setLives(prev => prev - 1);
+      playSound("lose");
     }
   };
 

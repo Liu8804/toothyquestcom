@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, Star, Trophy } from "lucide-react";
+import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown } from "lucide-react";
 import { games, Game, globalGameText } from "@/data/games";
 import GameCard from "./GameCard";
 import PlaquePatrolGame from "./PlaquePatrolGame";
@@ -10,27 +10,83 @@ import SugarBugChaseGame from "./SugarBugChaseGame";
 import BuildASmileGame from "./BuildASmileGame";
 import QuestMatchGame from "./QuestMatchGame";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useGameProgress } from "@/hooks/useGameProgress";
+import { useGameSounds } from "@/hooks/useGameSounds";
+import { useAuth } from "@/hooks/useAuth";
 
 interface GamesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  childId?: string;
 }
 
-const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
+const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
-  const [gameResult, setGameResult] = useState<{ won: boolean; stars: number } | null>(null);
+  const [gameResult, setGameResult] = useState<{ won: boolean; stars: number; score: number } | null>(null);
+  const [newAchievements, setNewAchievements] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState("games");
+  
+  const { user } = useAuth();
+  const { 
+    achievements, 
+    earnedAchievements, 
+    leaderboard, 
+    saveScore, 
+    fetchLeaderboard,
+    getTotalStars,
+    getHighScore 
+  } = useGameProgress(childId);
+  
+  const { 
+    playSound, 
+    playWinFanfare, 
+    playLoseSound, 
+    playAchievementUnlock,
+    isMuted, 
+    toggleMute 
+  } = useGameSounds();
 
-  const handleGameComplete = (won: boolean, stars: number) => {
-    setGameResult({ won, stars });
+  useEffect(() => {
+    if (isOpen && selectedGame) {
+      fetchLeaderboard(selectedGame.id);
+    }
+  }, [isOpen, selectedGame, fetchLeaderboard]);
+
+  const handleGameComplete = async (won: boolean, stars: number, score: number = 0) => {
+    setGameResult({ won, stars, score });
+    
+    if (won) {
+      playWinFanfare();
+      
+      // Save score if user is authenticated and has a child selected
+      if (user && childId) {
+        const newlyEarned = await saveScore(selectedGame!.id, score, stars);
+        if (newlyEarned.length > 0) {
+          setNewAchievements(newlyEarned);
+          setTimeout(playAchievementUnlock, 500);
+        }
+      }
+    } else {
+      playLoseSound();
+    }
   };
 
   const handleBackToGames = () => {
     setSelectedGame(null);
     setGameResult(null);
+    setNewAchievements([]);
   };
 
   const handlePlayAgain = () => {
     setGameResult(null);
+    setNewAchievements([]);
+  };
+
+  const handleGameSelect = (game: Game) => {
+    playSound("tap");
+    setSelectedGame(game);
+    fetchLeaderboard(game.id);
   };
 
   const renderGame = () => {
@@ -38,7 +94,7 @@ const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
 
     const gameProps = {
       game: selectedGame,
-      onComplete: handleGameComplete,
+      onComplete: (won: boolean, stars: number) => handleGameComplete(won, stars, stars * 10),
     };
 
     switch (selectedGame.id) {
@@ -59,6 +115,8 @@ const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
     }
   };
 
+  const currentLeaderboard = selectedGame ? leaderboard[selectedGame.id] || [] : [];
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -77,7 +135,7 @@ const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border">
-              {selectedGame ? (
+              {selectedGame && !gameResult ? (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -85,7 +143,7 @@ const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
                   className="gap-2"
                 >
                   <ArrowLeft className="w-4 h-4" />
-                  Back to Games
+                  Back
                 </Button>
               ) : (
                 <div className="flex items-center gap-2">
@@ -93,20 +151,73 @@ const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
                   <h2 className="font-display text-xl font-bold text-foreground">
                     Fun Games
                   </h2>
+                  {user && childId && (
+                    <span className="ml-2 px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 rounded-full text-sm">
+                      ⭐ {getTotalStars()} stars
+                    </span>
+                  )}
                 </div>
               )}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="rounded-full"
-              >
-                <X className="w-5 h-5" />
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleMute}
+                  className="rounded-full"
+                >
+                  {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="rounded-full"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-auto p-4">
+              {/* Achievement Unlock Overlay */}
+              <AnimatePresence>
+                {newAchievements.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    className="absolute inset-0 z-20 flex items-center justify-center bg-black/70"
+                  >
+                    <div className="bg-gradient-to-br from-yellow-400 to-amber-500 p-8 rounded-3xl text-center text-white max-w-sm mx-4">
+                      <motion.div
+                        animate={{ rotate: [0, -10, 10, 0], scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 1 }}
+                        className="text-6xl mb-4"
+                      >
+                        🏆
+                      </motion.div>
+                      <h3 className="text-2xl font-bold mb-2">Achievement Unlocked!</h3>
+                      {newAchievements.map((ach, i) => (
+                        <div key={i} className="flex items-center justify-center gap-2 mt-3">
+                          <span className="text-3xl">{ach.emoji}</span>
+                          <div>
+                            <p className="font-bold">{ach.name}</p>
+                            <p className="text-sm opacity-90">{ach.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                      <Button
+                        onClick={() => setNewAchievements([])}
+                        className="mt-6 bg-white text-amber-600 hover:bg-white/90"
+                      >
+                        Awesome!
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               {/* Game Result Screen */}
               {gameResult && selectedGame && (
                 <motion.div
@@ -177,18 +288,135 @@ const GamesModal = ({ isOpen, onClose }: GamesModalProps) => {
                 </div>
               )}
 
-              {/* Game Selection Grid */}
+              {/* Game Selection with Tabs */}
               {!selectedGame && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {games.map((game, index) => (
-                    <GameCard
-                      key={game.id}
-                      game={game}
-                      onClick={() => setSelectedGame(game)}
-                      delay={index * 0.1}
-                    />
-                  ))}
-                </div>
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                  <TabsList className="grid w-full grid-cols-3 mb-4">
+                    <TabsTrigger value="games" className="gap-2">
+                      <span>🎮</span> Games
+                    </TabsTrigger>
+                    <TabsTrigger value="achievements" className="gap-2">
+                      <span>🏆</span> Achievements
+                    </TabsTrigger>
+                    <TabsTrigger value="leaderboard" className="gap-2">
+                      <span>👑</span> Leaderboard
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="games">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {games.map((game, index) => (
+                        <GameCard
+                          key={game.id}
+                          game={game}
+                          onClick={() => handleGameSelect(game)}
+                          delay={index * 0.1}
+                        />
+                      ))}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="achievements">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {achievements.map((achievement) => {
+                        const isEarned = earnedAchievements.some(
+                          e => e.achievement_id === achievement.id
+                        );
+                        return (
+                          <motion.div
+                            key={achievement.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className={`p-4 rounded-xl border-2 flex items-center gap-4 ${
+                              isEarned 
+                                ? "bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-950/30 dark:to-amber-950/30 border-yellow-400" 
+                                : "bg-muted/50 border-border opacity-60"
+                            }`}
+                          >
+                            <div className={`text-4xl ${!isEarned && "grayscale"}`}>
+                              {achievement.emoji}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-bold text-foreground">{achievement.name}</h4>
+                              <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                            </div>
+                            {isEarned && (
+                              <Medal className="w-6 h-6 text-yellow-500" />
+                            )}
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="leaderboard">
+                    <div className="space-y-4">
+                      <p className="text-center text-muted-foreground mb-4">
+                        Select a game to see its leaderboard
+                      </p>
+                      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
+                        {games.map((game) => (
+                          <Button
+                            key={game.id}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedGame(game);
+                              fetchLeaderboard(game.id);
+                              setActiveTab("leaderboard");
+                            }}
+                            className="flex-col h-auto py-2"
+                          >
+                            <span className="text-2xl">{game.emoji}</span>
+                            <span className="text-xs truncate w-full">{game.name}</span>
+                          </Button>
+                        ))}
+                      </div>
+                      
+                      {selectedGame && currentLeaderboard.length > 0 && (
+                        <div className="space-y-2">
+                          <h4 className="font-bold text-center mb-4">
+                            {selectedGame.emoji} {selectedGame.name} Top Scores
+                          </h4>
+                          {currentLeaderboard.map((entry, index) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: index * 0.1 }}
+                              className={`flex items-center gap-4 p-3 rounded-xl ${
+                                index === 0 ? "bg-yellow-100 dark:bg-yellow-900/30" :
+                                index === 1 ? "bg-gray-100 dark:bg-gray-800" :
+                                index === 2 ? "bg-orange-100 dark:bg-orange-900/30" :
+                                "bg-muted/50"
+                              }`}
+                            >
+                              <div className="w-8 text-center font-bold">
+                                {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
+                              </div>
+                              <div className="text-2xl">{entry.avatar_emoji}</div>
+                              <div className="flex-1 font-medium">{entry.child_name}</div>
+                              <div className="flex items-center gap-1">
+                                <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                <span className="font-bold">{entry.stars}</span>
+                              </div>
+                              <div className="text-muted-foreground text-sm">
+                                Score: {entry.score}
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {(!selectedGame || currentLeaderboard.length === 0) && !selectedGame && (
+                        <div className="text-center py-8 text-muted-foreground">
+                          <Crown className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                          <p>Play games to appear on the leaderboard!</p>
+                        </div>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
               )}
             </div>
           </motion.div>

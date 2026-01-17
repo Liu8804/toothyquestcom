@@ -136,6 +136,42 @@ export type Database = {
         }
         Relationships: []
       }
+      earned_achievements: {
+        Row: {
+          achievement_id: string
+          child_id: string
+          earned_at: string
+          id: string
+        }
+        Insert: {
+          achievement_id: string
+          child_id: string
+          earned_at?: string
+          id?: string
+        }
+        Update: {
+          achievement_id?: string
+          child_id?: string
+          earned_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "earned_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "game_achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "earned_achievements_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       earned_badges: {
         Row: {
           badge_id: string
@@ -165,6 +201,74 @@ export type Database = {
           },
           {
             foreignKeyName: "earned_badges_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      game_achievements: {
+        Row: {
+          created_at: string
+          description: string
+          emoji: string
+          game_id: string | null
+          id: string
+          name: string
+          requirement_type: string
+          requirement_value: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          emoji: string
+          game_id?: string | null
+          id?: string
+          name: string
+          requirement_type: string
+          requirement_value?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          emoji?: string
+          game_id?: string | null
+          id?: string
+          name?: string
+          requirement_type?: string
+          requirement_value?: number
+        }
+        Relationships: []
+      }
+      game_scores: {
+        Row: {
+          child_id: string
+          game_id: string
+          id: string
+          played_at: string
+          score: number
+          stars_earned: number
+        }
+        Insert: {
+          child_id: string
+          game_id: string
+          id?: string
+          played_at?: string
+          score?: number
+          stars_earned?: number
+        }
+        Update: {
+          child_id?: string
+          game_id?: string
+          id?: string
+          played_at?: string
+          score?: number
+          stars_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_scores_child_id_fkey"
             columns: ["child_id"]
             isOneToOne: false
             referencedRelation: "children"
