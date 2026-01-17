@@ -4,6 +4,7 @@ import { BookOpen, Gamepad2, Music, MessageCircle } from "lucide-react";
 import AdventureCard from "@/components/AdventureCard";
 import BrushingTimerGame from "@/components/BrushingGame/BrushingTimerGame";
 import SingAlongModal from "@/components/SingAlongModal";
+import ChatWithToothy from "@/components/ChatWithToothy";
 
 const adventures = [
   {
@@ -32,13 +33,14 @@ const adventures = [
     description: "Have friendly conversations and ask any questions about your dental visit!",
     icon: MessageCircle,
     color: "gold" as const,
-    action: "coming-soon",
+    action: "open-chat",
   },
 ];
 
 export const AdventuresSection = () => {
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [isSongsOpen, setIsSongsOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleAdventureClick = (action: string) => {
     switch (action) {
@@ -48,11 +50,13 @@ export const AdventuresSection = () => {
       case "open-songs":
         setIsSongsOpen(true);
         break;
+      case "open-chat":
+        setIsChatOpen(true);
+        break;
       case "scroll-to-stories":
         document.getElementById("stories")?.scrollIntoView({ behavior: "smooth" });
         break;
       default:
-        // Coming soon features
         break;
     }
   };
@@ -99,6 +103,9 @@ export const AdventuresSection = () => {
 
       {/* Sing Along Modal */}
       <SingAlongModal isOpen={isSongsOpen} onClose={() => setIsSongsOpen(false)} />
+
+      {/* Chat with Toothy Modal */}
+      <ChatWithToothy isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </>
   );
 };
