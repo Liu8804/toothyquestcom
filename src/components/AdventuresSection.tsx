@@ -2,10 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Gamepad2, Music, MessageCircle } from "lucide-react";
 import AdventureCard from "@/components/AdventureCard";
-import BrushingTimerGame from "@/components/BrushingGame/BrushingTimerGame";
 import SingAlongModal from "@/components/SingAlongModal";
 import ChatWithToothy from "@/components/ChatWithToothy";
-
+import GamesModal from "@/components/games/GamesModal";
 const adventures = [
   {
     title: "Story Time",
@@ -98,8 +97,8 @@ export const AdventuresSection = () => {
         </div>
       </section>
 
-      {/* Brushing Timer Game Modal */}
-      <BrushingTimerGame isOpen={isGameOpen} onClose={() => setIsGameOpen(false)} />
+      {/* Fun Games Modal */}
+      <GamesModal isOpen={isGameOpen} onClose={() => setIsGameOpen(false)} />
 
       {/* Sing Along Modal */}
       <SingAlongModal isOpen={isSongsOpen} onClose={() => setIsSongsOpen(false)} />
