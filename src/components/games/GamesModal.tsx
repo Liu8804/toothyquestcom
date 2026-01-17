@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown, Lock, Unlock } from "lucide-react";
-import { games, Game, globalGameText, FREE_GAME_LIMIT } from "@/data/games";
+import { games, Game, globalGameText } from "@/data/games";
 import GameCard from "./GameCard";
 import PlaquePatrolGame from "./PlaquePatrolGame";
 import ToothDefenderGame from "./ToothDefenderGame";
@@ -18,7 +18,8 @@ import { useGameProgress } from "@/hooks/useGameProgress";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
-import { usePurchase } from "@/hooks/usePurchase";
+import { usePurchase, QUESTS_REQUIRED_FOR_GAMES } from "@/hooks/usePurchase";
+import { useQuestProgress } from "@/hooks/useQuestProgress";
 
 interface GamesModalProps {
   isOpen: boolean;
@@ -41,6 +42,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   
   const { user } = useAuth();
   const { isPurchased, isContentLocked } = usePurchase();
+  const { questProgress } = useQuestProgress();
+  const completedQuestsCount = questProgress.length;
   const { 
     achievements, 
     earnedAchievements, 
@@ -62,10 +65,12 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
 
   const { incrementProgress } = useDailyChallenges(childId);
 
-  // Add lock status to games based on purchase
-  const gamesWithLockStatus = games.map((game, index) => ({
+  // All games are locked until 5 quests completed OR purchase made
+  const areGamesLocked = !isPurchased && completedQuestsCount < QUESTS_REQUIRED_FOR_GAMES;
+  
+  const gamesWithLockStatus = games.map((game) => ({
     ...game,
-    isLocked: isContentLocked(index, 'game'),
+    isLocked: areGamesLocked,
   }));
 
   useEffect(() => {
@@ -377,8 +382,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                       ))}
                     </div>
                     
-                    {/* Unlock All Games Banner */}
-                    {!isPurchased && (
+                    {/* Unlock All Games Banner - show when games are locked */}
+                    {areGamesLocked && (
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -391,10 +396,10 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                             </div>
                             <div>
                               <p className="font-bold text-foreground">
-                                {games.length - FREE_GAME_LIMIT} more games locked
+                                All games locked
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                Unlock the full adventure to play all games!
+                                Complete {QUESTS_REQUIRED_FOR_GAMES - completedQuestsCount} more quests or unlock the full adventure!
                               </p>
                             </div>
                           </div>

@@ -47,13 +47,13 @@ Happy teeth make happy sounds!`,
   },
   {
     id: "flossing",
-    title: "Flossing Song",
+    title: "Floss Song",
     emoji: "🦷",
     useCase: "Skill quest (flossing / cleaning between teeth)",
     mood: "Calm + confident",
     duration: "~15 seconds",
-    lyrics: `Slide it gently, nice and slow,
-Between each tooth — now here we go!
+    lyrics: `Trace the floss gently between each tooth,
+Slide it slowly, that's the truth!
 Clean and fresh, you did it right,
 Flossing keeps your smile bright!`,
     devNote: "Mascot demonstrates floss motion. Good for instructional quests.",
@@ -80,7 +80,7 @@ Healthy choices lead the way!`,
     useCase: "Reward / badge / celebration screen",
     mood: "Celebration",
     duration: "~10–12 seconds",
-    lyrics: `Quest complete — hooray, hooray!
+    lyrics: `Quest complete — hooray!
 You helped your smile today!
 Stars and badges just for you,
 Great job — let's quest again soon!`,
