@@ -1,14 +1,29 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Map, Sparkles, Compass, Trophy } from "lucide-react";
+import { Map, Sparkles, Compass, Trophy, Lock } from "lucide-react";
 import { stories } from "@/data/stories";
 import StoryCard from "@/components/StoryCard";
 import StoryViewer from "@/components/StoryViewer";
+import { useQuestProgress } from "@/hooks/useQuestProgress";
+import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
+import PurchaseModal from "@/components/PurchaseModal";
 
 const StoryModeSection = () => {
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  
+  const { questProgress, isQuestCompleted } = useQuestProgress();
+  const { isPurchased, isContentLocked } = usePurchase();
+  
+  const completedQuestsCount = questProgress.length;
+  const progressPercentage = (completedQuestsCount / stories.length) * 100;
 
   const handleOpenStory = (index: number) => {
+    // Check if content is locked
+    if (isContentLocked(index, 'quest')) {
+      setShowPurchaseModal(true);
+      return;
+    }
     setSelectedStoryIndex(index);
   };
 
@@ -18,7 +33,14 @@ const StoryModeSection = () => {
 
   const handleNextStory = () => {
     if (selectedStoryIndex !== null && selectedStoryIndex < stories.length - 1) {
-      setSelectedStoryIndex(selectedStoryIndex + 1);
+      const nextIndex = selectedStoryIndex + 1;
+      // Check if next story is locked
+      if (isContentLocked(nextIndex, 'quest')) {
+        setShowPurchaseModal(true);
+        handleCloseStory();
+        return;
+      }
+      setSelectedStoryIndex(nextIndex);
     }
   };
 
@@ -72,12 +94,29 @@ const StoryModeSection = () => {
               </span>
               <span className="flex items-center gap-1 font-bold text-primary">
                 <Trophy className="w-4 h-4" />
-                0/{stories.length} Complete
+                {completedQuestsCount}/{stories.length} Complete
               </span>
             </div>
             <div className="h-3 bg-muted rounded-full overflow-hidden border border-primary/20">
-              <div className="h-full w-0 bg-gradient-to-r from-primary to-secondary rounded-full" />
+              <motion.div 
+                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              />
             </div>
+            
+            {/* Free quests indicator */}
+            {!isPurchased && completedQuestsCount < FREE_QUEST_LIMIT && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground"
+              >
+                <Lock className="w-3 h-3" />
+                <span>{FREE_QUEST_LIMIT - completedQuestsCount} free quests remaining</span>
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
 
@@ -89,6 +128,8 @@ const StoryModeSection = () => {
               story={story}
               index={index}
               onClick={() => handleOpenStory(index)}
+              isCompleted={isQuestCompleted(story.id)}
+              isLocked={isContentLocked(index, 'quest')}
             />
           ))}
         </div>
@@ -105,8 +146,8 @@ const StoryModeSection = () => {
             <div className="text-sm text-muted-foreground">Fun Stories</div>
           </div>
           <div className="px-6 py-4 bg-card rounded-2xl shadow-card">
-            <div className="text-3xl font-display font-bold text-secondary">{stories.length}</div>
-            <div className="text-sm text-muted-foreground">Lessons to Learn</div>
+            <div className="text-3xl font-display font-bold text-secondary">{completedQuestsCount}</div>
+            <div className="text-sm text-muted-foreground">Quests Completed</div>
           </div>
           <div className="px-6 py-4 bg-card rounded-2xl shadow-card">
             <div className="text-3xl font-display font-bold text-accent">∞</div>
@@ -126,6 +167,12 @@ const StoryModeSection = () => {
           onPrevious={handlePreviousStory}
         />
       )}
+      
+      {/* Purchase Modal */}
+      <PurchaseModal 
+        isOpen={showPurchaseModal}
+        onClose={() => setShowPurchaseModal(false)}
+      />
     </section>
   );
 };
