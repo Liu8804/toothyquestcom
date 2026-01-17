@@ -1,7 +1,6 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  X, 
   Music, 
   Play, 
   Pause, 
@@ -9,7 +8,8 @@ import {
   Loader2,
   Sparkles,
   Clock,
-  Heart
+  Heart,
+  Music2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -21,27 +21,98 @@ interface SingAlongModalProps {
   onClose: () => void;
 }
 
+// Music prompts for each song
+const musicPrompts: Record<string, string> = {
+  "welcome": "Happy cheerful children's music, magical sparkles, welcoming melody, playful xylophone and bells, upbeat tempo, kid-friendly",
+  "daily-care": "Energetic rhythmic children's song, brushing teeth tempo, happy and bouncy, simple melody with claps and drums",
+  "flossing": "Calm confident children's music, gentle flowing melody, soft piano and gentle percussion, educational song feel",
+  "healthy-habits": "Cheerful educational children's music, happy vegetables and fruits theme, playful ukulele and marimba",
+  "quest-complete": "Celebratory fanfare, triumphant children's music, achievement unlocked, confetti and stars, brass and bells"
+};
+
 const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isLoadingVocals, setIsLoadingVocals] = useState(false);
+  const [isLoadingMusic, setIsLoadingMusic] = useState(false);
+  const vocalsRef = useRef<HTMLAudioElement | null>(null);
+  const musicRef = useRef<HTMLAudioElement | null>(null);
+  const [musicLoaded, setMusicLoaded] = useState<Record<string, string>>({});
+
+  // Cleanup on close
+  useEffect(() => {
+    if (!isOpen) {
+      if (vocalsRef.current) {
+        vocalsRef.current.pause();
+        vocalsRef.current = null;
+      }
+      if (musicRef.current) {
+        musicRef.current.pause();
+        musicRef.current = null;
+      }
+      setIsPlaying(false);
+      setSelectedSong(null);
+    }
+  }, [isOpen]);
+
+  const loadBackgroundMusic = useCallback(async (songId: string) => {
+    if (musicLoaded[songId]) return musicLoaded[songId];
+    
+    setIsLoadingMusic(true);
+    try {
+      const prompt = musicPrompts[songId] || "Happy children's music, playful and fun";
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-music`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ 
+            prompt,
+            duration: 20
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Music request failed: ${response.status}`);
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      setMusicLoaded(prev => ({ ...prev, [songId]: audioUrl }));
+      return audioUrl;
+    } catch (error) {
+      console.error("Failed to load background music:", error);
+      return null;
+    } finally {
+      setIsLoadingMusic(false);
+    }
+  }, [musicLoaded]);
 
   const playSong = useCallback(async (song: Song) => {
-    if (isLoading) return;
+    if (isLoadingVocals || isLoadingMusic) return;
     
     // Stop any currently playing audio
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
+    if (vocalsRef.current) {
+      vocalsRef.current.pause();
+      vocalsRef.current = null;
+    }
+    if (musicRef.current) {
+      musicRef.current.pause();
+      musicRef.current = null;
     }
 
     setSelectedSong(song);
-    setIsLoading(true);
+    setIsLoadingVocals(true);
     setIsPlaying(false);
 
     try {
-      const response = await fetch(
+      // Load vocals
+      const vocalsResponse = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
         {
           method: "POST",
@@ -52,61 +123,86 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
           },
           body: JSON.stringify({ 
             text: song.lyrics,
-            voiceId: "pFZP5JQG7iQjIQuC4Bku", // Lily - child-friendly voice
-            style: "singing"
+            voiceId: "pFZP5JQG7iQjIQuC4Bku" // Lily - child-friendly voice
           }),
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`TTS request failed: ${response.status}`);
+      if (!vocalsResponse.ok) {
+        throw new Error(`TTS request failed: ${vocalsResponse.status}`);
       }
 
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audioRef.current = audio;
+      const vocalsBlob = await vocalsResponse.blob();
+      const vocalsUrl = URL.createObjectURL(vocalsBlob);
+      const vocalsAudio = new Audio(vocalsUrl);
+      vocalsRef.current = vocalsAudio;
       
-      audio.onended = () => {
+      // Try to load background music (non-blocking)
+      const musicUrl = await loadBackgroundMusic(song.id);
+      
+      vocalsAudio.onended = () => {
         setIsPlaying(false);
+        if (musicRef.current) {
+          musicRef.current.pause();
+        }
       };
 
-      audio.onerror = () => {
+      vocalsAudio.onerror = () => {
         setIsPlaying(false);
         toast.error("Failed to play audio");
       };
 
-      await audio.play();
+      // Start background music if available
+      if (musicUrl) {
+        const musicAudio = new Audio(musicUrl);
+        musicAudio.loop = true;
+        musicAudio.volume = 0.3; // Lower volume for background
+        musicRef.current = musicAudio;
+        await musicAudio.play().catch(() => {
+          console.log("Background music autoplay blocked");
+        });
+      }
+
+      // Start vocals
+      await vocalsAudio.play();
       setIsPlaying(true);
     } catch (error) {
       console.error("Failed to play song:", error);
       toast.error("Failed to play song. Please try again!");
     } finally {
-      setIsLoading(false);
+      setIsLoadingVocals(false);
     }
-  }, [isLoading]);
+  }, [isLoadingVocals, isLoadingMusic, loadBackgroundMusic]);
 
   const togglePlayPause = useCallback(() => {
-    if (!audioRef.current) return;
+    if (!vocalsRef.current) return;
     
     if (isPlaying) {
-      audioRef.current.pause();
+      vocalsRef.current.pause();
+      if (musicRef.current) musicRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play();
+      vocalsRef.current.play();
+      if (musicRef.current) musicRef.current.play();
       setIsPlaying(true);
     }
   }, [isPlaying]);
 
   const handleClose = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
+    if (vocalsRef.current) {
+      vocalsRef.current.pause();
+      vocalsRef.current = null;
+    }
+    if (musicRef.current) {
+      musicRef.current.pause();
+      musicRef.current = null;
     }
     setIsPlaying(false);
     setSelectedSong(null);
     onClose();
   }, [onClose]);
+
+  const isLoading = isLoadingVocals || isLoadingMusic;
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -134,9 +230,6 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
                     ? "ring-4 ring-primary ring-offset-2" 
                     : ""
                 }`}
-                style={{
-                  background: `linear-gradient(135deg, var(--tw-gradient-stops))`,
-                }}
                 onClick={() => playSong(song)}
               >
                 <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${song.color} opacity-90`} />
@@ -144,7 +237,10 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
                   <div className="flex items-start justify-between mb-2">
                     <span className="text-3xl">{song.emoji}</span>
                     {selectedSong?.id === song.id && isLoading ? (
-                      <Loader2 className="w-6 h-6 animate-spin" />
+                      <div className="flex items-center gap-1">
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        {isLoadingMusic && <Music2 className="w-4 h-4 animate-pulse" />}
+                      </div>
                     ) : selectedSong?.id === song.id && isPlaying ? (
                       <Volume2 className="w-6 h-6 animate-pulse" />
                     ) : (
@@ -192,7 +288,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
                     {isLoading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Loading...
+                        {isLoadingMusic ? "Loading music..." : "Loading..."}
                       </>
                     ) : isPlaying ? (
                       <>
@@ -245,6 +341,12 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
                 <div className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <Heart className="w-4 h-4 text-pink-500" />
                   <span>Sing along with Toothy!</span>
+                  {musicRef.current && (
+                    <span className="flex items-center gap-1 ml-2">
+                      <Music2 className="w-4 h-4 text-purple-500" />
+                      <span>Background music playing</span>
+                    </span>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -253,7 +355,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
           {/* Info section */}
           <div className="bg-muted/50 rounded-xl p-4 text-center">
             <p className="text-sm text-muted-foreground">
-              🎧 <strong>Tip:</strong> Tap any song card to hear it sung! Sing along to make brushing and flossing more fun!
+              🎧 <strong>Tip:</strong> Tap any song card to hear it with vocals and background music! Sing along to make brushing and flossing more fun!
             </p>
           </div>
         </div>
