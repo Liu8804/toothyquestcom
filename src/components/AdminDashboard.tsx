@@ -17,7 +17,8 @@ import {
   Pencil,
   Trash2,
   Shield,
-  RefreshCw
+  RefreshCw,
+  ClipboardList
 } from "lucide-react";
 import { badgeSchema } from "@/lib/validation";
 
@@ -36,7 +37,8 @@ const AdminDashboard = () => {
     stats, 
     badges, 
     users, 
-    children, 
+    children,
+    auditLogs,
     addBadge, 
     updateBadge, 
     deleteBadge,
@@ -183,10 +185,11 @@ const AdminDashboard = () => {
 
       {/* Tabs */}
       <Tabs defaultValue="badges" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="badges">Badges</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="children">Children</TabsTrigger>
+          <TabsTrigger value="audit">Audit Logs</TabsTrigger>
         </TabsList>
 
         {/* Badges Tab */}
@@ -363,6 +366,54 @@ const AdminDashboard = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Audit Logs Tab */}
+        <TabsContent value="audit" className="space-y-4">
+          <div className="flex items-center gap-3">
+            <ClipboardList className="w-5 h-5 text-muted-foreground" />
+            <h2 className="text-xl font-semibold">Admin Activity Logs</h2>
+          </div>
+          
+          {auditLogs.length === 0 ? (
+            <Card className="bg-card">
+              <CardContent className="p-8 text-center text-muted-foreground">
+                No audit logs yet. Admin actions will be recorded here.
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-2">
+              {auditLogs.map((log) => (
+                <Card key={log.id} className="bg-card">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                            log.action === 'CREATE' ? 'bg-green-500/20 text-green-500' :
+                            log.action === 'UPDATE' ? 'bg-blue-500/20 text-blue-500' :
+                            log.action === 'DELETE' ? 'bg-red-500/20 text-red-500' :
+                            'bg-muted text-muted-foreground'
+                          }`}>
+                            {log.action}
+                          </span>
+                          <span className="font-medium text-foreground">{log.target_table}</span>
+                        </div>
+                        {log.details && (
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {log.details.name ? `Name: ${log.details.name}` : JSON.stringify(log.details)}
+                          </p>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(log.created_at).toLocaleString()}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </motion.div>
