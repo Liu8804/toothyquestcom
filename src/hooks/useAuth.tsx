@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
 
       // Create profile after signup
+      // Note: Role assignment is now handled automatically by database trigger (on_auth_user_created)
       if (data.user) {
         const { error: profileError } = await supabase
           .from("profiles")
@@ -55,16 +56,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           });
 
         if (profileError) throw profileError;
-
-        // Assign parent role
-        const { error: roleError } = await supabase
-          .from("user_roles")
-          .insert({
-            user_id: data.user.id,
-            role: "parent",
-          });
-
-        if (roleError) throw roleError;
       }
 
       return { error: null };
