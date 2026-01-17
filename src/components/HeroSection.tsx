@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 import { Play, Sparkles, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ToothyMascot from "@/components/ToothyMascot";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import StarRating from "@/components/StarRating";
+import toothyQuestLogo from "@/assets/toothyquest-logo.jpeg";
 
 export const HeroSection = () => {
   return (
@@ -22,13 +22,12 @@ export const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between mb-12"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 gradient-hero rounded-2xl flex items-center justify-center">
-              <span className="text-2xl">🦷</span>
-            </div>
-            <span className="font-display text-2xl font-bold text-foreground">
-              ToothyQuest
-            </span>
+          <div className="flex items-center gap-2">
+            <img 
+              src={toothyQuestLogo} 
+              alt="ToothyQuest Logo" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
           <div className="hidden md:flex items-center gap-6">
             <a href="#adventures" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
@@ -92,7 +91,7 @@ export const HeroSection = () => {
             </div>
           </motion.div>
 
-          {/* Right Content - Mascot */}
+          {/* Right Content - Main Logo */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -100,9 +99,14 @@ export const HeroSection = () => {
             className="flex-1 flex justify-center relative"
           >
             <div className="relative">
-              <ToothyMascot size="xl" />
+              <motion.img
+                src={toothyQuestLogo}
+                alt="ToothyQuest - Friendly Tooth Character"
+                className="w-72 md:w-96 lg:w-[28rem] h-auto drop-shadow-2xl"
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
               
-              {/* Floating badges */}
               {/* Floating badges */}
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
