@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStoryNarration } from "@/hooks/useStoryNarration";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
+import toothyMascot from "@/assets/toothy-mascot.png";
 
 interface StoryViewerProps {
   story: Story;
@@ -23,6 +24,12 @@ const StoryViewer = ({
   onPrevious,
 }: StoryViewerProps) => {
   const { isPlaying, isLoading, isPaused, error, play, pause, resume, stop } = useStoryNarration();
+  const [showIntro, setShowIntro] = useState(true);
+
+  // Reset intro when story changes
+  useEffect(() => {
+    setShowIntro(true);
+  }, [story.id]);
 
   // Stop narration when story changes or modal closes
   useEffect(() => {
@@ -42,6 +49,10 @@ const StoryViewer = ({
     } else {
       handlePlayNarration();
     }
+  };
+
+  const handleStartStory = () => {
+    setShowIntro(false);
   };
   return (
     <AnimatePresence>
@@ -68,6 +79,97 @@ const StoryViewer = ({
             <X className="w-5 h-5" />
           </button>
 
+          {/* Toothy Intro Overlay */}
+          <AnimatePresence>
+            {showIntro && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary/95 to-accent/95 rounded-3xl"
+              >
+                {/* Toothy mascot */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -10 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", delay: 0.2, duration: 0.6 }}
+                  className="relative mb-6"
+                >
+                  <img
+                    src={toothyMascot}
+                    alt="Toothy"
+                    className="w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-lg"
+                  />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="absolute -top-2 -right-2"
+                  >
+                    <Sparkles className="w-8 h-8 text-star" />
+                  </motion.div>
+                </motion.div>
+
+                {/* Speech bubble */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="relative max-w-md bg-white rounded-3xl p-6 shadow-float mb-6"
+                >
+                  {/* Speech bubble tail */}
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white" />
+                  
+                  <div className="flex items-center gap-2 mb-2">
+                    <MessageCircle className="w-5 h-5 text-primary" />
+                    <span className="font-display font-bold text-primary">Toothy says:</span>
+                  </div>
+                  <p className="text-lg md:text-xl text-foreground/90 font-medium text-center">
+                    "{story.toothyIntro}"
+                  </p>
+                </motion.div>
+
+                {/* Story title preview */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-center mb-6"
+                >
+                  <span className="text-5xl mb-2 block">{story.emoji}</span>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+                    {story.title}
+                  </h3>
+                </motion.div>
+
+                {/* Start button */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  <Button
+                    onClick={handleStartStory}
+                    size="lg"
+                    className="rounded-full px-8 py-6 text-lg font-display font-bold bg-white text-primary hover:bg-white/90 shadow-float"
+                  >
+                    <Sparkles className="w-5 h-5 mr-2" />
+                    Start Quest!
+                  </Button>
+                </motion.div>
+
+                {/* Story counter */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="absolute top-4 left-4 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm font-display font-bold text-sm text-white"
+                >
+                  Quest {currentIndex + 1} of {totalStories}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {/* Story illustration */}
           <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/20 to-bubble/30">
             <img
@@ -88,7 +190,7 @@ const StoryViewer = ({
 
             {/* Story counter */}
             <div className="absolute top-4 left-4 px-4 py-2 rounded-full bg-background/80 backdrop-blur-sm font-display font-bold text-sm text-foreground shadow-card">
-              Story {currentIndex + 1} of {totalStories}
+              Quest {currentIndex + 1} of {totalStories}
             </div>
           </div>
 
@@ -186,13 +288,27 @@ const StoryViewer = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20"
+              className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20 mb-4"
             >
               <div className="flex items-center gap-2 mb-2">
                 <Heart className="w-5 h-5 text-secondary fill-secondary" />
                 <span className="font-display font-bold text-primary">What we learned:</span>
               </div>
               <p className="text-foreground/80 font-medium">{story.lesson}</p>
+            </motion.div>
+
+            {/* Quest ending */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="p-4 rounded-2xl bg-gradient-to-r from-star/20 to-secondary/20 border-2 border-star/30"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="w-5 h-5 text-star" />
+                <span className="font-display font-bold text-star">Quest Complete!</span>
+              </div>
+              <p className="text-foreground/80 font-medium italic">"{story.questEnding}"</p>
             </motion.div>
 
             {/* Navigation */}
