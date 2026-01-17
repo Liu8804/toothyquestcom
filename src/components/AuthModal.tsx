@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { Sparkles, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import { signInSchema, signUpSchema } from "@/lib/validation";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -27,17 +28,34 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     setError("");
     setLoading(true);
 
-    let result;
+    // Validate input before submission
     if (mode === "signup") {
-      result = await signUp(email, password, displayName);
+      const result = signUpSchema.safeParse({ email, password, displayName });
+      if (!result.success) {
+        setError(result.error.errors[0]?.message || "Validation failed");
+        setLoading(false);
+        return;
+      }
     } else {
-      result = await signIn(email, password);
+      const result = signInSchema.safeParse({ email, password });
+      if (!result.success) {
+        setError(result.error.errors[0]?.message || "Validation failed");
+        setLoading(false);
+        return;
+      }
+    }
+
+    let authResult;
+    if (mode === "signup") {
+      authResult = await signUp(email.trim(), password, displayName.trim());
+    } else {
+      authResult = await signIn(email.trim(), password);
     }
 
     setLoading(false);
 
-    if (result.error) {
-      setError(result.error.message);
+    if (authResult.error) {
+      setError(authResult.error.message);
     } else {
       onClose();
     }
@@ -87,6 +105,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="Parent's name"
                 required
+                maxLength={100}
                 className="rounded-xl"
               />
             </div>
@@ -104,6 +123,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="parent@example.com"
               required
+              maxLength={255}
               className="rounded-xl"
             />
           </div>
@@ -121,6 +141,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
               placeholder="••••••••"
               required
               minLength={6}
+              maxLength={128}
               className="rounded-xl"
             />
           </div>

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { Plus, X } from "lucide-react";
+import { addChildSchema } from "@/lib/validation";
 
 const AVATAR_OPTIONS = ["🦷", "😁", "🌟", "🦸", "🧚", "🦋", "🐻", "🐰", "🦊", "🐱"];
 
@@ -18,19 +19,36 @@ const AddChildModal = ({ isOpen, onClose }: AddChildModalProps) => {
   const [avatarEmoji, setAvatarEmoji] = useState("🦷");
   const [birthYear, setBirthYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const { addChild } = useQuestProgress();
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
 
-    await addChild(name, avatarEmoji, birthYear ? parseInt(birthYear) : undefined);
+    // Validate input before submission
+    const parsedBirthYear = birthYear ? parseInt(birthYear) : undefined;
+    const result = addChildSchema.safeParse({
+      name,
+      avatarEmoji,
+      birthYear: parsedBirthYear,
+    });
+
+    if (!result.success) {
+      setError(result.error.errors[0]?.message || "Validation failed");
+      setLoading(false);
+      return;
+    }
+
+    await addChild(result.data.name, result.data.avatarEmoji, result.data.birthYear);
 
     setLoading(false);
     setName("");
     setBirthYear("");
+    setError("");
     onClose();
   };
 
@@ -72,6 +90,7 @@ const AddChildModal = ({ isOpen, onClose }: AddChildModalProps) => {
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter name"
               required
+              maxLength={50}
               className="rounded-xl"
             />
           </div>
@@ -104,11 +123,17 @@ const AddChildModal = ({ isOpen, onClose }: AddChildModalProps) => {
               value={birthYear}
               onChange={(e) => setBirthYear(e.target.value)}
               placeholder="2018"
-              min="2010"
+              min="2000"
               max={new Date().getFullYear()}
               className="rounded-xl"
             />
           </div>
+
+          {error && (
+            <p className="text-sm text-destructive bg-destructive/10 p-3 rounded-xl">
+              {error}
+            </p>
+          )}
 
           <Button
             type="submit"
