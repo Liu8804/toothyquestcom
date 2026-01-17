@@ -9,10 +9,13 @@ import FlossHeroGame from "./FlossHeroGame";
 import SugarBugChaseGame from "./SugarBugChaseGame";
 import BuildASmileGame from "./BuildASmileGame";
 import QuestMatchGame from "./QuestMatchGame";
+import ConfettiCelebration from "@/components/ConfettiCelebration";
+import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGameProgress } from "@/hooks/useGameProgress";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
 
 interface GamesModalProps {
@@ -26,6 +29,12 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   const [gameResult, setGameResult] = useState<{ won: boolean; stars: number; score: number } | null>(null);
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("games");
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [challengeNotification, setChallengeNotification] = useState<{
+    show: boolean;
+    title: string;
+    xp: number;
+  } | null>(null);
   
   const { user } = useAuth();
   const { 
@@ -47,6 +56,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     toggleMute 
   } = useGameSounds();
 
+  const { incrementProgress } = useDailyChallenges(childId);
+
   useEffect(() => {
     if (isOpen && selectedGame) {
       fetchLeaderboard(selectedGame.id);
@@ -58,6 +69,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     
     if (won) {
       playWinFanfare();
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
       
       // Save score if user is authenticated and has a child selected
       if (user && childId) {
@@ -65,6 +78,18 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         if (newlyEarned.length > 0) {
           setNewAchievements(newlyEarned);
           setTimeout(playAchievementUnlock, 500);
+        }
+
+        // Track daily challenge progress for games
+        const challengeResult = await incrementProgress("game");
+        if (challengeResult?.completed) {
+          setTimeout(() => {
+            setChallengeNotification({
+              show: true,
+              title: challengeResult.challengeTitle,
+              xp: challengeResult.xpEarned,
+            });
+          }, 1500);
         }
       }
     } else {
@@ -118,6 +143,14 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   const currentLeaderboard = selectedGame ? leaderboard[selectedGame.id] || [] : [];
 
   return (
+    <>
+      <ConfettiCelebration isActive={showConfetti} />
+      <DailyChallengeNotification
+        isOpen={challengeNotification?.show || false}
+        challengeTitle={challengeNotification?.title || ""}
+        xpEarned={challengeNotification?.xp || 0}
+        onClose={() => setChallengeNotification(null)}
+      />
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -423,6 +456,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         </motion.div>
       )}
     </AnimatePresence>
+    </>
   );
 };
 

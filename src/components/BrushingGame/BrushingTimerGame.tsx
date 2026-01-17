@@ -6,6 +6,10 @@ import ProgressRing from "./ProgressRing";
 import ToothbrushCharacter from "./ToothbrushCharacter";
 import MouthGrid from "./MouthGrid";
 import RewardCelebration from "./RewardCelebration";
+import ConfettiCelebration from "@/components/ConfettiCelebration";
+import DailyChallengeNotification from "@/components/DailyChallengeNotification";
+import { useDailyChallenges } from "@/hooks/useDailyChallenges";
+import { useQuestProgress } from "@/hooks/useQuestProgress";
 
 interface BrushingTimerGameProps {
   isOpen: boolean;
@@ -26,10 +30,19 @@ const encouragements = [
 ];
 
 export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) => {
+  const { selectedChild } = useQuestProgress();
+  const { incrementProgress } = useDailyChallenges(selectedChild?.id);
+  
   const [phase, setPhase] = useState<GamePhase>("ready");
   const [timeRemaining, setTimeRemaining] = useState(TOTAL_TIME);
   const [countdown, setCountdown] = useState(3);
   const [encouragement, setEncouragement] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [challengeNotification, setChallengeNotification] = useState<{
+    show: boolean;
+    title: string;
+    xp: number;
+  } | null>(null);
 
   const currentQuadrant = Math.floor((TOTAL_TIME - timeRemaining) / QUADRANT_TIME);
   const completedQuadrants = Array.from(
@@ -85,8 +98,24 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
       return () => clearTimeout(timer);
     } else {
       setPhase("completed");
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+      
+      // Track daily challenge progress for brushing
+      (async () => {
+        const challengeResult = await incrementProgress("brush");
+        if (challengeResult?.completed) {
+          setTimeout(() => {
+            setChallengeNotification({
+              show: true,
+              title: challengeResult.challengeTitle,
+              xp: challengeResult.xpEarned,
+            });
+          }, 1500);
+        }
+      })();
     }
-  }, [phase, timeRemaining]);
+  }, [phase, timeRemaining, incrementProgress]);
 
   // Show encouragement at quadrant transitions
   useEffect(() => {
@@ -100,6 +129,14 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
   if (!isOpen) return null;
 
   return (
+    <>
+      <ConfettiCelebration isActive={showConfetti} />
+      <DailyChallengeNotification
+        isOpen={challengeNotification?.show || false}
+        challengeTitle={challengeNotification?.title || ""}
+        xpEarned={challengeNotification?.xp || 0}
+        onClose={() => setChallengeNotification(null)}
+      />
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0 }}
@@ -279,6 +316,7 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
         </motion.div>
       </motion.div>
     </AnimatePresence>
+    </>
   );
 };
 
