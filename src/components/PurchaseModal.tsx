@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Lock, Unlock, RefreshCw, Crown, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePurchase, purchaseMessages, PRODUCT_ID } from "@/hooks/usePurchase";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface PurchaseModalProps {
   isOpen: boolean;
@@ -10,10 +11,12 @@ interface PurchaseModalProps {
 
 const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   const { purchase, restorePurchase, isLoading, isRestoring, isPurchased } = usePurchase();
+  const { playWinFanfare, playAchievementUnlock, playSound } = useGameSounds();
 
   const handlePurchase = async () => {
     const success = await purchase();
     if (success) {
+      playWinFanfare();
       setTimeout(onClose, 2000);
     }
   };
@@ -21,6 +24,7 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   const handleRestore = async () => {
     const success = await restorePurchase();
     if (success) {
+      playAchievementUnlock();
       setTimeout(onClose, 2000);
     }
   };

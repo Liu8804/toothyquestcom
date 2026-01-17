@@ -8,6 +8,8 @@ const GAME_SOUNDS = {
   lose: { frequency: 200, duration: 0.4, type: "sawtooth" as OscillatorType },
   star: { frequency: 1047, duration: 0.15, type: "sine" as OscillatorType },
   achievement: { frequency: 880, duration: 0.5, type: "triangle" as OscillatorType },
+  locked: { frequency: 150, duration: 0.3, type: "square" as OscillatorType },
+  unlock: { frequency: 1200, duration: 0.2, type: "sine" as OscillatorType },
 };
 
 type SoundName = keyof typeof GAME_SOUNDS;

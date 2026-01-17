@@ -13,6 +13,7 @@ import MotivationalPopup from "@/components/MotivationalPopup";
 import DailyReward from "@/components/DailyReward";
 import StreakTracker from "@/components/StreakTracker";
 import FloatingSparkles from "@/components/FloatingSparkles";
+import FloatingUnlockCTA from "@/components/FloatingUnlockCTA";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn } from "lucide-react";
@@ -80,6 +81,7 @@ const Index = () => {
       {showDashboard && <ParentDashboard onClose={() => setShowDashboard(false)} />}
       <MotivationalPopup isOpen={showMotivation} onClose={() => setShowMotivation(false)} />
       <DailyReward />
+      <FloatingUnlockCTA />
     </main>
   );
 };
