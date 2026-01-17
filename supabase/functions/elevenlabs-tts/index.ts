@@ -13,7 +13,7 @@ serve(async (req) => {
 
   try {
     const { text, voiceId = "pFZP5JQG7iQjIQuC4Bku" } = await req.json();
-    const ELEVENLABS_API_KEY = Deno.env.get("ELEVENLABS_API_KEY");
+    const ELEVENLABS_API_KEY = (Deno.env.get("ELEVENLABS_API_KEY") ?? "").trim();
 
     if (!ELEVENLABS_API_KEY) {
       throw new Error("ELEVENLABS_API_KEY not configured");
