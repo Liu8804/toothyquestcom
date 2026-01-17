@@ -6,6 +6,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Rate limiting configuration
+const RATE_LIMIT_REQUESTS = 10; // Max requests per window
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute window
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -22,6 +26,7 @@ serve(async (req) => {
       );
     }
 
+    // Create client with user's auth for RLS
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_ANON_KEY") ?? "",
@@ -38,6 +43,64 @@ serve(async (req) => {
     }
 
     console.log("Authenticated user:", user.id);
+
+    // Create service role client for rate limiting (bypasses RLS)
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    // Rate limiting check
+    const windowStart = new Date(Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS) * RATE_LIMIT_WINDOW_MS);
+    const endpoint = "elevenlabs-sfx";
+
+    // Get current request count for this user in this window
+    const { data: existingLimit, error: limitError } = await supabaseAdmin
+      .from("rate_limits")
+      .select("request_count")
+      .eq("user_id", user.id)
+      .eq("endpoint", endpoint)
+      .eq("window_start", windowStart.toISOString())
+      .single();
+
+    if (limitError && limitError.code !== "PGRST116") {
+      // PGRST116 = no rows found, which is fine
+      console.error("Rate limit check error:", limitError);
+    }
+
+    const currentCount = existingLimit?.request_count ?? 0;
+
+    if (currentCount >= RATE_LIMIT_REQUESTS) {
+      console.warn(`Rate limit exceeded for user ${user.id}: ${currentCount}/${RATE_LIMIT_REQUESTS}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Rate limit exceeded. Please wait a minute before generating more sounds.",
+          retry_after: 60 
+        }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Update rate limit counter
+    if (existingLimit) {
+      await supabaseAdmin
+        .from("rate_limits")
+        .update({ request_count: currentCount + 1 })
+        .eq("user_id", user.id)
+        .eq("endpoint", endpoint)
+        .eq("window_start", windowStart.toISOString());
+    } else {
+      await supabaseAdmin
+        .from("rate_limits")
+        .insert({
+          user_id: user.id,
+          endpoint,
+          window_start: windowStart.toISOString(),
+          request_count: 1
+        });
+    }
+
+    console.log(`Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for user ${user.id}`);
 
     const { prompt, duration } = await req.json();
 
