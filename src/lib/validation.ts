@@ -75,6 +75,15 @@ export const completeQuestSchema = z.object({
   xpEarned: xpEarnedSchema.optional().default(10),
 });
 
+// Badge validation schema
+export const badgeSchema = z.object({
+  name: z.string().trim().min(1, "Badge name is required").max(100, "Badge name must be less than 100 characters"),
+  description: z.string().trim().min(1, "Description is required").max(500, "Description must be less than 500 characters"),
+  emoji: z.string().min(1, "Emoji is required").max(10, "Invalid emoji"),
+  xp_required: z.number().int().min(0, "XP required must be non-negative"),
+  quest_count_required: z.number().int().min(0, "Quest count required must be non-negative"),
+});
+
 // Validation result types
 export type ValidationSuccess<T> = { success: true; data: T };
 export type ValidationError = { success: false; error: string };

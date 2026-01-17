@@ -242,7 +242,17 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_stats: {
+        Row: {
+          total_badges: number | null
+          total_brushing_sessions: number | null
+          total_children: number | null
+          total_quests_completed: number | null
+          total_users: number | null
+          total_xp_earned: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_child_total_xp: { Args: { child_uuid: string }; Returns: number }
