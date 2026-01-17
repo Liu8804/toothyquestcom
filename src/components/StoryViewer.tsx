@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play, MessageCircle, Trophy } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Sparkles, Heart, Volume2, VolumeX, Loader2, Pause, Play, MessageCircle, Trophy, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useStoryNarration } from "@/hooks/useStoryNarration";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
@@ -12,6 +12,7 @@ import toothyMascot from "@/assets/toothy-mascot.png";
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
+import VoiceSettingsModal from "./VoiceSettingsModal";
 
 interface StoryViewerProps {
   story: Story;
@@ -45,6 +46,7 @@ const StoryViewer = ({
     title: string;
     xp: number;
   } | null>(null);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
 
   const questCompleted = isQuestCompleted(story.id);
 
@@ -268,53 +270,67 @@ const StoryViewer = ({
                 </h2>
               </div>
               
-              {/* Audio narration button */}
-              <Button
-                onClick={handleToggleNarration}
-                disabled={isLoading}
-                variant="outline"
-                size="sm"
-                className={`rounded-full gap-2 transition-all ${
-                  isPlaying ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""
-                }`}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="hidden sm:inline">Loading...</span>
-                  </>
-                ) : isPlaying && !isPaused ? (
-                  <>
-                    <Pause className="w-4 h-4" />
-                    <span className="hidden sm:inline">Pause</span>
-                    {/* Animated sound waves */}
-                    <div className="flex items-center gap-0.5 ml-1">
-                      {[1, 2, 3].map((i) => (
-                        <motion.div
-                          key={i}
-                          className="w-0.5 bg-primary-foreground rounded-full"
-                          animate={{ height: [4, 12, 4] }}
-                          transition={{
-                            duration: 0.5,
-                            repeat: Infinity,
-                            delay: i * 0.1,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </>
-                ) : isPaused ? (
-                  <>
-                    <Play className="w-4 h-4" />
-                    <span className="hidden sm:inline">Resume</span>
-                  </>
-                ) : (
-                  <>
-                    <Volume2 className="w-4 h-4" />
-                    <span className="hidden sm:inline">Listen</span>
-                  </>
-                )}
-              </Button>
+              {/* Audio controls */}
+              <div className="flex items-center gap-2">
+                {/* Voice settings button */}
+                <Button
+                  onClick={() => setShowVoiceSettings(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full w-9 h-9 p-0"
+                  title="Voice Settings"
+                >
+                  <Settings2 className="w-4 h-4" />
+                </Button>
+                
+                {/* Audio narration button */}
+                <Button
+                  onClick={handleToggleNarration}
+                  disabled={isLoading}
+                  variant="outline"
+                  size="sm"
+                  className={`rounded-full gap-2 transition-all ${
+                    isPlaying ? "bg-primary text-primary-foreground hover:bg-primary/90" : ""
+                  }`}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="hidden sm:inline">Loading...</span>
+                    </>
+                  ) : isPlaying && !isPaused ? (
+                    <>
+                      <Pause className="w-4 h-4" />
+                      <span className="hidden sm:inline">Pause</span>
+                      {/* Animated sound waves */}
+                      <div className="flex items-center gap-0.5 ml-1">
+                        {[1, 2, 3].map((i) => (
+                          <motion.div
+                            key={i}
+                            className="w-0.5 bg-primary-foreground rounded-full"
+                            animate={{ height: [4, 12, 4] }}
+                            transition={{
+                              duration: 0.5,
+                              repeat: Infinity,
+                              delay: i * 0.1,
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  ) : isPaused ? (
+                    <>
+                      <Play className="w-4 h-4" />
+                      <span className="hidden sm:inline">Resume</span>
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="w-4 h-4" />
+                      <span className="hidden sm:inline">Listen</span>
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
             
             {/* Enhanced error message with helpful tips */}
@@ -491,6 +507,12 @@ const StoryViewer = ({
         xpEarned={celebrationData.xp}
         newBadges={celebrationData.badges}
         onClose={() => setShowCelebration(false)}
+      />
+
+      {/* Voice Settings Modal */}
+      <VoiceSettingsModal
+        isOpen={showVoiceSettings}
+        onClose={() => setShowVoiceSettings(false)}
       />
     </AnimatePresence>
     </>
