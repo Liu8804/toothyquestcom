@@ -98,7 +98,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex-1 flex justify-center relative"
           >
-            <div className="relative">
+          <div className="relative flex flex-col items-center">
               <motion.img
                 src={toothyQuestLogo}
                 alt="ToothyQuest - Friendly Tooth Character"
@@ -106,6 +106,19 @@ export const HeroSection = () => {
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
+              
+              {/* Greeting text under logo */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="mt-6 text-center"
+              >
+                <p className="font-display text-xl md:text-2xl font-bold text-foreground">
+                  Hi! I'm Toothy. 
+                  <span className="text-primary"> Ready for an adventure?</span> 🌟
+                </p>
+              </motion.div>
               
               {/* Floating badges */}
               <motion.div
