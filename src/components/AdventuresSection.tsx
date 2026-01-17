@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Gamepad2, Music, MessageCircle } from "lucide-react";
 import AdventureCard from "@/components/AdventureCard";
 import BrushingTimerGame from "@/components/BrushingGame/BrushingTimerGame";
+import SingAlongModal from "@/components/SingAlongModal";
 
 const adventures = [
   {
@@ -24,7 +25,7 @@ const adventures = [
     description: "Learn fun songs about brushing and flossing that make dental care a party!",
     icon: Music,
     color: "purple" as const,
-    action: "coming-soon",
+    action: "open-songs",
   },
   {
     title: "Chat with Toothy",
@@ -37,11 +38,15 @@ const adventures = [
 
 export const AdventuresSection = () => {
   const [isGameOpen, setIsGameOpen] = useState(false);
+  const [isSongsOpen, setIsSongsOpen] = useState(false);
 
   const handleAdventureClick = (action: string) => {
     switch (action) {
       case "open-game":
         setIsGameOpen(true);
+        break;
+      case "open-songs":
+        setIsSongsOpen(true);
         break;
       case "scroll-to-stories":
         document.getElementById("stories")?.scrollIntoView({ behavior: "smooth" });
@@ -91,6 +96,9 @@ export const AdventuresSection = () => {
 
       {/* Brushing Timer Game Modal */}
       <BrushingTimerGame isOpen={isGameOpen} onClose={() => setIsGameOpen(false)} />
+
+      {/* Sing Along Modal */}
+      <SingAlongModal isOpen={isSongsOpen} onClose={() => setIsSongsOpen(false)} />
     </>
   );
 };
