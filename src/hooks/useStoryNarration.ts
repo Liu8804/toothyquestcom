@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { getVoiceSettings, VoiceSettings } from "@/components/VoiceSettingsModal";
 
 interface UseStoryNarrationReturn {
   isPlaying: boolean;
@@ -98,7 +99,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     return () => stop();
   }, [stop]);
 
-  const playWithBrowserSpeech = useCallback((text: string) => {
+  const playWithBrowserSpeech = useCallback((text: string, settings?: VoiceSettings) => {
     if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
       setError("Audio playback isn't available on this device.");
       return;
@@ -113,9 +114,10 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     setIsPlaying(false);
     setIsPaused(false);
 
+    const voiceSettings = settings || getVoiceSettings();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1.1;
+    utterance.rate = voiceSettings.speed;
+    utterance.pitch = voiceSettings.pitch;
     utterance.volume = 1;
 
     utterance.onstart = () => {
@@ -143,8 +145,18 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     (text: string) => {
       stop();
       setError(null);
-      setIsLoading(true);
 
+      // Get user's voice preference
+      const voiceSettings = getVoiceSettings();
+
+      // If user prefers browser voice, use it directly
+      if (voiceSettings.provider === "browser") {
+        playWithBrowserSpeech(text, voiceSettings);
+        return;
+      }
+
+      // Otherwise try ElevenLabs
+      setIsLoading(true);
       modeRef.current = "audio";
 
       // Create the audio element immediately on the user click.
@@ -209,7 +221,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
             // If provider blocked (401/402/429 etc), fall back so narration still works.
             if ([401, 402, 429, 403].includes(response.status)) {
               setError(serverMessage);
-              playWithBrowserSpeech(text);
+              playWithBrowserSpeech(text, voiceSettings);
               return;
             }
 
@@ -249,7 +261,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
               setIsPaused(false);
               setError("Audio playback was blocked. Tap Listen again, or allow audio playback.");
               // Fallback to speech synthesis if available
-              playWithBrowserSpeech(text);
+              playWithBrowserSpeech(text, voiceSettings);
             }
           );
         })
