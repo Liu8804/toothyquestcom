@@ -116,8 +116,9 @@ const StoryViewer = ({
         xpEarned={challengeNotification?.xp || 0}
         onClose={() => setChallengeNotification(null)}
       />
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       <motion.div
+        key={`story-modal-${story.id}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -141,9 +142,10 @@ const StoryViewer = ({
           </button>
 
           {/* Toothy Intro Overlay */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {showIntro && (
               <motion.div
+                key="intro-overlay"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -315,12 +317,46 @@ const StoryViewer = ({
               </Button>
             </div>
             
-            {/* Error message */}
+            {/* Enhanced error message with helpful tips */}
             {error && (
-              <div className="mb-4 p-3 bg-destructive/10 text-destructive rounded-xl text-sm flex items-center gap-2">
-                <VolumeX className="w-4 h-4" />
-                {error}
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-2xl"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-full bg-amber-100 dark:bg-amber-900/50">
+                    <VolumeX className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-display font-bold text-amber-800 dark:text-amber-200 mb-1">
+                      Voice narration unavailable
+                    </p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
+                      {error.includes("Unusual activity") || error.includes("Free Tier")
+                        ? "The voice service requires an upgraded plan. Using browser voice instead!"
+                        : error.includes("blocked")
+                        ? "Audio playback was blocked by your browser."
+                        : error}
+                    </p>
+                    <div className="flex flex-wrap gap-2 text-xs">
+                      {(error.includes("blocked") || error.includes("Audio playback")) && (
+                        <span className="px-2 py-1 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded-full">
+                          💡 Tap "Listen" again
+                        </span>
+                      )}
+                      {(error.includes("Unusual activity") || error.includes("VPN")) && (
+                        <span className="px-2 py-1 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 rounded-full">
+                          💡 Try disabling VPN
+                        </span>
+                      )}
+                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 rounded-full">
+                        ✓ Browser voice active
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             )}
 
             {/* Story text */}
