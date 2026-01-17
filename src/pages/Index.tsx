@@ -10,9 +10,12 @@ import FooterSection from "@/components/FooterSection";
 import AuthModal from "@/components/AuthModal";
 import ParentDashboard from "@/components/ParentDashboard";
 import MotivationalPopup from "@/components/MotivationalPopup";
+import DailyReward from "@/components/DailyReward";
+import StreakTracker from "@/components/StreakTracker";
+import FloatingSparkles from "@/components/FloatingSparkles";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { User, LayoutDashboard, LogIn } from "lucide-react";
+import { LayoutDashboard, LogIn } from "lucide-react";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -33,9 +36,13 @@ const Index = () => {
   }, []);
 
   return (
-    <main className="min-h-screen">
-      {/* Auth button in top right */}
-      <div className="fixed top-4 right-4 z-40 flex gap-2">
+    <main className="min-h-screen relative">
+      {/* Subtle floating sparkles background */}
+      <FloatingSparkles count={10} className="fixed inset-0 z-0 opacity-50" />
+
+      {/* Auth button and streak tracker in top right */}
+      <div className="fixed top-4 right-4 z-40 flex items-center gap-3">
+        <StreakTracker />
         {!loading && (
           <>
             {user ? (
@@ -72,6 +79,7 @@ const Index = () => {
       <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
       {showDashboard && <ParentDashboard onClose={() => setShowDashboard(false)} />}
       <MotivationalPopup isOpen={showMotivation} onClose={() => setShowMotivation(false)} />
+      <DailyReward />
     </main>
   );
 };

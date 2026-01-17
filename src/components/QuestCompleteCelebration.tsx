@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Sparkles, Trophy, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import MascotWithExpression from "./MascotWithExpression";
 
 interface Badge {
   name: string;
@@ -15,6 +17,15 @@ interface QuestCompleteCelebrationProps {
   newBadges: Badge[];
   onClose: () => void;
 }
+
+const confettiColors = [
+  "hsl(var(--primary))",
+  "hsl(var(--star-gold))",
+  "hsl(var(--candy-pink))",
+  "hsl(var(--mint-fresh))",
+  "hsl(var(--bubble-blue))",
+  "hsl(var(--secondary))",
+];
 
 const QuestCompleteCelebration = ({
   isOpen,
@@ -39,8 +50,36 @@ const QuestCompleteCelebration = ({
         exit={{ scale: 0.5, opacity: 0 }}
         transition={{ type: "spring", duration: 0.6 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-gradient-to-br from-star via-primary to-accent rounded-3xl shadow-float p-8 text-center"
+        className="relative w-full max-w-md bg-gradient-to-br from-star via-primary to-accent rounded-3xl shadow-float p-8 text-center overflow-hidden"
       >
+        {/* Confetti explosion */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(40)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-3 h-3 rounded-sm"
+              style={{
+                backgroundColor: confettiColors[i % confettiColors.length],
+                left: "50%",
+                top: "40%",
+              }}
+              initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
+              animate={{
+                x: (Math.random() - 0.5) * 400,
+                y: (Math.random() - 0.5) * 400,
+                opacity: [1, 1, 0],
+                rotate: 720 * (Math.random() > 0.5 ? 1 : -1),
+              }}
+              transition={{
+                duration: 2 + Math.random(),
+                delay: Math.random() * 0.3,
+                repeat: Infinity,
+                repeatDelay: 2,
+              }}
+            />
+          ))}
+        </div>
+
         {/* Stars animation */}
         <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
           {[...Array(20)].map((_, i) => (
@@ -65,6 +104,20 @@ const QuestCompleteCelebration = ({
             </motion.div>
           ))}
         </div>
+
+        {/* Logo in corner */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0, rotate: -20 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ delay: 0.3, type: "spring" }}
+          className="absolute top-4 right-4"
+        >
+          <img
+            src={toothyLogo}
+            alt="ToothyQuest"
+            className="w-14 h-14 rounded-full shadow-float border-3 border-white"
+          />
+        </motion.div>
 
         <motion.div
           animate={{ rotate: [0, 10, -10, 0] }}
@@ -108,18 +161,39 @@ const QuestCompleteCelebration = ({
               {newBadges.map((badge, i) => (
                 <motion.div
                   key={badge.name}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 0.6 + i * 0.1, type: "spring" }}
                   className="bg-white rounded-2xl p-3 shadow-card"
                 >
-                  <span className="text-3xl block mb-1">{badge.emoji}</span>
+                  <motion.span
+                    className="text-3xl block mb-1"
+                    animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                  >
+                    {badge.emoji}
+                  </motion.span>
                   <span className="text-xs font-medium text-foreground">{badge.name}</span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
         )}
+
+        {/* Mascot */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="mb-6"
+        >
+          <MascotWithExpression 
+            expression="celebrating" 
+            size="md"
+            showSpeechBubble
+            message="You did it! Amazing job!"
+          />
+        </motion.div>
 
         <Button
           onClick={onClose}
