@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Sparkles } from "lucide-react";
+import { Map, Sparkles, Compass, Trophy } from "lucide-react";
 import { stories } from "@/data/stories";
 import StoryCard from "@/components/StoryCard";
 import StoryViewer from "@/components/StoryViewer";
@@ -43,19 +43,42 @@ const StoryModeSection = () => {
             whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ type: "spring", duration: 0.6 }}
-            className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm font-bold mb-4"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-secondary/20 text-primary px-5 py-2 rounded-full text-sm font-bold mb-4 border border-primary/30"
           >
-            <BookOpen className="w-4 h-4" />
-            <span>📚 Story Mode</span>
+            <Compass className="w-4 h-4" />
+            <span>🗺️ Quest Mode</span>
             <Sparkles className="w-4 h-4" />
           </motion.div>
           
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Magical Tooth Tales
+            Epic Tooth Quests
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Join our tooth friends on exciting adventures! Learn about dental care through fun stories that will make you smile! ✨
+            Embark on legendary adventures with Toothy! Complete quests, earn XP, and become a Dental Hero! ⚔️✨
           </p>
+          
+          {/* Quest progress bar */}
+          <motion.div
+            initial={{ opacity: 0, width: 0 }}
+            whileInView={{ opacity: 1, width: "100%" }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            className="max-w-md mx-auto mt-6"
+          >
+            <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+              <span className="flex items-center gap-1">
+                <Map className="w-4 h-4 text-primary" />
+                Quest Progress
+              </span>
+              <span className="flex items-center gap-1 font-bold text-primary">
+                <Trophy className="w-4 h-4" />
+                0/{stories.length} Complete
+              </span>
+            </div>
+            <div className="h-3 bg-muted rounded-full overflow-hidden border border-primary/20">
+              <div className="h-full w-0 bg-gradient-to-r from-primary to-secondary rounded-full" />
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Stories Grid */}
