@@ -49,6 +49,16 @@ const FloatingUnlockCTA = () => {
           className="fixed bottom-6 right-6 z-50"
           onMouseEnter={() => setIsExpanded(true)}
           onMouseLeave={() => setIsExpanded(false)}
+          onClick={() => setIsExpanded((v) => !v)}
+          role="button"
+          tabIndex={0}
+          aria-expanded={isExpanded}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setIsExpanded((v) => !v);
+            }
+          }}
         >
           {/* Glow effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary via-secondary to-accent rounded-full blur-xl opacity-50 animate-pulse" />
@@ -62,7 +72,10 @@ const FloatingUnlockCTA = () => {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={handleOpenPurchase}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenPurchase();
+                }}
                 className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-primary-foreground"
               >
                 <Crown className="w-7 h-7" />
@@ -84,7 +97,10 @@ const FloatingUnlockCTA = () => {
                     </div>
                     
                     <Button
-                      onClick={handleOpenPurchase}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenPurchase();
+                      }}
                       size="sm"
                       className="bg-white text-primary hover:bg-white/90 font-bold whitespace-nowrap"
                     >
@@ -93,7 +109,10 @@ const FloatingUnlockCTA = () => {
                     </Button>
                     
                     <button
-                      onClick={handleDismiss}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDismiss();
+                      }}
                       className="p-1 rounded-full hover:bg-white/20 text-primary-foreground/80 hover:text-primary-foreground transition-colors"
                     >
                       <X className="w-4 h-4" />
