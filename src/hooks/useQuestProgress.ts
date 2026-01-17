@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { 
+  completeQuestSchema, 
+  addChildSchema
+} from "@/lib/validation";
 
 interface Child {
   id: string;
@@ -104,18 +108,27 @@ export const useQuestProgress = (childId?: string) => {
     }
   }, []);
 
-  // Complete a quest
+  // Complete a quest with input validation
   const completeQuest = useCallback(async (questId: string, xpEarned = 10) => {
     const currentChildId = childId || selectedChild?.id;
     if (!currentChildId) return { success: false, newBadges: [] };
+
+    // Validate input
+    const validation = completeQuestSchema.safeParse({ questId, xpEarned });
+    if (!validation.success) {
+      console.error("Validation error:", validation.error.errors[0]?.message);
+      return { success: false, newBadges: [] };
+    }
+
+    const { questId: validQuestId, xpEarned: validXp } = validation.data;
 
     // Insert quest progress
     const { error } = await supabase
       .from("quest_progress")
       .upsert({
         child_id: currentChildId,
-        quest_id: questId,
-        xp_earned: xpEarned,
+        quest_id: validQuestId,
+        xp_earned: validXp,
       }, { onConflict: "child_id,quest_id" });
 
     if (error) {
@@ -157,17 +170,26 @@ export const useQuestProgress = (childId?: string) => {
     return { success: true, newBadges };
   }, [childId, selectedChild, questProgress, totalXp, allBadges, earnedBadges, fetchProgress, fetchEarnedBadges]);
 
-  // Add a child
+  // Add a child with input validation
   const addChild = useCallback(async (name: string, avatarEmoji: string, birthYear?: number) => {
     if (!user) return null;
+
+    // Validate input
+    const validation = addChildSchema.safeParse({ name, avatarEmoji, birthYear });
+    if (!validation.success) {
+      console.error("Validation error:", validation.error.errors[0]?.message);
+      return null;
+    }
+
+    const { name: validName, avatarEmoji: validEmoji, birthYear: validYear } = validation.data;
 
     const { data, error } = await supabase
       .from("children")
       .insert({
         parent_id: user.id,
-        name,
-        avatar_emoji: avatarEmoji,
-        birth_year: birthYear,
+        name: validName,
+        avatar_emoji: validEmoji,
+        birth_year: validYear,
       })
       .select()
       .single();
