@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Star, Trophy, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import MascotWithExpression from "@/components/MascotWithExpression";
 
 interface RewardCelebrationProps {
   onPlayAgain: () => void;
@@ -13,6 +15,7 @@ const confettiColors = [
   "hsl(var(--candy-pink))",
   "hsl(var(--mint-fresh))",
   "hsl(var(--bubble-blue))",
+  "hsl(var(--secondary))",
 ];
 
 export const RewardCelebration = ({
@@ -29,12 +32,12 @@ export const RewardCelebration = ({
   const randomMessage = messages[Math.floor(Math.random() * messages.length)];
 
   return (
-    <div className="relative text-center py-8">
+    <div className="relative text-center py-8 overflow-hidden">
       {/* Confetti particles */}
-      {[...Array(30)].map((_, i) => (
+      {[...Array(40)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-3 h-3 rounded-full"
+          className="absolute w-3 h-3 rounded-sm"
           style={{
             backgroundColor: confettiColors[i % confettiColors.length],
             left: `${Math.random() * 100}%`,
@@ -55,6 +58,20 @@ export const RewardCelebration = ({
           }}
         />
       ))}
+
+      {/* Logo badge */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0, y: -20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 0.2, type: "spring" }}
+        className="mb-4"
+      >
+        <img
+          src={toothyLogo}
+          alt="ToothyQuest"
+          className="w-16 h-16 rounded-full mx-auto shadow-float border-3 border-primary"
+        />
+      </motion.div>
       
       {/* Trophy */}
       <motion.div
@@ -64,7 +81,12 @@ export const RewardCelebration = ({
         className="mb-6"
       >
         <div className="w-32 h-32 mx-auto bg-gradient-to-br from-star to-accent rounded-full flex items-center justify-center shadow-float">
-          <Trophy className="w-16 h-16 text-primary-foreground" />
+          <motion.div
+            animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Trophy className="w-16 h-16 text-primary-foreground" />
+          </motion.div>
         </div>
       </motion.div>
       
@@ -82,7 +104,12 @@ export const RewardCelebration = ({
             animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 0.5 + i * 0.15, type: "spring" }}
           >
-            <Star className="w-10 h-10 text-star fill-star" />
+            <motion.div
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 15, -15, 0] }}
+              transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+            >
+              <Star className="w-10 h-10 text-star fill-star" />
+            </motion.div>
           </motion.div>
         ))}
       </motion.div>
@@ -110,18 +137,33 @@ export const RewardCelebration = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="flex items-center justify-center gap-2 text-mint font-bold mb-8"
+        className="flex items-center justify-center gap-2 text-mint font-bold mb-6"
       >
         <Sparkles className="w-5 h-5" />
         <span>Your teeth are sparkling clean!</span>
         <Sparkles className="w-5 h-5" />
+      </motion.div>
+
+      {/* Mascot celebration */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.1 }}
+        className="mb-6"
+      >
+        <MascotWithExpression 
+          expression="cheering" 
+          size="md"
+          showSpeechBubble
+          message="Fantastic brushing!"
+        />
       </motion.div>
       
       {/* Action buttons */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2 }}
+        transition={{ delay: 1.3 }}
         className="flex flex-col sm:flex-row gap-3 justify-center"
       >
         <Button
