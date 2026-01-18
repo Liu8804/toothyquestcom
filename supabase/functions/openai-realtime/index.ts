@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +13,8 @@ serve(async (req) => {
   }
 
   const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+  const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+  const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
   
   if (!OPENAI_API_KEY) {
     console.error("OPENAI_API_KEY not configured");
@@ -23,6 +26,43 @@ serve(async (req) => {
       }
     );
   }
+
+  // Authentication check - require valid user session
+  const authHeader = req.headers.get("Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.error("Missing or invalid authorization header");
+    return new Response(
+      JSON.stringify({ error: "Unauthorized - missing authentication" }),
+      { 
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      }
+    );
+  }
+
+  // Verify the user's JWT token
+  const supabaseClient = createClient(
+    SUPABASE_URL ?? "",
+    SUPABASE_ANON_KEY ?? "",
+    { global: { headers: { Authorization: authHeader } } }
+  );
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: claimsData, error: claimsError } = await supabaseClient.auth.getUser(token);
+
+  if (claimsError || !claimsData?.user) {
+    console.error("Authentication failed:", claimsError?.message);
+    return new Response(
+      JSON.stringify({ error: "Unauthorized - invalid token" }),
+      { 
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      }
+    );
+  }
+
+  const userId = claimsData.user.id;
+  console.log("Authenticated user:", userId);
 
   // Check if this is a WebSocket upgrade request
   const upgrade = req.headers.get("upgrade") || "";
@@ -36,7 +76,7 @@ serve(async (req) => {
     );
   }
 
-  console.log("Upgrading to WebSocket connection...");
+  console.log("Upgrading to WebSocket connection for user:", userId);
 
   // Upgrade the connection to WebSocket
   const { socket: clientSocket, response } = Deno.upgradeWebSocket(req);
@@ -53,7 +93,7 @@ serve(async (req) => {
     );
 
     openaiSocket.onopen = () => {
-      console.log("Connected to OpenAI Realtime API");
+      console.log("Connected to OpenAI Realtime API for user:", userId);
     };
 
     openaiSocket.onmessage = (event) => {
@@ -97,7 +137,7 @@ serve(async (req) => {
   };
 
   clientSocket.onclose = (event) => {
-    console.log("Client WebSocket closed:", event.code, event.reason);
+    console.log("Client WebSocket closed for user:", userId);
     if (openaiSocket && openaiSocket.readyState === WebSocket.OPEN) {
       openaiSocket.close();
     }
