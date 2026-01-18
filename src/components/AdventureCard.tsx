@@ -5,9 +5,10 @@ interface AdventureCardProps {
   title: string;
   description: string;
   icon: LucideIcon;
-  color: "teal" | "coral" | "purple" | "gold";
+  color: "teal" | "coral" | "purple" | "gold" | "mint";
   delay?: number;
   onClick?: () => void;
+  isNew?: boolean;
 }
 
 const colorStyles = {
@@ -27,6 +28,10 @@ const colorStyles = {
     bg: "bg-accent",
     iconBg: "bg-accent-foreground/10",
   },
+  mint: {
+    bg: "bg-gradient-to-br from-emerald-400 to-teal-500",
+    iconBg: "bg-white/20",
+  },
 };
 
 export const AdventureCard = ({
@@ -36,6 +41,7 @@ export const AdventureCard = ({
   color,
   delay = 0,
   onClick,
+  isNew = false,
 }: AdventureCardProps) => {
   const styles = colorStyles[color];
 
@@ -48,8 +54,26 @@ export const AdventureCard = ({
       whileHover={{ scale: 1.05, y: -8 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`${styles.bg} rounded-3xl p-6 cursor-pointer shadow-float hover:shadow-playful transition-all duration-300`}
+      className={`${styles.bg} rounded-3xl p-6 cursor-pointer shadow-float hover:shadow-playful transition-all duration-300 relative overflow-hidden`}
     >
+      {/* New badge */}
+      {isNew && (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute -top-1 -right-1 z-10"
+        >
+          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+            >
+              ✨ NEW
+            </motion.span>
+          </div>
+        </motion.div>
+      )}
+
       <div className={`${styles.iconBg} w-16 h-16 rounded-2xl flex items-center justify-center mb-4`}>
         <Icon className="w-8 h-8 text-primary-foreground" />
       </div>
