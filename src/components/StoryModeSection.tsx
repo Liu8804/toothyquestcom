@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Map, Sparkles, Compass, Trophy, Lock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { stories } from "@/data/stories";
 import StoryCard from "@/components/StoryCard";
 import StoryViewer from "@/components/StoryViewer";
@@ -10,6 +11,7 @@ import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
 
 const StoryModeSection = () => {
+  const { t } = useTranslation();
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
@@ -21,7 +23,6 @@ const StoryModeSection = () => {
   const progressPercentage = (completedQuestsCount / stories.length) * 100;
 
   const handleOpenStory = (index: number) => {
-    // Check if content is locked
     if (isContentLocked(index, 'quest')) {
       playSound("locked");
       setShowPurchaseModal(true);
@@ -38,7 +39,6 @@ const StoryModeSection = () => {
   const handleNextStory = () => {
     if (selectedStoryIndex !== null && selectedStoryIndex < stories.length - 1) {
       const nextIndex = selectedStoryIndex + 1;
-      // Check if next story is locked
       if (isContentLocked(nextIndex, 'quest')) {
         playSound("locked");
         setShowPurchaseModal(true);
@@ -74,15 +74,15 @@ const StoryModeSection = () => {
             className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-secondary/20 text-primary px-5 py-2 rounded-full text-sm font-bold mb-4 border border-primary/30"
           >
             <Compass className="w-4 h-4" />
-            <span>🗺️ Quest Mode</span>
+            <span>{t("storyMode.badge")}</span>
             <Sparkles className="w-4 h-4" />
           </motion.div>
           
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Epic Tooth Quests
+            {t("storyMode.title")}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Embark on legendary adventures with Toothy! Complete quests, earn XP, and become a Dental Hero! ⚔️✨
+            {t("storyMode.subtitle")}
           </p>
           
           {/* Quest progress bar */}
@@ -96,11 +96,11 @@ const StoryModeSection = () => {
             <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
               <span className="flex items-center gap-1">
                 <Map className="w-4 h-4 text-primary" />
-                Quest Progress
+                {t("storyMode.questProgress")}
               </span>
               <span className="flex items-center gap-1 font-bold text-primary">
                 <Trophy className="w-4 h-4" />
-                {completedQuestsCount}/{stories.length} Complete
+                {completedQuestsCount}/{stories.length} {t("storyMode.complete")}
               </span>
             </div>
             <div className="h-3 bg-muted rounded-full overflow-hidden border border-primary/20">
@@ -120,7 +120,7 @@ const StoryModeSection = () => {
                 className="mt-3 flex items-center justify-center gap-2 text-sm text-muted-foreground"
               >
                 <Lock className="w-3 h-3" />
-                <span>{FREE_QUEST_LIMIT - completedQuestsCount} free quests remaining</span>
+                <span>{FREE_QUEST_LIMIT - completedQuestsCount} {t("storyMode.freeQuestsRemaining")}</span>
               </motion.div>
             )}
           </motion.div>
@@ -149,15 +149,15 @@ const StoryModeSection = () => {
         >
           <div className="px-6 py-4 bg-card rounded-2xl shadow-card">
             <div className="text-3xl font-display font-bold text-primary">{stories.length}</div>
-            <div className="text-sm text-muted-foreground">Fun Stories</div>
+            <div className="text-sm text-muted-foreground">{t("storyMode.funStories")}</div>
           </div>
           <div className="px-6 py-4 bg-card rounded-2xl shadow-card">
             <div className="text-3xl font-display font-bold text-secondary">{completedQuestsCount}</div>
-            <div className="text-sm text-muted-foreground">Quests Completed</div>
+            <div className="text-sm text-muted-foreground">{t("storyMode.questsCompleted")}</div>
           </div>
           <div className="px-6 py-4 bg-card rounded-2xl shadow-card">
             <div className="text-3xl font-display font-bold text-accent">∞</div>
-            <div className="text-sm text-muted-foreground">Smiles Created</div>
+            <div className="text-sm text-muted-foreground">{t("storyMode.smilesCreated")}</div>
           </div>
         </motion.div>
       </div>

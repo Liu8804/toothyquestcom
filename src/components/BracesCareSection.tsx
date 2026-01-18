@@ -1,74 +1,75 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Gamepad2, X } from "lucide-react";
+import { Gamepad2 } from "lucide-react";
 import BraceyMascot from "@/components/BraceyMascot";
 import BracesFoodQuizGame from "@/components/games/BracesFoodQuizGame";
 
 interface BracesTip {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
+  messageKey: string;
   icon: string;
   animation: "brush" | "floss" | "rinse" | "food" | "protect" | "smile";
   color: string;
-  braceyMessage: string;
 }
 
 const bracesTips: BracesTip[] = [
   {
     id: "brush",
-    title: "Brush After Every Meal",
-    description: "Use a soft brush and angle it around brackets. Brush for 2 minutes, making tiny circles!",
+    titleKey: "bracesCare.tips.brush.title",
+    descriptionKey: "bracesCare.tips.brush.description",
+    messageKey: "bracesCare.tips.brush.message",
     icon: "🪥",
     animation: "brush",
     color: "from-primary to-secondary",
-    braceyMessage: "Brushing keeps my braces sparkly clean! ✨",
   },
   {
     id: "floss",
-    title: "Floss Every Day",
-    description: "Use a floss threader or water flosser to clean between teeth and under wires!",
+    titleKey: "bracesCare.tips.floss.title",
+    descriptionKey: "bracesCare.tips.floss.description",
+    messageKey: "bracesCare.tips.floss.message",
     icon: "🧵",
     animation: "floss",
     color: "from-mint to-primary",
-    braceyMessage: "Flossing is like a spa day for teeth! 🧵",
   },
   {
     id: "rinse",
-    title: "Rinse with Mouthwash",
-    description: "Swish mouthwash to reach spots your brush can't. It kills germs and freshens breath!",
+    titleKey: "bracesCare.tips.rinse.title",
+    descriptionKey: "bracesCare.tips.rinse.description",
+    messageKey: "bracesCare.tips.rinse.message",
     icon: "💧",
     animation: "rinse",
     color: "from-sky to-mint",
-    braceyMessage: "Swish swish! Bye bye germs! 💧",
   },
   {
     id: "avoid",
-    title: "Avoid Sticky Foods",
-    description: "Say no to caramel, gum, and chewy candy. They can break brackets and get stuck!",
+    titleKey: "bracesCare.tips.avoid.title",
+    descriptionKey: "bracesCare.tips.avoid.description",
+    messageKey: "bracesCare.tips.avoid.message",
     icon: "🍬",
     animation: "food",
     color: "from-candy to-sunset",
-    braceyMessage: "Sticky foods are tricky! Let's pick better snacks! 🍎",
   },
   {
     id: "protect",
-    title: "Wear Your Mouthguard",
-    description: "Playing sports? Wear a special braces mouthguard to protect your smile!",
+    titleKey: "bracesCare.tips.protect.title",
+    descriptionKey: "bracesCare.tips.protect.description",
+    messageKey: "bracesCare.tips.protect.message",
     icon: "🛡️",
     animation: "protect",
     color: "from-secondary to-accent",
-    braceyMessage: "Safety first! Protect that smile! 🛡️",
   },
   {
     id: "visit",
-    title: "Visit Your Orthodontist",
-    description: "Regular checkups keep braces working great. You might even get new colored bands!",
+    titleKey: "bracesCare.tips.visit.title",
+    descriptionKey: "bracesCare.tips.visit.description",
+    messageKey: "bracesCare.tips.visit.message",
     icon: "🏥",
     animation: "smile",
     color: "from-accent to-primary",
-    braceyMessage: "I love picking new band colors! 🌈",
   },
 ];
 
@@ -278,12 +279,14 @@ const TipCard = ({
   tip, 
   index, 
   isActive, 
-  onClick 
+  onClick,
+  t
 }: { 
   tip: BracesTip; 
   index: number; 
   isActive: boolean;
   onClick: () => void;
+  t: (key: string) => string;
 }) => {
   return (
     <motion.div
@@ -312,11 +315,11 @@ const TipCard = ({
       </motion.div>
 
       <h3 className={`font-display text-lg font-bold mb-2 ${isActive ? 'text-white' : 'text-foreground'}`}>
-        {tip.title}
+        {t(tip.titleKey)}
       </h3>
 
       <p className={`text-sm leading-relaxed ${isActive ? 'text-white/90' : 'text-muted-foreground'}`}>
-        {tip.description}
+        {t(tip.descriptionKey)}
       </p>
 
       {isActive && (
@@ -333,10 +336,11 @@ const TipCard = ({
 };
 
 const BracesCareSection = () => {
+  const { t } = useTranslation();
   const [activeTip, setActiveTip] = useState<string>("brush");
   const [showQuiz, setShowQuiz] = useState(false);
 
-  const activeTipData = bracesTips.find(t => t.id === activeTip);
+  const activeTipData = bracesTips.find(tip => tip.id === activeTip);
 
   return (
     <section id="braces-care" className="py-20 bg-gradient-to-b from-muted/30 to-background overflow-hidden relative">
@@ -349,9 +353,13 @@ const BracesCareSection = () => {
         <BraceyMascot 
           mood="winking" 
           size="sm" 
-          message="I'll help you learn!" 
+          message={t("bracesCare.braceyMessages.help")}
           autoRotateMessages 
-          messages={["I'll help you learn!", "Braces are cool! 😎", "Let's do this! 💪"]}
+          messages={[
+            t("bracesCare.braceyMessages.help"),
+            t("bracesCare.braceyMessages.cool"),
+            t("bracesCare.braceyMessages.doThis")
+          ]}
         />
       </motion.div>
 
@@ -363,9 +371,13 @@ const BracesCareSection = () => {
         <BraceyMascot 
           mood="encouraging" 
           size="sm" 
-          message="You're doing great!" 
+          message={t("bracesCare.braceyMessages.great")}
           autoRotateMessages
-          messages={["You're doing great!", "Keep it up! ⭐", "Almost an expert! 🌟"]}
+          messages={[
+            t("bracesCare.braceyMessages.great"),
+            t("bracesCare.braceyMessages.keepUp"),
+            t("bracesCare.braceyMessages.expert")
+          ]}
         />
       </motion.div>
 
@@ -382,7 +394,7 @@ const BracesCareSection = () => {
             <BraceyMascot 
               mood="excited" 
               size="lg" 
-              message="Welcome to Braces Care! 🦷✨"
+              message={t("bracesCare.welcome")}
               showMessage={true}
             />
           </div>
@@ -393,7 +405,7 @@ const BracesCareSection = () => {
             transition={{ duration: 2, repeat: Infinity }}
           >
             <span className="text-lg">🦷</span>
-            Braces Care Guide
+            {t("bracesCare.badge")}
             <motion.span
               animate={{ rotate: [0, 15, -15, 0] }}
               transition={{ duration: 1, repeat: Infinity }}
@@ -402,14 +414,13 @@ const BracesCareSection = () => {
             </motion.span>
           </motion.span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            Keep Your Braces{" "}
+            {t("bracesCare.title")}{" "}
             <span className="bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
-              Super Clean!
+              {t("bracesCare.titleHighlight")}
             </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Learn how to take care of your braces with these fun and easy tips! 
-            Click on each tip to see it in action! 🌟
+            {t("bracesCare.subtitle")}
           </p>
         </motion.div>
 
@@ -435,7 +446,7 @@ const BracesCareSection = () => {
                 <BraceyMascot 
                   mood={activeTip === "avoid" ? "thinking" : "happy"} 
                   size="sm" 
-                  message={activeTipData?.braceyMessage || ""} 
+                  message={activeTipData ? t(activeTipData.messageKey) : ""} 
                   showMessage={true}
                 />
               </motion.div>
@@ -468,6 +479,7 @@ const BracesCareSection = () => {
                   index={index}
                   isActive={activeTip === tip.id}
                   onClick={() => setActiveTip(tip.id)}
+                  t={t}
                 />
               ))}
             </div>
@@ -486,15 +498,15 @@ const BracesCareSection = () => {
               <BraceyMascot 
                 mood="excited" 
                 size="md" 
-                message="Ready to test your knowledge? 🎮" 
+                message={t("bracesCare.readyToTest")}
                 showMessage={true}
               />
             </div>
             <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">
-              🎮 Braces Food Quiz Game
+              {t("bracesCare.quizTitle")}
             </h3>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              Can you figure out which foods are good or bad for braces? Play the quiz and become a braces food expert!
+              {t("bracesCare.quizSubtitle")}
             </p>
           </div>
 
@@ -520,7 +532,7 @@ const BracesCareSection = () => {
                   className="gap-3 px-8 py-6 text-lg rounded-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all"
                 >
                   <Gamepad2 className="w-6 h-6" />
-                  Play the Food Quiz!
+                  {t("bracesCare.playQuiz")}
                   <motion.span
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 0.8, repeat: Infinity }}
