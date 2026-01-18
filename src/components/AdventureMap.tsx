@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Star, Lock, Check, Sparkles } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
-import { stories } from "@/data/stories";
+import { useStories } from "@/hooks/useStories";
 import PurchaseModal from "@/components/PurchaseModal";
 
 interface AdventureMapProps {
@@ -12,6 +13,8 @@ interface AdventureMapProps {
 }
 
 const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
+  const { t } = useTranslation();
+  const stories = useStories();
   const { questProgress, isQuestCompleted } = useQuestProgress();
   const { isPurchased, isContentLocked } = usePurchase();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
@@ -81,9 +84,9 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
 
         {/* Progress header */}
         <div className="relative z-10 text-center mb-6">
-          <h3 className="font-display text-xl font-bold text-foreground">Quest Map</h3>
+          <h3 className="font-display text-xl font-bold text-foreground">{t("adventures.questMap")}</h3>
           <p className="text-sm text-muted-foreground">
-            {completedCount} of {totalQuests} quests completed
+            {completedCount} {t("adventures.of")} {totalQuests} {t("adventures.questsCompleted")}
           </p>
         </div>
 
@@ -192,7 +195,7 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
           <div className="flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-card">
             <Sparkles className="w-4 h-4 text-star" />
             <span className="text-sm font-display font-bold text-foreground">
-              Finish Line!
+              {t("adventures.finishLine")}
             </span>
             <span className="text-lg">🏆</span>
           </div>
