@@ -470,7 +470,6 @@ export type Database = {
           created_at: string | null
           details: Json | null
           id: string | null
-          ip_address: string | null
           target_id: string | null
           target_table: string | null
         }
@@ -480,7 +479,6 @@ export type Database = {
           created_at?: string | null
           details?: Json | null
           id?: string | null
-          ip_address?: never
           target_id?: string | null
           target_table?: string | null
         }
@@ -490,7 +488,6 @@ export type Database = {
           created_at?: string | null
           details?: Json | null
           id?: string | null
-          ip_address?: never
           target_id?: string | null
           target_table?: string | null
         }
