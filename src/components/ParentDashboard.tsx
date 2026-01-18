@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3 } from "lucide-react";
+import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3, Bell, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
@@ -11,6 +11,8 @@ import { useState } from "react";
 import AddChildModal from "./AddChildModal";
 import DailyChallengesPanel from "./DailyChallengesPanel";
 import ParentAnalyticsDashboard from "./ParentAnalyticsDashboard";
+import Leaderboard from "./Leaderboard";
+import NotificationSettings from "./NotificationSettings";
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -32,6 +34,8 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
   const [showAddChild, setShowAddChild] = useState(false);
   const [showDailyChallenges, setShowDailyChallenges] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   
   const { getCompletedCount, getChallengesWithProgress } = useDailyChallenges(selectedChild?.id);
 
@@ -66,7 +70,15 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
             <h1 className="font-display text-3xl font-bold text-foreground">Parent Dashboard</h1>
             <p className="text-muted-foreground">Track your child's dental adventure</p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              onClick={() => setShowLeaderboard(true)}
+              className="rounded-full gap-2"
+            >
+              <Crown className="w-4 h-4" />
+              Leaderboard
+            </Button>
             <Button
               variant="outline"
               onClick={() => setShowAnalytics(true)}
@@ -74,6 +86,14 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
             >
               <BarChart3 className="w-4 h-4" />
               Analytics
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowNotifications(true)}
+              className="rounded-full gap-2"
+            >
+              <Bell className="w-4 h-4" />
+              Notifications
             </Button>
             <Button
               variant="outline"
@@ -315,6 +335,16 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
         isOpen={showAnalytics}
         onClose={() => setShowAnalytics(false)}
         selectedChildId={selectedChild?.id}
+      />
+      <Leaderboard
+        isOpen={showLeaderboard}
+        onClose={() => setShowLeaderboard(false)}
+        selectedChildId={selectedChild?.id}
+        childName={selectedChild?.name}
+      />
+      <NotificationSettings
+        isOpen={showNotifications}
+        onClose={() => setShowNotifications(false)}
       />
     </motion.div>
   );

@@ -387,6 +387,77 @@ export type Database = {
           },
         ]
       }
+      leaderboard_profiles: {
+        Row: {
+          child_id: string
+          created_at: string
+          display_name: string
+          id: string
+          is_public: boolean
+          updated_at: string
+        }
+        Insert: {
+          child_id: string
+          created_at?: string
+          display_name: string
+          id?: string
+          is_public?: boolean
+          updated_at?: string
+        }
+        Update: {
+          child_id?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          is_public?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaderboard_profiles_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: true
+            referencedRelation: "children"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          evening_reminder: boolean
+          evening_time: string
+          id: string
+          morning_reminder: boolean
+          morning_time: string
+          streak_alerts: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          evening_reminder?: boolean
+          evening_time?: string
+          id?: string
+          morning_reminder?: boolean
+          morning_time?: string
+          streak_alerts?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          evening_reminder?: boolean
+          evening_time?: string
+          id?: string
+          morning_reminder?: boolean
+          morning_time?: string
+          streak_alerts?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_emoji: string | null
@@ -410,6 +481,33 @@ export type Database = {
           display_name?: string
           id?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
           user_id?: string
         }
         Relationships: []
@@ -543,6 +641,17 @@ export type Database = {
         }[]
       }
       get_child_total_xp: { Args: { child_uuid: string }; Returns: number }
+      get_public_leaderboard: {
+        Args: { limit_count?: number }
+        Returns: {
+          avatar_emoji: string
+          badges_earned: number
+          child_id: string
+          display_name: string
+          quests_completed: number
+          total_xp: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
