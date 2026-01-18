@@ -14,6 +14,7 @@ import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
 import VoiceSettingsModal from "./VoiceSettingsModal";
+import StoryQuizComponent from "./StoryQuiz";
 
 interface StoryViewerProps {
   story: Story;
@@ -49,15 +50,17 @@ const StoryViewer = ({
     xp: number;
   } | null>(null);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const questCompleted = isQuestCompleted(story.id);
 
-  // Reset intro when story changes and speak intro
+  // Reset intro and quiz when story changes and speak intro
   useEffect(() => {
     setShowIntro(true);
+    setQuizCompleted(questCompleted); // If already completed, mark quiz as done
     // Speak the intro when story loads
     speakIntro(story.toothyIntro);
-  }, [story.id, story.toothyIntro, speakIntro]);
+  }, [story.id, story.toothyIntro, speakIntro, questCompleted]);
 
   // Stop narration when story changes or modal closes
   useEffect(() => {
@@ -434,6 +437,22 @@ const StoryViewer = ({
               <p className="text-foreground/80 font-medium italic">"{story.questEnding}"</p>
             </motion.div>
 
+            {/* Quiz Section */}
+            {story.quiz && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.55 }}
+                className="mt-4"
+              >
+                <StoryQuizComponent
+                  quiz={story.quiz}
+                  onComplete={() => setQuizCompleted(true)}
+                  isCompleted={quizCompleted}
+                />
+              </motion.div>
+            )}
+
             {/* Complete Quest Button */}
             {user && selectedChild && (
               <motion.div
@@ -446,6 +465,11 @@ const StoryViewer = ({
                   <div className="flex items-center justify-center gap-2 p-4 bg-accent/20 rounded-2xl text-accent">
                     <Trophy className="w-5 h-5" />
                     <span className="font-display font-bold">Quest Completed! +10 XP</span>
+                  </div>
+                ) : !quizCompleted ? (
+                  <div className="flex items-center justify-center gap-2 p-4 bg-muted rounded-2xl text-muted-foreground">
+                    <Trophy className="w-5 h-5" />
+                    <span className="font-display font-bold">Answer the quiz to complete!</span>
                   </div>
                 ) : (
                   <Button
