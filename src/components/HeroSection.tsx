@@ -59,17 +59,17 @@ export const HeroSection = () => {
             >
               <Sparkles className="w-4 h-4 text-accent" />
               <span className="text-sm font-bold text-accent-foreground">
-                For brave little heroes ages 3-9!
+                🎉 5 FREE quests to get started! Perfect for ages 3-9
               </span>
             </motion.div>
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-              Welcome to{" "}
-              <span className="text-gradient-hero">ToothyQuest!</span>
+              🦷✨ Welcome to{" "}
+              <span className="text-gradient-hero">ToothyQuest!</span> ✨🦷
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
-              Join your friendly tooth mascot on exciting quests to learn about dental health! Explore brushing, flossing, healthy eating, and more while earning rewards for every adventure. Let's make dental care fun! 🌟
+              Join Toothy and friends on a magical adventure where brushing, flossing, and healthy habits are FUN! Kids explore exciting quests, chase sugar bugs, learn about healthy snacks, and discover the magic of braces—all in a safe, playful world. 🌟
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
