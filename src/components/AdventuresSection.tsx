@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Gamepad2, Music, MessageCircle } from "lucide-react";
+import { BookOpen, Gamepad2, Music, MessageCircle, Search } from "lucide-react";
 import AdventureCard from "@/components/AdventureCard";
 import SingAlongModal from "@/components/SingAlongModal";
 import ChatWithToothy from "@/components/ChatWithToothy";
 import GamesModal from "@/components/games/GamesModal";
+import DentalOfficeTour from "@/components/DentalOfficeTour";
+
 const adventures = [
   {
     title: "Story Time",
@@ -34,12 +36,21 @@ const adventures = [
     color: "gold" as const,
     action: "open-chat",
   },
+  {
+    title: "Explore the Office",
+    description: "Take a fun virtual tour of the dental office and discover cool equipment!",
+    icon: Search,
+    color: "mint" as const,
+    action: "open-tour",
+    isNew: true,
+  },
 ];
 
 export const AdventuresSection = () => {
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [isSongsOpen, setIsSongsOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isTourOpen, setIsTourOpen] = useState(false);
 
   const handleAdventureClick = (action: string) => {
     switch (action) {
@@ -51,6 +62,9 @@ export const AdventuresSection = () => {
         break;
       case "open-chat":
         setIsChatOpen(true);
+        break;
+      case "open-tour":
+        setIsTourOpen(true);
         break;
       case "scroll-to-stories":
         document.getElementById("stories")?.scrollIntoView({ behavior: "smooth" });
@@ -81,7 +95,7 @@ export const AdventuresSection = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {adventures.map((adventure, index) => (
               <AdventureCard
                 key={adventure.title}
@@ -91,6 +105,7 @@ export const AdventuresSection = () => {
                 color={adventure.color}
                 delay={index * 0.1}
                 onClick={() => handleAdventureClick(adventure.action)}
+                isNew={'isNew' in adventure ? adventure.isNew : false}
               />
             ))}
           </div>
@@ -105,6 +120,9 @@ export const AdventuresSection = () => {
 
       {/* Chat with Toothy Modal */}
       <ChatWithToothy isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* Dental Office Tour Modal */}
+      <DentalOfficeTour isOpen={isTourOpen} onClose={() => setIsTourOpen(false)} />
     </>
   );
 };
