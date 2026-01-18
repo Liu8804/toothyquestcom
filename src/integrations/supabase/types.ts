@@ -515,6 +515,10 @@ export type Database = {
           user_id: string
         }[]
       }
+      current_user_has_role: {
+        Args: { _role: Database["public"]["Enums"]["app_role"] }
+        Returns: boolean
+      }
       get_admin_audit_logs: {
         Args: never
         Returns: {
