@@ -18,6 +18,7 @@ import FloatingSparkles from "@/components/FloatingSparkles";
 import FloatingUnlockCTA from "@/components/FloatingUnlockCTA";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useAuth } from "@/hooks/useAuth";
+import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn } from "lucide-react";
 
@@ -26,6 +27,9 @@ const Index = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showMotivation, setShowMotivation] = useState(false);
+
+  // Track page views
+  usePageViewTracking();
 
   // Show motivational popup after 30 seconds on the page
   useEffect(() => {
