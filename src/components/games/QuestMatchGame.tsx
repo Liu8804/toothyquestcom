@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
 
@@ -26,6 +27,7 @@ interface Card {
 }
 
 const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
+  const { t } = useTranslation();
   const [gameStarted, setGameStarted] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -73,13 +75,13 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
     setCards(newCards);
     setFlippedCards([...flippedCards, uniqueId]);
     playSound("tap");
+
     if (flippedCards.length === 1) {
       setMoves(m => m + 1);
       const firstCard = cards.find(c => c.uniqueId === flippedCards[0]);
       const secondCard = cards.find(c => c.uniqueId === uniqueId);
 
       if (firstCard && secondCard && firstCard.id === secondCard.id) {
-        // Match found
         playSound("success");
         setTimeout(() => {
           setCards(prev =>
@@ -91,7 +93,6 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
           setFlippedCards([]);
         }, 500);
       } else {
-        // No match
         setTimeout(() => {
           setCards(prev =>
             prev.map(c =>
@@ -120,7 +121,7 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
           onClick={() => setGameStarted(true)}
           className="px-8 py-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold rounded-full text-xl"
         >
-          Start Matching!
+          {t("games.startMatching")}
         </motion.button>
       </div>
     );
@@ -131,11 +132,11 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
       {/* HUD */}
       <div className="flex justify-between mb-4">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-          <span className="font-bold text-foreground">Moves: {moves}</span>
+          <span className="font-bold text-foreground">{t("games.moves")}: {moves}</span>
         </div>
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">
-            Matched: {matchedPairs}/{cardPairs.length}
+            {t("games.matched")}: {matchedPairs}/{cardPairs.length}
           </span>
         </div>
       </div>

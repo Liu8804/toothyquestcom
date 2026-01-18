@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import StarRating from "@/components/StarRating";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import ParentInfoPopup from "@/components/ParentInfoPopup";
 import toothyQuestLogo from "@/assets/toothyquest-logo.jpeg";
 
 export const HeroSection = () => {
@@ -42,6 +44,10 @@ export const HeroSection = () => {
             <a href="#games" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
               {t('nav.games')}
             </a>
+          </div>
+          <div className="flex items-center gap-2">
+            <ParentInfoPopup />
+            <LanguageSwitcher />
           </div>
         </motion.nav>
 

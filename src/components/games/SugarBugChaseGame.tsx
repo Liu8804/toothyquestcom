@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 
 interface SugarBugChaseGameProps {
@@ -15,6 +16,7 @@ interface SugarBug {
 }
 
 const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
+  const { t } = useTranslation();
   const [bugs, setBugs] = useState<SugarBug[]>([]);
   const [score, setScore] = useState(0);
   const [escaped, setEscaped] = useState(0);
@@ -86,7 +88,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
           onClick={() => setGameStarted(true)}
           className="px-8 py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold rounded-full text-xl"
         >
-          Start Chasing!
+          {t("games.startChasing")}
         </motion.button>
       </div>
     );
@@ -116,7 +118,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
         >
           🦷
         </motion.div>
-        <p className="text-center text-xs text-muted-foreground mt-1">Protect me!</p>
+        <p className="text-center text-xs text-muted-foreground mt-1">{t("games.protectMe")}</p>
       </div>
 
       {/* Sugar Bugs */}

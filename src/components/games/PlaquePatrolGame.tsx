@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
 
@@ -16,6 +17,7 @@ interface PlaqueBug {
 }
 
 const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
+  const { t } = useTranslation();
   const [bugs, setBugs] = useState<PlaqueBug[]>([]);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
@@ -42,7 +44,6 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
-    // Spawn bugs periodically
     const spawnInterval = setInterval(() => {
       if (bugs.length < 5) {
         spawnBug();
@@ -93,7 +94,7 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
           }}
           className="px-8 py-4 bg-gradient-to-r from-teal-400 to-cyan-500 text-white font-bold rounded-full text-xl"
         >
-          Start Game!
+          {t("games.startGame")}
         </motion.button>
       </div>
     );
@@ -104,7 +105,7 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
       {/* Game HUD */}
       <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-          <span className="font-bold text-foreground">Score: {score}/{totalBugs}</span>
+          <span className="font-bold text-foreground">{t("games.score")}: {score}/{totalBugs}</span>
         </div>
         <div className={`bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg ${timeLeft <= 10 ? 'text-destructive animate-pulse' : 'text-foreground'}`}>
           <span className="font-bold">⏱️ {timeLeft}s</span>

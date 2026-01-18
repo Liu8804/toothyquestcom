@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 
 interface FlossHeroGameProps {
@@ -8,6 +9,7 @@ interface FlossHeroGameProps {
 }
 
 const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
+  const { t } = useTranslation();
   const [gameStarted, setGameStarted] = useState(false);
   const [currentGap, setCurrentGap] = useState(0);
   const [flossedGaps, setFlossedGaps] = useState<number[]>([]);
@@ -62,7 +64,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           onClick={() => setGameStarted(true)}
           className="px-8 py-4 bg-gradient-to-r from-purple-400 to-pink-500 text-white font-bold rounded-full text-xl"
         >
-          Start Flossing!
+          {t("games.startFlossing")}
         </motion.button>
       </div>
     );
@@ -74,7 +76,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
       <div className="absolute top-4 left-4 right-4">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg text-center">
           <span className="font-bold text-foreground">
-            Gaps Flossed: {flossedGaps.length}/{totalGaps}
+            {t("games.gapsFlossed")}: {flossedGaps.length}/{totalGaps}
           </span>
         </div>
       </div>
@@ -126,8 +128,8 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
       {/* Instructions */}
       <p className="mt-8 text-center text-muted-foreground">
         {isFlossing 
-          ? `Keep holding! ${Math.round(flossProgress)}%` 
-          : "Hold on the yellow gaps to floss!"}
+          ? `${t("games.keepHolding")} ${Math.round(flossProgress)}%` 
+          : t("games.holdToFloss")}
       </p>
 
       {/* Floss indicator */}

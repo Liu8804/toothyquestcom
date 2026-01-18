@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
+
 interface ToothDefenderGameProps {
   game: Game;
   onComplete: (won: boolean, stars: number) => void;
@@ -19,6 +21,7 @@ const healthyItems = ["🥕", "🍎", "🥛", "🧀", "💧", "🥦"];
 const unhealthyItems = ["🍭", "🍫", "🥤", "🍰", "🍬", "🍪"];
 
 const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
+  const { t } = useTranslation();
   const [items, setItems] = useState<FallingItem[]>([]);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
@@ -102,11 +105,11 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
         <div className="flex gap-4 mb-6">
           <div className="text-center">
             <div className="text-2xl">✅</div>
-            <p className="text-xs text-muted-foreground">Tap healthy!</p>
+            <p className="text-xs text-muted-foreground">{t("games.tapHealthy")}</p>
           </div>
           <div className="text-center">
             <div className="text-2xl">❌</div>
-            <p className="text-xs text-muted-foreground">Avoid candy!</p>
+            <p className="text-xs text-muted-foreground">{t("games.avoidCandy")}</p>
           </div>
         </div>
         <motion.button
@@ -115,7 +118,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
           onClick={() => setGameStarted(true)}
           className="px-8 py-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-white font-bold rounded-full text-xl"
         >
-          Start Game!
+          {t("games.startGame")}
         </motion.button>
       </div>
     );
@@ -126,7 +129,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
       {/* HUD */}
       <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-          <span className="font-bold text-foreground">Score: {score}</span>
+          <span className="font-bold text-foreground">{t("games.score")}: {score}</span>
         </div>
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">
