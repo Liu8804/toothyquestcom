@@ -78,15 +78,11 @@ export const useAdmin = () => {
       } as never);
   }, [user]);
 
-  // Fetch audit logs
+  // Fetch audit logs using secure function
   const fetchAuditLogs = useCallback(async () => {
     if (!isAdmin) return;
 
-    const { data, error } = await supabase
-      .from("admin_audit_logs")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(100);
+    const { data, error } = await supabase.rpc("get_admin_audit_logs");
 
     if (!error && data) {
       setAuditLogs(data as unknown as AuditLog[]);
