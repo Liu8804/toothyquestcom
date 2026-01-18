@@ -6,7 +6,14 @@ import type { Json } from "@/integrations/supabase/types";
 export const useAnalytics = () => {
   const { user } = useAuth();
 
-  // Track an event (no session tracking, no PII)
+  // Allowed event data keys - only these can be stored
+  const ALLOWED_DATA_KEYS = new Set([
+    'button_name', 'feature_name', 'game_id', 'story_id', 
+    'badge_id', 'badge_name', 'child_id', 'duration', 
+    'session_type', 'score', 'quest_id', 'challenge_id'
+  ]);
+
+  // Track an event (no session tracking, no PII, strict allowlist)
   const trackEvent = useCallback(async (
     eventName: string,
     eventData: Record<string, unknown> = {},
@@ -14,21 +21,29 @@ export const useAnalytics = () => {
   ) => {
     if (!user) return;
 
-    // Sanitize event data client-side as well
-    const sanitizedData = { ...eventData };
-    const sensitiveKeys = ['email', 'password', 'token', 'phone', 'address', 'ip'];
-    sensitiveKeys.forEach(key => {
-      delete sanitizedData[key];
-      delete sanitizedData[key.toLowerCase()];
-      delete sanitizedData[key.toUpperCase()];
-    });
+    // Only allow specific whitelisted keys - prevents any tracking abuse
+    const sanitizedData: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(eventData)) {
+      if (ALLOWED_DATA_KEYS.has(key)) {
+        // Only allow primitive values (no nested objects)
+        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+          // Truncate strings to prevent data stuffing
+          sanitizedData[key] = typeof value === 'string' ? value.slice(0, 100) : value;
+        }
+      }
+    }
+
+    // Cap total payload size
+    if (JSON.stringify(sanitizedData).length > 1024) {
+      return; // Reject oversized payloads
+    }
 
     try {
       await supabase.from("analytics_events").insert([{
         user_id: user.id,
-        event_name: eventName,
+        event_name: eventName.slice(0, 64).toLowerCase().replace(/[^a-z0-9_:-]/g, '_'),
         event_data: sanitizedData as Json,
-        page_path: pagePath || window.location.pathname,
+        page_path: pagePath?.slice(0, 200) || window.location.pathname.slice(0, 200),
       }]);
     } catch (error) {
       // Silently fail - analytics should not break the app
