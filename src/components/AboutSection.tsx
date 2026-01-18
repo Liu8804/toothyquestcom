@@ -6,22 +6,22 @@ export const AboutSection = () => {
     {
       icon: Shield,
       title: "Safe & Kid-Friendly",
-      description: "A secure environment designed specifically for children",
+      description: "A secure, playful world designed specifically for little ones ages 3-9",
     },
     {
       icon: Heart,
       title: "Fun Learning",
-      description: "Making dental health education enjoyable",
+      description: "Multiple-choice questions, hints, and colorful animations keep kids engaged",
     },
     {
       icon: Star,
-      title: "Earn Rewards",
-      description: "Badges and achievements for every milestone",
+      title: "42 Quests + Rewards",
+      description: "5 FREE quests to start, unlock all 42 for just $3.99!",
     },
     {
       icon: Users,
       title: "Parent Dashboard",
-      description: "Track your child's dental adventures",
+      description: "Track your child's progress and watch their smile grow brighter",
     },
   ];
 
@@ -35,16 +35,24 @@ export const AboutSection = () => {
           className="text-center mb-16"
         >
           <span className="inline-block bg-secondary/20 text-secondary px-4 py-2 rounded-full text-sm font-bold mb-4">
-            ℹ️ About ToothyQuest
+            🦷✨ About ToothyQuest ✨🦷
           </span>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            About ToothyQuest
+            What's Inside ToothyQuest?
           </h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            ToothyQuest is a fun and educational app for kids ages 3–9. Kids complete daily quests, 
-            learn healthy habits, and earn badges for brushing, flossing, and making smart choices 
-            for their teeth. Parents can track progress and support their child's dental adventures—all 
-            in a safe, kid-friendly environment.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-6">
+            Join Toothy and friends on a magical adventure where brushing, flossing, and healthy habits are FUN! 
+            Kids explore exciting quests, chase sugar bugs, learn about healthy snacks, and even discover the magic 
+            of braces—all in a safe, playful world.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 text-sm">
+            <span className="bg-primary/10 text-primary px-3 py-1.5 rounded-full font-semibold">🎮 5 FREE quests to start</span>
+            <span className="bg-accent/10 text-accent px-3 py-1.5 rounded-full font-semibold">❓ Multiple-choice questions & hints</span>
+            <span className="bg-secondary/10 text-secondary px-3 py-1.5 rounded-full font-semibold">🦷 Bonus braces adventures</span>
+            <span className="bg-mint/10 text-mint-foreground px-3 py-1.5 rounded-full font-semibold">✨ Colorful animations & rewards</span>
+          </div>
+          <p className="text-lg font-bold text-primary mt-6">
+            🎉 Unlock all 42 quests for just $3.99!
           </p>
         </motion.div>
 
