@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, Sparkles, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
 
 interface StoryQuizProps {
@@ -11,6 +12,7 @@ interface StoryQuizProps {
 }
 
 const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) => {
+  const { t } = useTranslation();
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [showHint, setShowHint] = useState(false);
@@ -21,7 +23,6 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
     setShowResult(true);
     
     if (index === quiz.correctIndex) {
-      // Correct answer - show success briefly then complete
       setTimeout(() => {
         onComplete();
       }, 1500);
@@ -45,7 +46,7 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
       >
         <div className="flex items-center gap-2 text-accent">
           <CheckCircle2 className="w-5 h-5" />
-          <span className="font-display font-bold">Quiz Completed!</span>
+          <span className="font-display font-bold">{t("stories.quizCompleted")}</span>
           <Sparkles className="w-4 h-4" />
         </div>
       </motion.div>
@@ -63,7 +64,7 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
         <div className="p-2 rounded-full bg-primary/20">
           <HelpCircle className="w-5 h-5 text-primary" />
         </div>
-        <span className="font-display font-bold text-primary text-lg">Quest Question</span>
+        <span className="font-display font-bold text-primary text-lg">{t("stories.questQuestion")}</span>
       </div>
 
       {/* Question */}
@@ -147,7 +148,7 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-5 h-5 text-accent" />
-                  <span className="font-display font-bold text-accent">Amazing! 🎉</span>
+                  <span className="font-display font-bold text-accent">{t("stories.amazing")}</span>
                 </div>
                 <p className="text-foreground/80 text-sm">{quiz.hint}</p>
               </motion.div>
@@ -160,11 +161,11 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
                 <div className="flex items-start gap-3">
                   <div className="flex-1">
                     <p className="font-display font-bold text-amber-800 dark:text-amber-200 mb-1">
-                      Oops! Let's try again! 💪
+                      {t("stories.oopsTryAgain")}
                     </p>
                     {showHint && (
                       <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
-                        <span className="font-bold">Hint:</span> {quiz.hint}
+                        <span className="font-bold">{t("stories.hereIsAHint")}</span> {quiz.hint}
                       </p>
                     )}
                     <Button
@@ -173,7 +174,7 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
                       variant="outline"
                       className="rounded-full"
                     >
-                      Try Again
+                      {t("stories.tryAgain")}
                     </Button>
                   </div>
                 </div>
