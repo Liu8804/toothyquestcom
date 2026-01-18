@@ -1,23 +1,12 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import type { Json } from "@/integrations/supabase/types";
 
-// Generate a unique session ID
-const generateSessionId = () => {
-  const stored = sessionStorage.getItem("analytics_session_id");
-  if (stored) return stored;
-  
-  const newId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-  sessionStorage.setItem("analytics_session_id", newId);
-  return newId;
-};
-
 export const useAnalytics = () => {
   const { user } = useAuth();
-  const sessionIdRef = useRef<string>(generateSessionId());
 
-  // Track an event
+  // Track an event (no session tracking, no PII)
   const trackEvent = useCallback(async (
     eventName: string,
     eventData: Record<string, unknown> = {},
@@ -25,16 +14,24 @@ export const useAnalytics = () => {
   ) => {
     if (!user) return;
 
+    // Sanitize event data client-side as well
+    const sanitizedData = { ...eventData };
+    const sensitiveKeys = ['email', 'password', 'token', 'phone', 'address', 'ip'];
+    sensitiveKeys.forEach(key => {
+      delete sanitizedData[key];
+      delete sanitizedData[key.toLowerCase()];
+      delete sanitizedData[key.toUpperCase()];
+    });
+
     try {
       await supabase.from("analytics_events").insert([{
         user_id: user.id,
         event_name: eventName,
-        event_data: eventData as Json,
+        event_data: sanitizedData as Json,
         page_path: pagePath || window.location.pathname,
-        session_id: sessionIdRef.current,
       }]);
     } catch (error) {
-      console.error("Failed to track event:", error);
+      // Silently fail - analytics should not break the app
     }
   }, [user]);
 

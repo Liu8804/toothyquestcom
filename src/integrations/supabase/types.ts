@@ -54,7 +54,6 @@ export type Database = {
           event_name: string
           id: string
           page_path: string | null
-          session_id: string | null
           user_id: string | null
         }
         Insert: {
@@ -63,7 +62,6 @@ export type Database = {
           event_name: string
           id?: string
           page_path?: string | null
-          session_id?: string | null
           user_id?: string | null
         }
         Update: {
@@ -72,7 +70,6 @@ export type Database = {
           event_name?: string
           id?: string
           page_path?: string | null
-          session_id?: string | null
           user_id?: string | null
         }
         Relationships: []
