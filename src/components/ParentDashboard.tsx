@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame } from "lucide-react";
+import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
@@ -10,6 +10,7 @@ import { stories } from "@/data/stories";
 import { useState } from "react";
 import AddChildModal from "./AddChildModal";
 import DailyChallengesPanel from "./DailyChallengesPanel";
+import ParentAnalyticsDashboard from "./ParentAnalyticsDashboard";
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -30,6 +31,7 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
   } = useQuestProgress();
   const [showAddChild, setShowAddChild] = useState(false);
   const [showDailyChallenges, setShowDailyChallenges] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
   
   const { getCompletedCount, getChallengesWithProgress } = useDailyChallenges(selectedChild?.id);
 
@@ -65,6 +67,14 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
             <p className="text-muted-foreground">Track your child's dental adventure</p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowAnalytics(true)}
+              className="rounded-full gap-2"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </Button>
             <Button
               variant="outline"
               size="icon"
@@ -300,6 +310,11 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
         isOpen={showDailyChallenges} 
         onClose={() => setShowDailyChallenges(false)} 
         childId={selectedChild?.id}
+      />
+      <ParentAnalyticsDashboard
+        isOpen={showAnalytics}
+        onClose={() => setShowAnalytics(false)}
+        selectedChildId={selectedChild?.id}
       />
     </motion.div>
   );
