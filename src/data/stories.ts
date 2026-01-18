@@ -15,13 +15,14 @@ export interface Story {
   illustrationPath: string;
   emoji: string;
   quiz: StoryQuiz;
+  isFree?: boolean;
 }
 
 // Use logo asset path - will be imported in components
 export const LOGO_PATH = "/toothyquest-logo.jpeg";
 
 export const stories: Story[] = [
-  // === FREE QUESTS 1-5 ===
+  // ===== FREE QUESTS (First 5) =====
   {
     id: "sparkle-start",
     title: "Quest 1 – Sparkle Start",
@@ -31,6 +32,7 @@ export const stories: Story[] = [
     questEnding: "You've started your smile adventure!",
     illustrationPath: "/stories/smile-quest.png",
     emoji: "⭐",
+    isFree: true,
     quiz: {
       question: "What did Toothy do first?",
       options: ["Take a nap", "Brush his teeth", "Eat candy"],
@@ -47,6 +49,7 @@ export const stories: Story[] = [
     questEnding: "Now you know the brushing basics!",
     illustrationPath: "/stories/brush-bounce.png",
     emoji: "🪥",
+    isFree: true,
     quiz: {
       question: "Who helped Toothy learn how to brush?",
       options: ["Flossy", "Sugar Monster", "Sleepy Tooth"],
@@ -63,6 +66,7 @@ export const stories: Story[] = [
     questEnding: "You've learned the art of flossing!",
     illustrationPath: "/stories/captain-floss.png",
     emoji: "🧵",
+    isFree: true,
     quiz: {
       question: "What did Toothy use to clean between teeth?",
       options: ["Spoon", "Floss", "Blanket"],
@@ -79,6 +83,7 @@ export const stories: Story[] = [
     questEnding: "You know which foods help your smile!",
     illustrationPath: "/stories/apple-crunch.png",
     emoji: "🥕",
+    isFree: true,
     quiz: {
       question: "Which snack is good for teeth?",
       options: ["Candy", "Carrots", "Soda"],
@@ -87,14 +92,33 @@ export const stories: Story[] = [
     },
   },
   {
+    id: "bracey-first-day",
+    title: "Quest 5 – Bracey's First Day with Braces",
+    toothyIntro: "Meet Bracey! She just got braces today!",
+    story: "Bracey got her first braces today! At first, she felt a little nervous — the metal felt strange on her teeth. But Toothy bounced over with a big smile. \"Don't worry, Bracey! Braces are like armor for your teeth!\" He showed her how to brush gently around each bracket. \"See? It's easy when you take your time!\" Bracey smiled. Her new braces sparkled in the mirror.",
+    lesson: "Braces help make your smile beautiful — just brush carefully!",
+    questEnding: "Welcome to the braces adventure, Bracey!",
+    illustrationPath: "/stories/brave-little-tooth.png",
+    emoji: "🦷",
+    isFree: true,
+    quiz: {
+      question: "What should Bracey do after eating sticky candy?",
+      options: ["Brush her teeth", "Ignore it", "Go to sleep"],
+      correctIndex: 0,
+      hint: "Great job! Brushing after sticky candy keeps braces clean and happy!",
+    },
+  },
+  // ===== PAID / LOCKED QUESTS (6–42) =====
+  {
     id: "first-adventure-complete",
-    title: "Quest 5 – First Adventure Complete",
+    title: "Quest 6 – First Adventure",
     toothyIntro: "You've done something amazing!",
     story: "Toothy jumped with joy! \"You did it!\" he cheered. \"You've completed your first five quests!\" All the teeth in the mouth clapped and sparkled. \"You've learned to brush, floss, and choose healthy foods,\" Toothy said proudly. A golden star appeared above. \"This is your Smile Star — proof that you're a true ToothyQuest hero!\" The adventure was just beginning...",
     lesson: "Great job! You finished your first five quests!",
     questEnding: "You're ready for even bigger adventures!",
     illustrationPath: "/stories/shiny-club.png",
     emoji: "🏆",
+    isFree: false,
     quiz: {
       question: "Who went with Toothy on his first adventure?",
       options: ["Sugar Monster", "Flossy", "Sleepy Tooth"],
@@ -102,16 +126,16 @@ export const stories: Story[] = [
       hint: "Flossy loves adventures and brushing together!",
     },
   },
-  // === PAID QUESTS 6+ ===
   {
     id: "brave-little-tooth",
-    title: "The Brave Little Tooth",
+    title: "Quest 7 – The Brave Little Tooth",
     toothyIntro: "Sometimes teeth feel scared too. Let's see what happens!",
     story: "Timmy's little tooth wiggled nervously. \"I don't want to fall out!\" it whispered. But with a gentle wiggle and a brave smile, Timmy counted to three… and POP! The little tooth jumped out safely. Timmy's mouth felt lighter, and he couldn't wait to put his tooth under the pillow for the Tooth Fairy.",
     lesson: "Losing teeth is natural and nothing to fear.",
     questEnding: "Be brave like the little tooth!",
     illustrationPath: "/stories/brave-little-tooth.png",
     emoji: "🦷",
+    isFree: false,
     quiz: {
       question: "Which tooth was brave in this quest?",
       options: ["Front tooth", "Back tooth", "Tongue"],
@@ -121,13 +145,14 @@ export const stories: Story[] = [
   },
   {
     id: "tooth-fairy-adventure",
-    title: "Tooth Fairy Adventure",
+    title: "Quest 8 – Tooth Fairy Adventure",
     toothyIntro: "The Tooth Fairy loves visiting clean teeth!",
     story: "Lily placed her lost tooth under the pillow and drifted to sleep. Suddenly, the Tooth Fairy appeared, sparkling wings fluttering! She whispered, \"Thanks for keeping your teeth clean!\" and left a shiny coin. Lily woke up excited and proud.",
     lesson: "Brushing and caring for teeth brings rewards.",
     questEnding: "Keep your teeth clean for the Tooth Fairy!",
     illustrationPath: "/stories/tooth-fairy.png",
     emoji: "🧚",
+    isFree: false,
     quiz: {
       question: "Who helped Toothy collect sparkling teeth?",
       options: ["Tooth Fairy", "Flossy", "Sugar Monster"],
@@ -137,13 +162,14 @@ export const stories: Story[] = [
   },
   {
     id: "cavity-monster-trouble",
-    title: "Cavity Monster Trouble",
+    title: "Quest 9 – Cavity Monster Problem",
     toothyIntro: "Watch out! The cavity monsters are sneaking around!",
     story: "Max was playing when tiny cavity monsters snuck into his teeth! \"Oh no!\" he cried. With his toothbrush and a little bubble of toothpaste, Max chased the monsters away. His teeth sparkled again, safe and happy.",
     lesson: "Brushing keeps cavities away.",
     questEnding: "Grab your toothbrush and chase those monsters!",
     illustrationPath: "/stories/cavity-monsters.png",
     emoji: "👾",
+    isFree: false,
     quiz: {
       question: "What problem did the friends face?",
       options: ["Sparkling teeth", "Cavity monsters", "Lost toothbrushes"],
@@ -153,13 +179,14 @@ export const stories: Story[] = [
   },
   {
     id: "captain-floss",
-    title: "Captain Floss Saves the Day",
+    title: "Quest 10 – Captain Floss Saves the Day",
     toothyIntro: "Here comes Captain Floss to the rescue!",
     story: "Flossy the superhero zipped through the mouth, saving teeth stuck with hidden sugar bits. \"You're safe now!\" she cheered. Every tooth sparkled as she finished her mission. Max clapped — flossing was fun!",
     lesson: "Flossing protects teeth from sneaky sugar.",
     questEnding: "Floss like a superhero today!",
     illustrationPath: "/stories/captain-floss.png",
     emoji: "🦸",
+    isFree: false,
     quiz: {
       question: "How did Captain Floss help?",
       options: ["Ate candy", "Flossed carefully", "Took a nap"],
@@ -169,13 +196,14 @@ export const stories: Story[] = [
   },
   {
     id: "sugar-bug-hunt",
-    title: "The Sugar Bug Hunt",
+    title: "Quest 11 – The Sugar Bug Hunt",
     toothyIntro: "Sugar bugs love to hide. Can we find them?",
     story: "Sophie spotted sugar bugs hiding in her chocolate bar. \"We can't let them stay!\" she said. She brushed, rinsed, and flossed — the sugar bugs ran away. Sophie's teeth shone bright like stars.",
     lesson: "Brushing after sweets protects teeth.",
     questEnding: "Hunt those sugar bugs with your brush!",
     illustrationPath: "/stories/sugar-bugs.png",
     emoji: "🐛",
+    isFree: false,
     quiz: {
       question: "What did Toothy chase away?",
       options: ["Sugar bugs", "Candy", "Plaque pirates"],
@@ -185,13 +213,14 @@ export const stories: Story[] = [
   },
   {
     id: "smile-quest",
-    title: "Smile Quest",
+    title: "Quest 12 – Smile Quest",
     toothyIntro: "Ready for an adventure? Let's find the Shiny Smile Crown!",
     story: "A group of tiny teeth went on a quest to find the Shiny Smile Crown. Along the way, they met sticky plaque and sugary traps! With brushing and flossing, they reached the crown and celebrated with sparkling smiles.",
     lesson: "Daily care leads to healthy teeth.",
     questEnding: "Complete your quest with daily brushing!",
     illustrationPath: "/stories/smile-quest.png",
     emoji: "👑",
+    isFree: false,
     quiz: {
       question: "How did friends feel after brushing?",
       options: ["Sad", "Happy and proud", "Sleepy"],
@@ -201,13 +230,14 @@ export const stories: Story[] = [
   },
   {
     id: "magic-mouthwash",
-    title: "Magic Mouthwash Potion",
+    title: "Quest 13 – Magic Mouthwash Potion",
     toothyIntro: "Let's mix a magical potion!",
     story: "Zara mixed a sparkling mouthwash potion with magic bubbles. She swished it around and… POP! Tiny sparkling shields appeared on all her teeth. Her mouth felt fresh and magical!",
     lesson: "Rinsing helps keep teeth healthy.",
     questEnding: "Swish some magic mouthwash!",
     illustrationPath: "/stories/magic-mouthwash.png",
     emoji: "✨",
+    isFree: false,
     quiz: {
       question: "What magical potion did Toothy use?",
       options: ["Mouthwash", "Juice", "Candy syrup"],
@@ -217,13 +247,14 @@ export const stories: Story[] = [
   },
   {
     id: "brush-and-bounce",
-    title: "Brush & Bounce",
+    title: "Quest 14 – Brush and Bounce",
     toothyIntro: "Let's dance while we brush!",
     story: "Liam's teeth loved to dance! Each time he brushed, they bounced and twirled happily. The cleaner he brushed, the shinier their moves became. Soon, they won the Great Tooth Dance Contest!",
     lesson: "Brushing can be fun!",
     questEnding: "Dance and brush at the same time!",
     illustrationPath: "/stories/brush-bounce.png",
     emoji: "💃",
+    isFree: false,
     quiz: {
       question: "How did Toothy make brushing fun?",
       options: ["By jumping and brushing", "By hiding", "By sleeping"],
@@ -233,13 +264,14 @@ export const stories: Story[] = [
   },
   {
     id: "shiny-tooth-club",
-    title: "The Shiny Tooth Club",
+    title: "Quest 15 – The Shiny Tooth Club",
     toothyIntro: "Want to join a special club?",
     story: "Emma joined the Shiny Tooth Club. Every day she brushed and flossed, earning sparkly badges for each clean tooth. Soon, she had the shiniest smile in the club!",
     lesson: "Brushing and flossing daily pays off.",
     questEnding: "Earn your Shiny Tooth Club badge!",
     illustrationPath: "/stories/shiny-club.png",
     emoji: "🏅",
+    isFree: false,
     quiz: {
       question: "What did friends earn for brushing well?",
       options: ["Stickers", "Candy", "Sleep"],
@@ -249,13 +281,14 @@ export const stories: Story[] = [
   },
   {
     id: "plaque-pirates",
-    title: "Plaque Pirates",
+    title: "Quest 16 – Plaque Pirates",
     toothyIntro: "Ahoy! Pirates ahead!",
     story: "Sneaky Plaque Pirates tried to attack Leo's teeth while he slept. \"Not on my watch!\" Leo shouted, grabbing his toothbrush sword. Swish-swash! The pirates were defeated, leaving Leo's teeth safe and sparkly.",
     lesson: "Regular brushing fights plaque.",
     questEnding: "Defeat the plaque pirates with your brush!",
     illustrationPath: "/stories/plaque-pirates.png",
     emoji: "🏴‍☠️",
+    isFree: false,
     quiz: {
       question: "Who caused trouble in the mouth?",
       options: ["Plaque Pirates", "Tooth Fairy", "Flossy"],
@@ -265,13 +298,14 @@ export const stories: Story[] = [
   },
   {
     id: "shy-tooth-first-brush",
-    title: "The Shy Tooth's First Brush",
+    title: "Quest 17 – The Shy Tooth First Brush",
     toothyIntro: "Meet a little tooth who's feeling nervous…",
     story: "A tiny tooth peeked out from the back of the mouth. \"I don't like brushing,\" the tooth whispered. \"The toothbrush is too tickly!\" Toothy smiled. \"Let's try slowly,\" he said. The toothbrush moved gently. Swish… swish… swish. The tooth started to giggle. \"Oh!\" said the tooth. \"That feels nice!\" Soon, the tooth was sparkling.",
     lesson: "Trying something new can feel scary — but it can turn fun.",
     questEnding: "Brush gently and make your teeth giggle!",
     illustrationPath: "/stories/shy-tooth.png",
     emoji: "😊",
+    isFree: false,
     quiz: {
       question: "What did the shy tooth learn?",
       options: ["To hide", "To brush carefully", "To eat candy"],
@@ -281,13 +315,14 @@ export const stories: Story[] = [
   },
   {
     id: "timmy-wiggly-tooth",
-    title: "Timmy and the Wiggly Tooth",
+    title: "Quest 18 – Timmy and the Wiggling Tooth",
     toothyIntro: "Something's wiggling in there!",
     story: "Timmy felt his tooth move. \"It's wiggling!\" he said. The tooth was nervous. \"What if I fall out?\" it whispered. Toothy popped in. \"Wiggly teeth mean you're growing!\" Timmy smiled and kept brushing gently every day. One morning… plop! The tooth was ready.",
     lesson: "Growing up means change — and that's okay.",
     questEnding: "Growing teeth need gentle care!",
     illustrationPath: "/stories/wiggly-tooth.png",
     emoji: "🦷",
+    isFree: false,
     quiz: {
       question: "What happened to Timmy's tooth?",
       options: ["It wiggled", "It fell asleep", "It turned blue"],
@@ -297,13 +332,14 @@ export const stories: Story[] = [
   },
   {
     id: "dentist-not-scary",
-    title: "The Dentist Who Wasn't Scary at All",
+    title: "Quest 19 – The Dentist Who Wasn't Scary at All",
     toothyIntro: "Let's meet a friendly helper!",
     story: "Max held his mom's hand tightly. \"The dentist sounds scary,\" he said. But inside, the dentist smiled. \"Hello, friend!\" The chair went up. The light shined bright. Everything felt gentle. \"Toothy was right,\" Max said. \"That wasn't scary at all!\"",
     lesson: "Dentists help keep smiles strong.",
     questEnding: "Dentists are our smile friends!",
     illustrationPath: "/stories/friendly-dentist.png",
     emoji: "🏥",
+    isFree: false,
     quiz: {
       question: "Why wasn't the dentist scary?",
       options: ["She was kind and friendly", "She wore a mask", "She gave candy"],
@@ -313,13 +349,14 @@ export const stories: Story[] = [
   },
   {
     id: "tooth-learned-wait",
-    title: "The Tooth That Learned to Wait",
+    title: "Quest 20 – The Tooth That Learned to Wait",
     toothyIntro: "Patience is a superpower!",
     story: "A tooth wanted candy right now. \"I don't want to wait!\" Toothy shook his head kindly. \"First brush, then treat.\" The tooth waited. Brush… rinse… smile! The candy tasted even better after.",
     lesson: "Good habits come first.",
     questEnding: "Brush first, then enjoy your treat!",
     illustrationPath: "/stories/patient-tooth.png",
     emoji: "⏰",
+    isFree: false,
     quiz: {
       question: "What did the tooth learn?",
       options: ["To wait patiently", "To wiggle fast", "To hide"],
@@ -329,13 +366,14 @@ export const stories: Story[] = [
   },
   {
     id: "sugar-bug-sneak-attack",
-    title: "The Sugar Bug Sneak Attack",
+    title: "Quest 21 – The Sugar Bug Sneak Attack",
     toothyIntro: "The sugar bugs are planning something!",
     story: "After snack time, tiny sugar bugs crept in. \"Hehehe,\" they giggled. The teeth called for help. Toothy arrived with a toothbrush army. Scrub! Swish! Rinse! The sugar bugs ran away. \"Victory!\" cheered the teeth.",
     lesson: "Brushing keeps sugar bugs away.",
     questEnding: "Brush away those sneaky sugar bugs!",
     illustrationPath: "/stories/sugar-bugs.png",
     emoji: "🐜",
+    isFree: false,
     quiz: {
       question: "Who tried to sneak into the teeth?",
       options: ["Sugar bugs", "Plaque pirates", "Tooth Fairy"],
@@ -345,13 +383,14 @@ export const stories: Story[] = [
   },
   {
     id: "cavity-monster-second-chance",
-    title: "Cavity Monster's Second Chance",
+    title: "Quest 22 – Cavity Monster's Second Chance",
     toothyIntro: "Not all monsters are bad. Let's meet one who wants to change!",
     story: "A little cavity monster sat alone. \"I didn't mean to hurt teeth,\" he sighed. The teeth looked worried. Toothy stepped forward. \"Everyone can learn,\" he said. The monster watched as the teeth brushed and flossed. The cavity monster grew smaller… and smaller… Until—poof!—he disappeared with a smile.",
     lesson: "Good habits make bad problems go away.",
     questEnding: "Let's brush and give cavities no chance!",
     illustrationPath: "/stories/cavity-monster-chance.png",
     emoji: "👾",
+    isFree: false,
     quiz: {
       question: "What did the Cavity Monster do?",
       options: ["Ate candy", "Learned to help clean teeth", "Hid under the pillow"],
@@ -361,13 +400,14 @@ export const stories: Story[] = [
   },
   {
     id: "midnight-snack-mystery",
-    title: "The Midnight Snack Mystery",
+    title: "Quest 23 – The Midnight Snack",
     toothyIntro: "Something strange happens at night…",
     story: "After bedtime, crumbs stayed behind. The teeth whispered, \"Uh-oh.\" Tiny sugar bugs woke up. They started a midnight party! Suddenly— Swish! Scrub! Toothy arrived with toothpaste foam. \"Bedtime brushing saves the day,\" he said.",
     lesson: "Brushing before bed is very important.",
     questEnding: "Brush your teeth before sleep to keep them safe!",
     illustrationPath: "/stories/midnight-snack.png",
     emoji: "🌙",
+    isFree: false,
     quiz: {
       question: "What snack did the friends eat at night?",
       options: ["Candy", "Healthy snack", "Soda"],
@@ -377,13 +417,14 @@ export const stories: Story[] = [
   },
   {
     id: "bubble-toothpaste-rescue",
-    title: "The Bubble Toothpaste Rescue",
+    title: "Quest 24 – The Bubble Toothpaste Rescue",
     toothyIntro: "Get ready for bubbles!",
     story: "A tooth was covered in sticky sugar. \"I'm stuck!\" it cried. Toothy squeezed the toothpaste. Bubbles filled the mouth. Pop! Pop! Pop! The sugar floated away. \"I feel clean!\" said the tooth happily.",
     lesson: "Toothpaste helps clean hard-to-reach spots.",
     questEnding: "Let's use toothpaste and make bubbles!",
     illustrationPath: "/stories/bubble-rescue.png",
     emoji: "🫧",
+    isFree: false,
     quiz: {
       question: "How did Toothy save the teeth?",
       options: ["With bubble toothpaste", "With juice", "With a spoon"],
@@ -393,13 +434,14 @@ export const stories: Story[] = [
   },
   {
     id: "captain-floss-hidden-corn",
-    title: "Captain Floss and the Hidden Corn",
+    title: "Quest 25 – Captain Floss and the Hidden Corn",
     toothyIntro: "Captain Floss is on a mission!",
     story: "A tiny piece of corn was stuck between two teeth. \"It won't come out!\" they cried. Captain Floss swooped in. Slide… gently… pull! The corn was gone. \"Floss saves the day!\" cheered the teeth.",
     lesson: "Floss helps where brushes can't reach.",
     questEnding: "Time to floss like a hero!",
     illustrationPath: "/stories/captain-floss-corn.png",
     emoji: "🦸‍♂️",
+    isFree: false,
     quiz: {
       question: "What was hidden between teeth?",
       options: ["Candy", "Corn", "Toothbrush"],
@@ -409,13 +451,14 @@ export const stories: Story[] = [
   },
   {
     id: "plaque-pirates-battle",
-    title: "The Plaque Pirates Battle",
+    title: "Quest 26 – The Plaque Pirates",
     toothyIntro: "Arrr! Plaque Pirates ahead!",
     story: "Plaque pirates sailed across the teeth. \"They think they own this mouth!\" laughed Toothy. The toothbrush became a ship. The paste became foam waves. Scrub! Scrub! The pirates jumped ship and vanished.",
     lesson: "Daily brushing keeps teeth safe.",
     questEnding: "Brush away the plaque pirates!",
     illustrationPath: "/stories/plaque-pirates-battle.png",
     emoji: "🏴‍☠️",
+    isFree: false,
     quiz: {
       question: "Who caused trouble in the mouth?",
       options: ["Plaque Pirates", "Tooth Fairy", "Flossy"],
@@ -425,13 +468,14 @@ export const stories: Story[] = [
   },
   {
     id: "brushing-timer-challenge",
-    title: "The Brushing Timer Challenge",
+    title: "Quest 27 – The Brushing Timer",
     toothyIntro: "Can you brush until the timer ends?",
     story: "The teeth looked at the clock. \"Two whole minutes?\" they gasped. Toothy laughed. \"It goes faster with music!\" Brush… brush… Left side… right side… Top… bottom… Ding! \"We did it!\" cheered the teeth.",
     lesson: "Brushing for 2 minutes makes teeth extra clean.",
     questEnding: "Let's brush together until the timer finishes!",
     illustrationPath: "/stories/brushing-timer.png",
     emoji: "⏱️",
+    isFree: false,
     quiz: {
       question: "What helped friends brush for the right time?",
       options: ["Timer", "Candy", "Blanket"],
@@ -441,13 +485,14 @@ export const stories: Story[] = [
   },
   {
     id: "super-smile-squad",
-    title: "Super Smile Squad",
+    title: "Quest 28 – Super Smile Squad",
     toothyIntro: "Every smile needs a hero!",
     story: "The teeth felt dull and tired. \"We need help!\" Toothy called the Super Smile Squad. Brush Hero! Floss Friend! Rinse Ranger! Together they cleaned every tooth. The smiles sparkled brighter than ever.",
     lesson: "Working together keeps smiles strong.",
     questEnding: "Join the Super Smile Squad and brush!",
     illustrationPath: "/stories/super-smile-squad.png",
     emoji: "🦸‍♀️",
+    isFree: false,
     quiz: {
       question: "What did friends earn for brushing together?",
       options: ["Stars", "Candy", "Sleep"],
@@ -457,13 +502,14 @@ export const stories: Story[] = [
   },
   {
     id: "tooth-fairy-lost-map",
-    title: "The Tooth Fairy's Lost Map",
+    title: "Quest 29 – The Tooth Fairy Lost Map",
     toothyIntro: "A magical map has gone missing!",
     story: "The Tooth Fairy fluttered sadly. \"I lost my map,\" she said. The teeth followed sparkle clues. They brushed and cleaned along the way. Behind a shiny molar — there it was! \"Clean teeth help magic shine,\" said the Fairy.",
     lesson: "Clean teeth make magical things happen.",
     questEnding: "Brush to help the Tooth Fairy!",
     illustrationPath: "/stories/tooth-fairy-map.png",
     emoji: "🗺️",
+    isFree: false,
     quiz: {
       question: "What did the friends help find?",
       options: ["Lost map", "Candy bag", "Pillow"],
@@ -473,13 +519,14 @@ export const stories: Story[] = [
   },
   {
     id: "moonlight-tooth-parade",
-    title: "The Moonlight Tooth Parade",
+    title: "Quest 30 – The Moonlight Tooth Parade",
     toothyIntro: "Look up — the teeth are glowing!",
     story: "At night, the teeth lined up. The cleanest ones glowed bright. Others whispered, \"We want to shine too.\" Toothy smiled. \"Brush every night, and you will.\" Soon, all the teeth sparkled under the moon.",
     lesson: "Nighttime brushing keeps teeth glowing.",
     questEnding: "Brush tonight to join the parade!",
     illustrationPath: "/stories/moonlight-parade.png",
     emoji: "🌙",
+    isFree: false,
     quiz: {
       question: "What did the teeth do at night?",
       options: ["Parade in the moonlight", "Hide", "Sleep"],
@@ -489,13 +536,14 @@ export const stories: Story[] = [
   },
   {
     id: "sparkle-spell",
-    title: "The Sparkle Spell",
+    title: "Quest 31 – The Sparkle Spell",
     toothyIntro: "Let's cast a cleaning spell!",
     story: "Toothy waved his brush. \"Sparkle… scrub… swish!\" The teeth repeated the words. They brushed together. Shiny magic filled the mouth. \"Spell complete!\" cheered the teeth.",
     lesson: "Brushing can be fun and magical.",
     questEnding: "Say the sparkle spell and brush!",
     illustrationPath: "/stories/sparkle-spell.png",
     emoji: "✨",
+    isFree: false,
     quiz: {
       question: "How did Toothy make teeth sparkle?",
       options: ["Magic spell", "Candy", "Juice"],
@@ -505,13 +553,14 @@ export const stories: Story[] = [
   },
   {
     id: "dreamland-dental-adventure",
-    title: "Dreamland Dental Adventure",
+    title: "Quest 32 – Dreamland Dental Adventure",
     toothyIntro: "Let's visit Dreamland before bedtime!",
     story: "As the child fell asleep, the teeth yawned. \"Time to rest,\" they said. In Dreamland, Toothy guided them. Brush softly… rinse gently… The teeth curled up, clean and happy. They dreamed of shiny smiles.",
     lesson: "Clean teeth sleep better.",
     questEnding: "Brush before bed and sweet dreams!",
     illustrationPath: "/stories/dreamland-adventure.png",
     emoji: "💤",
+    isFree: false,
     quiz: {
       question: "Where did Toothy and friends go?",
       options: ["Dreamland", "Candy land", "Playground"],
@@ -521,13 +570,14 @@ export const stories: Story[] = [
   },
   {
     id: "apple-crunch-test",
-    title: "The Apple Crunch Test",
+    title: "Quest 33 – The Apple Crunch Test",
     toothyIntro: "Crunch time!",
     story: "An apple rolled in proudly. \"I help make teeth strong,\" it said. The teeth crunched happily. \"Yum!\" Candy tried to sneak in. Toothy waved it away. \"Healthy foods help teeth grow strong.\"",
     lesson: "Crunchy, healthy foods are good for teeth.",
     questEnding: "Choose a healthy snack today!",
     illustrationPath: "/stories/apple-crunch.png",
     emoji: "🍎",
+    isFree: false,
     quiz: {
       question: "Which snack was crunchy and healthy?",
       options: ["Apple", "Cookie", "Candy"],
@@ -537,13 +587,14 @@ export const stories: Story[] = [
   },
   {
     id: "juice-tried-too-hard",
-    title: "The Juice That Tried Too Hard",
+    title: "Quest 34 – The Juice That Tried Too Hard",
     toothyIntro: "Not all drinks are the same!",
     story: "Juice splashed around loudly. \"I'm healthy!\" it said. Toothy read the label. \"Lots of sugar,\" he said gently. Water walked in quietly. \"I help rinse teeth clean.\" The teeth chose water.",
     lesson: "Water is the best drink for teeth.",
     questEnding: "Drink water after snacks!",
     illustrationPath: "/stories/juice-sugar.png",
     emoji: "🧃",
+    isFree: false,
     quiz: {
       question: "Why was the juice tricky?",
       options: ["Too sugary", "Too cold", "Too tasty"],
@@ -553,13 +604,14 @@ export const stories: Story[] = [
   },
   {
     id: "water-super-drink",
-    title: "Water the Super Drink",
+    title: "Quest 35 – Water the Super Drink",
     toothyIntro: "Meet a real superhero!",
     story: "Water zoomed in wearing a cape. \"Splash!\" It washed away sugar and food bits. The teeth cheered. \"Toothy was right!\" they said.",
     lesson: "Water keeps mouths clean and fresh.",
     questEnding: "Take a sip of water now!",
     illustrationPath: "/stories/water-superhero.png",
     emoji: "💧",
+    isFree: false,
     quiz: {
       question: "Which drink is best for teeth?",
       options: ["Water", "Soda", "Juice"],
@@ -569,13 +621,14 @@ export const stories: Story[] = [
   },
   {
     id: "snack-time-choices",
-    title: "Snack Time Choices",
+    title: "Quest 36 – Snack Time Choices",
     toothyIntro: "Let's choose wisely!",
     story: "The teeth looked at snacks. Candy… apple… crackers… Toothy asked, \"What helps us most?\" The teeth chose smart snacks. They smiled proudly.",
     lesson: "Good choices help teeth stay happy.",
     questEnding: "Pick a tooth-friendly snack!",
     illustrationPath: "/stories/snack-choices.png",
     emoji: "🥕",
+    isFree: false,
     quiz: {
       question: "Which snack is the best for teeth?",
       options: ["Candy", "Fruit", "Cookies"],
@@ -583,32 +636,17 @@ export const stories: Story[] = [
       hint: "Fruits are yummy and good for sparkling teeth!",
     },
   },
-  // === BONUS BRACES QUESTS ===
-  {
-    id: "bracey-first-day",
-    title: "Bracey's First Day with Braces",
-    toothyIntro: "Meet Bracey! She just got braces today!",
-    story: "Bracey got her first braces today! At first, she felt a little nervous — the metal felt strange on her teeth. But Toothy bounced over with a big smile. \"Don't worry, Bracey! Braces are like armor for your teeth!\" He showed her how to brush gently around each bracket. \"See? It's easy when you take your time!\" Bracey smiled. Her new braces sparkled in the mirror.",
-    lesson: "Braces help make your smile beautiful — just brush carefully!",
-    questEnding: "Welcome to the braces adventure, Bracey!",
-    illustrationPath: "/stories/brave-little-tooth.png",
-    emoji: "🦷",
-    quiz: {
-      question: "What should Bracey do after eating sticky candy?",
-      options: ["Brush her teeth", "Ignore it", "Go to sleep"],
-      correctIndex: 0,
-      hint: "Great job! Brushing after sticky candy keeps braces clean and happy!",
-    },
-  },
+  // === BONUS BRACES QUESTS (37-42) ===
   {
     id: "bracey-colorful-bands",
-    title: "Bracey's Colorful Bands Adventure",
+    title: "Quest 37 – Bracey's Colorful Bands Adventure",
     toothyIntro: "Time to pick some fun colors for braces bands!",
     story: "Bracey picked her favorite colors for her braces bands — pink and purple! They looked so cool! Toothy taught her a special trick. \"Brush around each bracket in tiny circles,\" he said. \"That way, no food can hide!\" Bracey practiced her new brushing moves. Her teeth sparkled like gems with their colorful bands.",
     lesson: "Brushing carefully around brackets keeps teeth shiny.",
     questEnding: "Your colorful smile is sparkling!",
     illustrationPath: "/stories/sparkle-spell.png",
     emoji: "🌈",
+    isFree: false,
     quiz: {
       question: "How can Bracey clean her braces properly?",
       options: ["Brush carefully around the brackets", "Just rinse with water", "Skip brushing today"],
@@ -618,13 +656,14 @@ export const stories: Story[] = [
   },
   {
     id: "bracey-sticky-snack",
-    title: "Bracey vs. The Sticky Snack",
+    title: "Quest 38 – Bracey vs. The Sticky Snack",
     toothyIntro: "Uh oh! Something sticky got in the braces!",
     story: "Bracey tried a sticky candy, and it got stuck in her braces! \"Oh no!\" she cried. Toothy flew over quickly. \"Don't worry! I know a trick!\" He handed her a toothbrush and floss. \"Gently brush first, then use floss to get the tricky bits.\" Bracey followed the steps. Pop! The candy was gone. \"My braces feel clean again!\" she cheered.",
     lesson: "Brushing and flossing removes stuck food from braces.",
     questEnding: "You saved your braces from sticky trouble!",
     illustrationPath: "/stories/sugar-bugs.png",
     emoji: "🍬",
+    isFree: false,
     quiz: {
       question: "What should Bracey do if candy gets stuck?",
       options: ["Brush and floss carefully", "Ignore it", "Shake her teeth"],
@@ -634,13 +673,14 @@ export const stories: Story[] = [
   },
   {
     id: "bracey-wiggly-adventure",
-    title: "The Wiggly Braces Adventure",
+    title: "Quest 39 – The Wiggly Braces Adventure",
     toothyIntro: "Braces feel a little different today!",
     story: "Bracey noticed her braces felt a little wiggly after her orthodontist tightened them. \"Is something wrong?\" she asked nervously. Toothy smiled. \"That's totally normal! It means your teeth are moving to the right spots!\" Bracey felt better. She kept brushing gently every day. \"Soon my smile will be perfect!\" she said happily.",
     lesson: "Wiggly braces mean your teeth are getting straighter!",
     questEnding: "Keep brushing — your smile is on its way!",
     illustrationPath: "/stories/wiggly-tooth.png",
     emoji: "✨",
+    isFree: false,
     quiz: {
       question: "What should Bracey do if her braces feel wiggly?",
       options: ["Stay calm and keep brushing", "Pull the braces off", "Stop brushing"],
@@ -650,13 +690,14 @@ export const stories: Story[] = [
   },
   {
     id: "bracey-nighttime-brushing",
-    title: "Bracey's Nighttime Brushing Quest",
+    title: "Quest 40 – Bracey's Nighttime Brushing Quest",
     toothyIntro: "Bedtime brushing is extra important with braces!",
     story: "Bracey learned that brushing before bed is super important, especially with braces. \"Sugar bugs love to party at night,\" Toothy warned. \"But if you brush before sleep, they have nowhere to hide!\" Bracey grabbed her toothbrush. She brushed around every bracket carefully. \"Goodnight, sugar bugs — you're not welcome here!\" Her braces sparkled as she smiled in the mirror.",
     lesson: "Nighttime brushing keeps braces clean while you sleep.",
     questEnding: "Sweet dreams with a sparkling smile!",
     illustrationPath: "/stories/midnight-snack.png",
     emoji: "🌙",
+    isFree: false,
     quiz: {
       question: "When is the best time to brush with braces?",
       options: ["Before bed", "Only in the morning", "After lunch only"],
@@ -666,13 +707,14 @@ export const stories: Story[] = [
   },
   {
     id: "bracey-colored-bands-challenge",
-    title: "Bracey's Colored Bands Challenge",
+    title: "Quest 41 – Bracey's Colored Bands Challenge",
     toothyIntro: "New colorful bands need extra care!",
     story: "Bracey picked new colorful bands for her braces — blue and green this time! They looked amazing! Toothy reminded her that brushing around each band keeps her smile sparkling. \"Think of each band as a little treasure,\" he said. \"Clean around them carefully!\" Bracey brushed gently around every single band. Her rainbow smile shined bright!",
     lesson: "Careful brushing around bands keeps your smile bright.",
     questEnding: "Your rainbow smile is shining!",
     illustrationPath: "/stories/shiny-club.png",
     emoji: "🎨",
+    isFree: false,
     quiz: {
       question: "How should Bracey brush around colored bands?",
       options: ["Brush carefully around each band", "Brush only the front teeth", "Skip brushing the bands"],
@@ -682,13 +724,14 @@ export const stories: Story[] = [
   },
   {
     id: "bracey-braces-superpowers",
-    title: "Bracey's Braces Superpowers",
+    title: "Quest 42 – Bracey's Braces Superpowers",
     toothyIntro: "Discover the secret superpowers of braces!",
     story: "Bracey realized something amazing — taking care of her braces gives her superpowers! A healthy, shiny smile and strong teeth! \"Every time you brush and floss,\" Toothy explained, \"you're making your smile stronger!\" Bracey felt like a superhero. She grabbed her toothbrush like a magic wand. \"Super Smile Power, activate!\" Her teeth glowed with confidence.",
     lesson: "Brushing and flossing gives your teeth superpowers!",
     questEnding: "You've unlocked braces superpowers!",
     illustrationPath: "/stories/super-smile-squad.png",
     emoji: "💪",
+    isFree: false,
     quiz: {
       question: "What is the best way to have braces superpowers?",
       options: ["Brush and floss every day", "Eat candy whenever you want", "Skip brushing sometimes"],
