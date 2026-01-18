@@ -111,34 +111,72 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
 
     setError(null);
     setIsLoading(false);
-    setIsPlaying(false);
     setIsPaused(false);
 
     const voiceSettings = settings || getVoiceSettings();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = voiceSettings.speed;
-    utterance.pitch = voiceSettings.pitch;
-    utterance.volume = 1;
-
-    utterance.onstart = () => {
-      setIsPlaying(true);
-      setIsPaused(false);
-    };
-    utterance.onend = () => {
-      setIsPlaying(false);
-      setIsPaused(false);
-    };
-    utterance.onerror = (event) => {
-      setIsPlaying(false);
-      setIsPaused(false);
-      if (event.error !== "interrupted") {
-        setError("Sorry, there was an error playing the story.");
+    
+    // Wait for voices to load if needed
+    const speakNow = () => {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = voiceSettings.speed;
+      utterance.pitch = voiceSettings.pitch;
+      utterance.volume = 1;
+      
+      // Try to find a good voice
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(v => v.lang.startsWith('en') && v.localService) 
+        || voices.find(v => v.lang.startsWith('en'))
+        || voices[0];
+      if (englishVoice) {
+        utterance.voice = englishVoice;
       }
+
+      utterance.onstart = () => {
+        console.log("Browser speech started");
+        setIsPlaying(true);
+        setIsPaused(false);
+      };
+      utterance.onend = () => {
+        console.log("Browser speech ended");
+        setIsPlaying(false);
+        setIsPaused(false);
+      };
+      utterance.onerror = (event) => {
+        console.error("Browser speech error:", event.error);
+        setIsPlaying(false);
+        setIsPaused(false);
+        if (event.error !== "interrupted" && event.error !== "canceled") {
+          setError("Sorry, there was an error playing the story.");
+        }
+      };
+
+      utteranceRef.current = utterance;
+      window.speechSynthesis.cancel();
+      
+      // Set playing immediately since speak() is synchronous start
+      setIsPlaying(true);
+      window.speechSynthesis.speak(utterance);
+      console.log("Browser speech speak() called");
     };
 
-    utteranceRef.current = utterance;
-    window.speechSynthesis.cancel();
-    window.speechSynthesis.speak(utterance);
+    // Voices may not be loaded yet on some browsers
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length === 0) {
+      console.log("Waiting for voices to load...");
+      window.speechSynthesis.onvoiceschanged = () => {
+        console.log("Voices loaded, speaking now");
+        speakNow();
+      };
+      // Fallback if onvoiceschanged doesn't fire
+      setTimeout(() => {
+        if (!utteranceRef.current) {
+          console.log("Fallback: speaking without voice selection");
+          speakNow();
+        }
+      }, 100);
+    } else {
+      speakNow();
+    }
   }, [cleanupAudio, cleanupSpeech]);
 
   const play = useCallback(
