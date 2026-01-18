@@ -551,6 +551,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      is_safe_analytics_event_data: { Args: { _data: Json }; Returns: boolean }
     }
     Enums: {
       app_role: "parent" | "child" | "admin"
