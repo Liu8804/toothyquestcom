@@ -15,7 +15,7 @@ import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
 import VoiceSettingsModal from "./VoiceSettingsModal";
 import StoryQuizComponent from "./StoryQuiz";
-
+import BracesQuestEffect, { BracesQuestReward, isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
 interface StoryViewerProps {
   story: Story;
   currentIndex: number;
@@ -51,7 +51,8 @@ const StoryViewer = ({
   } | null>(null);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
-
+  const [showBracesEffect, setShowBracesEffect] = useState(false);
+  const [showBracesReward, setShowBracesReward] = useState(false);
   const questCompleted = isQuestCompleted(story.id);
 
   // Reset intro and quiz when story changes and speak intro
@@ -90,8 +91,13 @@ const StoryViewer = ({
     setShowIntro(false);
     // Play story start sound
     playSound(SOUND_PROMPTS.storyStart, 2);
+    
+    // Trigger braces quest effect if applicable
+    if (isBracesQuest(story.id)) {
+      setShowBracesEffect(true);
+      setTimeout(() => setShowBracesEffect(false), 4000);
+    }
   };
-
   const handleCompleteQuest = async () => {
     if (!user || !selectedChild || questCompleted || isCompleting) return;
     
@@ -108,6 +114,14 @@ const StoryViewer = ({
       playSound(SOUND_PROMPTS.questComplete, 3);
       // Speak quest ending
       speakEnding(`Quest Complete! ${story.questEnding}`);
+      
+      // Show braces quest reward popup if applicable
+      if (isBracesQuest(story.id)) {
+        setTimeout(() => {
+          setShowBracesReward(true);
+          setTimeout(() => setShowBracesReward(false), 4000);
+        }, 500);
+      }
 
       // Track daily challenge progress for stories
       const challengeResult = await incrementProgress("story");
@@ -262,6 +276,9 @@ const StoryViewer = ({
             <div className="hidden absolute inset-0 flex items-center justify-center text-9xl">
               {story.emoji}
             </div>
+            
+            {/* Braces Quest Effect */}
+            <BracesQuestEffect questId={story.id} isActive={showBracesEffect} />
             
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
@@ -538,6 +555,7 @@ const StoryViewer = ({
       <QuestCompleteCelebration
         isOpen={showCelebration}
         questTitle={story.title}
+        questId={story.id}
         xpEarned={celebrationData.xp}
         newBadges={celebrationData.badges}
         onClose={() => setShowCelebration(false)}
@@ -548,6 +566,17 @@ const StoryViewer = ({
         isOpen={showVoiceSettings}
         onClose={() => setShowVoiceSettings(false)}
       />
+      
+      {/* Braces Quest Reward Popup */}
+      <AnimatePresence>
+        {showBracesReward && (
+          <BracesQuestReward
+            questId={story.id}
+            isOpen={showBracesReward}
+            onClose={() => setShowBracesReward(false)}
+          />
+        )}
+      </AnimatePresence>
     </AnimatePresence>
     </>
   );
