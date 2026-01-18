@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Check, Sparkles, Star, Gift, Lock, Unlock, Apple, Smartphone } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { usePurchase } from "@/hooks/usePurchase";
@@ -26,6 +27,7 @@ const premiumFeatures = [
 ];
 
 export const PricingSection = () => {
+  const { t } = useTranslation();
   const { isPurchased, purchase, isLoading } = usePurchase();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
 

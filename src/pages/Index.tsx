@@ -16,6 +16,7 @@ import DailyReward from "@/components/DailyReward";
 import StreakTracker from "@/components/StreakTracker";
 import FloatingSparkles from "@/components/FloatingSparkles";
 import FloatingUnlockCTA from "@/components/FloatingUnlockCTA";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn } from "lucide-react";
@@ -43,8 +44,9 @@ const Index = () => {
       {/* Subtle floating sparkles background */}
       <FloatingSparkles count={10} className="fixed inset-0 z-0 opacity-50" />
 
-      {/* Auth button and streak tracker in top right */}
-      <div className="fixed top-4 right-4 z-40 flex items-center gap-3">
+      {/* Auth button, language switcher and streak tracker in top right */}
+      <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
+        <LanguageSwitcher />
         <StreakTracker />
         {!loading && (
           <>

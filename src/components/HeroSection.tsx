@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
 import { Play, Sparkles, Heart } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import StarRating from "@/components/StarRating";
 import toothyQuestLogo from "@/assets/toothyquest-logo.jpeg";
 
 export const HeroSection = () => {
+  const { t } = useTranslation();
+  
   return (
     <section className="relative min-h-screen gradient-sky overflow-hidden">
       <FloatingBubbles />
@@ -31,13 +34,13 @@ export const HeroSection = () => {
           </div>
           <div className="hidden md:flex items-center gap-6">
             <a href="#adventures" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              Adventures
+              {t('nav.adventures')}
             </a>
             <a href="#facts" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              Fun Facts
+              {t('nav.funFacts')}
             </a>
             <a href="#games" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              Games
+              {t('nav.games')}
             </a>
           </div>
         </motion.nav>
@@ -59,34 +62,34 @@ export const HeroSection = () => {
             >
               <Sparkles className="w-4 h-4 text-accent" />
               <span className="text-sm font-bold text-accent-foreground">
-                🎉 5 FREE quests to get started! Perfect for ages 3-9
+                {t('hero.badge')}
               </span>
             </motion.div>
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-              🦷✨ Welcome to{" "}
-              <span className="text-gradient-hero">ToothyQuest!</span> ✨🦷
+              {t('hero.title')}{" "}
+              <span className="text-gradient-hero">{t('hero.titleHighlight')}</span> {t('hero.titleEnd')}
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
-              Join Toothy and friends on a magical adventure where brushing, flossing, and healthy habits are FUN! Kids explore exciting quests, chase sugar bugs, learn about healthy snacks, and discover the magic of braces—all in a safe, playful world. 🌟
+              {t('hero.description')}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
               <Button variant="hero" size="xl">
                 <Play className="w-6 h-6" />
-                Start Adventure
+                {t('common.startAdventure')}
               </Button>
               <Button variant="outline" size="xl">
                 <Heart className="w-6 h-6" />
-                Meet Toothy
+                {t('common.meetToothy')}
               </Button>
             </div>
 
             <div className="flex items-center gap-4 justify-center lg:justify-start">
               <StarRating count={5} size="md" />
               <span className="text-sm text-muted-foreground font-medium">
-                Loved by 10,000+ little heroes!
+                {t('hero.lovedBy')}
               </span>
             </div>
           </motion.div>
@@ -115,8 +118,8 @@ export const HeroSection = () => {
                 className="mt-6 text-center"
               >
                 <p className="font-display text-xl md:text-2xl font-bold text-foreground">
-                  Hi! I'm Toothy. 
-                  <span className="text-primary"> Ready for an adventure?</span> 🌟
+                  {t('hero.toothyGreeting')}
+                  <span className="text-primary"> {t('hero.readyForAdventure')}</span> 🌟
                 </p>
               </motion.div>
               
