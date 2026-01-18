@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import { useQuestVoice } from "@/hooks/useQuestVoice";
 
 interface ChatWithToothyProps {
   isOpen: boolean;
@@ -136,6 +137,7 @@ const ChatWithToothy = ({ isOpen, onClose }: ChatWithToothyProps) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [agentResponse, setAgentResponse] = useState("");
+  const { speak, stop: stopVoice } = useQuestVoice();
   
   const wsRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -144,6 +146,7 @@ const ChatWithToothy = ({ isOpen, onClose }: ChatWithToothyProps) => {
   const processorRef = useRef<ScriptProcessorNode | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
   const sessionCreatedRef = useRef(false);
+  const hasSpokenWelcome = useRef(false);
 
   const cleanup = useCallback(() => {
     console.log("Cleaning up...");
@@ -169,18 +172,26 @@ const ChatWithToothy = ({ isOpen, onClose }: ChatWithToothyProps) => {
     }
     
     sessionCreatedRef.current = false;
+    hasSpokenWelcome.current = false;
     setIsConnected(false);
     setIsConnecting(false);
     setIsSpeaking(false);
     setIsListening(false);
-  }, []);
+    stopVoice();
+  }, [stopVoice]);
 
+  // Speak welcome message when dialog opens
   useEffect(() => {
+    if (isOpen && !hasSpokenWelcome.current) {
+      hasSpokenWelcome.current = true;
+      speak("Hi there! I'm Toothy, your friendly tooth buddy! Press the button to start talking with me!");
+    }
     if (!isOpen) {
+      hasSpokenWelcome.current = false;
       cleanup();
     }
     return cleanup;
-  }, [isOpen, cleanup]);
+  }, [isOpen, cleanup, speak]);
 
   const startConversation = useCallback(async () => {
     if (isConnecting || isConnected) return;
