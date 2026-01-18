@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Sword, Map, Trophy, Scroll, Lock, CheckCircle } from "lucide-react";
+import { Sword, Map, Trophy, Scroll, Lock, CheckCircle, Smile } from "lucide-react";
 import type { Story } from "@/data/stories";
 import { FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
+import { isBracesQuest } from "./BracesQuestEffects";
 
 interface StoryCardProps {
   story: Story;
@@ -15,7 +16,8 @@ const questIcons = [Sword, Map, Trophy, Scroll];
 
 const StoryCard = ({ story, index, onClick, isCompleted = false, isLocked = false }: StoryCardProps) => {
   const QuestIcon = questIcons[index % questIcons.length];
-  const isFreeQuest = index < FREE_QUEST_LIMIT;
+  const isFreeQuest = story.isFree === true || index < FREE_QUEST_LIMIT;
+  const isBraces = isBracesQuest(story.id);
   
   return (
     <motion.div
@@ -33,7 +35,9 @@ const StoryCard = ({ story, index, onClick, isCompleted = false, isLocked = fals
           ? 'border-green-500/50 hover:border-green-500' 
           : isLocked 
             ? 'border-muted/50 hover:border-muted' 
-            : 'border-primary/20 hover:border-primary/50'
+            : isBraces
+              ? 'border-pink-400/50 hover:border-pink-500'
+              : 'border-primary/20 hover:border-primary/50'
       }`}>
         {/* Quest banner */}
         <div className={`absolute top-0 left-0 right-0 h-1 ${
@@ -41,7 +45,9 @@ const StoryCard = ({ story, index, onClick, isCompleted = false, isLocked = fals
             ? 'bg-gradient-to-r from-green-400 via-green-500 to-green-400' 
             : isLocked
               ? 'bg-gradient-to-r from-muted via-muted-foreground/30 to-muted'
-              : 'bg-gradient-to-r from-primary via-secondary to-accent'
+              : isBraces
+                ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400'
+                : 'bg-gradient-to-r from-primary via-secondary to-accent'
         }`} />
         
         {/* Story illustration */}
@@ -69,23 +75,27 @@ const StoryCard = ({ story, index, onClick, isCompleted = false, isLocked = fals
                 ? 'bg-gradient-to-br from-green-500 to-green-600' 
                 : isLocked
                   ? 'bg-gradient-to-br from-muted to-muted-foreground/50'
-                  : 'bg-gradient-to-br from-primary to-primary/80'
+                  : isBraces
+                    ? 'bg-gradient-to-br from-pink-500 to-purple-500'
+                    : 'bg-gradient-to-br from-primary to-primary/80'
             } text-primary-foreground flex items-center justify-center font-display font-bold text-lg shadow-lg rotate-3 group-hover:rotate-0 transition-transform`}>
-              {isCompleted ? <CheckCircle className="w-5 h-5" /> : index + 1}
+              {isCompleted ? <CheckCircle className="w-5 h-5" /> : isBraces ? <Smile className="w-5 h-5" /> : index + 1}
             </div>
             <div className={`${
-              isFreeQuest 
-                ? 'bg-green-500/90' 
-                : 'bg-secondary/90'
-            } backdrop-blur-sm text-secondary-foreground px-2 py-1 rounded-lg text-xs font-bold shadow-md`}>
-              {isFreeQuest ? 'FREE' : 'PREMIUM'}
+              isBraces
+                ? 'bg-gradient-to-r from-pink-500 to-purple-500'
+                : isFreeQuest 
+                  ? 'bg-green-500/90' 
+                  : 'bg-secondary/90'
+            } backdrop-blur-sm text-white px-2 py-1 rounded-lg text-xs font-bold shadow-md`}>
+              {isBraces ? '🦷 BRACES' : isFreeQuest ? 'FREE' : 'PREMIUM'}
             </div>
           </div>
           
           {/* Difficulty stars */}
           <div className="absolute top-3 right-3 flex gap-0.5">
             {[...Array(Math.min(3, Math.floor(index / 3) + 1))].map((_, i) => (
-              <span key={i} className={`text-sm drop-shadow-md ${isLocked ? 'text-muted-foreground' : 'text-yellow-400'}`}>⭐</span>
+              <span key={i} className={`text-sm drop-shadow-md ${isLocked ? 'text-muted-foreground' : isBraces ? 'text-pink-400' : 'text-yellow-400'}`}>⭐</span>
             ))}
           </div>
           

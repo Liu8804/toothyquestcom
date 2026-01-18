@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { Sparkles, Trophy, Star } from "lucide-react";
+import { Sparkles, Trophy, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toothyLogo from "@/assets/toothyquest-logo.jpeg";
 import MascotWithExpression from "./MascotWithExpression";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect } from "react";
+import { isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
 
 interface Badge {
   name: string;
@@ -15,6 +16,7 @@ interface Badge {
 interface QuestCompleteCelebrationProps {
   isOpen: boolean;
   questTitle: string;
+  questId?: string;
   xpEarned: number;
   newBadges: Badge[];
   onClose: () => void;
@@ -32,11 +34,14 @@ const confettiColors = [
 const QuestCompleteCelebration = ({
   isOpen,
   questTitle,
+  questId,
   xpEarned,
   newBadges,
   onClose,
 }: QuestCompleteCelebrationProps) => {
   const { speakQuestComplete, speakBadgeEarned, stop } = useQuestVoice();
+  const bracesConfig = questId ? getBracesQuestConfig(questId) : null;
+  const isBraces = questId ? isBracesQuest(questId) : false;
 
   // Speak celebration when opened
   useEffect(() => {
@@ -73,7 +78,11 @@ const QuestCompleteCelebration = ({
         exit={{ scale: 0.5, opacity: 0 }}
         transition={{ type: "spring", duration: 0.6 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md bg-gradient-to-br from-star via-primary to-accent rounded-3xl shadow-float p-8 text-center overflow-hidden"
+        className={`relative w-full max-w-md rounded-3xl shadow-float p-8 text-center overflow-hidden ${
+          isBraces 
+            ? 'bg-gradient-to-br from-pink-500 via-purple-500 to-pink-600'
+            : 'bg-gradient-to-br from-star via-primary to-accent'
+        }`}
       >
         {/* Confetti explosion */}
         <div className="absolute inset-0 pointer-events-none">
@@ -147,11 +156,21 @@ const QuestCompleteCelebration = ({
           transition={{ duration: 0.5, repeat: 3 }}
           className="relative"
         >
-          <Trophy className="w-20 h-20 mx-auto text-white mb-4 drop-shadow-lg" />
+          {isBraces ? (
+            <motion.div
+              className="text-6xl mb-4"
+              animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 1, repeat: 2 }}
+            >
+              {bracesConfig?.emoji || "🦷"}
+            </motion.div>
+          ) : (
+            <Trophy className="w-20 h-20 mx-auto text-white mb-4 drop-shadow-lg" />
+          )}
         </motion.div>
 
         <h2 className="font-display text-3xl font-bold text-white mb-2 drop-shadow-lg">
-          Quest Complete! 🎉
+          {isBraces ? `${bracesConfig?.rewardMessage || 'Quest Complete!'} 🎉` : 'Quest Complete! 🎉'}
         </h2>
         <p className="text-white/90 text-lg mb-6">{questTitle}</p>
 
