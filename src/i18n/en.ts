@@ -18,6 +18,8 @@ export const en = {
     locked: "Locked",
     completed: "Completed",
     comingSoon: "Coming Soon",
+    play: "Play",
+    new: "NEW",
   },
 
   // Navigation
@@ -129,45 +131,90 @@ export const en = {
 
   // Features Section
   features: {
-    badge: "✨ Magical Features",
-    title: "Everything Your Little Hero Needs!",
-    brushingTimer: {
-      title: "2-Minute Brushing Timer",
-      description: "Fun animated timer with music and encouragement",
+    badge: "✨ Your Dental Adventure Awaits!",
+    title: "Your Dental Adventure Awaits!",
+    subtitle: "Discover all the amazing features that make ToothyQuest the best way to learn about dental health!",
+    funQuests: {
+      title: "Fun Quests",
+      description: "Fun quests for brushing, flossing, and healthy habits",
     },
-    quests: {
-      title: "42 Dental Quests",
-      description: "Learn brushing, flossing, healthy eating & more",
+    earnRewards: {
+      title: "Earn Rewards",
+      description: "Earn badges and rewards for completing challenges",
     },
-    games: {
-      title: "Educational Games",
-      description: "Sugar Bug Chase, Floss Hero, and more!",
+    friendlyGuide: {
+      title: "Friendly Guide",
+      description: "Guided by a friendly tooth mascot",
     },
-    stories: {
-      title: "Interactive Stories",
-      description: "Meet the Tooth Fairy and friendly dentists",
+    reminders: {
+      title: "Reminders",
+      description: "Set reminders to keep routines consistent",
     },
-    badges: {
-      title: "Badges & Rewards",
-      description: "Earn stars and unlock achievements",
-    },
-    braces: {
-      title: "Braces Adventures",
-      description: "Special content for kids with braces",
+    parentDashboard: {
+      title: "Parent Dashboard",
+      description: "Parent dashboard to track progress",
     },
   },
 
   // Adventures Section
   adventures: {
-    badge: "🗺️ Quest Map",
-    title: "Explore Dental Adventures!",
-    subtitle: "Complete quests to earn XP and unlock badges!",
+    badge: "🚀 Choose Your Adventure",
+    title: "Exciting Ways to Explore!",
+    subtitle: "Pick an adventure and discover how fun taking care of your teeth can be!",
     questsCompleted: "Quests Completed",
     xpEarned: "XP Earned",
     startQuest: "Start Quest",
     continueQuest: "Continue",
     completedBadge: "✓ Completed",
     lockedMessage: "Complete previous quests to unlock!",
+    storyTime: {
+      title: "Story Time",
+      description: "Join Toothy on magical adventures that make dental visits feel like exciting quests!",
+    },
+    funGames: {
+      title: "Fun Games",
+      description: "Play tooth-brushing games and earn stars for being a dental superhero!",
+    },
+    singAlong: {
+      title: "Sing Along",
+      description: "Learn fun songs about brushing and flossing that make dental care a party!",
+    },
+    chatWithToothy: {
+      title: "Chat with Toothy",
+      description: "Have friendly conversations and ask any questions about your dental visit!",
+    },
+    exploreOffice: {
+      title: "Explore the Office",
+      description: "Take a fun virtual tour of the dental office and discover cool equipment!",
+    },
+  },
+
+  // Fun Facts Section
+  funFacts: {
+    badge: "🧠 Did You Know?",
+    title: "Super Cool Tooth Facts!",
+    subtitle: "Impress your friends and family with these amazing facts about teeth!",
+    facts: [
+      "Your teeth are as unique as your fingerprints! No one else in the whole world has teeth exactly like yours.",
+      "Dentists have special chairs that can move up, down, and even lay back like a spaceship seat!",
+      "The tooth fairy collects millions of teeth every year! That's a lot of tiny treasures.",
+      "Brushing your teeth twice a day keeps cavity bugs away and makes your smile sparkle!",
+      "Elephants have the biggest teeth of any land animal - some are as long as your arm!",
+      "Your tongue has a unique print just like your fingers - it's your body's special signature!",
+    ],
+  },
+
+  // Story Mode Section
+  storyMode: {
+    badge: "🗺️ Quest Mode",
+    title: "Epic Tooth Quests",
+    subtitle: "Embark on legendary adventures with Toothy! Complete quests, earn XP, and become a Dental Hero! ⚔️✨",
+    questProgress: "Quest Progress",
+    complete: "Complete",
+    freeQuestsRemaining: "free quests remaining",
+    funStories: "Fun Stories",
+    questsCompleted: "Quests Completed",
+    smilesCreated: "Smiles Created",
   },
 
   // Games
@@ -179,6 +226,13 @@ export const en = {
     highScore: "High Score",
     timesPlayed: "Times Played",
     locked: "Complete 5 quests to unlock games!",
+    startGame: "Start Game!",
+    score: "Score",
+    lives: "Lives",
+    timeLeft: "Time Left",
+    escaped: "Escaped",
+    tapToSquash: "Tap to squash!",
+    protectTooth: "Protect the tooth!",
   },
 
   // Stories
@@ -188,6 +242,15 @@ export const en = {
     subtitle: "Interactive tales that teach healthy habits",
     read: "Read Story",
     listen: "Listen",
+    toothySays: "Toothy says:",
+    startQuest: "Start Quest!",
+    questOf: "Quest {{current}} of {{total}}",
+    quizCompleted: "Quiz Completed!",
+    questQuestion: "Quest Question",
+    amazing: "Amazing! 🎉",
+    oopsTryAgain: "Oops! Let's try again! 💪",
+    tryAgain: "Try Again",
+    hereIsAHint: "Here's a hint:",
   },
 
   // Brushing Timer
@@ -209,6 +272,76 @@ export const en = {
       bottomLeft: "Bottom Left",
       bottomRight: "Bottom Right",
     },
+  },
+
+  // Braces Care Section
+  bracesCare: {
+    badge: "🦷 Braces Care Guide",
+    title: "Keep Your Braces",
+    titleHighlight: "Super Clean!",
+    subtitle: "Learn how to take care of your braces with these fun and easy tips! Click on each tip to see it in action! 🌟",
+    quizTitle: "🎮 Braces Food Quiz Game",
+    quizSubtitle: "Can you figure out which foods are good or bad for braces? Play the quiz and become a braces food expert!",
+    playQuiz: "Play Quiz Game",
+    closeQuiz: "Close Quiz",
+    welcome: "Welcome to Braces Care! 🦷✨",
+    readyToTest: "Ready to test your knowledge? 🎮",
+    tips: {
+      brush: {
+        title: "Brush After Every Meal",
+        description: "Use a soft brush and angle it around brackets. Brush for 2 minutes, making tiny circles!",
+        message: "Brushing keeps my braces sparkly clean! ✨",
+      },
+      floss: {
+        title: "Floss Every Day",
+        description: "Use a floss threader or water flosser to clean between teeth and under wires!",
+        message: "Flossing is like a spa day for teeth! 🧵",
+      },
+      rinse: {
+        title: "Rinse with Mouthwash",
+        description: "Swish mouthwash to reach spots your brush can't. It kills germs and freshens breath!",
+        message: "Swish swish! Bye bye germs! 💧",
+      },
+      avoid: {
+        title: "Avoid Sticky Foods",
+        description: "Say no to caramel, gum, and chewy candy. They can break brackets and get stuck!",
+        message: "Sticky foods are tricky! Let's pick better snacks! 🍎",
+      },
+      protect: {
+        title: "Wear Your Mouthguard",
+        description: "Playing sports? Wear a special braces mouthguard to protect your smile!",
+        message: "Safety first! Protect that smile! 🛡️",
+      },
+      visit: {
+        title: "Visit Your Orthodontist",
+        description: "Regular checkups keep braces working great. You might even get new colored bands!",
+        message: "I love picking new band colors! 🌈",
+      },
+    },
+    braceyMessages: {
+      help: "I'll help you learn!",
+      cool: "Braces are cool! 😎",
+      doThis: "Let's do this! 💪",
+      great: "You're doing great!",
+      keepUp: "Keep it up! ⭐",
+      expert: "Almost an expert! 🌟",
+    },
+  },
+
+  // Footer Section
+  footer: {
+    tagline: "Making dental care fun for kids! 🦷✨",
+    keepGoing: "Keep Going, Hero! 🌟",
+    motivational: "Every quest you complete helps you grow a healthier, stronger smile! Don't forget your daily adventures—your teeth will thank you!",
+    madeWith: "Made with",
+    forSmiles: "for little smiles everywhere",
+    links: {
+      privacy: "Privacy Policy",
+      terms: "Terms of Service",
+      contact: "Contact Us",
+      support: "Support",
+    },
+    copyright: "© 2026 ToothyQuest. Helping kids smile brighter.",
   },
 
   // Auth
@@ -243,19 +376,6 @@ export const en = {
     recentActivity: "Recent Activity",
   },
 
-  // Footer
-  footer: {
-    tagline: "Making dental care fun for kids! 🦷✨",
-    links: {
-      privacy: "Privacy Policy",
-      terms: "Terms of Service",
-      contact: "Contact Us",
-      support: "Support",
-    },
-    copyright: "© 2024 ToothyQuest. All rights reserved.",
-    madeWith: "Made with ❤️ for little smiles",
-  },
-
   // Rewards & Celebrations
   rewards: {
     congratulations: "Congratulations! 🎉",
@@ -279,4 +399,61 @@ export const en = {
     "What a champion! 🏆",
     "Keep those teeth clean! 🦷",
   ],
+
+  // Dental Office Tour
+  dentalTour: {
+    title: "Explore the Dental Office! 🏥",
+    subtitle: "Click on the equipment to learn about them!",
+    tapToExplore: "Tap to explore!",
+    back: "Back",
+    equipment: {
+      chair: {
+        name: "The Magic Chair",
+        description: "This special chair moves up, down, and tilts back like a spaceship seat! It helps you get comfortable while the dentist looks at your teeth.",
+        funFact: "Some dental chairs can massage your back while you sit!",
+      },
+      light: {
+        name: "The Super Light",
+        description: "This bright light helps the dentist see all the tiny spots in your mouth. It's like having a sunshine in the room!",
+        funFact: "The light is specially designed not to hurt your eyes!",
+      },
+      mirror: {
+        name: "The Magic Mirror",
+        description: "A tiny mirror on a stick that helps the dentist see behind your teeth. It's like a treasure hunter's tool!",
+        funFact: "Dentists use mirrors because teeth have many hidden sides!",
+      },
+      suction: {
+        name: "Mr. Thirsty",
+        description: "This little straw slurps up water and keeps your mouth dry and comfy. It makes a funny sound!",
+        funFact: "Mr. Thirsty can drink up a whole cup of water in seconds!",
+      },
+      drill: {
+        name: "The Tooth Tickler",
+        description: "This tool helps clean away any cavity bugs. It vibrates and tickles a tiny bit!",
+        funFact: "Modern dental tools are super gentle and fast!",
+      },
+      xray: {
+        name: "The Picture Machine",
+        description: "Takes special photos of your teeth that the dentist can see on a screen. It's like having X-ray vision!",
+        funFact: "X-rays can see things hidden under your gums!",
+      },
+    },
+  },
+
+  // Sing Along
+  singAlong: {
+    title: "🎵 Sing Along with Toothy!",
+    subtitle: "Fun songs to make brushing exciting!",
+    nowPlaying: "Now Playing",
+    lyrics: "Lyrics",
+    comingSoon: "More songs coming soon!",
+  },
+
+  // Chat with Toothy
+  chatWithToothy: {
+    title: "Chat with Toothy! 💬",
+    placeholder: "Ask Toothy a question...",
+    thinking: "Toothy is thinking...",
+    greeting: "Hi there! I'm Toothy, your friendly dental buddy! 🦷 Ask me anything about taking care of your teeth!",
+  },
 };
