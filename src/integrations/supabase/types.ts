@@ -493,6 +493,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_all_children: {
+        Args: never
+        Returns: {
+          age_group: string
+          avatar_emoji: string
+          created_at: string
+          id: string
+          name: string
+          parent_id: string
+        }[]
+      }
+      admin_get_all_profiles: {
+        Args: never
+        Returns: {
+          avatar_emoji: string
+          created_at: string
+          display_name: string
+          id: string
+          updated_at: string
+          user_id: string
+        }[]
+      }
       get_admin_audit_logs: {
         Args: never
         Returns: {
