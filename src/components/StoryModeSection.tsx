@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Map, Sparkles, Compass, Trophy, Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { stories } from "@/data/stories";
+import { useStories } from "@/hooks/useStories";
 import StoryCard from "@/components/StoryCard";
 import StoryViewer from "@/components/StoryViewer";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
@@ -12,6 +12,7 @@ import PurchaseModal from "@/components/PurchaseModal";
 
 const StoryModeSection = () => {
   const { t } = useTranslation();
+  const stories = useStories();
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
