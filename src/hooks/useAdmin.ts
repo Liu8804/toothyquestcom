@@ -43,7 +43,7 @@ interface Child {
   id: string;
   name: string;
   avatar_emoji: string | null;
-  birth_year: number | null;
+  age_group: string;
   parent_id: string;
   created_at: string;
 }
@@ -112,29 +112,23 @@ export const useAdmin = () => {
     setLoading(false);
   }, [user]);
 
-  // Fetch admin statistics
+  // Fetch admin statistics using secure function
   const fetchStats = useCallback(async () => {
     if (!isAdmin) return;
 
-    // Fetch counts manually since RLS is now configured
-    const [profilesRes, childrenRes, badgesRes, questProgressRes, brushingRes] = await Promise.all([
-      supabase.from("profiles").select("id", { count: "exact", head: true }),
-      supabase.from("children").select("id", { count: "exact", head: true }),
-      supabase.from("badges").select("id", { count: "exact", head: true }),
-      supabase.from("quest_progress").select("xp_earned"),
-      supabase.from("brushing_sessions").select("id", { count: "exact", head: true }),
-    ]);
+    const { data, error } = await supabase.rpc("get_admin_stats");
 
-    const totalXp = questProgressRes.data?.reduce((sum, q) => sum + q.xp_earned, 0) || 0;
-
-    setStats({
-      total_users: profilesRes.count || 0,
-      total_children: childrenRes.count || 0,
-      total_badges: badgesRes.count || 0,
-      total_xp_earned: totalXp,
-      total_quests_completed: questProgressRes.data?.length || 0,
-      total_brushing_sessions: brushingRes.count || 0,
-    });
+    if (!error && data) {
+      const statsData = Array.isArray(data) ? data[0] : data;
+      setStats({
+        total_users: Number(statsData.total_users) || 0,
+        total_children: Number(statsData.total_children) || 0,
+        total_badges: Number(statsData.total_badges) || 0,
+        total_xp_earned: Number(statsData.total_xp_earned) || 0,
+        total_quests_completed: Number(statsData.total_quests_completed) || 0,
+        total_brushing_sessions: Number(statsData.total_brushing_sessions) || 0,
+      });
+    }
   }, [isAdmin]);
 
   // Fetch all badges
@@ -151,31 +145,25 @@ export const useAdmin = () => {
     }
   }, [isAdmin]);
 
-  // Fetch all users
+  // Fetch all users using audited function
   const fetchUsers = useCallback(async () => {
     if (!isAdmin) return;
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.rpc("admin_get_all_profiles");
 
     if (!error && data) {
-      setUsers(data);
+      setUsers(data as unknown as UserProfile[]);
     }
   }, [isAdmin]);
 
-  // Fetch all children
+  // Fetch all children using audited function (returns age_group instead of birth_year)
   const fetchChildren = useCallback(async () => {
     if (!isAdmin) return;
 
-    const { data, error } = await supabase
-      .from("children")
-      .select("*")
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.rpc("admin_get_all_children");
 
     if (!error && data) {
-      setChildren(data);
+      setChildren(data as unknown as Child[]);
     }
   }, [isAdmin]);
 

@@ -355,7 +355,7 @@ const AdminDashboard = () => {
                     <div>
                       <h3 className="font-semibold text-foreground">{child.name}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {child.birth_year ? `Born: ${child.birth_year}` : "Birth year not set"}
+                        Age group: {child.age_group || "unknown"}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Added: {new Date(child.created_at).toLocaleDateString()}
