@@ -3,6 +3,8 @@ import { Star, Trophy, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toothyLogo from "@/assets/toothyquest-logo.jpeg";
 import MascotWithExpression from "@/components/MascotWithExpression";
+import { useQuestVoice } from "@/hooks/useQuestVoice";
+import { useEffect, useMemo } from "react";
 
 interface RewardCelebrationProps {
   onPlayAgain: () => void;
@@ -22,6 +24,8 @@ export const RewardCelebration = ({
   onPlayAgain,
   onClose,
 }: RewardCelebrationProps) => {
+  const { speak, stop } = useQuestVoice();
+  
   const messages = [
     "Super Brusher!",
     "Tooth Hero!",
@@ -29,7 +33,15 @@ export const RewardCelebration = ({
     "Dental Superstar!",
   ];
   
-  const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  const randomMessage = useMemo(() => messages[Math.floor(Math.random() * messages.length)], []);
+
+  // Speak celebration message when component mounts
+  useEffect(() => {
+    const celebrationText = `${randomMessage}! You brushed for 2 whole minutes! Your teeth are sparkling clean! Fantastic brushing!`;
+    speak(celebrationText);
+    
+    return () => stop();
+  }, [randomMessage, speak, stop]);
 
   return (
     <div className="relative text-center py-8 overflow-hidden">

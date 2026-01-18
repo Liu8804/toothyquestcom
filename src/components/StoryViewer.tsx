@@ -6,6 +6,7 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useSoundEffects, SOUND_PROMPTS } from "@/hooks/useSoundEffects";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
+import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import toothyMascot from "@/assets/toothy-mascot.png";
@@ -36,6 +37,7 @@ const StoryViewer = ({
   const { completeQuest, isQuestCompleted, selectedChild } = useQuestProgress();
   const { playSound } = useSoundEffects();
   const { incrementProgress } = useDailyChallenges(selectedChild?.id);
+  const { speakIntro, speakEnding, stop: stopQuestVoice } = useQuestVoice();
   const [showIntro, setShowIntro] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -50,14 +52,19 @@ const StoryViewer = ({
 
   const questCompleted = isQuestCompleted(story.id);
 
-  // Reset intro when story changes
+  // Reset intro when story changes and speak intro
   useEffect(() => {
     setShowIntro(true);
-  }, [story.id]);
+    // Speak the intro when story loads
+    speakIntro(story.toothyIntro);
+  }, [story.id, story.toothyIntro, speakIntro]);
 
   // Stop narration when story changes or modal closes
   useEffect(() => {
-    return () => stop();
+    return () => {
+      stop();
+      stopQuestVoice();
+    };
   }, [story.id, stop]);
 
   const handlePlayNarration = () => {
@@ -76,6 +83,7 @@ const StoryViewer = ({
   };
 
   const handleStartStory = async () => {
+    stopQuestVoice(); // Stop intro voice
     setShowIntro(false);
     // Play story start sound
     playSound(SOUND_PROMPTS.storyStart, 2);
@@ -95,6 +103,8 @@ const StoryViewer = ({
       setTimeout(() => setShowConfetti(false), 3000);
       // Play completion sound
       playSound(SOUND_PROMPTS.questComplete, 3);
+      // Speak quest ending
+      speakEnding(`Quest Complete! ${story.questEnding}`);
 
       // Track daily challenge progress for stories
       const challengeResult = await incrementProgress("story");
