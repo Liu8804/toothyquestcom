@@ -1,6 +1,9 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { Sparkles, Clock, Utensils, Droplets, Shield, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Gamepad2, X } from "lucide-react";
+import BraceyMascot from "@/components/BraceyMascot";
+import BracesFoodQuizGame from "@/components/games/BracesFoodQuizGame";
 
 interface BracesTip {
   id: string;
@@ -9,6 +12,7 @@ interface BracesTip {
   icon: string;
   animation: "brush" | "floss" | "rinse" | "food" | "protect" | "smile";
   color: string;
+  braceyMessage: string;
 }
 
 const bracesTips: BracesTip[] = [
@@ -19,6 +23,7 @@ const bracesTips: BracesTip[] = [
     icon: "🪥",
     animation: "brush",
     color: "from-primary to-secondary",
+    braceyMessage: "Brushing keeps my braces sparkly clean! ✨",
   },
   {
     id: "floss",
@@ -27,6 +32,7 @@ const bracesTips: BracesTip[] = [
     icon: "🧵",
     animation: "floss",
     color: "from-mint to-primary",
+    braceyMessage: "Flossing is like a spa day for teeth! 🧵",
   },
   {
     id: "rinse",
@@ -35,6 +41,7 @@ const bracesTips: BracesTip[] = [
     icon: "💧",
     animation: "rinse",
     color: "from-sky to-mint",
+    braceyMessage: "Swish swish! Bye bye germs! 💧",
   },
   {
     id: "avoid",
@@ -43,6 +50,7 @@ const bracesTips: BracesTip[] = [
     icon: "🍬",
     animation: "food",
     color: "from-candy to-sunset",
+    braceyMessage: "Sticky foods are tricky! Let's pick better snacks! 🍎",
   },
   {
     id: "protect",
@@ -51,6 +59,7 @@ const bracesTips: BracesTip[] = [
     icon: "🛡️",
     animation: "protect",
     color: "from-secondary to-accent",
+    braceyMessage: "Safety first! Protect that smile! 🛡️",
   },
   {
     id: "visit",
@@ -59,6 +68,7 @@ const bracesTips: BracesTip[] = [
     icon: "🏥",
     animation: "smile",
     color: "from-accent to-primary",
+    braceyMessage: "I love picking new band colors! 🌈",
   },
 ];
 
@@ -86,9 +96,7 @@ const AnimatedBracesMouth = ({ activeAnimation }: { activeAnimation: string }) =
             }
             transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
           >
-            {/* Tooth */}
             <div className="w-6 h-8 bg-white rounded-b-lg border-2 border-gray-200 shadow-sm" />
-            {/* Bracket */}
             <motion.div
               className="absolute top-3 left-1/2 -translate-x-1/2 w-4 h-3 bg-gray-400 rounded-sm border border-gray-500"
               animate={
@@ -98,7 +106,6 @@ const AnimatedBracesMouth = ({ activeAnimation }: { activeAnimation: string }) =
               }
               transition={{ duration: 2, repeat: Infinity }}
             />
-            {/* Wire */}
             {i < 5 && (
               <div className="absolute top-4 left-6 w-2 h-0.5 bg-gray-500" />
             )}
@@ -119,9 +126,7 @@ const AnimatedBracesMouth = ({ activeAnimation }: { activeAnimation: string }) =
             }
             transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
           >
-            {/* Tooth */}
             <div className="w-6 h-7 bg-white rounded-t-lg border-2 border-gray-200 shadow-sm" />
-            {/* Bracket */}
             <motion.div
               className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-3 bg-gray-400 rounded-sm border border-gray-500"
               animate={
@@ -149,7 +154,6 @@ const AnimatedBracesMouth = ({ activeAnimation }: { activeAnimation: string }) =
           transition={{ duration: 2, repeat: Infinity }}
         >
           <div className="text-4xl">🪥</div>
-          {/* Sparkles */}
           <motion.span
             className="absolute -top-2 -left-2 text-lg"
             animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
@@ -296,7 +300,6 @@ const TipCard = ({
         }
       `}
     >
-      {/* Icon */}
       <motion.div
         className="text-4xl mb-3"
         animate={isActive ? { 
@@ -308,17 +311,14 @@ const TipCard = ({
         {tip.icon}
       </motion.div>
 
-      {/* Title */}
       <h3 className={`font-display text-lg font-bold mb-2 ${isActive ? 'text-white' : 'text-foreground'}`}>
         {tip.title}
       </h3>
 
-      {/* Description */}
       <p className={`text-sm leading-relaxed ${isActive ? 'text-white/90' : 'text-muted-foreground'}`}>
         {tip.description}
       </p>
 
-      {/* Active indicator */}
       {isActive && (
         <motion.div
           className="absolute -top-2 -right-2"
@@ -334,19 +334,59 @@ const TipCard = ({
 
 const BracesCareSection = () => {
   const [activeTip, setActiveTip] = useState<string>("brush");
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const activeTipData = bracesTips.find(t => t.id === activeTip);
 
   return (
-    <section id="braces-care" className="py-20 bg-gradient-to-b from-muted/30 to-background overflow-hidden">
+    <section id="braces-care" className="py-20 bg-gradient-to-b from-muted/30 to-background overflow-hidden relative">
+      {/* Floating Bracey mascots */}
+      <motion.div
+        className="absolute top-10 left-10 hidden lg:block"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      >
+        <BraceyMascot 
+          mood="winking" 
+          size="sm" 
+          message="I'll help you learn!" 
+          autoRotateMessages 
+          messages={["I'll help you learn!", "Braces are cool! 😎", "Let's do this! 💪"]}
+        />
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-20 right-10 hidden lg:block"
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 4, repeat: Infinity }}
+      >
+        <BraceyMascot 
+          mood="encouraging" 
+          size="sm" 
+          message="You're doing great!" 
+          autoRotateMessages
+          messages={["You're doing great!", "Keep it up! ⭐", "Almost an expert! 🌟"]}
+        />
+      </motion.div>
+
       <div className="container mx-auto px-4">
-        {/* Header */}
+        {/* Header with Bracey */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
+          {/* Centered Bracey at top */}
+          <div className="flex justify-center mb-6">
+            <BraceyMascot 
+              mood="excited" 
+              size="lg" 
+              message="Welcome to Braces Care! 🦷✨"
+              showMessage={true}
+            />
+          </div>
+
           <motion.span 
             className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 text-pink-600 px-4 py-2 rounded-full text-sm font-bold mb-4"
             animate={{ scale: [1, 1.02, 1] }}
@@ -383,20 +423,21 @@ const BracesCareSection = () => {
             className="relative order-2 lg:order-1"
           >
             <div className="bg-gradient-to-br from-pink-100 to-purple-100 rounded-3xl p-8 shadow-card">
-              {/* Animated braces mouth */}
               <AnimatedBracesMouth activeAnimation={activeTipData?.animation || "brush"} />
               
-              {/* Current tip label */}
+              {/* Bracey with tip-specific message */}
               <motion.div
                 key={activeTip}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center mt-6"
+                className="flex justify-center mt-6"
               >
-                <span className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm">
-                  <span className="text-xl">{activeTipData?.icon}</span>
-                  <span className="font-bold text-foreground">{activeTipData?.title}</span>
-                </span>
+                <BraceyMascot 
+                  mood={activeTip === "avoid" ? "thinking" : "happy"} 
+                  size="sm" 
+                  message={activeTipData?.braceyMessage || ""} 
+                  showMessage={true}
+                />
               </motion.div>
 
               {/* Decorative elements */}
@@ -433,22 +474,75 @@ const BracesCareSection = () => {
           </div>
         </div>
 
-        {/* Fun fact footer */}
+        {/* Food Quiz Game Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-16"
+        >
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <BraceyMascot 
+                mood="excited" 
+                size="md" 
+                message="Ready to test your knowledge? 🎮" 
+                showMessage={true}
+              />
+            </div>
+            <h3 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">
+              🎮 Braces Food Quiz Game
+            </h3>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              Can you figure out which foods are good or bad for braces? Play the quiz and become a braces food expert!
+            </p>
+          </div>
+
+          <AnimatePresence>
+            {showQuiz ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+              >
+                <BracesFoodQuizGame onClose={() => setShowQuiz(false)} />
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex justify-center"
+              >
+                <Button
+                  onClick={() => setShowQuiz(true)}
+                  size="lg"
+                  className="gap-3 px-8 py-6 text-lg rounded-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 shadow-lg hover:shadow-xl transition-all"
+                >
+                  <Gamepad2 className="w-6 h-6" />
+                  Play the Food Quiz!
+                  <motion.span
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 0.8, repeat: Infinity }}
+                  >
+                    🎯
+                  </motion.span>
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        {/* Fun fact footer with Bracey */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex items-center gap-3 bg-gradient-to-r from-pink-500/10 to-purple-500/10 px-6 py-4 rounded-2xl">
-            <motion.span
-              className="text-3xl"
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            >
-              🦷
-            </motion.span>
-            <p className="text-muted-foreground">
+          <div className="inline-flex items-center gap-4 bg-gradient-to-r from-pink-500/10 to-purple-500/10 px-6 py-4 rounded-2xl">
+            <BraceyMascot mood="winking" size="sm" showMessage={false} />
+            <p className="text-muted-foreground text-left">
               <span className="font-bold text-foreground">Fun Fact:</span> Most kids wear braces for 1-3 years. 
               Taking great care of them means a <span className="text-pink-500 font-bold">beautiful smile</span> when they come off! 
             </p>
