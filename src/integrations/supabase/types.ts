@@ -463,38 +463,21 @@ export type Database = {
       }
     }
     Views: {
-      admin_audit_logs_safe: {
-        Row: {
-          action: string | null
-          admin_user_id: string | null
-          created_at: string | null
-          details: Json | null
-          id: string | null
-          target_id: string | null
-          target_table: string | null
-        }
-        Insert: {
-          action?: string | null
-          admin_user_id?: string | null
-          created_at?: string | null
-          details?: Json | null
-          id?: string | null
-          target_id?: string | null
-          target_table?: string | null
-        }
-        Update: {
-          action?: string | null
-          admin_user_id?: string | null
-          created_at?: string | null
-          details?: Json | null
-          id?: string | null
-          target_id?: string | null
-          target_table?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_admin_audit_logs: {
+        Args: never
+        Returns: {
+          action: string
+          admin_user_id: string
+          created_at: string
+          details: Json
+          id: string
+          target_id: string
+          target_table: string
+        }[]
+      }
       get_admin_stats: {
         Args: never
         Returns: {
