@@ -18,6 +18,8 @@ export const es = {
     locked: "Bloqueado",
     completed: "Completado",
     comingSoon: "Próximamente",
+    play: "Jugar",
+    new: "NUEVO",
   },
 
   // Navegación
@@ -129,45 +131,90 @@ export const es = {
 
   // Sección de Características
   features: {
-    badge: "✨ Características Mágicas",
-    title: "¡Todo lo que tu Pequeño Héroe Necesita!",
-    brushingTimer: {
-      title: "Temporizador de 2 Minutos",
-      description: "Temporizador animado divertido con música y ánimo",
+    badge: "✨ ¡Tu Aventura Dental te Espera!",
+    title: "¡Tu Aventura Dental te Espera!",
+    subtitle: "¡Descubre todas las características increíbles que hacen de ToothyQuest la mejor manera de aprender sobre salud dental!",
+    funQuests: {
+      title: "Misiones Divertidas",
+      description: "Misiones divertidas para cepillarse, usar hilo dental y hábitos saludables",
     },
-    quests: {
-      title: "42 Misiones Dentales",
-      description: "Aprende cepillado, hilo dental, alimentación saludable y más",
+    earnRewards: {
+      title: "Gana Recompensas",
+      description: "Gana insignias y recompensas por completar desafíos",
     },
-    games: {
-      title: "Juegos Educativos",
-      description: "¡Caza Bichos de Azúcar, Héroe del Hilo Dental y más!",
+    friendlyGuide: {
+      title: "Guía Amigable",
+      description: "Guiado por una mascota dental amigable",
     },
-    stories: {
-      title: "Cuentos Interactivos",
-      description: "Conoce al Hada de los Dientes y dentistas amigables",
+    reminders: {
+      title: "Recordatorios",
+      description: "Configura recordatorios para mantener rutinas consistentes",
     },
-    badges: {
-      title: "Insignias y Recompensas",
-      description: "Gana estrellas y desbloquea logros",
-    },
-    braces: {
-      title: "Aventuras con Brackets",
-      description: "Contenido especial para niños con brackets",
+    parentDashboard: {
+      title: "Panel para Padres",
+      description: "Panel para padres para seguir el progreso",
     },
   },
 
   // Sección de Aventuras
   adventures: {
-    badge: "🗺️ Mapa de Misiones",
-    title: "¡Explora Aventuras Dentales!",
-    subtitle: "¡Completa misiones para ganar XP y desbloquear insignias!",
+    badge: "🚀 Elige Tu Aventura",
+    title: "¡Formas Emocionantes de Explorar!",
+    subtitle: "¡Elige una aventura y descubre lo divertido que puede ser cuidar tus dientes!",
     questsCompleted: "Misiones Completadas",
     xpEarned: "XP Ganado",
     startQuest: "Iniciar Misión",
     continueQuest: "Continuar",
     completedBadge: "✓ Completado",
     lockedMessage: "¡Completa las misiones anteriores para desbloquear!",
+    storyTime: {
+      title: "Hora del Cuento",
+      description: "¡Únete a Toothy en aventuras mágicas que hacen que las visitas al dentista se sientan como misiones emocionantes!",
+    },
+    funGames: {
+      title: "Juegos Divertidos",
+      description: "¡Juega juegos de cepillado de dientes y gana estrellas por ser un superhéroe dental!",
+    },
+    singAlong: {
+      title: "Canta Conmigo",
+      description: "¡Aprende canciones divertidas sobre cepillarse y usar hilo dental que hacen del cuidado dental una fiesta!",
+    },
+    chatWithToothy: {
+      title: "Chatea con Toothy",
+      description: "¡Ten conversaciones amigables y haz cualquier pregunta sobre tu visita al dentista!",
+    },
+    exploreOffice: {
+      title: "Explora el Consultorio",
+      description: "¡Haz un recorrido virtual divertido del consultorio dental y descubre equipos geniales!",
+    },
+  },
+
+  // Sección de Datos Divertidos
+  funFacts: {
+    badge: "🧠 ¿Sabías Que?",
+    title: "¡Datos Super Geniales sobre Dientes!",
+    subtitle: "¡Impresiona a tus amigos y familia con estos datos increíbles sobre los dientes!",
+    facts: [
+      "¡Tus dientes son tan únicos como tus huellas digitales! Nadie más en el mundo tiene dientes exactamente como los tuyos.",
+      "¡Los dentistas tienen sillas especiales que pueden moverse arriba, abajo, e incluso reclinarse como un asiento de nave espacial!",
+      "¡El hada de los dientes recolecta millones de dientes cada año! Son muchos pequeños tesoros.",
+      "¡Cepillarte los dientes dos veces al día mantiene alejados a los bichos de las caries y hace que tu sonrisa brille!",
+      "¡Los elefantes tienen los dientes más grandes de cualquier animal terrestre - algunos son tan largos como tu brazo!",
+      "¡Tu lengua tiene una huella única igual que tus dedos - es la firma especial de tu cuerpo!",
+    ],
+  },
+
+  // Sección de Modo Historia
+  storyMode: {
+    badge: "🗺️ Modo Misión",
+    title: "Épicas Misiones de Dientes",
+    subtitle: "¡Embárcate en aventuras legendarias con Toothy! ¡Completa misiones, gana XP y conviértete en un Héroe Dental! ⚔️✨",
+    questProgress: "Progreso de Misión",
+    complete: "Completo",
+    freeQuestsRemaining: "misiones gratis restantes",
+    funStories: "Cuentos Divertidos",
+    questsCompleted: "Misiones Completadas",
+    smilesCreated: "Sonrisas Creadas",
   },
 
   // Juegos
@@ -179,6 +226,13 @@ export const es = {
     highScore: "Puntuación Alta",
     timesPlayed: "Veces Jugado",
     locked: "¡Completa 5 misiones para desbloquear juegos!",
+    startGame: "¡Iniciar Juego!",
+    score: "Puntos",
+    lives: "Vidas",
+    timeLeft: "Tiempo",
+    escaped: "Escapados",
+    tapToSquash: "¡Toca para aplastar!",
+    protectTooth: "¡Protege el diente!",
   },
 
   // Cuentos
@@ -188,6 +242,15 @@ export const es = {
     subtitle: "Historias interactivas que enseñan hábitos saludables",
     read: "Leer Cuento",
     listen: "Escuchar",
+    toothySays: "Toothy dice:",
+    startQuest: "¡Iniciar Misión!",
+    questOf: "Misión {{current}} de {{total}}",
+    quizCompleted: "¡Quiz Completado!",
+    questQuestion: "Pregunta de Misión",
+    amazing: "¡Increíble! 🎉",
+    oopsTryAgain: "¡Ups! ¡Intentemos de nuevo! 💪",
+    tryAgain: "Intentar de Nuevo",
+    hereIsAHint: "Aquí hay una pista:",
   },
 
   // Temporizador de Cepillado
@@ -209,6 +272,76 @@ export const es = {
       bottomLeft: "Abajo Izquierda",
       bottomRight: "Abajo Derecha",
     },
+  },
+
+  // Sección de Cuidado de Brackets
+  bracesCare: {
+    badge: "🦷 Guía de Cuidado de Brackets",
+    title: "¡Mantén Tus Brackets",
+    titleHighlight: "Super Limpios!",
+    subtitle: "¡Aprende cómo cuidar tus brackets con estos consejos fáciles y divertidos! ¡Haz clic en cada consejo para verlo en acción! 🌟",
+    quizTitle: "🎮 Juego de Quiz de Comidas para Brackets",
+    quizSubtitle: "¿Puedes descubrir qué comidas son buenas o malas para los brackets? ¡Juega el quiz y conviértete en un experto en comidas para brackets!",
+    playQuiz: "Jugar Quiz",
+    closeQuiz: "Cerrar Quiz",
+    welcome: "¡Bienvenido al Cuidado de Brackets! 🦷✨",
+    readyToTest: "¿Listo para probar tus conocimientos? 🎮",
+    tips: {
+      brush: {
+        title: "Cepíllate Después de Cada Comida",
+        description: "Usa un cepillo suave y ángúlalo alrededor de los brackets. ¡Cepíllate por 2 minutos, haciendo pequeños círculos!",
+        message: "¡Cepillarme mantiene mis brackets brillantes! ✨",
+      },
+      floss: {
+        title: "Usa Hilo Dental Todos los Días",
+        description: "¡Usa un enhebrador de hilo dental o irrigador para limpiar entre los dientes y debajo de los alambres!",
+        message: "¡Usar hilo dental es como un día de spa para los dientes! 🧵",
+      },
+      rinse: {
+        title: "Enjuágate con Enjuague Bucal",
+        description: "¡Enjuágate para llegar a los lugares que tu cepillo no puede. Mata gérmenes y refresca el aliento!",
+        message: "¡Swish swish! ¡Adiós gérmenes! 💧",
+      },
+      avoid: {
+        title: "Evita Comidas Pegajosas",
+        description: "Di no al caramelo, chicle y dulces masticables. ¡Pueden romper los brackets y quedarse pegados!",
+        message: "¡Las comidas pegajosas son complicadas! ¡Elijamos mejores snacks! 🍎",
+      },
+      protect: {
+        title: "Usa Tu Protector Bucal",
+        description: "¿Practicas deportes? ¡Usa un protector bucal especial para brackets para proteger tu sonrisa!",
+        message: "¡Seguridad primero! ¡Protege esa sonrisa! 🛡️",
+      },
+      visit: {
+        title: "Visita a Tu Ortodoncista",
+        description: "Las revisiones regulares mantienen los brackets funcionando bien. ¡Incluso podrías elegir nuevos colores de ligas!",
+        message: "¡Me encanta elegir nuevos colores de ligas! 🌈",
+      },
+    },
+    braceyMessages: {
+      help: "¡Te ayudaré a aprender!",
+      cool: "¡Los brackets son geniales! 😎",
+      doThis: "¡Hagamos esto! 💪",
+      great: "¡Lo estás haciendo genial!",
+      keepUp: "¡Sigue así! ⭐",
+      expert: "¡Casi eres un experto! 🌟",
+    },
+  },
+
+  // Sección de Pie de Página
+  footer: {
+    tagline: "¡Haciendo el cuidado dental divertido para niños! 🦷✨",
+    keepGoing: "¡Sigue Adelante, Héroe! 🌟",
+    motivational: "¡Cada misión que completas te ayuda a crecer una sonrisa más saludable y fuerte! ¡No olvides tus aventuras diarias—tus dientes te lo agradecerán!",
+    madeWith: "Hecho con",
+    forSmiles: "para pequeñas sonrisas en todas partes",
+    links: {
+      privacy: "Política de Privacidad",
+      terms: "Términos de Servicio",
+      contact: "Contáctanos",
+      support: "Soporte",
+    },
+    copyright: "© 2026 ToothyQuest. Ayudando a los niños a sonreír más.",
   },
 
   // Autenticación
@@ -243,19 +376,6 @@ export const es = {
     recentActivity: "Actividad Reciente",
   },
 
-  // Pie de Página
-  footer: {
-    tagline: "¡Haciendo el cuidado dental divertido para niños! 🦷✨",
-    links: {
-      privacy: "Política de Privacidad",
-      terms: "Términos de Servicio",
-      contact: "Contáctanos",
-      support: "Soporte",
-    },
-    copyright: "© 2024 ToothyQuest. Todos los derechos reservados.",
-    madeWith: "Hecho con ❤️ para pequeñas sonrisas",
-  },
-
   // Recompensas y Celebraciones
   rewards: {
     congratulations: "¡Felicitaciones! 🎉",
@@ -279,4 +399,61 @@ export const es = {
     "¡Qué campeón! 🏆",
     "¡Mantén esos dientes limpios! 🦷",
   ],
+
+  // Tour del Consultorio Dental
+  dentalTour: {
+    title: "¡Explora el Consultorio Dental! 🏥",
+    subtitle: "¡Haz clic en el equipo para aprender sobre ellos!",
+    tapToExplore: "¡Toca para explorar!",
+    back: "Atrás",
+    equipment: {
+      chair: {
+        name: "La Silla Mágica",
+        description: "¡Esta silla especial se mueve arriba, abajo, y se reclina como un asiento de nave espacial! Te ayuda a ponerte cómodo mientras el dentista revisa tus dientes.",
+        funFact: "¡Algunas sillas dentales pueden masajearte la espalda mientras te sientas!",
+      },
+      light: {
+        name: "La Super Luz",
+        description: "Esta luz brillante ayuda al dentista a ver todos los pequeños rincones de tu boca. ¡Es como tener un rayito de sol en la habitación!",
+        funFact: "¡La luz está especialmente diseñada para no lastimar tus ojos!",
+      },
+      mirror: {
+        name: "El Espejo Mágico",
+        description: "Un pequeño espejo en un palito que ayuda al dentista a ver detrás de tus dientes. ¡Es como una herramienta de cazador de tesoros!",
+        funFact: "¡Los dentistas usan espejos porque los dientes tienen muchos lados escondidos!",
+      },
+      suction: {
+        name: "Don Sediento",
+        description: "Esta pequeña pajita absorbe el agua y mantiene tu boca seca y cómoda. ¡Hace un sonido gracioso!",
+        funFact: "¡Don Sediento puede beber una taza entera de agua en segundos!",
+      },
+      drill: {
+        name: "El Cosquillador de Dientes",
+        description: "Esta herramienta ayuda a limpiar cualquier bicho de caries. ¡Vibra y hace cosquillitas un poquito!",
+        funFact: "¡Las herramientas dentales modernas son super suaves y rápidas!",
+      },
+      xray: {
+        name: "La Máquina de Fotos",
+        description: "Toma fotos especiales de tus dientes que el dentista puede ver en una pantalla. ¡Es como tener visión de rayos X!",
+        funFact: "¡Los rayos X pueden ver cosas escondidas debajo de tus encías!",
+      },
+    },
+  },
+
+  // Canta Conmigo
+  singAlong: {
+    title: "🎵 ¡Canta con Toothy!",
+    subtitle: "¡Canciones divertidas para hacer el cepillado emocionante!",
+    nowPlaying: "Reproduciendo Ahora",
+    lyrics: "Letra",
+    comingSoon: "¡Más canciones próximamente!",
+  },
+
+  // Chatea con Toothy
+  chatWithToothy: {
+    title: "¡Chatea con Toothy! 💬",
+    placeholder: "Hazle una pregunta a Toothy...",
+    thinking: "Toothy está pensando...",
+    greeting: "¡Hola! ¡Soy Toothy, tu amigable compañero dental! 🦷 ¡Pregúntame cualquier cosa sobre cómo cuidar tus dientes!",
+  },
 };
