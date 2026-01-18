@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Heart } from "lucide-react";
+import { Heart, Shield } from "lucide-react";
+import { Link } from "react-router-dom";
 import ToothyMascot from "@/components/ToothyMascot";
 
 export const FooterSection = () => {
@@ -38,8 +39,17 @@ export const FooterSection = () => {
                 <span className="font-display font-bold text-foreground">ToothyQuest</span>
               </div>
             </div>
+            <div className="flex items-center justify-center gap-4 mt-4">
+              <Link 
+                to="/privacy" 
+                className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <Shield className="w-3 h-3" />
+                Privacy Policy
+              </Link>
+            </div>
             <p className="text-xs text-muted-foreground mt-4">
-              © 2025 ToothyQuest. Helping kids smile brighter.
+              © 2026 ToothyQuest. Helping kids smile brighter.
             </p>
           </div>
         </motion.div>
