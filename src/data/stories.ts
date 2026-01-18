@@ -1,3 +1,10 @@
+export interface StoryQuiz {
+  question: string;
+  options: string[];
+  correctIndex: number;
+  hint: string;
+}
+
 export interface Story {
   id: string;
   title: string;
@@ -7,6 +14,7 @@ export interface Story {
   questEnding: string;
   illustrationPath: string;
   emoji: string;
+  quiz: StoryQuiz;
 }
 
 // Use logo asset path - will be imported in components
@@ -23,6 +31,12 @@ export const stories: Story[] = [
     questEnding: "You've started your smile adventure!",
     illustrationPath: "/stories/smile-quest.png",
     emoji: "⭐",
+    quiz: {
+      question: "What did Toothy do first?",
+      options: ["Take a nap", "Brush his teeth", "Eat candy"],
+      correctIndex: 1,
+      hint: "Great job! Brushing first keeps teeth happy and shiny!",
+    },
   },
   {
     id: "brushing-basics",
@@ -33,6 +47,12 @@ export const stories: Story[] = [
     questEnding: "Now you know the brushing basics!",
     illustrationPath: "/stories/brush-bounce.png",
     emoji: "🪥",
+    quiz: {
+      question: "Who helped Toothy learn how to brush?",
+      options: ["Flossy", "Sugar Monster", "Sleepy Tooth"],
+      correctIndex: 0,
+      hint: "Flossy is a brushing buddy who knows all the tips!",
+    },
   },
   {
     id: "floss-fun",
@@ -43,6 +63,12 @@ export const stories: Story[] = [
     questEnding: "You've learned the art of flossing!",
     illustrationPath: "/stories/captain-floss.png",
     emoji: "🧵",
+    quiz: {
+      question: "What did Toothy use to clean between teeth?",
+      options: ["Spoon", "Floss", "Blanket"],
+      correctIndex: 1,
+      hint: "Floss slides in between teeth to keep them super clean!",
+    },
   },
   {
     id: "healthy-bites",
@@ -53,6 +79,12 @@ export const stories: Story[] = [
     questEnding: "You know which foods help your smile!",
     illustrationPath: "/stories/apple-crunch.png",
     emoji: "🥕",
+    quiz: {
+      question: "Which snack is good for teeth?",
+      options: ["Candy", "Carrots", "Soda"],
+      correctIndex: 1,
+      hint: "Crunchy carrots make teeth strong and happy!",
+    },
   },
   {
     id: "first-adventure-complete",
@@ -63,6 +95,12 @@ export const stories: Story[] = [
     questEnding: "You're ready for even bigger adventures!",
     illustrationPath: "/stories/shiny-club.png",
     emoji: "🏆",
+    quiz: {
+      question: "Who went with Toothy on his first adventure?",
+      options: ["Sugar Monster", "Flossy", "Sleepy Tooth"],
+      correctIndex: 1,
+      hint: "Flossy loves adventures and brushing together!",
+    },
   },
   // === PAID QUESTS 6+ ===
   {
@@ -74,6 +112,12 @@ export const stories: Story[] = [
     questEnding: "Be brave like the little tooth!",
     illustrationPath: "/stories/brave-little-tooth.png",
     emoji: "🦷",
+    quiz: {
+      question: "Which tooth was brave in this quest?",
+      options: ["Front tooth", "Back tooth", "Tongue"],
+      correctIndex: 0,
+      hint: "The front tooth was brave and ready to shine!",
+    },
   },
   {
     id: "tooth-fairy-adventure",
@@ -84,6 +128,12 @@ export const stories: Story[] = [
     questEnding: "Keep your teeth clean for the Tooth Fairy!",
     illustrationPath: "/stories/tooth-fairy.png",
     emoji: "🧚",
+    quiz: {
+      question: "Who helped Toothy collect sparkling teeth?",
+      options: ["Tooth Fairy", "Flossy", "Sugar Monster"],
+      correctIndex: 0,
+      hint: "The Tooth Fairy loves sparkling teeth and smiles!",
+    },
   },
   {
     id: "cavity-monster-trouble",
@@ -94,6 +144,12 @@ export const stories: Story[] = [
     questEnding: "Grab your toothbrush and chase those monsters!",
     illustrationPath: "/stories/cavity-monsters.png",
     emoji: "👾",
+    quiz: {
+      question: "What problem did the friends face?",
+      options: ["Sparkling teeth", "Cavity monsters", "Lost toothbrushes"],
+      correctIndex: 1,
+      hint: "Cavity monsters hide if we don't brush well!",
+    },
   },
   {
     id: "captain-floss",
@@ -104,6 +160,12 @@ export const stories: Story[] = [
     questEnding: "Floss like a superhero today!",
     illustrationPath: "/stories/captain-floss.png",
     emoji: "🦸",
+    quiz: {
+      question: "How did Captain Floss help?",
+      options: ["Ate candy", "Flossed carefully", "Took a nap"],
+      correctIndex: 1,
+      hint: "Flossing gets rid of sugar hiding in tight spots!",
+    },
   },
   {
     id: "sugar-bug-hunt",
@@ -114,6 +176,12 @@ export const stories: Story[] = [
     questEnding: "Hunt those sugar bugs with your brush!",
     illustrationPath: "/stories/sugar-bugs.png",
     emoji: "🐛",
+    quiz: {
+      question: "What did Toothy chase away?",
+      options: ["Sugar bugs", "Candy", "Plaque pirates"],
+      correctIndex: 0,
+      hint: "Sugar bugs run away when we brush and floss!",
+    },
   },
   {
     id: "smile-quest",
@@ -124,6 +192,12 @@ export const stories: Story[] = [
     questEnding: "Complete your quest with daily brushing!",
     illustrationPath: "/stories/smile-quest.png",
     emoji: "👑",
+    quiz: {
+      question: "How did friends feel after brushing?",
+      options: ["Sad", "Happy and proud", "Sleepy"],
+      correctIndex: 1,
+      hint: "Clean teeth make everyone smile big!",
+    },
   },
   {
     id: "magic-mouthwash",
@@ -134,6 +208,12 @@ export const stories: Story[] = [
     questEnding: "Swish some magic mouthwash!",
     illustrationPath: "/stories/magic-mouthwash.png",
     emoji: "✨",
+    quiz: {
+      question: "What magical potion did Toothy use?",
+      options: ["Mouthwash", "Juice", "Candy syrup"],
+      correctIndex: 0,
+      hint: "Mouthwash keeps teeth extra fresh and healthy!",
+    },
   },
   {
     id: "brush-and-bounce",
@@ -144,6 +224,12 @@ export const stories: Story[] = [
     questEnding: "Dance and brush at the same time!",
     illustrationPath: "/stories/brush-bounce.png",
     emoji: "💃",
+    quiz: {
+      question: "How did Toothy make brushing fun?",
+      options: ["By jumping and brushing", "By hiding", "By sleeping"],
+      correctIndex: 0,
+      hint: "Dancing while brushing makes teeth happy!",
+    },
   },
   {
     id: "shiny-tooth-club",
@@ -154,6 +240,12 @@ export const stories: Story[] = [
     questEnding: "Earn your Shiny Tooth Club badge!",
     illustrationPath: "/stories/shiny-club.png",
     emoji: "🏅",
+    quiz: {
+      question: "What did friends earn for brushing well?",
+      options: ["Stickers", "Candy", "Sleep"],
+      correctIndex: 0,
+      hint: "Stickers are rewards for sparkling clean teeth!",
+    },
   },
   {
     id: "plaque-pirates",
@@ -164,6 +256,12 @@ export const stories: Story[] = [
     questEnding: "Defeat the plaque pirates with your brush!",
     illustrationPath: "/stories/plaque-pirates.png",
     emoji: "🏴‍☠️",
+    quiz: {
+      question: "Who caused trouble in the mouth?",
+      options: ["Plaque Pirates", "Tooth Fairy", "Flossy"],
+      correctIndex: 0,
+      hint: "Plaque Pirates hide sugar and germs—brush them away!",
+    },
   },
   {
     id: "shy-tooth-first-brush",
@@ -174,6 +272,12 @@ export const stories: Story[] = [
     questEnding: "Brush gently and make your teeth giggle!",
     illustrationPath: "/stories/shy-tooth.png",
     emoji: "😊",
+    quiz: {
+      question: "What did the shy tooth learn?",
+      options: ["To hide", "To brush carefully", "To eat candy"],
+      correctIndex: 1,
+      hint: "Every tooth can shine with careful brushing!",
+    },
   },
   {
     id: "timmy-wiggly-tooth",
@@ -184,6 +288,12 @@ export const stories: Story[] = [
     questEnding: "Growing teeth need gentle care!",
     illustrationPath: "/stories/wiggly-tooth.png",
     emoji: "🦷",
+    quiz: {
+      question: "What happened to Timmy's tooth?",
+      options: ["It wiggled", "It fell asleep", "It turned blue"],
+      correctIndex: 0,
+      hint: "Wiggly teeth are getting ready to make room for new ones!",
+    },
   },
   {
     id: "dentist-not-scary",
@@ -194,6 +304,12 @@ export const stories: Story[] = [
     questEnding: "Dentists are our smile friends!",
     illustrationPath: "/stories/friendly-dentist.png",
     emoji: "🏥",
+    quiz: {
+      question: "Why wasn't the dentist scary?",
+      options: ["She was kind and friendly", "She wore a mask", "She gave candy"],
+      correctIndex: 0,
+      hint: "Dentists are friends who help teeth stay healthy!",
+    },
   },
   {
     id: "tooth-learned-wait",
@@ -204,6 +320,12 @@ export const stories: Story[] = [
     questEnding: "Brush first, then enjoy your treat!",
     illustrationPath: "/stories/patient-tooth.png",
     emoji: "⏰",
+    quiz: {
+      question: "What did the tooth learn?",
+      options: ["To wait patiently", "To wiggle fast", "To hide"],
+      correctIndex: 0,
+      hint: "Patience makes brushing and teeth care easier!",
+    },
   },
   {
     id: "sugar-bug-sneak-attack",
@@ -214,6 +336,12 @@ export const stories: Story[] = [
     questEnding: "Brush away those sneaky sugar bugs!",
     illustrationPath: "/stories/sugar-bugs.png",
     emoji: "🐜",
+    quiz: {
+      question: "Who tried to sneak into the teeth?",
+      options: ["Sugar bugs", "Plaque pirates", "Tooth Fairy"],
+      correctIndex: 0,
+      hint: "Sugar bugs hide between teeth if we forget to brush!",
+    },
   },
   {
     id: "cavity-monster-second-chance",
@@ -224,6 +352,12 @@ export const stories: Story[] = [
     questEnding: "Let's brush and give cavities no chance!",
     illustrationPath: "/stories/cavity-monster-chance.png",
     emoji: "👾",
+    quiz: {
+      question: "What did the Cavity Monster do?",
+      options: ["Ate candy", "Learned to help clean teeth", "Hid under the pillow"],
+      correctIndex: 1,
+      hint: "Even tricky teeth problems can get fixed!",
+    },
   },
   {
     id: "midnight-snack-mystery",
@@ -234,6 +368,12 @@ export const stories: Story[] = [
     questEnding: "Brush your teeth before sleep to keep them safe!",
     illustrationPath: "/stories/midnight-snack.png",
     emoji: "🌙",
+    quiz: {
+      question: "What snack did the friends eat at night?",
+      options: ["Candy", "Healthy snack", "Soda"],
+      correctIndex: 1,
+      hint: "Healthy snacks keep teeth strong even at night!",
+    },
   },
   {
     id: "bubble-toothpaste-rescue",
@@ -244,6 +384,12 @@ export const stories: Story[] = [
     questEnding: "Let's use toothpaste and make bubbles!",
     illustrationPath: "/stories/bubble-rescue.png",
     emoji: "🫧",
+    quiz: {
+      question: "How did Toothy save the teeth?",
+      options: ["With bubble toothpaste", "With juice", "With a spoon"],
+      correctIndex: 0,
+      hint: "Bubble toothpaste is fun and cleans every corner!",
+    },
   },
   {
     id: "captain-floss-hidden-corn",
@@ -254,16 +400,28 @@ export const stories: Story[] = [
     questEnding: "Time to floss like a hero!",
     illustrationPath: "/stories/captain-floss-corn.png",
     emoji: "🦸‍♂️",
+    quiz: {
+      question: "What was hidden between teeth?",
+      options: ["Candy", "Corn", "Toothbrush"],
+      correctIndex: 1,
+      hint: "Floss can get the tiniest bits hiding in teeth!",
+    },
   },
   {
     id: "plaque-pirates-battle",
-    title: "The Plaque Pirates",
+    title: "The Plaque Pirates Battle",
     toothyIntro: "Arrr! Plaque Pirates ahead!",
     story: "Plaque pirates sailed across the teeth. \"They think they own this mouth!\" laughed Toothy. The toothbrush became a ship. The paste became foam waves. Scrub! Scrub! The pirates jumped ship and vanished.",
     lesson: "Daily brushing keeps teeth safe.",
     questEnding: "Brush away the plaque pirates!",
     illustrationPath: "/stories/plaque-pirates-battle.png",
     emoji: "🏴‍☠️",
+    quiz: {
+      question: "Who caused trouble in the mouth?",
+      options: ["Plaque Pirates", "Tooth Fairy", "Flossy"],
+      correctIndex: 0,
+      hint: "Plaque Pirates are gone when we brush and floss!",
+    },
   },
   {
     id: "brushing-timer-challenge",
@@ -274,6 +432,12 @@ export const stories: Story[] = [
     questEnding: "Let's brush together until the timer finishes!",
     illustrationPath: "/stories/brushing-timer.png",
     emoji: "⏱️",
+    quiz: {
+      question: "What helped friends brush for the right time?",
+      options: ["Timer", "Candy", "Blanket"],
+      correctIndex: 0,
+      hint: "Brushing for 2 minutes keeps teeth super clean!",
+    },
   },
   {
     id: "super-smile-squad",
@@ -284,6 +448,12 @@ export const stories: Story[] = [
     questEnding: "Join the Super Smile Squad and brush!",
     illustrationPath: "/stories/super-smile-squad.png",
     emoji: "🦸‍♀️",
+    quiz: {
+      question: "What did friends earn for brushing together?",
+      options: ["Stars", "Candy", "Sleep"],
+      correctIndex: 0,
+      hint: "Team brushing is fun and earns stars!",
+    },
   },
   {
     id: "tooth-fairy-lost-map",
@@ -294,6 +464,12 @@ export const stories: Story[] = [
     questEnding: "Brush to help the Tooth Fairy!",
     illustrationPath: "/stories/tooth-fairy-map.png",
     emoji: "🗺️",
+    quiz: {
+      question: "What did the friends help find?",
+      options: ["Lost map", "Candy bag", "Pillow"],
+      correctIndex: 0,
+      hint: "Tooth Fairy needs our help to find all the sparkling teeth!",
+    },
   },
   {
     id: "moonlight-tooth-parade",
@@ -304,6 +480,12 @@ export const stories: Story[] = [
     questEnding: "Brush tonight to join the parade!",
     illustrationPath: "/stories/moonlight-parade.png",
     emoji: "🌙",
+    quiz: {
+      question: "What did the teeth do at night?",
+      options: ["Parade in the moonlight", "Hide", "Sleep"],
+      correctIndex: 0,
+      hint: "Teeth love to shine in a fun parade!",
+    },
   },
   {
     id: "sparkle-spell",
@@ -314,6 +496,12 @@ export const stories: Story[] = [
     questEnding: "Say the sparkle spell and brush!",
     illustrationPath: "/stories/sparkle-spell.png",
     emoji: "✨",
+    quiz: {
+      question: "How did Toothy make teeth sparkle?",
+      options: ["Magic spell", "Candy", "Juice"],
+      correctIndex: 0,
+      hint: "A sparkle spell + brushing = shiny happy teeth!",
+    },
   },
   {
     id: "dreamland-dental-adventure",
@@ -324,6 +512,12 @@ export const stories: Story[] = [
     questEnding: "Brush before bed and sweet dreams!",
     illustrationPath: "/stories/dreamland-adventure.png",
     emoji: "💤",
+    quiz: {
+      question: "Where did Toothy and friends go?",
+      options: ["Dreamland", "Candy land", "Playground"],
+      correctIndex: 0,
+      hint: "Dreamland is full of fun tooth adventures!",
+    },
   },
   {
     id: "apple-crunch-test",
@@ -334,6 +528,12 @@ export const stories: Story[] = [
     questEnding: "Choose a healthy snack today!",
     illustrationPath: "/stories/apple-crunch.png",
     emoji: "🍎",
+    quiz: {
+      question: "Which snack was crunchy and healthy?",
+      options: ["Apple", "Cookie", "Candy"],
+      correctIndex: 0,
+      hint: "Crunchy apples are yummy and keep teeth strong!",
+    },
   },
   {
     id: "juice-tried-too-hard",
@@ -344,6 +544,12 @@ export const stories: Story[] = [
     questEnding: "Drink water after snacks!",
     illustrationPath: "/stories/juice-sugar.png",
     emoji: "🧃",
+    quiz: {
+      question: "Why was the juice tricky?",
+      options: ["Too sugary", "Too cold", "Too tasty"],
+      correctIndex: 0,
+      hint: "Sugary drinks can hide in teeth—brush after juice!",
+    },
   },
   {
     id: "water-super-drink",
@@ -354,6 +560,12 @@ export const stories: Story[] = [
     questEnding: "Take a sip of water now!",
     illustrationPath: "/stories/water-superhero.png",
     emoji: "💧",
+    quiz: {
+      question: "Which drink is best for teeth?",
+      options: ["Water", "Soda", "Juice"],
+      correctIndex: 0,
+      hint: "Water keeps teeth clean and happy!",
+    },
   },
   {
     id: "snack-time-choices",
@@ -364,5 +576,11 @@ export const stories: Story[] = [
     questEnding: "Pick a tooth-friendly snack!",
     illustrationPath: "/stories/snack-choices.png",
     emoji: "🥕",
+    quiz: {
+      question: "Which snack is the best for teeth?",
+      options: ["Candy", "Fruit", "Cookies"],
+      correctIndex: 1,
+      hint: "Fruits are yummy and good for sparkling teeth!",
+    },
   },
 ];
