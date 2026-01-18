@@ -4,6 +4,7 @@ import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import AdventuresSection from "@/components/AdventuresSection";
 import StoryModeSection from "@/components/StoryModeSection";
+import BracesCareSection from "@/components/BracesCareSection";
 import FunFactsSection from "@/components/FunFactsSection";
 import PreviewSection from "@/components/PreviewSection";
 import FooterSection from "@/components/FooterSection";
@@ -73,6 +74,7 @@ const Index = () => {
       <FeaturesSection />
       <AdventuresSection />
       <StoryModeSection />
+      <BracesCareSection />
       <FunFactsSection />
       <PreviewSection />
       <FooterSection />
