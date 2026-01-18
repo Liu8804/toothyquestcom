@@ -3,6 +3,8 @@ import { Sparkles, Trophy, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toothyLogo from "@/assets/toothyquest-logo.jpeg";
 import MascotWithExpression from "./MascotWithExpression";
+import { useQuestVoice } from "@/hooks/useQuestVoice";
+import { useEffect } from "react";
 
 interface Badge {
   name: string;
@@ -34,6 +36,27 @@ const QuestCompleteCelebration = ({
   newBadges,
   onClose,
 }: QuestCompleteCelebrationProps) => {
+  const { speakQuestComplete, speakBadgeEarned, stop } = useQuestVoice();
+
+  // Speak celebration when opened
+  useEffect(() => {
+    if (isOpen) {
+      speakQuestComplete(questTitle, xpEarned);
+      
+      // Speak badge names after a delay
+      if (newBadges.length > 0) {
+        const timeout = setTimeout(() => {
+          newBadges.forEach((badge, index) => {
+            setTimeout(() => speakBadgeEarned(badge.name), index * 1500);
+          });
+        }, 2000);
+        return () => clearTimeout(timeout);
+      }
+    }
+    
+    return () => stop();
+  }, [isOpen, questTitle, xpEarned, newBadges, speakQuestComplete, speakBadgeEarned, stop]);
+
   if (!isOpen) return null;
 
   return (
