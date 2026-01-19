@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface UseSoundEffectsReturn {
   playSound: (prompt: string, duration?: number) => Promise<void>;
@@ -41,14 +42,21 @@ export const useSoundEffects = (): UseSoundEffectsReturn => {
     if (!audioUrl) {
       setIsLoading(true);
       try {
+        // Get user session for authenticated request
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          console.log("Sound effects require authentication");
+          setIsLoading(false);
+          return;
+        }
+
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-sfx`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              "Authorization": `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({ prompt, duration }),
           }

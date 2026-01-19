@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getVoiceSettings, VoiceSettings } from "@/components/VoiceSettingsModal";
+import { supabase } from "@/integrations/supabase/client";
 
 interface UseStoryNarrationReturn {
   isPlaying: boolean;
@@ -226,15 +227,23 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
         // ignore
       }
 
-      fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({ text, voiceId: "pFZP5JQG7iQjIQuC4Bku" }),
-      })
+      // Get user session for authenticated request
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session?.access_token) {
+          console.log("ElevenLabs TTS requires authentication, falling back to browser speech");
+          setIsLoading(false);
+          playWithBrowserSpeech(text, voiceSettings);
+          return;
+        }
+
+        fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({ text, voiceId: "pFZP5JQG7iQjIQuC4Bku" }),
+        })
         .then(async (response) => {
           if (!response.ok) {
             let serverMessage = `Voice request failed (${response.status})`;
@@ -308,6 +317,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
           setIsLoading(false);
           setError("Failed to generate narration. Please try again.");
         });
+      });
     },
     [playWithBrowserSpeech, stop]
   );
