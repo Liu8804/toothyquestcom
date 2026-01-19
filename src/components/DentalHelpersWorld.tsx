@@ -150,7 +150,7 @@ const DentalHelpersWorld = () => {
             <BraceyMascot 
               mood="excited" 
               size="lg" 
-              message="Welcome to Dental Helpers World! 🎉"
+              message="Welcome to Dental Helpers! 🎉"
               showMessage={true}
             />
           </div>
@@ -166,7 +166,7 @@ const DentalHelpersWorld = () => {
           </motion.span>
 
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            🦷 Dental Helpers World ✨
+            🦷 Dental Helpers ✨
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Meet the friendly tools that help teeth grow straight, strong, and safe! 
