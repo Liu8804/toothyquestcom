@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Bell, BellOff, Clock, Sun, Moon, Flame, X, Check } from "lucide-react";
+import { Bell, BellOff, Clock, Sun, Moon, Flame, X, Check, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 interface NotificationSettingsProps {
   isOpen: boolean;
@@ -246,6 +247,23 @@ const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsProps) =>
                   <Switch
                     checked={preferences.streak_alerts}
                     onCheckedChange={(checked) => updatePreferences({ streak_alerts: checked })}
+                  />
+                </div>
+
+                {/* Email Reminders */}
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl border-2 border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-6 h-6 text-primary" />
+                    <div>
+                      <p className="font-medium">Email Streak Reminders</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get emails when your streak is at risk
+                      </p>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={(preferences as any).email_reminders || false}
+                    onCheckedChange={(checked) => updatePreferences({ email_reminders: checked } as any)}
                   />
                 </div>
               </CardContent>

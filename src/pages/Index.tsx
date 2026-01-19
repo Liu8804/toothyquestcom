@@ -24,6 +24,7 @@ import DailyBonusModal from "@/components/DailyBonusModal";
 import RewardsPanel from "@/components/rewards/RewardsPanel";
 import SparkMeter from "@/components/rewards/SparkMeter";
 import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
+import ReferralProgram from "@/components/ReferralProgram";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
@@ -114,6 +115,8 @@ const Index = () => {
 
         {/* Auth button, language switcher and streak tracker in top right */}
         <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
+          {/* Referral Program Button */}
+          {user && <ReferralProgram />}
           {/* Sparkle Meter (Mini version for header) */}
           {user && selectedChild && (
             <Button
