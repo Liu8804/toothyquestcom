@@ -3,6 +3,7 @@ export interface StoryQuiz {
   options: string[];
   correctIndex: number;
   hint: string;
+  parentTip?: string; // Guidance for parents to reinforce the lesson at home
 }
 
 export interface Story {
@@ -1124,12 +1125,14 @@ export const stories: Story[] = [
       options: ["Thumb sucking 👎", "Brushing gently 🪥", "Eating veggies 🥕"],
       correctIndex: 0,
       hint: "OH NO! 😬 Thumb sucking can push teeth! But we can learn NEW habits! You're so smart! 🎉",
+      parentTip: "Gently redirect thumb sucking or nail biting without shaming. Positive reinforcement and habit trackers work well. Consult your dentist if habits persist past age 5.",
     },
     quiz2: {
       question: "True or False: Good habits help teeth grow STRAIGHT! 🦷",
       options: ["TRUE! ✨✅", "False 🙅"],
       correctIndex: 0,
       hint: "YAY! 🎉 Good habits = straight, happy teeth! You're a habit hero! 🦸‍♀️",
+      parentTip: "Celebrate small wins when your child chooses healthy habits. Create a simple reward chart for habit-free days.",
     },
   },
   {
@@ -1155,12 +1158,14 @@ export const stories: Story[] = [
       options: ["Stay CALM! 😌", "Cry forever 😭", "Hide under bed 🛏️"],
       correctIndex: 0,
       hint: "SUPER HERO MOVE! 🎉 Stay calm and find help! You're SO brave! 🦸‍♀️",
+      parentTip: "Keep your dentist's emergency number handy. If a tooth is knocked out, hold it by the crown (not root), keep it moist in milk, and seek dental care within 30 minutes.",
     },
     quiz2: {
       question: "Should we go to the dentist FAST if a tooth gets bumped?",
       options: ["YES! Super fast! 🏃‍♂️💨", "No, wait a week 📅"],
       correctIndex: 0,
       hint: "ZOOM ZOOM! 🎉 Fast = tooth saved! Great thinking! 🚀",
+      parentTip: "Time is critical for dental emergencies. Even baby teeth trauma should be evaluated to check for damage to developing adult teeth.",
     },
   },
   {
@@ -1186,12 +1191,14 @@ export const stories: Story[] = [
       options: ["Lining up teeth! 🦷✨", "Coloring teeth 🎨", "Making teeth sleepy 😴"],
       correctIndex: 0,
       hint: "HOORAY! 🎉 Braces guide teeth into PERFECT places! Like a tooth parade! 🎊",
+      parentTip: "Braces are common and helpful. Encourage gentle brushing around brackets and remind kids that braces mean healthy progress toward a beautiful smile.",
     },
     quiz2: {
       question: "Can kids with braces eat sticky candy? 🍬",
       options: ["Nope! 🙅‍♀️", "Yes, all day! 🍭"],
       correctIndex: 0,
       hint: "SMART CHOICE! 🎉 Sticky stuff can hurt braces. Gentle foods are best! 🍎",
+      parentTip: "Keep a list of braces-friendly foods visible. Avoid sticky, hard, or chewy foods that can damage brackets and wires.",
     },
   },
   {
@@ -1217,12 +1224,14 @@ export const stories: Story[] = [
       options: ["Make space between teeth! ✨", "Color teeth rainbow 🌈", "Make teeth dance 💃"],
       correctIndex: 0,
       hint: "PERFECT! 🎉 Spacers make room so teeth can move! Like making space for friends! 🤗",
+      parentTip: "Spacers may cause mild discomfort for 1-3 days. Soft foods and over-the-counter pain relief can help. Contact your orthodontist if spacers fall out.",
     },
     quiz2: {
       question: "Is it normal if spacers feel a little funny at first?",
       options: ["Yes, totally normal! 👍", "No, never! 🙅"],
       correctIndex: 0,
       hint: "YOU'RE RIGHT! 🎉 A little funny feeling is OK! It gets better fast! 💪",
+      parentTip: "Reassure your child that the discomfort is temporary. Avoid sticky foods that could dislodge the spacers.",
     },
   },
   {
@@ -1248,12 +1257,14 @@ export const stories: Story[] = [
       options: ["The JAW! 😮", "Hair 💇", "Shoes 👟"],
       correctIndex: 0,
       hint: "WOW! 🎉 Expanders make jaws bigger so ALL teeth can fit! Magic! ✨",
+      parentTip: "Follow your orthodontist's turning schedule carefully. Most expanders need turning once or twice daily for several weeks.",
     },
     quiz2: {
       question: "Do expanders work fast or slowly?",
       options: ["Slowly and gently! 🐢", "Super duper fast! 🚀"],
       correctIndex: 0,
       hint: "EXACTLY! 🎉 Slow and steady wins the race! Gentle is best! 🌟",
+      parentTip: "Speech may be affected temporarily. Encourage your child to practice speaking and reading aloud to adjust faster.",
     },
   },
   {
@@ -1279,12 +1290,14 @@ export const stories: Story[] = [
       options: ["A tooth PROTECTOR! 💪", "A snack 🍪", "Candy 🍬"],
       correctIndex: 0,
       hint: "SUPER SHIELD! 🎉 Mouthguards are like HELMETS for teeth! POW! 💥",
+      parentTip: "Custom-fitted mouthguards from your dentist offer the best protection. Replace them each season or when they show wear.",
     },
     quiz2: {
       question: "When do kids wear mouthguards?",
       options: ["Playing SPORTS! ⚽🏀", "Sleeping 😴", "Eating dinner 🍽️"],
       correctIndex: 0,
       hint: "GAME ON! 🎉 Mouthguards protect teeth during all the sporty fun! GO TEAM! 🏆",
+      parentTip: "Make mouthguard use a non-negotiable part of sports equipment. Keep it in the sports bag so it's never forgotten.",
     },
   },
   {
@@ -1308,12 +1321,14 @@ export const stories: Story[] = [
       options: ["To clean BETWEEN teeth! 🦷", "To tickle gums 😆", "To play 🎮"],
       correctIndex: 0,
       hint: "SWOOSH! 🎉 Floss reaches tiny spaces brushes can't! You're so smart! 🧠",
+      parentTip: "Assist young children with flossing until they develop good hand control, usually around age 8-9. Floss picks can make it easier for little hands.",
     },
     quiz2: {
       question: "Should floss snap HARD on gums?",
       options: ["NO! Be gentle! 🌸", "Yes, super hard! 💪"],
       correctIndex: 0,
       hint: "GENTLE WINS! 🎉 Soft and easy = happy gums! You got it! 🌟",
+      parentTip: "Demonstrate gentle C-curve flossing technique. Bleeding gums usually improve within 1-2 weeks of regular gentle flossing.",
     },
   },
   {
@@ -1337,12 +1352,14 @@ export const stories: Story[] = [
       options: ["Feed GERMS! 😱", "Clean teeth ✨", "Make teeth stronger 💪"],
       correctIndex: 0,
       hint: "WATCH OUT! 🎉 Germs LOVE sugar! But brushing saves the day! 🪥✨",
+      parentTip: "Limit sugary snacks between meals. When treats are enjoyed, have them with meals rather than as standalone snacks to reduce acid attacks.",
     },
     quiz2: {
       question: "What helps after eating sweets?",
       options: ["BRUSHING! 🪥✨", "Waiting forever ⏰", "Sleeping 😴"],
       correctIndex: 0,
       hint: "SUPER BRUSH! 🎉 Brushing after sweets chases germs away! POW! 💥",
+      parentTip: "Rinsing with water after sweets is better than nothing if brushing isn't possible. Wait 30 minutes after acidic foods before brushing.",
     },
   },
   {
@@ -1366,12 +1383,14 @@ export const stories: Story[] = [
       options: ["To CHECK teeth! 🦷✨", "To play games 🎮", "To take naps 😴"],
       correctIndex: 0,
       hint: "CHECK-UP CHAMP! 🎉 Dentists keep smiles healthy and sparkly! ⭐",
+      parentTip: "Schedule dental visits every 6 months starting by age 1. Using positive language before visits helps kids feel calm and confident.",
     },
     quiz2: {
       question: "Are dentist visits scary? 😰",
       options: ["NO! Dentists are FRIENDS! 🤗", "Yes, super scary! 👻"],
       correctIndex: 0,
       hint: "HOORAY! 🎉 Dentists are friendly smile helpers! Nothing to fear! 🌟",
+      parentTip: "Role-play dentist visits at home. Read books about dental visits and avoid using dental care as a threat or punishment.",
     },
   },
   {
@@ -1395,12 +1414,14 @@ export const stories: Story[] = [
       options: ["YES! Super important! ⭐", "No, not at all 🙅"],
       correctIndex: 0,
       hint: "LITTLE HEROES! 🎉 Baby teeth help eat, talk, AND guide big teeth! 🦸‍♀️",
+      parentTip: "Baby teeth hold space for adult teeth. Losing them early to decay can cause crowding and orthodontic issues later.",
     },
     quiz2: {
       question: "Should we brush baby teeth?",
       options: ["YES! Every day! 🪥", "No, skip them 🙅"],
       correctIndex: 0,
       hint: "BRUSH BRUSH! 🎉 Baby teeth need love too! Keep them sparkly! ✨",
+      parentTip: "Start brushing as soon as the first tooth appears. Use a smear of fluoride toothpaste for under 3, pea-sized for 3-6 years.",
     },
   },
   {
@@ -1424,12 +1445,14 @@ export const stories: Story[] = [
       options: ["STICKY germs! 👾", "Tooth paint 🎨", "Fresh air 💨"],
       correctIndex: 0,
       hint: "GOTCHA! 🎉 Plaque is sticky germs, but brushing makes them GO AWAY! 🪥💨",
+      parentTip: "Explaining plaque as 'sticky bugs' helps kids understand why brushing matters. Disclosing tablets can show plaque they missed.",
     },
     quiz2: {
       question: "Can floss help remove plaque?",
       options: ["YES! Floss is awesome! 🧵", "No way 🙅"],
       correctIndex: 0,
       hint: "SUPER FLOSS! 🎉 Floss reaches where brushes can't! Team effort! 🤝",
+      parentTip: "Plaque hardens into tartar within 24-72 hours. Daily brushing and flossing prevents buildup that requires professional cleaning.",
     },
   },
   {
@@ -1453,12 +1476,14 @@ export const stories: Story[] = [
       options: ["Cheese! 🧀✨", "Candy 🍬", "Soda 🥤"],
       correctIndex: 0,
       hint: "YUM! 🎉 Cheese is a SUPER tooth food! Great pick! 🧀✨",
+      parentTip: "Cheese, nuts, crunchy vegetables, and apples are great tooth-friendly snacks. They stimulate saliva and naturally clean teeth.",
     },
     quiz2: {
       question: "Which drink helps teeth MOST?",
       options: ["WATER! 💧", "Juice 🧃", "Soda 🥤"],
       correctIndex: 0,
       hint: "SPLASH! 🎉 Water is the #1 drink for happy teeth! 💧🦷",
+      parentTip: "Water (especially fluoridated) is the best drink for dental health. Limit juice to mealtimes and dilute with water when possible.",
     },
   },
   {
@@ -1482,12 +1507,14 @@ export const stories: Story[] = [
       options: ["NO! Teeth are for FOOD! 🍎", "Yes, open everything! 📦"],
       correctIndex: 0,
       hint: "SMART! 🎉 Teeth are for EATING, not opening things! Safety first! 🛡️",
+      parentTip: "Teach kids that teeth are for eating food only—not for opening packages, biting nails, or chewing on pens and pencils.",
     },
     quiz2: {
       question: "Should kids bite hard objects?",
       options: ["NO! Be gentle! 🌸", "Yes, chomp everything! 💪"],
       correctIndex: 0,
       hint: "GENTLE WINS! 🎉 Hard things can hurt teeth. Be kind to your smile! 😊",
+      parentTip: "Ice, hard candy, and popcorn kernels are common causes of cracked teeth. Model good habits by avoiding these behaviors yourself.",
     },
   },
 ];

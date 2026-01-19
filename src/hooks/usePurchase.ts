@@ -8,6 +8,9 @@ export const ANNUAL_PRODUCT_ID = 'prod_ToloWHHcJ4wnOm';
 export const FREE_QUEST_LIMIT = 5;
 export const QUESTS_REQUIRED_FOR_GAMES = 5;
 
+// Test mode - set to true to unlock all content for testing
+export const TEST_MODE_UNLOCK_ALL = true;
+
 // Pricing configuration
 export const PRICING = {
   monthly: {
@@ -204,6 +207,9 @@ export const usePurchase = () => {
   }, [session, user]);
 
   const isContentLocked = useCallback((contentIndex: number, contentType: 'quest' | 'game' = 'quest', completedQuestsCount: number = 0): boolean => {
+    // Test mode unlocks everything
+    if (TEST_MODE_UNLOCK_ALL) return false;
+    
     if (purchaseState.isPurchased) return false;
     
     if (contentType === 'game') {
