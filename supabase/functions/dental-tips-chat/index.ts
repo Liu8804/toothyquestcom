@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.90.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,6 +11,9 @@ interface Message {
   content: string;
 }
 
+// Rate limit: 20 requests per minute per user
+const RATE_LIMIT = 20;
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -18,9 +22,54 @@ serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
+    
     if (!LOVABLE_API_KEY) {
       console.error("LOVABLE_API_KEY is not configured");
       throw new Error("AI service not configured");
+    }
+
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.error("Supabase configuration missing");
+      throw new Error("Service not configured");
+    }
+
+    // Authenticate user
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: "Please sign in to chat with Toothy!" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    if (authError || !user) {
+      console.error("Authentication error:", authError);
+      return new Response(
+        JSON.stringify({ error: "Please sign in to chat with Toothy!" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Rate limiting
+    const { data: rateAllowed, error: rateError } = await supabaseClient.rpc(
+      "increment_rate_limit",
+      { p_user_id: user.id, p_endpoint: "dental-tips-chat" }
+    );
+
+    if (rateError) {
+      console.error("Rate limit check error:", rateError);
+    } else if (!rateAllowed) {
+      return new Response(
+        JSON.stringify({ error: "Toothy needs a quick rest! Please try again in a minute." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     const { messages, childName } = await req.json() as { messages: Message[]; childName?: string };
@@ -29,9 +78,30 @@ serve(async (req) => {
       throw new Error("Messages array is required");
     }
 
-    console.log("Processing dental tips chat:", { messageCount: messages.length, childName });
+    // Validate message content length
+    for (const msg of messages) {
+      if (typeof msg.content !== "string" || msg.content.length > 500) {
+        throw new Error("Message content invalid or too long");
+      }
+      if (msg.role !== "user" && msg.role !== "assistant") {
+        throw new Error("Invalid message role");
+      }
+    }
 
-    const systemPrompt = `You are Toothy, a super friendly and enthusiastic tooth mascot who LOVES helping children learn about dental health! You're talking to ${childName || "a young friend"}.
+    // Limit message history
+    const limitedMessages = messages.slice(-10);
+
+    // Sanitize child name
+    const safeChildName = childName 
+      ? childName.replace(/[<>"'&]/g, "").substring(0, 50) 
+      : "a young friend";
+
+    console.log("Processing dental tips chat:", { 
+      messageCount: limitedMessages.length, 
+      userId: user.id.substring(0, 8) + "..." 
+    });
+
+    const systemPrompt = `You are Toothy, a super friendly and enthusiastic tooth mascot who LOVES helping children learn about dental health! You're talking to ${safeChildName}.
 
 Your personality:
 - Super friendly, warm, and encouraging - like a fun teacher!
@@ -66,7 +136,7 @@ Do NOT use asterisks or markdown formatting. Just plain text, maybe with an emoj
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          ...messages
+          ...limitedMessages
         ],
         temperature: 0.8,
         max_tokens: 200,
