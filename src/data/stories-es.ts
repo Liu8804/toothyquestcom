@@ -1094,12 +1094,14 @@ export const storiesEs: Story[] = [
       options: ["Chuparse el dedo 👎", "Cepillarse suavemente 🪥", "Comer vegetales 🥕"],
       correctIndex: 0,
       hint: "¡OH NO! 😬 ¡Chuparse el dedo puede empujar los dientes! ¡Pero podemos aprender NUEVOS hábitos! ¡Eres muy listo! 🎉",
+      parentTip: "Redirige suavemente el chuparse el dedo o morderse las uñas sin avergonzar. El refuerzo positivo y los rastreadores de hábitos funcionan bien. Consulta a tu dentista si los hábitos persisten después de los 5 años.",
     },
     quiz2: {
       question: "Verdadero o Falso: ¡Los buenos hábitos ayudan a que los dientes crezcan RECTOS! 🦷",
       options: ["¡VERDADERO! ✨✅", "Falso 🙅"],
       correctIndex: 0,
       hint: "¡YAY! 🎉 ¡Buenos hábitos = dientes rectos y felices! ¡Eres un héroe de hábitos! 🦸‍♀️",
+      parentTip: "Celebra las pequeñas victorias cuando tu hijo elige hábitos saludables. Crea un simple cuadro de recompensas para días sin malos hábitos.",
     },
   },
   {
@@ -1125,12 +1127,14 @@ export const storiesEs: Story[] = [
       options: ["¡Mantener la CALMA! 😌", "Llorar para siempre 😭", "Esconderse debajo de la cama 🛏️"],
       correctIndex: 0,
       hint: "¡MOVIMIENTO DE SUPERHÉROE! 🎉 ¡Mantén la calma y busca ayuda! ¡Eres MUY valiente! 🦸‍♀️",
+      parentTip: "Ten a mano el número de emergencia de tu dentista. Si se cae un diente, sostenlo por la corona (no la raíz), mantenlo húmedo en leche y busca atención dental dentro de 30 minutos.",
     },
     quiz2: {
       question: "¿Debemos ir al dentista RÁPIDO si un diente se golpea?",
       options: ["¡SÍ! ¡Súper rápido! 🏃‍♂️💨", "No, esperar una semana 📅"],
       correctIndex: 0,
       hint: "¡ZOOM ZOOM! 🎉 ¡Rápido = diente salvado! ¡Gran pensamiento! 🚀",
+      parentTip: "El tiempo es crítico en emergencias dentales. Incluso el trauma en dientes de leche debe evaluarse para verificar daños en los dientes adultos en desarrollo.",
     },
   },
   {
@@ -1156,12 +1160,14 @@ export const storiesEs: Story[] = [
       options: ["¡Alinear los dientes! 🦷✨", "Colorear los dientes 🎨", "Hacer que los dientes duerman 😴"],
       correctIndex: 0,
       hint: "¡HURRA! 🎉 ¡Los frenos guían los dientes a lugares PERFECTOS! ¡Como un desfile de dientes! 🎊",
+      parentTip: "Los frenos son comunes y útiles. Anima el cepillado suave alrededor de los brackets y recuerda a los niños que los frenos significan progreso saludable hacia una hermosa sonrisa.",
     },
     quiz2: {
       question: "¿Pueden los niños con frenos comer dulces pegajosos? 🍬",
       options: ["¡No! 🙅‍♀️", "¡Sí, todo el día! 🍭"],
       correctIndex: 0,
       hint: "¡ELECCIÓN INTELIGENTE! 🎉 ¡Las cosas pegajosas pueden dañar los frenos. ¡Los alimentos suaves son mejores! 🍎",
+      parentTip: "Mantén visible una lista de alimentos compatibles con frenos. Evita alimentos pegajosos, duros o masticables que puedan dañar brackets y alambres.",
     },
   },
   {
@@ -1187,12 +1193,14 @@ export const storiesEs: Story[] = [
       options: ["¡Hacen espacio entre los dientes! ✨", "Colorean los dientes de arcoíris 🌈", "Hacen bailar los dientes 💃"],
       correctIndex: 0,
       hint: "¡PERFECTO! 🎉 ¡Los separadores hacen espacio para que los dientes se muevan! ¡Como hacer espacio para los amigos! 🤗",
+      parentTip: "Los separadores pueden causar molestias leves durante 1-3 días. Los alimentos blandos y el alivio del dolor de venta libre pueden ayudar. Contacta a tu ortodoncista si los separadores se caen.",
     },
     quiz2: {
       question: "¿Es normal si los separadores se sienten un poco raros al principio?",
       options: ["¡Sí, totalmente normal! 👍", "¡No, nunca! 🙅"],
       correctIndex: 0,
       hint: "¡TIENES RAZÓN! 🎉 ¡Una sensación un poco rara está bien! ¡Se mejora rápido! 💪",
+      parentTip: "Tranquiliza a tu hijo diciéndole que la molestia es temporal. Evita alimentos pegajosos que puedan desalojar los separadores.",
     },
   },
   {
@@ -1218,12 +1226,14 @@ export const storiesEs: Story[] = [
       options: ["¡La MANDÍBULA! 😮", "El cabello 💇", "Los zapatos 👟"],
       correctIndex: 0,
       hint: "¡WOW! 🎉 ¡Los expansores hacen las mandíbulas más grandes para que TODOS los dientes quepan! ¡Magia! ✨",
+      parentTip: "Sigue cuidadosamente el horario de giros de tu ortodoncista. La mayoría de los expansores necesitan girarse una o dos veces al día durante varias semanas.",
     },
     quiz2: {
       question: "¿Los expansores trabajan rápido o lentamente?",
       options: ["¡Lenta y suavemente! 🐢", "¡Súper duper rápido! 🚀"],
       correctIndex: 0,
       hint: "¡EXACTO! 🎉 ¡Lento y constante gana la carrera! ¡Suave es lo mejor! 🌟",
+      parentTip: "El habla puede verse afectada temporalmente. Anima a tu hijo a practicar hablando y leyendo en voz alta para adaptarse más rápido.",
     },
   },
   {
@@ -1249,12 +1259,14 @@ export const storiesEs: Story[] = [
       options: ["¡Un PROTECTOR de dientes! 💪", "Un snack 🍪", "Un dulce 🍬"],
       correctIndex: 0,
       hint: "¡SÚPER ESCUDO! 🎉 ¡Los protectores bucales son como CASCOS para los dientes! ¡POW! 💥",
+      parentTip: "Los protectores bucales hechos a medida por tu dentista ofrecen la mejor protección. Reemplázalos cada temporada o cuando muestren desgaste.",
     },
     quiz2: {
       question: "¿Cuándo usan los niños protectores bucales?",
       options: ["¡Jugando DEPORTES! ⚽🏀", "Durmiendo 😴", "Cenando 🍽️"],
       correctIndex: 0,
       hint: "¡A JUGAR! 🎉 ¡Los protectores bucales protegen los dientes durante toda la diversión deportiva! ¡VAMOS EQUIPO! 🏆",
+      parentTip: "Haz que el uso del protector bucal sea parte no negociable del equipo deportivo. Mantenlo en la bolsa de deportes para que nunca se olvide.",
     },
   },
   {
@@ -1278,12 +1290,14 @@ export const storiesEs: Story[] = [
       options: ["¡Para limpiar ENTRE los dientes! 🦷", "Para hacer cosquillas a las encías 😆", "Para jugar 🎮"],
       correctIndex: 0,
       hint: "¡SWOOSH! 🎉 ¡El hilo dental llega a espacios pequeñitos donde los cepillos no pueden! ¡Eres muy listo! 🧠",
+      parentTip: "Ayuda a los niños pequeños con el hilo dental hasta que desarrollen buen control manual, generalmente alrededor de los 8-9 años. Los palitos de hilo dental pueden facilitar el trabajo para manos pequeñas.",
     },
     quiz2: {
       question: "¿Debe el hilo dental golpear FUERTE las encías?",
       options: ["¡NO! ¡Sé suave! 🌸", "¡Sí, súper fuerte! 💪"],
       correctIndex: 0,
       hint: "¡SUAVE GANA! 🎉 ¡Suave y fácil = encías felices! ¡Lo lograste! 🌟",
+      parentTip: "Demuestra la técnica suave de curva en C del hilo dental. Las encías sangrantes generalmente mejoran dentro de 1-2 semanas de uso regular y suave del hilo dental.",
     },
   },
   {
@@ -1307,12 +1321,14 @@ export const storiesEs: Story[] = [
       options: ["¡Alimentar GÉRMENES! 😱", "Limpiar dientes ✨", "Hacer dientes más fuertes 💪"],
       correctIndex: 0,
       hint: "¡CUIDADO! 🎉 ¡Los gérmenes AMAN el azúcar! ¡Pero cepillarse salva el día! 🪥✨",
+      parentTip: "Limita los snacks azucarados entre comidas. Cuando se disfrutan golosinas, tenlas con las comidas en lugar de como snacks independientes para reducir los ataques de ácido.",
     },
     quiz2: {
       question: "¿Qué ayuda después de comer dulces?",
       options: ["¡CEPILLARSE! 🪥✨", "Esperar para siempre ⏰", "Dormir 😴"],
       correctIndex: 0,
       hint: "¡SÚPER CEPILLO! 🎉 ¡Cepillarse después de los dulces ahuyenta los gérmenes! ¡POW! 💥",
+      parentTip: "Enjuagar con agua después de los dulces es mejor que nada si no es posible cepillarse. Espera 30 minutos después de alimentos ácidos antes de cepillarte.",
     },
   },
   {
@@ -1336,12 +1352,14 @@ export const storiesEs: Story[] = [
       options: ["¡Para REVISAR los dientes! 🦷✨", "Para jugar videojuegos 🎮", "Para tomar siestas 😴"],
       correctIndex: 0,
       hint: "¡CAMPEÓN DEL CHEQUEO! 🎉 ¡Los dentistas mantienen las sonrisas saludables y brillantes! ⭐",
+      parentTip: "Programa visitas dentales cada 6 meses a partir del primer año de edad. Usar lenguaje positivo antes de las visitas ayuda a los niños a sentirse tranquilos y confiados.",
     },
     quiz2: {
       question: "¿Son las visitas al dentista aterradoras? 😰",
       options: ["¡NO! ¡Los dentistas son AMIGOS! 🤗", "¡Sí, súper aterradoras! 👻"],
       correctIndex: 0,
       hint: "¡HURRA! 🎉 ¡Los dentistas son ayudantes de sonrisas amigables! ¡Nada que temer! 🌟",
+      parentTip: "Juega al dentista en casa. Lee libros sobre visitas dentales y evita usar el cuidado dental como amenaza o castigo.",
     },
   },
   {
@@ -1365,12 +1383,14 @@ export const storiesEs: Story[] = [
       options: ["¡SÍ! ¡Súper importantes! ⭐", "No, para nada 🙅"],
       correctIndex: 0,
       hint: "¡PEQUEÑOS HÉROES! 🎉 ¡Los dientes de leche ayudan a comer, hablar Y guiar a los dientes grandes! 🦸‍♀️",
+      parentTip: "Los dientes de leche mantienen el espacio para los dientes adultos. Perderlos temprano por caries puede causar apiñamiento y problemas de ortodoncia más adelante.",
     },
     quiz2: {
       question: "¿Debemos cepillar los dientes de leche?",
       options: ["¡SÍ! ¡Todos los días! 🪥", "No, saltarlos 🙅"],
       correctIndex: 0,
       hint: "¡CEPILLA CEPILLA! 🎉 ¡Los dientes de leche también necesitan amor! ¡Mantenlos brillantes! ✨",
+      parentTip: "Comienza a cepillar tan pronto aparezca el primer diente. Usa una cantidad de pasta dental con flúor del tamaño de un grano de arroz para menores de 3 años, del tamaño de un guisante para 3-6 años.",
     },
   },
   {
@@ -1394,12 +1414,14 @@ export const storiesEs: Story[] = [
       options: ["¡Gérmenes PEGAJOSOS! 👾", "Pintura de dientes 🎨", "Aire fresco 💨"],
       correctIndex: 0,
       hint: "¡TE ATRAPÉ! 🎉 ¡La placa son gérmenes pegajosos, pero cepillarse los hace IRSE! 🪥💨",
+      parentTip: "Explicar la placa como 'bichitos pegajosos' ayuda a los niños a entender por qué es importante cepillarse. Las tabletas reveladoras pueden mostrar la placa que se les escapó.",
     },
     quiz2: {
       question: "¿Puede el hilo dental ayudar a eliminar la placa?",
       options: ["¡SÍ! ¡El hilo dental es genial! 🧵", "De ninguna manera 🙅"],
       correctIndex: 0,
       hint: "¡SÚPER HILO DENTAL! 🎉 ¡El hilo dental llega donde los cepillos no pueden! ¡Trabajo en equipo! 🤝",
+      parentTip: "La placa se endurece en sarro dentro de 24-72 horas. El cepillado y uso de hilo dental diarios previenen la acumulación que requiere limpieza profesional.",
     },
   },
   {
@@ -1423,12 +1445,14 @@ export const storiesEs: Story[] = [
       options: ["¡Queso! 🧀✨", "Dulces 🍬", "Refresco 🥤"],
       correctIndex: 0,
       hint: "¡DELICIOSO! 🎉 ¡El queso es un SÚPER alimento para dientes! ¡Gran elección! 🧀✨",
+      parentTip: "El queso, las nueces, los vegetales crujientes y las manzanas son excelentes snacks amigos de los dientes. Estimulan la saliva y limpian los dientes naturalmente.",
     },
     quiz2: {
       question: "¿Qué bebida ayuda MÁS a los dientes?",
       options: ["¡AGUA! 💧", "Jugo 🧃", "Refresco 🥤"],
       correctIndex: 0,
       hint: "¡SPLASH! 🎉 ¡El agua es la bebida #1 para dientes felices! 💧🦷",
+      parentTip: "El agua (especialmente fluorada) es la mejor bebida para la salud dental. Limita el jugo a las horas de comida y dilúyelo con agua cuando sea posible.",
     },
   },
   {
@@ -1452,12 +1476,14 @@ export const storiesEs: Story[] = [
       options: ["¡NO! ¡Los dientes son para COMIDA! 🍎", "¡Sí, abre todo! 📦"],
       correctIndex: 0,
       hint: "¡INTELIGENTE! 🎉 ¡Los dientes son para COMER, no para abrir cosas! ¡Seguridad primero! 🛡️",
+      parentTip: "Enseña a los niños que los dientes son solo para comer comida, no para abrir paquetes, morderse las uñas o masticar bolígrafos y lápices.",
     },
     quiz2: {
       question: "¿Deben los niños morder objetos duros?",
       options: ["¡NO! ¡Sé suave! 🌸", "¡Sí, muerde todo! 💪"],
       correctIndex: 0,
       hint: "¡SUAVE GANA! 🎉 ¡Las cosas duras pueden lastimar los dientes. ¡Sé amable con tu sonrisa! 😊",
+      parentTip: "El hielo, los dulces duros y las palomitas de maíz sin reventar son causas comunes de dientes agrietados. Modela buenos hábitos evitando estos comportamientos tú mismo.",
     },
   },
 ];

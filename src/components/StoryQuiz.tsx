@@ -340,6 +340,28 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
                   )}
                 </div>
                 <p className="text-foreground/80 text-sm">{activeQuiz.hint}</p>
+                
+                {/* Parent Tip Section */}
+                {activeQuiz.parentTip && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="mt-3 pt-3 border-t border-accent/20"
+                  >
+                    <div className="flex items-start gap-2">
+                      <span className="text-lg">👨‍👩‍👧</span>
+                      <div>
+                        <span className="text-xs font-bold text-primary/80 uppercase tracking-wide">
+                          Parent Tip
+                        </span>
+                        <p className="text-foreground/70 text-xs mt-1 leading-relaxed">
+                          {activeQuiz.parentTip}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             ) : (
               <motion.div
