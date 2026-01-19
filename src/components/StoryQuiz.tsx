@@ -1,30 +1,59 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, Sparkles, HelpCircle } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, HelpCircle, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
 
 interface StoryQuizProps {
   quiz: StoryQuiz;
+  quiz2?: StoryQuiz;
   onComplete: () => void;
   isCompleted: boolean;
 }
 
-const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) => {
+const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizProps) => {
   const { t } = useTranslation();
+  const [currentQuiz, setCurrentQuiz] = useState(0); // 0 = first quiz, 1 = second quiz
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [quiz1Completed, setQuiz1Completed] = useState(false);
+  const [quiz2Completed, setQuiz2Completed] = useState(false);
+
+  const totalQuizzes = quiz2 ? 2 : 1;
+  const activeQuiz = currentQuiz === 0 ? quiz : quiz2!;
+
+  // Reset state when component mounts or quiz changes
+  useEffect(() => {
+    if (isCompleted) {
+      setQuiz1Completed(true);
+      setQuiz2Completed(true);
+    }
+  }, [isCompleted]);
 
   const handleAnswer = (index: number) => {
     if (showResult || isCompleted) return;
     setSelectedAnswer(index);
     setShowResult(true);
     
-    if (index === quiz.correctIndex) {
+    if (index === activeQuiz.correctIndex) {
       setTimeout(() => {
-        onComplete();
+        if (currentQuiz === 0) {
+          setQuiz1Completed(true);
+          if (quiz2) {
+            // Move to second question
+            setSelectedAnswer(null);
+            setShowResult(false);
+            setShowHint(false);
+            setCurrentQuiz(1);
+          } else {
+            onComplete();
+          }
+        } else {
+          setQuiz2Completed(true);
+          onComplete();
+        }
       }, 1500);
     }
   };
@@ -35,7 +64,7 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
     setShowHint(true);
   };
 
-  const isCorrect = selectedAnswer === quiz.correctIndex;
+  const isCorrect = selectedAnswer === activeQuiz.correctIndex;
 
   if (isCompleted) {
     return (
@@ -48,6 +77,9 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
           <CheckCircle2 className="w-5 h-5" />
           <span className="font-display font-bold">{t("stories.quizCompleted")}</span>
           <Sparkles className="w-4 h-4" />
+          {totalQuizzes > 1 && (
+            <span className="ml-auto text-sm opacity-75">({totalQuizzes}/{totalQuizzes})</span>
+          )}
         </div>
       </motion.div>
     );
@@ -59,77 +91,116 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
       animate={{ opacity: 1, y: 0 }}
       className="p-5 rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20"
     >
-      {/* Question header */}
+      {/* Question header with progress indicator */}
       <div className="flex items-center gap-2 mb-4">
         <div className="p-2 rounded-full bg-primary/20">
           <HelpCircle className="w-5 h-5 text-primary" />
         </div>
         <span className="font-display font-bold text-primary text-lg">{t("stories.questQuestion")}</span>
+        {totalQuizzes > 1 && (
+          <div className="ml-auto flex items-center gap-2">
+            <div className="flex gap-1">
+              {[...Array(totalQuizzes)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    i === 0 && quiz1Completed
+                      ? "bg-accent"
+                      : i === 1 && quiz2Completed
+                      ? "bg-accent"
+                      : i === currentQuiz
+                      ? "bg-primary animate-pulse"
+                      : "bg-muted"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-sm text-muted-foreground font-medium">
+              {currentQuiz + 1}/{totalQuizzes}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Question */}
-      <p className="text-lg font-medium text-foreground mb-4">
-        {quiz.question}
-      </p>
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={currentQuiz}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          className="text-lg font-medium text-foreground mb-4"
+        >
+          {activeQuiz.question}
+        </motion.p>
+      </AnimatePresence>
 
       {/* Answer options */}
-      <div className="space-y-2 mb-4">
-        {quiz.options.map((option, index) => {
-          const isSelected = selectedAnswer === index;
-          const isCorrectAnswer = index === quiz.correctIndex;
-          
-          let buttonStyle = "bg-card hover:bg-muted border-border";
-          if (showResult && isSelected) {
-            buttonStyle = isCorrect 
-              ? "bg-accent/20 border-accent text-accent" 
-              : "bg-destructive/20 border-destructive text-destructive";
-          } else if (showResult && isCorrectAnswer && !isCorrect) {
-            buttonStyle = "bg-accent/20 border-accent text-accent";
-          }
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentQuiz}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="space-y-2 mb-4"
+        >
+          {activeQuiz.options.map((option, index) => {
+            const isSelected = selectedAnswer === index;
+            const isCorrectAnswer = index === activeQuiz.correctIndex;
+            
+            let buttonStyle = "bg-card hover:bg-muted border-border";
+            if (showResult && isSelected) {
+              buttonStyle = isCorrect 
+                ? "bg-accent/20 border-accent text-accent" 
+                : "bg-destructive/20 border-destructive text-destructive";
+            } else if (showResult && isCorrectAnswer && !isCorrect) {
+              buttonStyle = "bg-accent/20 border-accent text-accent";
+            }
 
-          return (
-            <motion.button
-              key={index}
-              whileHover={!showResult ? { scale: 1.02 } : {}}
-              whileTap={!showResult ? { scale: 0.98 } : {}}
-              onClick={() => handleAnswer(index)}
-              disabled={showResult}
-              className={`w-full p-3 rounded-xl border-2 text-left font-medium transition-all ${buttonStyle} ${
-                showResult ? "cursor-default" : "cursor-pointer"
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-display font-bold text-sm">
-                  {String.fromCharCode(65 + index)}
-                </span>
-                <span className="flex-1">{option}</span>
-                {showResult && isSelected && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring" }}
-                  >
-                    {isCorrect ? (
+            return (
+              <motion.button
+                key={index}
+                whileHover={!showResult ? { scale: 1.02 } : {}}
+                whileTap={!showResult ? { scale: 0.98 } : {}}
+                onClick={() => handleAnswer(index)}
+                disabled={showResult}
+                className={`w-full p-3 rounded-xl border-2 text-left font-medium transition-all ${buttonStyle} ${
+                  showResult ? "cursor-default" : "cursor-pointer"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-display font-bold text-sm">
+                    {String.fromCharCode(65 + index)}
+                  </span>
+                  <span className="flex-1">{option}</span>
+                  {showResult && isSelected && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring" }}
+                    >
+                      {isCorrect ? (
+                        <CheckCircle2 className="w-6 h-6 text-accent" />
+                      ) : (
+                        <XCircle className="w-6 h-6 text-destructive" />
+                      )}
+                    </motion.div>
+                  )}
+                  {showResult && isCorrectAnswer && !isCorrect && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", delay: 0.2 }}
+                    >
                       <CheckCircle2 className="w-6 h-6 text-accent" />
-                    ) : (
-                      <XCircle className="w-6 h-6 text-destructive" />
-                    )}
-                  </motion.div>
-                )}
-                {showResult && isCorrectAnswer && !isCorrect && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.2 }}
-                  >
-                    <CheckCircle2 className="w-6 h-6 text-accent" />
-                  </motion.div>
-                )}
-              </div>
-            </motion.button>
-          );
-        })}
-      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.button>
+            );
+          })}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Result feedback */}
       <AnimatePresence>
@@ -149,8 +220,14 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="w-5 h-5 text-accent" />
                   <span className="font-display font-bold text-accent">{t("stories.amazing")}</span>
+                  {quiz2 && currentQuiz === 0 && (
+                    <div className="ml-auto flex items-center gap-1 text-accent/80 text-sm">
+                      <span>Next question</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </div>
+                  )}
                 </div>
-                <p className="text-foreground/80 text-sm">{quiz.hint}</p>
+                <p className="text-foreground/80 text-sm">{activeQuiz.hint}</p>
               </motion.div>
             ) : (
               <motion.div
@@ -165,7 +242,7 @@ const StoryQuizComponent = ({ quiz, onComplete, isCompleted }: StoryQuizProps) =
                     </p>
                     {showHint && (
                       <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
-                        <span className="font-bold">{t("stories.hereIsAHint")}</span> {quiz.hint}
+                        <span className="font-bold">{t("stories.hereIsAHint")}</span> {activeQuiz.hint}
                       </p>
                     )}
                     <Button

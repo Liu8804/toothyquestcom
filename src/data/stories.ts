@@ -15,6 +15,13 @@ export interface Story {
   illustrationPath: string;
   emoji: string;
   quiz: StoryQuiz;
+  quiz2?: StoryQuiz; // Optional second quiz question
+  miniGameInstructions?: string; // Instructions for mini-game
+  rewards?: {
+    points: number;
+    pointsType: string;
+    feedback: string;
+  };
   isFree?: boolean;
 }
 
@@ -737,6 +744,356 @@ export const stories: Story[] = [
       options: ["Brush and floss every day", "Eat candy whenever you want", "Skip brushing sometimes"],
       correctIndex: 0,
       hint: "Yes! Brushing and flossing every day gives your teeth superpowers!",
+    },
+  },
+
+  // ===== DENTAL PROCEDURE QUESTS (New 12 Quests) =====
+  {
+    id: "cavity-castle-rescue",
+    title: "Quest 43 – Cavity Castle Rescue",
+    toothyIntro: "Sugar Monsters snuck into the Tooth Castle! Help the Dentist Knights save it!",
+    story: "Sugar Monsters snuck into the Tooth Castle! The brave Dentist Knights needed your help to clean them out and restore the castle. Toothy handed you a magic filling brush. \"Quick! We need to seal the holes before they spread!\" You tapped and painted the filling over each cavity until every tooth sparkled. The Sugar Monsters waved goodbye as they floated away. The Tooth Castle was saved!",
+    lesson: "Fill the cavities to stop Sugar Monsters from spreading. Healthy teeth are strong teeth!",
+    questEnding: "The Tooth Castle sparkles again!",
+    illustrationPath: "/stories/cavity-castle.png",
+    emoji: "🏰",
+    miniGameInstructions: "Tap and paint the filling over the cavity until the tooth shines.",
+    rewards: {
+      points: 50,
+      pointsType: "Sparkle Points",
+      feedback: "Tooth Castle sparkles, cheerful Sugar Monsters wave goodbye!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What happens if we don't fill cavities?",
+      options: ["Teeth stay healthy", "Sugar Monsters can make bigger holes", "Teeth grow faster"],
+      correctIndex: 1,
+      hint: "Sugar Monsters love to make holes bigger if we don't fill them!",
+    },
+    quiz2: {
+      question: "Which of these helps prevent cavities?",
+      options: ["Brushing teeth every day", "Eating only candy", "Never visiting the dentist"],
+      correctIndex: 0,
+      hint: "Brushing every day is the best way to keep cavities away!",
+    },
+  },
+  {
+    id: "tunnel-adventure",
+    title: "Quest 44 – Tunnel Adventure",
+    toothyIntro: "The Tooth Village has tunnels full of germs. Help Dentist Explorer clean them out!",
+    story: "The Tooth Village has tunnels deep inside where germs were hiding! Dentist Explorer needed your help to clean them out. You grabbed a tiny flashlight and explored the twisting tunnels. \"Swipe to remove the germs!\" Toothy cheered. With each swipe, germs disappeared and the tunnels sparkled. The village was safe again, and the tiny explorer waved happily!",
+    lesson: "Remove germs and save the tooth village! Root canals protect teeth from serious infections.",
+    questEnding: "The Tooth Village is safe and sparkling!",
+    illustrationPath: "/stories/tunnel-adventure.png",
+    emoji: "🔦",
+    miniGameInstructions: "Guide a tiny explorer through twisting tunnels, swipe to remove germs.",
+    rewards: {
+      points: 60,
+      pointsType: "Hero Points",
+      feedback: "Village sparkles, explorer waves happily!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What is the main reason for a root canal?",
+      options: ["To clean deep infection inside a tooth", "To make teeth shiny", "To straighten teeth"],
+      correctIndex: 0,
+      hint: "Root canals clean out deep infections to save the tooth!",
+    },
+    quiz2: {
+      question: "True or False – Root canals are scary and always painful.",
+      options: ["True", "False"],
+      correctIndex: 1,
+      hint: "Root canals aren't scary! Dentists make sure you're comfortable.",
+    },
+  },
+  {
+    id: "tooth-train-track",
+    title: "Quest 45 – Tooth Train Track",
+    toothyIntro: "Smile City wants a perfect parade! Help teeth line up using magic braces tracks!",
+    story: "Smile City was preparing for a grand parade! But the teeth needed to line up perfectly. Toothy showed you the magic braces tracks. \"Drag each tooth along the track to line them up!\" he said. One by one, you helped each tooth find its perfect spot. When all teeth were aligned, the parade began! Dancing teeth celebrated with a spectacular show!",
+    lesson: "Align teeth for a strong, straight smile.",
+    questEnding: "The Smile City parade is a success!",
+    illustrationPath: "/stories/tooth-train.png",
+    emoji: "🚂",
+    miniGameInstructions: "Drag teeth along tracks to line them up perfectly.",
+    rewards: {
+      points: 40,
+      pointsType: "Smile Points",
+      feedback: "Parade animation with dancing teeth!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What do braces help your teeth do?",
+      options: ["Stay straight", "Turn purple", "Fall out"],
+      correctIndex: 0,
+      hint: "Braces help teeth stay straight and beautiful!",
+    },
+    quiz2: {
+      question: "How long do we usually wear braces?",
+      options: ["A few days", "Several months to years", "Only at night"],
+      correctIndex: 1,
+      hint: "Braces work their magic over several months to years!",
+    },
+  },
+  {
+    id: "sparkle-shower",
+    title: "Quest 46 – Sparkle Shower",
+    toothyIntro: "Plaque Pirates are hiding on teeth! Help the dentist superhero wash them away!",
+    story: "Plaque Pirates had invaded and were hiding all over the teeth! The dentist superhero needed backup. You grabbed a sparkly brush and got to work. \"Swipe to remove the pirates!\" Toothy called out. With every brush stroke, pirates ran away squealing. When all pirates were gone, the teeth shined brighter than ever under a sparkly shower of cleanliness!",
+    lesson: "Regular cleaning keeps teeth free from plaque.",
+    questEnding: "All Plaque Pirates have sailed away!",
+    illustrationPath: "/stories/sparkle-shower.png",
+    emoji: "🚿",
+    miniGameInstructions: "Swipe the brush to remove pirates, earn sparkle points.",
+    rewards: {
+      points: 30,
+      pointsType: "Sparkle Points",
+      feedback: "Teeth shine brightly!"
+    },
+    isFree: false,
+    quiz: {
+      question: "How often should we brush our teeth?",
+      options: ["Once a week", "Twice a day", "Only before candy"],
+      correctIndex: 1,
+      hint: "Brushing twice a day keeps plaque away!",
+    },
+    quiz2: {
+      question: "What is plaque?",
+      options: ["Sticky germs on teeth", "Tooth fairy dust", "Candy sugar"],
+      correctIndex: 0,
+      hint: "Plaque is sticky germs that love to hide on teeth!",
+    },
+  },
+  {
+    id: "tooth-armor",
+    title: "Quest 47 – Tooth Armor",
+    toothyIntro: "A candy storm is coming! Give the molars invisible armor to protect them!",
+    story: "Dark clouds gathered over Mouthland — a candy storm was coming! The dentist knight handed you a magical brush. \"Quick! Paint the invisible armor on each molar before the candy falls!\" You worked fast, covering each tooth with protective sealant. Just in time! Candies rained down but bounced right off the magical shields. The molars glowed with protective magic!",
+    lesson: "Sealants prevent cavities and protect teeth from sticky candy attacks.",
+    questEnding: "The molars are protected with magic armor!",
+    illustrationPath: "/stories/tooth-armor.png",
+    emoji: "🛡️",
+    miniGameInstructions: "Paint the armor on each tooth before the candy falls.",
+    rewards: {
+      points: 50,
+      pointsType: "Shield Points",
+      feedback: "Teeth glow with protective magic!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What does a sealant do?",
+      options: ["Makes teeth soft", "Protects teeth from cavities", "Makes candy taste better"],
+      correctIndex: 1,
+      hint: "Sealants create a shield that protects teeth from cavities!",
+    },
+    quiz2: {
+      question: "Which teeth usually get sealants?",
+      options: ["Front teeth", "Molars", "Wisdom teeth only"],
+      correctIndex: 1,
+      hint: "Molars have lots of grooves where sealants help most!",
+    },
+  },
+  {
+    id: "little-tooth-farewell",
+    title: "Quest 48 – Little Tooth Farewell",
+    toothyIntro: "One tooth is ready to leave Mouthland. Help guide it safely so new teeth can grow!",
+    story: "One little tooth was ready for a big adventure — it was time to leave Mouthland! The tooth looked nervous, but Toothy smiled gently. \"Don't worry, little one. This makes room for new teeth to grow!\" You tapped gently to help the tooth wiggle out safely. Pop! The tooth waved goodbye as stars appeared. \"Thank you for being brave!\" Toothy cheered.",
+    lesson: "Sometimes teeth need to be removed to keep the mouth healthy.",
+    questEnding: "The little tooth waves goodbye happily!",
+    illustrationPath: "/stories/tooth-farewell.png",
+    emoji: "👋",
+    miniGameInstructions: "Tap gently to help the tooth wiggle out safely.",
+    rewards: {
+      points: 40,
+      pointsType: "Bravery Points",
+      feedback: "Tooth waves goodbye, stars appear!"
+    },
+    isFree: false,
+    quiz: {
+      question: "Why might a tooth need to be removed?",
+      options: ["To grow new teeth", "Because it's too happy", "To make teeth purple"],
+      correctIndex: 0,
+      hint: "Sometimes a tooth leaves to make room for new teeth!",
+    },
+    quiz2: {
+      question: "True or False – Losing a tooth can be part of keeping a healthy mouth.",
+      options: ["True", "False"],
+      correctIndex: 0,
+      hint: "It's true! Losing baby teeth is part of growing up healthy!",
+    },
+  },
+  {
+    id: "superhero-shield",
+    title: "Quest 49 – Superhero Shield",
+    toothyIntro: "Teeth need extra protection from Sugar Monsters! Apply the magic fluoride shield!",
+    story: "The Sugar Monsters were planning another attack! But this time, teeth would be ready. The dentist handed you a bottle of magic fluoride. \"Spread this shield over each tooth to make them extra strong!\" You carefully applied the sparkly solution to every tooth. They glowed bright blue with superhero power! When Sugar Monsters tried to attack, they bounced right off!",
+    lesson: "Fluoride strengthens teeth and prevents cavities.",
+    questEnding: "Your teeth have superhero shields!",
+    illustrationPath: "/stories/superhero-shield.png",
+    emoji: "💎",
+    miniGameInstructions: "Spread shield over each tooth to make them sparkle.",
+    rewards: {
+      points: 50,
+      pointsType: "Shield Points",
+      feedback: "Glowing teeth animation!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What does fluoride do for your teeth?",
+      options: ["Makes them weaker", "Makes them stronger", "Changes their color"],
+      correctIndex: 1,
+      hint: "Fluoride is like a superpower that makes teeth stronger!",
+    },
+    quiz2: {
+      question: "True or False – Fluoride is a superhero for teeth.",
+      options: ["True", "False"],
+      correctIndex: 0,
+      hint: "True! Fluoride protects teeth just like a superhero!",
+    },
+  },
+  {
+    id: "tooth-detective",
+    title: "Quest 50 – Tooth Detective",
+    toothyIntro: "The dentist detective uses a magic camera to find hidden germs inside teeth!",
+    story: "Something was hiding inside the teeth, but what? The dentist detective pulled out a magic camera — an X-ray machine! \"This helps us see what's hidden inside,\" Toothy explained. The camera showed shadows where germs were hiding. \"Match each germ to its tooth!\" You carefully identified each problem spot. The germs vanished, and a detective hat popped up on your head!",
+    lesson: "X-rays help dentists see problems before they grow.",
+    questEnding: "You're now a certified Tooth Detective!",
+    illustrationPath: "/stories/tooth-detective.png",
+    emoji: "🔍",
+    miniGameInstructions: "Match germs seen in the X-ray to the correct tooth.",
+    rewards: {
+      points: 40,
+      pointsType: "Detective Points",
+      feedback: "Germs vanish, detective hat pops up!"
+    },
+    isFree: false,
+    quiz: {
+      question: "Why do dentists use X-rays?",
+      options: ["To see hidden problems", "To play games", "To make teeth sparkle"],
+      correctIndex: 0,
+      hint: "X-rays are like magic glasses that see hidden problems!",
+    },
+    quiz2: {
+      question: "True or False – X-rays hurt your teeth.",
+      options: ["True", "False"],
+      correctIndex: 1,
+      hint: "X-rays are safe and don't hurt at all!",
+    },
+  },
+  {
+    id: "adventure-tooth",
+    title: "Quest 51 – Adventure Tooth",
+    toothyIntro: "A wisdom tooth grows in a tricky spot. Help the dentist guide it out safely!",
+    story: "Deep in the back of Mouthland, a wisdom tooth was growing in a tricky spot! It was getting crowded back there. Toothy put on his adventure backpack. \"Sometimes these teeth need help moving out so everyone has room!\" You tapped gently to wiggle the wisdom tooth free. It packed its tiny backpack and waved goodbye. Sparkles appeared as it headed off on its new adventure!",
+    lesson: "Some teeth need removal to keep the mouth healthy.",
+    questEnding: "The wisdom tooth is off on a new adventure!",
+    illustrationPath: "/stories/adventure-tooth.png",
+    emoji: "🎒",
+    miniGameInstructions: "Tap gently to wiggle the wisdom tooth out.",
+    rewards: {
+      points: 45,
+      pointsType: "Adventure Points",
+      feedback: "Tooth waves, sparkles appear!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What is a wisdom tooth?",
+      options: ["A special back tooth", "A tiny fairy", "A candy tooth"],
+      correctIndex: 0,
+      hint: "Wisdom teeth are special teeth that grow way in the back!",
+    },
+    quiz2: {
+      question: "True or False – Wisdom teeth sometimes need to be removed.",
+      options: ["True", "False"],
+      correctIndex: 0,
+      hint: "True! Sometimes there's not enough room for wisdom teeth!",
+    },
+  },
+  {
+    id: "sparkle-potion",
+    title: "Quest 52 – Sparkle Potion",
+    toothyIntro: "Teeth want to shine bright! Apply the magic sparkle potion!",
+    story: "The teeth were feeling a little dull and wanted to shine bright again! The dentist pulled out a magical bottle of sparkle potion. \"This will make your teeth extra shiny!\" Toothy smiled. You carefully spread the potion evenly on each tooth. One by one, they began to glow and sparkle! The whole smile lit up like a constellation of stars!",
+    lesson: "Healthy teeth are happy teeth; whitening can make them extra shiny.",
+    questEnding: "Your smile sparkles like stars!",
+    illustrationPath: "/stories/sparkle-potion.png",
+    emoji: "✨",
+    miniGameInstructions: "Spread potion evenly on teeth to make them sparkle.",
+    rewards: {
+      points: 35,
+      pointsType: "Sparkle Points",
+      feedback: "Teeth glow with sparkles!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What makes teeth sparkle?",
+      options: ["Magic potion", "Dirt", "Sugar"],
+      correctIndex: 0,
+      hint: "The sparkle potion (whitening) makes teeth shine!",
+    },
+    quiz2: {
+      question: "True or False – Healthy teeth are more important than just being shiny.",
+      options: ["True", "False"],
+      correctIndex: 0,
+      hint: "True! Health always comes first, shininess is a bonus!",
+    },
+  },
+  {
+    id: "tooth-fixing-fairy",
+    title: "Quest 53 – Tooth Fixing Fairy",
+    toothyIntro: "A little chip appeared on a tooth. Help the dentist fairy smooth it with magic resin!",
+    story: "Oh no! A little chip appeared on one of the teeth. But don't worry — the Tooth Fixing Fairy was here to help! She pulled out a tiny wand with magic resin. \"Paint this carefully to fill in the crack,\" she said sweetly. You traced along the chip, filling it perfectly. The tooth became whole again, and the fairy sprinkled sparkles in celebration!",
+    lesson: "Bonding fixes small chips and cracks.",
+    questEnding: "The tooth is whole and perfect again!",
+    illustrationPath: "/stories/tooth-fairy-fix.png",
+    emoji: "🧚",
+    miniGameInstructions: "Paint resin to fill in cracks perfectly.",
+    rewards: {
+      points: 40,
+      pointsType: "Fairy Points",
+      feedback: "Tooth becomes whole again, fairy sparkles!"
+    },
+    isFree: false,
+    quiz: {
+      question: "What does bonding fix?",
+      options: ["Small chips", "Large cavities only", "Hair"],
+      correctIndex: 0,
+      hint: "Bonding is perfect for fixing small chips and cracks!",
+    },
+    quiz2: {
+      question: "True or False – Bonding can make a tooth whole again.",
+      options: ["True", "False"],
+      correctIndex: 0,
+      hint: "True! Bonding fills in chips to make teeth whole!",
+    },
+  },
+  {
+    id: "sports-shield",
+    title: "Quest 54 – Sports Shield",
+    toothyIntro: "Teeth are ready for the big game! Help give them custom mouth guards!",
+    story: "The big game was about to start! But the teeth needed protection before heading onto the field. The dentist coach handed out custom mouth guards. \"Place these on each tooth before the game starts!\" Toothy cheered. You quickly fitted each mouth guard perfectly. The teeth cheered, ready to play safely! A sparkly guard appeared on each tooth like a champion's medal!",
+    lesson: "Mouth guards protect teeth during sports.",
+    questEnding: "Teeth are protected and ready to win!",
+    illustrationPath: "/stories/sports-shield.png",
+    emoji: "🏆",
+    miniGameInstructions: "Place the mouth guard on each tooth before the game starts.",
+    rewards: {
+      points: 45,
+      pointsType: "Sports Points",
+      feedback: "Teeth cheer, sparkly guard appears!"
+    },
+    isFree: false,
+    quiz: {
+      question: "Why do we wear mouth guards?",
+      options: ["To protect teeth during sports", "To eat candy", "To brush faster"],
+      correctIndex: 0,
+      hint: "Mouth guards are like helmets for your teeth!",
+    },
+    quiz2: {
+      question: "True or False – Mouth guards keep teeth safe when playing games.",
+      options: ["True", "False"],
+      correctIndex: 0,
+      hint: "True! Always wear a mouth guard when playing sports!",
     },
   },
 ];
