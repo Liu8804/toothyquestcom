@@ -98,10 +98,10 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
               </motion.div>
 
               <h2 className="font-display text-2xl font-bold text-white mb-2">
-                Unlock the Full ToothyQuest Adventure
+                🦷✨ Unlock ToothyQuest! ✨🦷
               </h2>
               <p className="text-white/90 text-sm">
-                Your child completed the first 5 quests!
+                Give your child full access to dental health fun!
               </p>
             </div>
 
@@ -110,10 +110,10 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
               {/* Message */}
               <div className="text-center space-y-2">
                 <p className="text-foreground font-medium">
-                  Unlock 25 more quests, games, rewards, and surprises.
+                  Pay <span className="text-primary font-bold text-xl">$3.99</span> one time to unlock all games, stories, and activities!
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  One-time purchase. No subscriptions.
+                  One-time purchase. No subscriptions. Forever access.
                 </p>
               </div>
               {/* Already purchased state */}
@@ -165,12 +165,12 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
                         transition={{ duration: 1, repeat: Infinity }}
                       >
                         <Sparkles className="w-5 h-5" />
-                        Processing...
+                        Opening Checkout...
                       </motion.div>
                     ) : (
                       <span className="flex items-center gap-2">
                         <Unlock className="w-5 h-5" />
-                        Unlock Full Adventure
+                        Pay $3.99 to Unlock ToothyQuest
                       </span>
                     )}
                   </Button>
