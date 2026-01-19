@@ -4,23 +4,33 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { usePurchase } from "@/hooks/usePurchase";
 import AuthModal from "@/components/AuthModal";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { refreshPurchaseStatus } = usePurchase();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(true);
 
   useEffect(() => {
-    // Clear any cached purchase state to force refresh
+    // Clear any cached purchase state and force refresh
     localStorage.removeItem("toothyquest_purchase_checked");
+    
+    // Mark as purchased in localStorage immediately for logged-in users
+    if (user?.id) {
+      localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
+    }
+    
+    // Refresh purchase status from Stripe to confirm
+    refreshPurchaseStatus();
     
     // Hide confetti after 5 seconds
     const timer = setTimeout(() => setShowConfetti(false), 5000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [user, refreshPurchaseStatus]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-sky-50 to-white flex items-center justify-center p-4 relative overflow-hidden">
