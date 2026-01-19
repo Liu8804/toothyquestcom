@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Lock, Unlock, RefreshCw, Crown, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePurchase, purchaseMessages, PRODUCT_ID } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import PaymentLoadingOverlay from "./PaymentLoadingOverlay";
 
 interface PurchaseModalProps {
   isOpen: boolean;
@@ -11,13 +13,15 @@ interface PurchaseModalProps {
 
 const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   const { purchase, restorePurchase, isLoading, isRestoring, isPurchased } = usePurchase();
-  const { playWinFanfare, playAchievementUnlock, playSound } = useGameSounds();
+  const { playWinFanfare, playAchievementUnlock } = useGameSounds();
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
 
   const handlePurchase = async () => {
-    const success = await purchase();
+    const success = await purchase(() => {
+      setShowLoadingOverlay(true);
+    });
     if (success) {
       playWinFanfare();
-      setTimeout(onClose, 2000);
     }
   };
 
@@ -38,6 +42,7 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   ];
 
   return (
+    <>
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -210,6 +215,10 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
         </motion.div>
       )}
     </AnimatePresence>
+    
+    {/* Full-screen loading overlay */}
+    <PaymentLoadingOverlay isVisible={showLoadingOverlay} />
+  </>
   );
 };
 

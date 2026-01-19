@@ -96,7 +96,7 @@ export const usePurchase = () => {
     }
   };
 
-  const purchase = useCallback(async (): Promise<boolean> => {
+  const purchase = useCallback(async (onLoadingStart?: () => void): Promise<boolean> => {
     if (!session?.access_token) {
       toast.error('Please sign in to purchase ToothyQuest');
       return false;
@@ -116,6 +116,12 @@ export const usePurchase = () => {
       }
 
       if (data?.url) {
+        // Notify caller that redirect is about to happen
+        onLoadingStart?.();
+        
+        // Small delay to show loading overlay before redirect
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
         // Redirect to Stripe checkout (works better on Safari than window.open)
         window.location.href = data.url;
         return true;
