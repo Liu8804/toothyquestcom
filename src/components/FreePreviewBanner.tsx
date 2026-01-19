@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Sparkles, Play, Lock, Gift } from "lucide-react";
+import { Sparkles, Lock, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
+import { usePurchase, FREE_QUEST_LIMIT, PRICING } from "@/hooks/usePurchase";
 import PurchaseModal from "@/components/PurchaseModal";
 
 const FreePreviewBanner = () => {
@@ -34,7 +34,7 @@ const FreePreviewBanner = () => {
                   Try {FREE_QUEST_LIMIT} Free Quests!
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Explore games & stories before unlocking
+                  50+ quests, mini-games, and rewards await!
                 </p>
               </div>
             </div>
@@ -51,7 +51,7 @@ const FreePreviewBanner = () => {
                 className="bg-gradient-to-r from-primary to-bubble hover:opacity-90 text-white font-semibold shadow-lg"
               >
                 <Lock className="w-4 h-4 mr-1" />
-                Unlock All for $3.99
+                Unlock All - {PRICING.monthly.label}/mo
               </Button>
             </div>
           </div>

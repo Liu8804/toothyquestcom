@@ -12,8 +12,12 @@ const logStep = (step: string, details?: unknown) => {
   console.log(`[CHECK-PURCHASE] ${step}${detailsStr}`);
 };
 
-// ToothyQuest Access product ID
-const TOOTHYQUEST_PRODUCT_ID = "prod_ToVdXfL4456xpF";
+// All valid ToothyQuest product IDs (legacy + new monthly + annual)
+const VALID_PRODUCT_IDS = [
+  "prod_ToVdXfL4456xpF",  // Legacy $3.99 one-time
+  "prod_ToloozqRZM4fpp", // New $4.99 monthly one-time
+  "prod_ToloWHHcJ4wnOm", // New $49.99 annual one-time
+];
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -60,14 +64,15 @@ serve(async (req) => {
     const customerId = customers.data[0].id;
     logStep("Found Stripe customer", { customerId });
 
-    // Check for completed payment intents with ToothyQuest product
+    // Check for completed payment intents with any ToothyQuest product
     const paymentIntents = await stripe.paymentIntents.list({
       customer: customerId,
       limit: 100,
     });
 
-    // Check if any successful payment was for ToothyQuest Access
+    // Check if any successful payment was for ToothyQuest
     let hasPurchased = false;
+    let purchasedProductId: string | null = null;
     
     for (const pi of paymentIntents.data) {
       if (pi.status === "succeeded") {
@@ -82,9 +87,11 @@ serve(async (req) => {
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
           
           for (const item of lineItems.data) {
-            if (item.price?.product === TOOTHYQUEST_PRODUCT_ID) {
+            const productId = item.price?.product as string;
+            if (VALID_PRODUCT_IDS.includes(productId)) {
               hasPurchased = true;
-              logStep("Found ToothyQuest purchase", { sessionId: session.id });
+              purchasedProductId = productId;
+              logStep("Found ToothyQuest purchase", { sessionId: session.id, productId });
               break;
             }
           }
@@ -93,11 +100,11 @@ serve(async (req) => {
       if (hasPurchased) break;
     }
 
-    logStep("Purchase check complete", { hasPurchased });
+    logStep("Purchase check complete", { hasPurchased, purchasedProductId });
 
     return new Response(JSON.stringify({ 
       purchased: hasPurchased,
-      product_id: hasPurchased ? TOOTHYQUEST_PRODUCT_ID : null,
+      product_id: purchasedProductId,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
