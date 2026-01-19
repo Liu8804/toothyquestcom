@@ -11,7 +11,8 @@ import {
   Heart,
   Zap,
   Users,
-  HelpCircle
+  HelpCircle,
+  Disc3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -20,6 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
 import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
+import VoiceDJMixer from "./VoiceDJMixer";
 
 interface VoiceSettingsModalProps {
   isOpen: boolean;
@@ -156,6 +158,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
   const [testPlaying, setTestPlaying] = useState(false);
   const [testingPersonality, setTestingPersonality] = useState<VoicePersonality | null>(null);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showDJMixer, setShowDJMixer] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -392,15 +395,26 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
                   <span>Voice Mood</span>
                   <span className="text-lg">✨</span>
                 </Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-1.5 text-xs h-7 text-primary hover:text-primary"
-                  onClick={() => setShowQuiz(true)}
-                >
-                  <HelpCircle className="w-3.5 h-3.5" />
-                  Take Quiz!
-                </Button>
+                <div className="flex gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1.5 text-xs h-7 text-accent hover:text-accent"
+                    onClick={() => setShowDJMixer(true)}
+                  >
+                    <Disc3 className="w-3.5 h-3.5" />
+                    DJ Mix!
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1.5 text-xs h-7 text-primary hover:text-primary"
+                    onClick={() => setShowQuiz(true)}
+                  >
+                    <HelpCircle className="w-3.5 h-3.5" />
+                    Quiz
+                  </Button>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 {VOICE_MOODS.map((mood) => {
@@ -566,6 +580,12 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
         onComplete={handleQuizComplete}
+      />
+
+      {/* Voice DJ Mixer Modal */}
+      <VoiceDJMixer
+        isOpen={showDJMixer}
+        onClose={() => setShowDJMixer(false)}
       />
     </Dialog>
   );
