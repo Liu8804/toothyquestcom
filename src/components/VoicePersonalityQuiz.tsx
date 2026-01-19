@@ -4,8 +4,8 @@ import { Sparkles, ArrowRight, RotateCcw, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
-  VoicePersonality, 
-  VOICE_PERSONALITIES, 
+  VoiceMood, 
+  VOICE_MOODS, 
   getVoiceSettings, 
   saveVoiceSettings,
   getVoicePersonalityConfig 
@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface VoicePersonalityQuizProps {
   isOpen: boolean;
   onClose: () => void;
-  onComplete?: (personality: VoicePersonality) => void;
+  onComplete?: (mood: VoiceMood) => void;
 }
 
 interface QuizQuestion {
@@ -25,7 +25,7 @@ interface QuizQuestion {
   options: {
     text: string;
     emoji: string;
-    personality: VoicePersonality;
+    mood: VoiceMood;
   }[];
 }
 
@@ -35,10 +35,10 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     question: "What's your favorite kind of story?",
     emoji: "📚",
     options: [
-      { text: "Happy adventures with friends!", emoji: "🌈", personality: "cheerful" },
-      { text: "Cozy bedtime stories", emoji: "🌙", personality: "gentle" },
-      { text: "Super exciting quests!", emoji: "🚀", personality: "adventure" },
-      { text: "Stories with funny characters", emoji: "🎪", personality: "character" },
+      { text: "Happy adventures with friends!", emoji: "🌈", mood: "happy" },
+      { text: "Cozy bedtime stories", emoji: "🌙", mood: "calm" },
+      { text: "Super exciting quests!", emoji: "🚀", mood: "excited" },
+      { text: "Stories with funny characters", emoji: "🎪", mood: "silly" },
     ],
   },
   {
@@ -46,10 +46,10 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     question: "When you brush your teeth, you feel like...",
     emoji: "🦷",
     options: [
-      { text: "A happy helper making smiles!", emoji: "😊", personality: "cheerful" },
-      { text: "A peaceful cloud floating", emoji: "☁️", personality: "gentle" },
-      { text: "A superhero fighting germs!", emoji: "🦸", personality: "adventure" },
-      { text: "A silly monster scaring bugs!", emoji: "👾", personality: "character" },
+      { text: "A happy helper making smiles!", emoji: "😊", mood: "happy" },
+      { text: "A peaceful cloud floating", emoji: "☁️", mood: "calm" },
+      { text: "A superhero fighting germs!", emoji: "🦸", mood: "excited" },
+      { text: "A silly monster scaring bugs!", emoji: "👾", mood: "silly" },
     ],
   },
   {
@@ -57,10 +57,10 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     question: "Pick your favorite animal friend!",
     emoji: "🐾",
     options: [
-      { text: "A friendly puppy", emoji: "🐕", personality: "cheerful" },
-      { text: "A cuddly bunny", emoji: "🐰", personality: "gentle" },
-      { text: "A brave lion", emoji: "🦁", personality: "adventure" },
-      { text: "A silly monkey", emoji: "🐵", personality: "character" },
+      { text: "A friendly puppy", emoji: "🐕", mood: "happy" },
+      { text: "A cuddly bunny", emoji: "🐰", mood: "calm" },
+      { text: "A brave lion", emoji: "🦁", mood: "excited" },
+      { text: "A silly monkey", emoji: "🐵", mood: "silly" },
     ],
   },
   {
@@ -68,10 +68,10 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     question: "What makes you smile the most?",
     emoji: "😄",
     options: [
-      { text: "Dancing and singing!", emoji: "💃", personality: "cheerful" },
-      { text: "Warm hugs", emoji: "🤗", personality: "gentle" },
-      { text: "Going on adventures!", emoji: "🏔️", personality: "adventure" },
-      { text: "Making funny faces!", emoji: "🤪", personality: "character" },
+      { text: "Dancing and singing!", emoji: "💃", mood: "happy" },
+      { text: "Warm hugs", emoji: "🤗", mood: "calm" },
+      { text: "Going on adventures!", emoji: "🏔️", mood: "excited" },
+      { text: "Making funny faces!", emoji: "🤪", mood: "silly" },
     ],
   },
   {
@@ -79,40 +79,40 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     question: "If you had a magic power, it would be...",
     emoji: "✨",
     options: [
-      { text: "Making everyone happy!", emoji: "🌟", personality: "cheerful" },
-      { text: "Helping friends feel calm", emoji: "💫", personality: "gentle" },
-      { text: "Flying super fast!", emoji: "⚡", personality: "adventure" },
-      { text: "Talking to animals!", emoji: "🗣️", personality: "character" },
+      { text: "Making everyone happy!", emoji: "🌟", mood: "happy" },
+      { text: "Helping friends feel calm", emoji: "💫", mood: "calm" },
+      { text: "Flying super fast!", emoji: "⚡", mood: "excited" },
+      { text: "Talking to animals!", emoji: "🗣️", mood: "silly" },
     ],
   },
 ];
 
 const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQuizProps) => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<VoicePersonality[]>([]);
-  const [result, setResult] = useState<VoicePersonality | null>(null);
+  const [answers, setAnswers] = useState<VoiceMood[]>([]);
+  const [result, setResult] = useState<VoiceMood | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const handleAnswer = (personality: VoicePersonality) => {
-    const newAnswers = [...answers, personality];
+  const handleAnswer = (mood: VoiceMood) => {
+    const newAnswers = [...answers, mood];
     setAnswers(newAnswers);
 
     if (currentQuestion < QUIZ_QUESTIONS.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       // Calculate result
-      const counts: Record<VoicePersonality, number> = {
-        cheerful: 0,
-        gentle: 0,
-        adventure: 0,
-        character: 0,
+      const counts: Record<VoiceMood, number> = {
+        happy: 0,
+        excited: 0,
+        calm: 0,
+        silly: 0,
       };
       
       newAnswers.forEach((answer) => {
         counts[answer]++;
       });
 
-      const winner = (Object.entries(counts) as [VoicePersonality, number][])
+      const winner = (Object.entries(counts) as [VoiceMood, number][])
         .sort((a, b) => b[1] - a[1])[0][0];
       
       setResult(winner);
@@ -135,19 +135,13 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
     if (!result || isPlaying) return;
     setIsPlaying(true);
 
-    const personality = getVoicePersonalityConfig(result);
-    const testPhrases: Record<VoicePersonality, string> = {
-      cheerful: "Yay! I'm so happy to be your storytelling friend! Let's have amazing adventures together!",
-      gentle: "Hello, sweet one. I'll be here to tell you the most peaceful, wonderful stories.",
-      adventure: "AWESOME! You picked the best voice! Get ready for EPIC tooth-brushing quests!",
-      character: "Ahoy, little matey! We're going to have SO much fun with all kinds of silly voices!",
-    };
+    const moodConfig = getVoicePersonalityConfig(result);
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) {
         if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(testPhrases[result]);
+          const utterance = new SpeechSynthesisUtterance(moodConfig.previewPhrase);
           utterance.onend = () => setIsPlaying(false);
           utterance.onerror = () => setIsPlaying(false);
           window.speechSynthesis.speak(utterance);
@@ -166,13 +160,13 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
             "Authorization": `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
-            text: testPhrases[result],
-            voiceId: personality.voiceId,
+            text: moodConfig.previewPhrase,
+            voiceId: moodConfig.voiceId,
             voiceSettings: {
-              stability: personality.stability,
-              similarityBoost: personality.similarityBoost,
-              style: personality.style,
-              speed: personality.speed,
+              stability: moodConfig.stability,
+              similarityBoost: moodConfig.similarityBoost,
+              style: moodConfig.style,
+              speed: moodConfig.speed,
             },
           }),
         }
@@ -199,7 +193,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
     }
   };
 
-  const resultPersonality = result ? getVoicePersonalityConfig(result) : null;
+  const resultMoodConfig = result ? getVoicePersonalityConfig(result) : null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -213,7 +207,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
             >
               <Sparkles className="w-5 h-5 text-white" />
             </motion.div>
-            <span>Voice Personality Quiz!</span>
+            <span>Voice Mood Quiz!</span>
           </DialogTitle>
         </DialogHeader>
 
@@ -266,7 +260,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
                       transition={{ delay: idx * 0.1 }}
                       whileHover={{ scale: 1.02, x: 5 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={() => handleAnswer(option.personality)}
+                      onClick={() => handleAnswer(option.mood)}
                       className="w-full p-4 rounded-2xl border-2 border-border bg-background hover:border-primary hover:bg-primary/5 transition-all text-left flex items-center gap-3"
                     >
                       <span className="text-2xl">{option.emoji}</span>
@@ -300,24 +294,24 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
                     🎉
                   </motion.div>
                   <h3 className="text-xl font-display font-bold text-foreground">
-                    Your Perfect Voice Is...
+                    Your Perfect Voice Mood Is...
                   </h3>
                 </motion.div>
 
                 {/* Result Card */}
-                {resultPersonality && (
+                {resultMoodConfig && (
                   <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    className={`p-6 rounded-3xl bg-gradient-to-br ${resultPersonality.gradient} text-white shadow-lg`}
+                    className={`p-6 rounded-3xl bg-gradient-to-br ${resultMoodConfig.gradient} text-white shadow-lg`}
                   >
-                    <span className="text-5xl block mb-3">{resultPersonality.emoji}</span>
+                    <span className="text-5xl block mb-3">{resultMoodConfig.emoji}</span>
                     <h4 className="text-2xl font-display font-bold mb-2">
-                      {resultPersonality.name}
+                      {resultMoodConfig.name}
                     </h4>
                     <p className="text-white/90 text-sm">
-                      {resultPersonality.description}
+                      {resultMoodConfig.description}
                     </p>
                   </motion.div>
                 )}

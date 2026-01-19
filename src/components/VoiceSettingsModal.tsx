@@ -28,11 +28,11 @@ interface VoiceSettingsModalProps {
 
 export type VoiceProvider = "elevenlabs" | "browser";
 
-// Voice personalities for kids
-export type VoicePersonality = "cheerful" | "gentle" | "adventure" | "character";
+// Voice moods for kids - warm, happy, playful as base with variations
+export type VoiceMood = "happy" | "excited" | "calm" | "silly";
 
-export interface VoicePersonalityConfig {
-  id: VoicePersonality;
+export interface VoiceMoodConfig {
+  id: VoiceMood;
   name: string;
   description: string;
   emoji: string;
@@ -43,27 +43,43 @@ export interface VoicePersonalityConfig {
   style: number;
   speed: number;
   gradient: string;
+  previewPhrase: string;
 }
 
-// Voice personalities with ElevenLabs configurations
-export const VOICE_PERSONALITIES: VoicePersonalityConfig[] = [
+// Voice moods with ElevenLabs configurations - all warm and kid-friendly
+export const VOICE_MOODS: VoiceMoodConfig[] = [
   {
-    id: "cheerful",
-    name: "Cheerful Storyteller",
-    description: "Friendly, upbeat, and fun like your favorite guide!",
-    emoji: "🌟",
+    id: "happy",
+    name: "Happy & Warm",
+    description: "Friendly, cheerful, and full of sunshine! ☀️",
+    emoji: "😊",
     icon: Star,
     voiceId: "cgSgspJ2msm6clMCkdW9", // Jessica - cheerful, upbeat
     stability: 0.35,
     similarityBoost: 0.8,
-    style: 0.7,
-    speed: 1.0,
-    gradient: "from-yellow-400 to-orange-500",
+    style: 0.75,
+    speed: 0.95,
+    gradient: "from-yellow-400 to-orange-400",
+    previewPhrase: "Hey there, superstar! I'm so happy to see you! Ready to make those teeth sparkle and shine?",
   },
   {
-    id: "gentle",
-    name: "Gentle & Caring",
-    description: "Soft and calm like a bedtime storyteller",
+    id: "excited",
+    name: "Super Excited",
+    description: "High energy and ready for adventure! ⚡",
+    emoji: "🎉",
+    icon: Zap,
+    voiceId: "TX3LPaxmHKxFdv7VOQHJ", // Liam - energetic, expressive
+    stability: 0.25,
+    similarityBoost: 0.85,
+    style: 0.9,
+    speed: 1.05,
+    gradient: "from-pink-500 to-rose-500",
+    previewPhrase: "WOOHOO! This is going to be AMAZING! Let's GO on the most EPIC brushing adventure EVER!",
+  },
+  {
+    id: "calm",
+    name: "Calm & Gentle",
+    description: "Soft and soothing like a bedtime story 🌙",
     emoji: "💜",
     icon: Heart,
     voiceId: "pFZP5JQG7iQjIQuC4Bku", // Lily - soft, gentle
@@ -71,35 +87,29 @@ export const VOICE_PERSONALITIES: VoicePersonalityConfig[] = [
     similarityBoost: 0.7,
     style: 0.4,
     speed: 0.85,
-    gradient: "from-purple-400 to-pink-500",
+    gradient: "from-purple-400 to-indigo-400",
+    previewPhrase: "Hello, sweet one. Let's take a nice, peaceful journey together. Everything is going to be just fine.",
   },
   {
-    id: "adventure",
-    name: "Excitable Adventure",
-    description: "High energy and cartoon-like fun!",
-    emoji: "⚡",
-    icon: Zap,
-    voiceId: "TX3LPaxmHKxFdv7VOQHJ", // Liam - energetic, expressive
-    stability: 0.25,
-    similarityBoost: 0.85,
-    style: 0.9,
-    speed: 1.05,
-    gradient: "from-cyan-400 to-blue-500",
-  },
-  {
-    id: "character",
-    name: "Character Voices",
-    description: "Multiple fun personalities for each story!",
+    id: "silly",
+    name: "Silly & Playful",
+    description: "Giggly, goofy, and super fun! 🤪",
     emoji: "🎭",
     icon: Users,
     voiceId: "IKne3meq5aSn9XLyUdCD", // Charlie - versatile character voice
-    stability: 0.3,
+    stability: 0.2,
     similarityBoost: 0.75,
-    style: 0.85,
-    speed: 0.95,
-    gradient: "from-green-400 to-emerald-500",
+    style: 0.95,
+    speed: 1.0,
+    gradient: "from-green-400 to-teal-400",
+    previewPhrase: "Hee hee hee! Did you know that teeth love to do the wiggle dance? Wiggle wiggle wiggle! So silly!",
   },
 ];
+
+// Legacy type aliases for backwards compatibility
+export type VoicePersonality = VoiceMood;
+export type VoicePersonalityConfig = VoiceMoodConfig;
+export const VOICE_PERSONALITIES = VOICE_MOODS;
 
 export interface VoiceSettings {
   provider: VoiceProvider;
@@ -110,8 +120,8 @@ export interface VoiceSettings {
 
 const DEFAULT_SETTINGS: VoiceSettings = {
   provider: "elevenlabs",
-  personality: "cheerful",
-  speed: 0.9,
+  personality: "happy",
+  speed: 0.95,
   pitch: 1.1,
 };
 
@@ -171,15 +181,9 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
 
     const personality = getVoicePersonalityConfig(testPersonality);
     
-    // Fun test phrases based on personality
-    const testPhrases: Record<VoicePersonality, string> = {
-      cheerful: "Hey there, superstar! Ready for an awesome tooth-brushing adventure? Let's make those teeth sparkle!",
-      gentle: "Hello, little one. Let's take a peaceful journey to dreamland, where magical teeth dance under the moonlight.",
-      adventure: "WOOHOO! Time for an EPIC quest! Grab your toothbrush sword and let's defeat those sneaky sugar bugs!",
-      character: "Ahoy matey! Captain Toothy here! We're sailing to Sparkle Island to find the treasure of clean teeth!",
-    };
-
-    const testText = testPhrases[testPersonality];
+    // Get the preview phrase from mood config
+    const moodConfig = getVoicePersonalityConfig(testPersonality);
+    const testText = moodConfig.previewPhrase;
 
     try {
       if (settings.provider === "browser") {
@@ -385,7 +389,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
             >
               <div className="flex items-center justify-between">
                 <Label className="text-sm font-display font-bold text-foreground flex items-center gap-2">
-                  <span>Voice Personality</span>
+                  <span>Voice Mood</span>
                   <span className="text-lg">✨</span>
                 </Label>
                 <Button
@@ -399,14 +403,14 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
                 </Button>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {VOICE_PERSONALITIES.map((personality) => {
-                  const IconComponent = personality.icon;
-                  const isSelected = settings.personality === personality.id;
-                  const isTesting = testingPersonality === personality.id;
+                {VOICE_MOODS.map((mood) => {
+                  const IconComponent = mood.icon;
+                  const isSelected = settings.personality === mood.id;
+                  const isTesting = testingPersonality === mood.id;
                   
                   return (
                     <motion.div
-                      key={personality.id}
+                      key={mood.id}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       className={`relative flex flex-col p-4 rounded-2xl border-2 cursor-pointer transition-all ${
@@ -414,19 +418,19 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
                           ? "border-primary bg-primary/10"
                           : "border-border hover:border-primary/50 bg-background"
                       }`}
-                      onClick={() => setSettings({ ...settings, personality: personality.id })}
+                      onClick={() => setSettings({ ...settings, personality: mood.id })}
                     >
                       <div className="flex items-center gap-2 mb-2">
-                        <div className={`p-1.5 rounded-lg bg-gradient-to-br ${personality.gradient}`}>
+                        <div className={`p-1.5 rounded-lg bg-gradient-to-br ${mood.gradient}`}>
                           <IconComponent className="w-4 h-4 text-white" />
                         </div>
-                        <span className="text-lg">{personality.emoji}</span>
+                        <span className="text-lg">{mood.emoji}</span>
                       </div>
                       <span className="font-display font-bold text-sm text-foreground">
-                        {personality.name}
+                        {mood.name}
                       </span>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {personality.description}
+                        {mood.description}
                       </p>
                       
                       {/* Quick test button */}
@@ -436,7 +440,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
                         className="mt-2 h-7 text-xs gap-1"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleTestVoice(personality.id);
+                          handleTestVoice(mood.id);
                         }}
                         disabled={testPlaying}
                       >
