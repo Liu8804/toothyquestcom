@@ -133,11 +133,12 @@ serve(async (req) => {
       );
     }
 
-    // Use custom voice settings if provided, otherwise use warm, happy, playful defaults
-    const stability = voiceSettings?.stability ?? 0.35;     // Lower = more expressive/warm
-    const similarityBoost = voiceSettings?.similarityBoost ?? 0.8;  // Higher = clearer voice
-    const style = voiceSettings?.style ?? 0.75;             // Higher = more playful/happy
-    const speed = voiceSettings?.speed ?? 0.95;             // Slightly upbeat pace
+    // Kid-friendly voice settings: playful, energetic, and fun for ages 4-8
+    // Optimized for short sentences, emotional inflection, and excitement
+    const stability = voiceSettings?.stability ?? 0.25;     // Lower = more expressive/animated
+    const similarityBoost = voiceSettings?.similarityBoost ?? 0.85;  // Higher = clearer pronunciation
+    const style = voiceSettings?.style ?? 0.9;              // Higher = more playful/exaggerated
+    const speed = voiceSettings?.speed ?? 1.0;              // Medium-fast pace for energy
 
     console.log(`Generating TTS for text of length ${trimmedText.length} with voice ${voiceId}, stability: ${stability}, style: ${style}, speed: ${speed}`);
 

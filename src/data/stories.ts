@@ -41,10 +41,10 @@ export const stories: Story[] = [
     emoji: "⭐",
     isFree: true,
     quiz: {
-      question: "What did Toothy do first?",
-      options: ["Take a nap", "Brush his teeth", "Eat candy"],
+      question: "Yay! What did Toothy do first? 🦷✨",
+      options: ["Take a nap 😴", "Brush his teeth 🪥", "Eat candy 🍬"],
       correctIndex: 1,
-      hint: "Great job! Brushing first keeps teeth happy and shiny!",
+      hint: "HOORAY! You got it! 🎉 Brushing first makes teeth sparkle like stars! ⭐",
     },
   },
   {
@@ -58,10 +58,10 @@ export const stories: Story[] = [
     emoji: "🪥",
     isFree: true,
     quiz: {
-      question: "Who helped Toothy learn how to brush?",
-      options: ["Flossy", "Sugar Monster", "Sleepy Tooth"],
+      question: "Who helped Toothy learn super brushing moves? 💪✨",
+      options: ["Flossy the Hero! 🦸", "Sugar Monster 👾", "Sleepy Tooth 😴"],
       correctIndex: 0,
-      hint: "Flossy is a brushing buddy who knows all the tips!",
+      hint: "YAY! Flossy is the BEST brushing buddy ever! 🎉 High five! ✋",
     },
   },
   {
@@ -75,10 +75,10 @@ export const stories: Story[] = [
     emoji: "🧵",
     isFree: true,
     quiz: {
-      question: "What did Toothy use to clean between teeth?",
-      options: ["Spoon", "Floss", "Blanket"],
+      question: "Ooh! What magic string cleans BETWEEN teeth? 🧵✨",
+      options: ["A spoon 🥄", "Super Floss! 🦸", "A blanket 🛏️"],
       correctIndex: 1,
-      hint: "Floss slides in between teeth to keep them super clean!",
+      hint: "WOOHOO! Super Floss saves the day! 🎉 It swooshes out all the hidden yucky stuff! 💨",
     },
   },
   {
@@ -92,10 +92,10 @@ export const stories: Story[] = [
     emoji: "🥕",
     isFree: true,
     quiz: {
-      question: "Which snack is good for teeth?",
-      options: ["Candy", "Carrots", "Soda"],
+      question: "Yum yum! Which snack makes teeth SUPER strong? 💪🦷",
+      options: ["Sticky candy 🍬", "Crunchy carrots! 🥕", "Fizzy soda 🥤"],
       correctIndex: 1,
-      hint: "Crunchy carrots make teeth strong and happy!",
+      hint: "CRUNCH CRUNCH! 🥕 You're SO smart! Carrots are tooth superfoods! 🦸‍♀️✨",
     },
   },
   {
@@ -109,10 +109,10 @@ export const stories: Story[] = [
     emoji: "🦷",
     isFree: true,
     quiz: {
-      question: "What should Bracey do after eating sticky candy?",
-      options: ["Brush her teeth", "Ignore it", "Go to sleep"],
+      question: "Uh-oh! Bracey ate sticky candy! 🍬 What should she do NOW? ⏰",
+      options: ["Brush brush brush! 🪥✨", "Oops, ignore it 🙈", "Go sleepy time 😴"],
       correctIndex: 0,
-      hint: "Great job! Brushing after sticky candy keeps braces clean and happy!",
+      hint: "AMAZING! 🎉 Quick brushing saves the day! Bye bye sticky stuff! 👋💨",
     },
   },
   // ===== PAID / LOCKED QUESTS (6–42) =====
@@ -127,10 +127,10 @@ export const stories: Story[] = [
     emoji: "🏆",
     isFree: false,
     quiz: {
-      question: "Who went with Toothy on his first adventure?",
-      options: ["Sugar Monster", "Flossy", "Sleepy Tooth"],
+      question: "Who was Toothy's BEST adventure buddy? 🚀🌟",
+      options: ["Sugar Monster 👾", "Flossy the Hero! 🦸", "Sleepy Tooth 😴"],
       correctIndex: 1,
-      hint: "Flossy loves adventures and brushing together!",
+      hint: "YAY! Flossy and Toothy are the BEST team! 🎉 Adventure friends forever! 🤝✨",
     },
   },
   {
@@ -144,10 +144,10 @@ export const stories: Story[] = [
     emoji: "🦷",
     isFree: false,
     quiz: {
-      question: "Which tooth was brave in this quest?",
-      options: ["Front tooth", "Back tooth", "Tongue"],
+      question: "WOW! Which tooth was super duper BRAVE? 💪🦷",
+      options: ["Front tooth hero! 🦸", "Sneaky back tooth 👀", "Silly tongue 👅"],
       correctIndex: 0,
-      hint: "The front tooth was brave and ready to shine!",
+      hint: "HOORAY for bravery! 🎉 The front tooth was SO brave and sparkly! ✨⭐",
     },
   },
   {
@@ -161,10 +161,10 @@ export const stories: Story[] = [
     emoji: "🧚",
     isFree: false,
     quiz: {
-      question: "Who helped Toothy collect sparkling teeth?",
-      options: ["Tooth Fairy", "Flossy", "Sugar Monster"],
+      question: "Ooh! Who collects sparkly teeth with magic wings? 🧚✨",
+      options: ["The Tooth Fairy! 🧚‍♀️", "Flossy 🦸", "Sugar Monster 👾"],
       correctIndex: 0,
-      hint: "The Tooth Fairy loves sparkling teeth and smiles!",
+      hint: "MAGICAL! 🎉 The Tooth Fairy LOVES super clean sparkly teeth! ✨🦷💫",
     },
   },
   {
@@ -178,10 +178,10 @@ export const stories: Story[] = [
     emoji: "👾",
     isFree: false,
     quiz: {
-      question: "What problem did the friends face?",
-      options: ["Sparkling teeth", "Cavity monsters", "Lost toothbrushes"],
+      question: "Uh-oh! What sneaky trouble showed up? 😱👾",
+      options: ["Super sparkly teeth ✨", "CAVITY MONSTERS! 👾", "Lost toothbrushes 🪥"],
       correctIndex: 1,
-      hint: "Cavity monsters hide if we don't brush well!",
+      hint: "You found them! 🔍 But don't worry - brushing makes them RUN AWAY! 💨👾 Bye bye!",
     },
   },
   {
@@ -195,10 +195,10 @@ export const stories: Story[] = [
     emoji: "🦸",
     isFree: false,
     quiz: {
-      question: "How did Captain Floss help?",
-      options: ["Ate candy", "Flossed carefully", "Took a nap"],
+      question: "ZOOM! How did Captain Floss save the day? 🦸‍♂️💨",
+      options: ["Munched candy 🍬", "SUPER FLOSS POWER! 🧵✨", "Took a snooze 😴"],
       correctIndex: 1,
-      hint: "Flossing gets rid of sugar hiding in tight spots!",
+      hint: "WHOOOOSH! 🎉 Captain Floss zooms in and gets ALL the hidden yuckies! 💪✨",
     },
   },
   {
@@ -212,10 +212,10 @@ export const stories: Story[] = [
     emoji: "🐛",
     isFree: false,
     quiz: {
-      question: "What did Toothy chase away?",
-      options: ["Sugar bugs", "Candy", "Plaque pirates"],
+      question: "What tiny troublemakers did we chase away? 🏃💨",
+      options: ["SUGAR BUGS! 🐛", "Yummy candy 🍬", "Plaque pirates 🏴‍☠️"],
       correctIndex: 0,
-      hint: "Sugar bugs run away when we brush and floss!",
+      hint: "GOTCHA! 🎉 Sugar bugs are SO scared of our toothbrush! Bye bye buggies! 👋🐛💨",
     },
   },
   {
@@ -229,10 +229,10 @@ export const stories: Story[] = [
     emoji: "👑",
     isFree: false,
     quiz: {
-      question: "How did friends feel after brushing?",
-      options: ["Sad", "Happy and proud", "Sleepy"],
+      question: "How did everyone feel after brushing? 🦷✨",
+      options: ["Sad and grumpy 😢", "SUPER HAPPY! 🎉😁", "Sleepy snoozy 😴"],
       correctIndex: 1,
-      hint: "Clean teeth make everyone smile big!",
+      hint: "WOOHOO! 🎉 Everyone feels AMAZING after brushing! Sparkle sparkle! ✨😁✨",
     },
   },
   {
@@ -246,10 +246,10 @@ export const stories: Story[] = [
     emoji: "✨",
     isFree: false,
     quiz: {
-      question: "What magical potion did Toothy use?",
-      options: ["Mouthwash", "Juice", "Candy syrup"],
+      question: "Ooh! What MAGIC potion made teeth super fresh? 🧪✨",
+      options: ["Swishy mouthwash! 💫", "Yummy juice 🧃", "Candy syrup 🍯"],
       correctIndex: 0,
-      hint: "Mouthwash keeps teeth extra fresh and healthy!",
+      hint: "SWISH SWISH! 🎉 The magic mouthwash makes your whole mouth feel like a sparkle party! ✨🎊",
     },
   },
   {
@@ -263,10 +263,10 @@ export const stories: Story[] = [
     emoji: "💃",
     isFree: false,
     quiz: {
-      question: "How did Toothy make brushing fun?",
-      options: ["By jumping and brushing", "By hiding", "By sleeping"],
+      question: "How did Toothy make brushing SUPER FUN? 🎵💃",
+      options: ["Dance and brush! 💃🪥", "Hide and seek 🙈", "Snooze time 😴"],
       correctIndex: 0,
-      hint: "Dancing while brushing makes teeth happy!",
+      hint: "DANCE PARTY! 🎉💃 Brush to the beat and your teeth will LOVE it! Wiggle wiggle sparkle! ✨",
     },
   },
   {
@@ -280,10 +280,10 @@ export const stories: Story[] = [
     emoji: "🏅",
     isFree: false,
     quiz: {
-      question: "What did friends earn for brushing well?",
-      options: ["Stickers", "Candy", "Sleep"],
+      question: "YAY! What awesome reward did friends earn? 🏆✨",
+      options: ["SHINY STICKERS! ⭐", "Candy treats 🍬", "Sleepy time 😴"],
       correctIndex: 0,
-      hint: "Stickers are rewards for sparkling clean teeth!",
+      hint: "STICKER TIME! 🎉⭐ You earned it for having the SPARKLIEST teeth! So proud of you! 🏆✨",
     },
   },
   {
@@ -297,10 +297,10 @@ export const stories: Story[] = [
     emoji: "🏴‍☠️",
     isFree: false,
     quiz: {
-      question: "Who caused trouble in the mouth?",
-      options: ["Plaque Pirates", "Tooth Fairy", "Flossy"],
+      question: "ARRR! Who were the sneaky troublemakers? 🏴‍☠️👀",
+      options: ["PLAQUE PIRATES! 🏴‍☠️", "Sweet Tooth Fairy 🧚", "Hero Flossy 🦸"],
       correctIndex: 0,
-      hint: "Plaque Pirates hide sugar and germs—brush them away!",
+      hint: "Ahoy! 🏴‍☠️ But YOU defeated them! SWISH SWASH with your brush! 🪥💪 Pirates overboard! 🎉",
     },
   },
   {
@@ -314,10 +314,10 @@ export const stories: Story[] = [
     emoji: "😊",
     isFree: false,
     quiz: {
-      question: "What did the shy tooth learn?",
-      options: ["To hide", "To brush carefully", "To eat candy"],
+      question: "Aww! What did the shy little tooth learn? 🥺🦷",
+      options: ["To hide away 🙈", "Gentle brushing is NICE! 🪥💕", "Munch munch candy 🍬"],
       correctIndex: 1,
-      hint: "Every tooth can shine with careful brushing!",
+      hint: "SO SWEET! 🥹 The shy tooth learned brushing feels like tickly hugs! Hehe! 🤗✨",
     },
   },
   {
@@ -331,10 +331,10 @@ export const stories: Story[] = [
     emoji: "🦷",
     isFree: false,
     quiz: {
-      question: "What happened to Timmy's tooth?",
-      options: ["It wiggled", "It fell asleep", "It turned blue"],
+      question: "Ooh exciting! What happened to Timmy's tooth? 🦷👀",
+      options: ["WIGGLE WIGGLE! 🕺", "Sleepy tooth 😴", "Turned blue 🔵"],
       correctIndex: 0,
-      hint: "Wiggly teeth are getting ready to make room for new ones!",
+      hint: "WIGGLE WIGGLE WOO! 🎉 That means a BIG KID tooth is coming! You're growing up! 🌟",
     },
   },
   {
@@ -348,10 +348,10 @@ export const stories: Story[] = [
     emoji: "🏥",
     isFree: false,
     quiz: {
-      question: "Why wasn't the dentist scary?",
-      options: ["She was kind and friendly", "She wore a mask", "She gave candy"],
+      question: "Why was the dentist actually SUPER NICE? 👩‍⚕️💕",
+      options: ["So kind and friendly! 🤗", "Wore a mask 😷", "Gave candy 🍬"],
       correctIndex: 0,
-      hint: "Dentists are friends who help teeth stay healthy!",
+      hint: "YAY! 🎉 Dentists are SMILE FRIENDS! They help teeth be their sparkliest! 👩‍⚕️✨🦷",
     },
   },
   {
@@ -365,10 +365,10 @@ export const stories: Story[] = [
     emoji: "⏰",
     isFree: false,
     quiz: {
-      question: "What did the tooth learn?",
-      options: ["To wait patiently", "To wiggle fast", "To hide"],
+      question: "What super skill did the tooth learn? 🧠✨",
+      options: ["PATIENCE power! ⏰💪", "Wiggle super fast 🏃", "Hide and seek 🙈"],
       correctIndex: 0,
-      hint: "Patience makes brushing and teeth care easier!",
+      hint: "GOOD JOB! 🎉 Brush first, THEN treats taste even YUMMIER! You're so smart! 🧠⭐",
     },
   },
   {
@@ -382,10 +382,10 @@ export const stories: Story[] = [
     emoji: "🐜",
     isFree: false,
     quiz: {
-      question: "Who tried to sneak into the teeth?",
-      options: ["Sugar bugs", "Plaque pirates", "Tooth Fairy"],
+      question: "Shhh! Who tried to sneak attack? 🤫👾",
+      options: ["SUGAR BUGS! 🐛", "Plaque pirates 🏴‍☠️", "Tooth Fairy 🧚"],
       correctIndex: 0,
-      hint: "Sugar bugs hide between teeth if we forget to brush!",
+      hint: "CAUGHT THEM! 🔍 But your toothbrush scared them ALL away! 💨🐛 Victory! 🏆",
     },
   },
   {
@@ -399,10 +399,10 @@ export const stories: Story[] = [
     emoji: "👾",
     isFree: false,
     quiz: {
-      question: "What did the Cavity Monster do?",
-      options: ["Ate candy", "Learned to help clean teeth", "Hid under the pillow"],
+      question: "WOW! What did the Cavity Monster learn to do? 👾❤️",
+      options: ["Munch more candy 🍬", "HELP clean teeth! 🧹✨", "Hide under pillow 🛏️"],
       correctIndex: 1,
-      hint: "Even tricky teeth problems can get fixed!",
+      hint: "AMAZING! 🎉 Even monsters can change! Brushing makes EVERYONE happy! 👾💕✨",
     },
   },
   {
@@ -416,10 +416,10 @@ export const stories: Story[] = [
     emoji: "🌙",
     isFree: false,
     quiz: {
-      question: "What snack did the friends eat at night?",
-      options: ["Candy", "Healthy snack", "Soda"],
+      question: "What yummy snack is BEST before bedtime? 🌙🍎",
+      options: ["Sticky candy 🍬", "HEALTHY snack! 🥕", "Fizzy soda 🥤"],
       correctIndex: 1,
-      hint: "Healthy snacks keep teeth strong even at night!",
+      hint: "YUM YUM! 🎉 Healthy snacks are sleepy teeth's BEST friends! Sweet dreams! 🌙💤",
     },
   },
   {
@@ -433,10 +433,10 @@ export const stories: Story[] = [
     emoji: "🫧",
     isFree: false,
     quiz: {
-      question: "How did Toothy save the teeth?",
-      options: ["With bubble toothpaste", "With juice", "With a spoon"],
+      question: "POP POP! How did Toothy save the day? 🫧✨",
+      options: ["BUBBLE TOOTHPASTE! 🫧", "Yummy juice 🧃", "A silly spoon 🥄"],
       correctIndex: 0,
-      hint: "Bubble toothpaste is fun and cleans every corner!",
+      hint: "POP POP POP! 🎉🫧 Bubbles are SO fun and clean every tiny spot! Wheee! 🌟",
     },
   },
   {
@@ -450,10 +450,10 @@ export const stories: Story[] = [
     emoji: "🦸‍♂️",
     isFree: false,
     quiz: {
-      question: "What was hidden between teeth?",
-      options: ["Candy", "Corn", "Toothbrush"],
+      question: "Detective time! 🔍 What was hiding between teeth?",
+      options: ["Sneaky candy 🍬", "CORN piece! 🌽", "Tiny toothbrush 🪥"],
       correctIndex: 1,
-      hint: "Floss can get the tiniest bits hiding in teeth!",
+      hint: "FOUND IT! 🎉🌽 Captain Floss zoomed in and rescued it! Super hero move! 🦸‍♂️💨",
     },
   },
   {
@@ -467,10 +467,10 @@ export const stories: Story[] = [
     emoji: "🏴‍☠️",
     isFree: false,
     quiz: {
-      question: "Who caused trouble in the mouth?",
-      options: ["Plaque Pirates", "Tooth Fairy", "Flossy"],
+      question: "ARRR! 🏴‍☠️ Who were the troublemakers?",
+      options: ["PLAQUE PIRATES! 🏴‍☠️", "Sweet Tooth Fairy 🧚", "Flossy hero 🦸"],
       correctIndex: 0,
-      hint: "Plaque Pirates are gone when we brush and floss!",
+      hint: "WALK THE PLANK, pirates! 🎉 Your brush is mightier than any pirate! 🪥⚔️ Victory! 🏆",
     },
   },
   {
@@ -484,10 +484,10 @@ export const stories: Story[] = [
     emoji: "⏱️",
     isFree: false,
     quiz: {
-      question: "What helped friends brush for the right time?",
-      options: ["Timer", "Candy", "Blanket"],
+      question: "TICK TOCK! ⏱️ What helped brush for 2 whole minutes?",
+      options: ["Magic TIMER! ⏱️✨", "Candy treat 🍬", "Cozy blanket 🛏️"],
       correctIndex: 0,
-      hint: "Brushing for 2 minutes keeps teeth super clean!",
+      hint: "DING DING! 🎉 Two minutes of brushing = SUPER SPARKLY teeth! You're a champion! 🏆✨",
     },
   },
   {
@@ -501,10 +501,10 @@ export const stories: Story[] = [
     emoji: "🦸‍♀️",
     isFree: false,
     quiz: {
-      question: "What did friends earn for brushing together?",
-      options: ["Stars", "Candy", "Sleep"],
+      question: "TEAM POWER! 🦸‍♀️🦸‍♂️ What awesome reward did they earn?",
+      options: ["GOLDEN STARS! ⭐✨", "Candy treats 🍬", "Sleepy time 😴"],
       correctIndex: 0,
-      hint: "Team brushing is fun and earns stars!",
+      hint: "TEAMWORK MAKES THE DREAM WORK! 🎉 You earned SO many sparkly stars! ⭐⭐⭐✨",
     },
   },
   {
@@ -518,10 +518,10 @@ export const stories: Story[] = [
     emoji: "🗺️",
     isFree: false,
     quiz: {
-      question: "What did the friends help find?",
-      options: ["Lost map", "Candy bag", "Pillow"],
+      question: "Mystery time! 🗺️ What did we help the Tooth Fairy find?",
+      options: ["Her LOST MAP! 🗺️✨", "Candy bag 🍬", "Fluffy pillow 🛏️"],
       correctIndex: 0,
-      hint: "Tooth Fairy needs our help to find all the sparkling teeth!",
+      hint: "WE FOUND IT! 🎉 The Tooth Fairy is SO happy! Magic sparkles everywhere! ✨🧚‍♀️💫",
     },
   },
   {
@@ -535,10 +535,10 @@ export const stories: Story[] = [
     emoji: "🌙",
     isFree: false,
     quiz: {
-      question: "What did the teeth do at night?",
-      options: ["Parade in the moonlight", "Hide", "Sleep"],
+      question: "So magical! 🌙 What did teeth do under the moon?",
+      options: ["MOONLIGHT PARADE! 🌙✨", "Play hide and seek 🙈", "Snooze away 😴"],
       correctIndex: 0,
-      hint: "Teeth love to shine in a fun parade!",
+      hint: "SPARKLE SPARKLE! 🎉 The cleanest teeth GLOW in the moonlight parade! So pretty! 🌟🦷✨",
     },
   },
   {
@@ -552,10 +552,10 @@ export const stories: Story[] = [
     emoji: "✨",
     isFree: false,
     quiz: {
-      question: "How did Toothy make teeth sparkle?",
-      options: ["Magic spell", "Candy", "Juice"],
+      question: "ABRACADABRA! ✨ How did Toothy make teeth sparkle?",
+      options: ["MAGIC SPELL! ✨🪄", "Candy magic 🍬", "Juicy juice 🧃"],
       correctIndex: 0,
-      hint: "A sparkle spell + brushing = shiny happy teeth!",
+      hint: "SPARKLE SCRUB SWISH! 🎉🪄 The magic spell worked! Your teeth are GLOWING! ✨✨✨",
     },
   },
   {
@@ -569,10 +569,10 @@ export const stories: Story[] = [
     emoji: "💤",
     isFree: false,
     quiz: {
-      question: "Where did Toothy and friends go?",
-      options: ["Dreamland", "Candy land", "Playground"],
+      question: "Sleepy time adventure! 💤 Where did they go?",
+      options: ["DREAMLAND! 🌈💫", "Candy land 🍬", "Fun playground 🎢"],
       correctIndex: 0,
-      hint: "Dreamland is full of fun tooth adventures!",
+      hint: "SWEET DREAMS! 🎉 Clean teeth have the BEST adventures in Dreamland! 🌙💫✨",
     },
   },
   {
@@ -586,10 +586,10 @@ export const stories: Story[] = [
     emoji: "🍎",
     isFree: false,
     quiz: {
-      question: "Which snack was crunchy and healthy?",
-      options: ["Apple", "Cookie", "Candy"],
+      question: "CRUNCH CRUNCH! 🍎 Which snack is super healthy?",
+      options: ["CRUNCHY APPLE! 🍎", "Soft cookie 🍪", "Sticky candy 🍬"],
       correctIndex: 0,
-      hint: "Crunchy apples are yummy and keep teeth strong!",
+      hint: "CRUNCH CRUNCH YUM! 🎉🍎 Apples are like toothbrushes you can EAT! So cool! 🦷💪",
     },
   },
   {
@@ -603,10 +603,10 @@ export const stories: Story[] = [
     emoji: "🧃",
     isFree: false,
     quiz: {
-      question: "Why was the juice tricky?",
-      options: ["Too sugary", "Too cold", "Too tasty"],
+      question: "Hmm! 🤔 Why was juice being tricky?",
+      options: ["SECRET SUGAR! 🍬😱", "Too chilly 🥶", "Too yummy 😋"],
       correctIndex: 0,
-      hint: "Sugary drinks can hide in teeth—brush after juice!",
+      hint: "AHA! Good detective! 🔍 Juice has sneaky sugar! Water is teeth's BEST friend! 💧🦷",
     },
   },
   {
@@ -620,10 +620,10 @@ export const stories: Story[] = [
     emoji: "💧",
     isFree: false,
     quiz: {
-      question: "Which drink is best for teeth?",
-      options: ["Water", "Soda", "Juice"],
+      question: "SPLASH! 💧 Which drink is a SUPERHERO for teeth?",
+      options: ["SUPER WATER! 💧🦸", "Fizzy soda 🥤", "Sweet juice 🧃"],
       correctIndex: 0,
-      hint: "Water keeps teeth clean and happy!",
+      hint: "SPLASH SPLASH! 🎉💧 Water is the #1 CHAMPION for happy healthy teeth! 🏆🦷",
     },
   },
   {
@@ -637,10 +637,10 @@ export const stories: Story[] = [
     emoji: "🥕",
     isFree: false,
     quiz: {
-      question: "Which snack is the best for teeth?",
-      options: ["Candy", "Fruit", "Cookies"],
+      question: "Snack time! 🍎🥕 Which is the BEST choice for teeth?",
+      options: ["Sticky candy 🍬", "YUMMY FRUIT! 🍎🍇", "Sugary cookies 🍪"],
       correctIndex: 1,
-      hint: "Fruits are yummy and good for sparkling teeth!",
+      hint: "SMART CHOICE! 🎉 Fruits are nature's candy AND they love your teeth! 🍎💕🦷",
     },
   },
   // === BONUS BRACES QUESTS (37-42) ===
@@ -655,10 +655,10 @@ export const stories: Story[] = [
     emoji: "🌈",
     isFree: false,
     quiz: {
-      question: "How can Bracey clean her braces properly?",
-      options: ["Brush carefully around the brackets", "Just rinse with water", "Skip brushing today"],
+      question: "Rainbow braces! 🌈 How does Bracey keep them sparkly?",
+      options: ["Brush around EACH bracket! 🪥✨", "Quick water splash 💧", "Skip today 🙈"],
       correctIndex: 0,
-      hint: "Yay! Brushing carefully around each bracket keeps Bracey's teeth sparkling!",
+      hint: "PERFECT! 🎉🌈 Each little bracket gets sparkle time! Your rainbow smile is GLOWING! ✨🦷",
     },
   },
   {
@@ -672,10 +672,10 @@ export const stories: Story[] = [
     emoji: "🍬",
     isFree: false,
     quiz: {
-      question: "What should Bracey do if candy gets stuck?",
-      options: ["Brush and floss carefully", "Ignore it", "Shake her teeth"],
+      question: "Uh-oh! Candy stuck in braces! 🍬😱 What NOW?",
+      options: ["Brush and floss rescue! 🪥🧵", "Oops, ignore it 🙈", "Shake shake shake 🙃"],
       correctIndex: 0,
-      hint: "Excellent! Brushing and flossing carefully keeps braces clean and comfy.",
+      hint: "RESCUE COMPLETE! 🎉 Brush + floss = sticky candy's WORST ENEMY! Bye bye goo! 👋💨",
     },
   },
   {
@@ -689,10 +689,10 @@ export const stories: Story[] = [
     emoji: "✨",
     isFree: false,
     quiz: {
-      question: "What should Bracey do if her braces feel wiggly?",
-      options: ["Stay calm and keep brushing", "Pull the braces off", "Stop brushing"],
+      question: "Ooh! Braces feel wiggly! 😯 What should Bracey do?",
+      options: ["Stay cool & keep brushing! 😎🪥", "Pull them off 😬", "Stop brushing 🙅"],
       correctIndex: 0,
-      hint: "Perfect! Wiggly braces just mean your teeth are moving – brushing helps them stay healthy.",
+      hint: "SO BRAVE! 🎉 Wiggly means teeth are moving to PERFECT spots! Keep brushing, superstar! ⭐🦷",
     },
   },
   {
@@ -706,10 +706,10 @@ export const stories: Story[] = [
     emoji: "🌙",
     isFree: false,
     quiz: {
-      question: "When is the best time to brush with braces?",
-      options: ["Before bed", "Only in the morning", "After lunch only"],
+      question: "Sweet dreams time! 🌙 When should Bracey brush?",
+      options: ["BEFORE BED! 🌙🪥", "Just morning time ☀️", "Only after lunch 🥪"],
       correctIndex: 0,
-      hint: "Awesome! Brushing before bed keeps braces and teeth clean all night.",
+      hint: "PERFECT! 🎉🌙 Nighttime brushing = NO sugar bug parties while you sleep! 💤✨",
     },
   },
   {
@@ -723,10 +723,10 @@ export const stories: Story[] = [
     emoji: "🎨",
     isFree: false,
     quiz: {
-      question: "How should Bracey brush around colored bands?",
-      options: ["Brush carefully around each band", "Brush only the front teeth", "Skip brushing the bands"],
+      question: "Rainbow bands! 🎨 How does Bracey keep them clean?",
+      options: ["Brush EACH band carefully! 🪥🌈", "Just front teeth 😬", "Skip the bands 🙈"],
       correctIndex: 0,
-      hint: "Great job! Careful brushing around bands keeps your smile bright and healthy.",
+      hint: "RAINBOW SPARKLE! 🎉🌈 Every colorful band gets love! Your smile is like a treasure! 💎✨",
     },
   },
   {
@@ -765,16 +765,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What happens if we don't fill cavities?",
-      options: ["Teeth stay healthy", "Sugar Monsters can make bigger holes", "Teeth grow faster"],
+      question: "Uh-oh! 🏰 What happens if we DON'T fill cavities?",
+      options: ["Teeth stay happy 😊", "Sugar Monsters make BIGGER holes! 👾😱", "Teeth grow super fast 🚀"],
       correctIndex: 1,
-      hint: "Sugar Monsters love to make holes bigger if we don't fill them!",
+      hint: "OH NO! 👾 But we stopped them! Fill those holes and Sugar Monsters have NO home! 🎉🏆",
     },
     quiz2: {
-      question: "Which of these helps prevent cavities?",
-      options: ["Brushing teeth every day", "Eating only candy", "Never visiting the dentist"],
+      question: "What's the BEST way to stop cavities? 🛡️✨",
+      options: ["BRUSH EVERY DAY! 🪥💪", "Only eat candy 🍬", "Never see dentist 🙈"],
       correctIndex: 0,
-      hint: "Brushing every day is the best way to keep cavities away!",
+      hint: "CHAMPION BRUSHER! 🎉 Daily brushing is your SUPER SHIELD against cavities! 🛡️✨",
     },
   },
   {
@@ -794,16 +794,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What is the main reason for a root canal?",
-      options: ["To clean deep infection inside a tooth", "To make teeth shiny", "To straighten teeth"],
+      question: "Explorer mission! 🔦 What do we clean in the tunnels?",
+      options: ["Deep inside germs! 🦠💨", "Make teeth sparkly ✨", "Straighten teeth 📐"],
       correctIndex: 0,
-      hint: "Root canals clean out deep infections to save the tooth!",
+      hint: "MISSION COMPLETE! 🎉🔦 We found ALL the hidden germs and cleaned them out! Hero work! 🦸",
     },
     quiz2: {
-      question: "True or False – Root canals are scary and always painful.",
-      options: ["True", "False"],
+      question: "True or False: Root canals are scary and hurt! 😰",
+      options: ["True 😱", "FALSE! 😊"],
       correctIndex: 1,
-      hint: "Root canals aren't scary! Dentists make sure you're comfortable.",
+      hint: "NOT SCARY AT ALL! 🎉 Dentists are super gentle! You're SO brave! 💪🦷",
     },
   },
   {
@@ -823,16 +823,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What do braces help your teeth do?",
-      options: ["Stay straight", "Turn purple", "Fall out"],
+      question: "CHOO CHOO! 🚂 What do braces help teeth do?",
+      options: ["Stay PERFECTLY straight! 📐✨", "Turn purple 💜", "Fall out 😱"],
       correctIndex: 0,
-      hint: "Braces help teeth stay straight and beautiful!",
+      hint: "ALL ABOARD! 🎉🚂 The tooth train lines up every smile PERFECTLY! Choo choo! ✨",
     },
     quiz2: {
-      question: "How long do we usually wear braces?",
-      options: ["A few days", "Several months to years", "Only at night"],
+      question: "How long is the braces adventure? ⏰🦷",
+      options: ["Just a few days 📅", "Many months to years! 📆✨", "Only at night 🌙"],
       correctIndex: 1,
-      hint: "Braces work their magic over several months to years!",
+      hint: "It's a BIG adventure! 🎉 But the AMAZING smile at the end is SO worth it! 😁✨",
     },
   },
   {
@@ -852,16 +852,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "How often should we brush our teeth?",
-      options: ["Once a week", "Twice a day", "Only before candy"],
+      question: "SPARKLE TIME! 🚿✨ How often do we brush?",
+      options: ["Once a week 📅", "TWICE A DAY! ☀️🌙", "Only before candy 🍬"],
       correctIndex: 1,
-      hint: "Brushing twice a day keeps plaque away!",
+      hint: "MORNING AND NIGHT! 🎉 Twice a day keeps your smile shining like the SUN! ☀️✨",
     },
     quiz2: {
-      question: "What is plaque?",
-      options: ["Sticky germs on teeth", "Tooth fairy dust", "Candy sugar"],
+      question: "Ew! What is icky plaque? 🤢",
+      options: ["STICKY GERMS! 🦠", "Tooth fairy sparkles ✨", "Candy sugar 🍬"],
       correctIndex: 0,
-      hint: "Plaque is sticky germs that love to hide on teeth!",
+      hint: "YUCKY GERMS! 🦠 But YOUR toothbrush is their WORST nightmare! 🪥💪 Bye bye plaque! 👋",
     },
   },
   {
@@ -881,16 +881,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What does a sealant do?",
-      options: ["Makes teeth soft", "Protects teeth from cavities", "Makes candy taste better"],
+      question: "SUPER ARMOR! 🛡️ What does a sealant do?",
+      options: ["Makes teeth squishy 🫠", "PROTECTS from cavities! 🛡️✨", "Makes candy yummier 🍬"],
       correctIndex: 1,
-      hint: "Sealants create a shield that protects teeth from cavities!",
+      hint: "ARMOR UP! 🎉🛡️ Sealants are like INVISIBLE SHIELDS for teeth! Candy bounces right off! 💨",
     },
     quiz2: {
-      question: "Which teeth usually get sealants?",
-      options: ["Front teeth", "Molars", "Wisdom teeth only"],
+      question: "Which teeth get the super armor? 🦷🛡️",
+      options: ["Front teeth 😁", "MIGHTY MOLARS! 🦷💪", "Only wisdom teeth 🧠"],
       correctIndex: 1,
-      hint: "Molars have lots of grooves where sealants help most!",
+      hint: "MOLARS WIN! 🎉 They have lots of grooves that need extra protection! 🛡️✨",
     },
   },
   {
@@ -910,16 +910,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "Why might a tooth need to be removed?",
-      options: ["To grow new teeth", "Because it's too happy", "To make teeth purple"],
+      question: "Bye bye little tooth! 👋 Why does it need to leave?",
+      options: ["Make room for NEW teeth! 🌟", "It's too happy 😊", "Turn teeth purple 💜"],
       correctIndex: 0,
-      hint: "Sometimes a tooth leaves to make room for new teeth!",
+      hint: "NEW TOOTH COMING! 🎉 Little tooth makes way for a BIG KID tooth! Growing up! 🌟",
     },
     quiz2: {
-      question: "True or False – Losing a tooth can be part of keeping a healthy mouth.",
-      options: ["True", "False"],
+      question: "True or False: Losing teeth keeps mouths healthy! 🦷❤️",
+      options: ["TRUE! 😊✅", "False 🙅"],
       correctIndex: 0,
-      hint: "It's true! Losing baby teeth is part of growing up healthy!",
+      hint: "TRUE TRUE TRUE! 🎉 Baby teeth say bye so big teeth can say HI! 👋🦷✨",
     },
   },
   {
@@ -939,16 +939,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What does fluoride do for your teeth?",
-      options: ["Makes them weaker", "Makes them stronger", "Changes their color"],
+      question: "POWER UP! 💎 What does fluoride do for teeth?",
+      options: ["Makes them weaker 😢", "Makes them SUPER STRONG! 💪", "Changes colors 🎨"],
       correctIndex: 1,
-      hint: "Fluoride is like a superpower that makes teeth stronger!",
+      hint: "POWER BOOST! 🎉💎 Fluoride is like drinking STRENGTH POTION for your teeth! 💪✨",
     },
     quiz2: {
-      question: "True or False – Fluoride is a superhero for teeth.",
-      options: ["True", "False"],
+      question: "True or False: Fluoride is a SUPERHERO for teeth! 🦸",
+      options: ["TRUE! 💪✅", "False 🙅"],
       correctIndex: 0,
-      hint: "True! Fluoride protects teeth just like a superhero!",
+      hint: "SUPERHERO CONFIRMED! 🎉🦸 Fluoride gives teeth SHIELDS that bounce germs away! 💨👾",
     },
   },
   {
@@ -968,16 +968,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "Why do dentists use X-rays?",
-      options: ["To see hidden problems", "To play games", "To make teeth sparkle"],
+      question: "DETECTIVE MODE! 🔍 Why do dentists use X-rays?",
+      options: ["See HIDDEN stuff! 🔍✨", "Play fun games 🎮", "Make teeth sparkle ✨"],
       correctIndex: 0,
-      hint: "X-rays are like magic glasses that see hidden problems!",
+      hint: "CASE SOLVED! 🎉🔍 X-rays are like MAGIC glasses that see secret problems! You're a detective! 🕵️",
     },
     quiz2: {
-      question: "True or False – X-rays hurt your teeth.",
-      options: ["True", "False"],
+      question: "True or False: X-rays hurt your teeth! 😰",
+      options: ["True 😢", "FALSE! 😊✅"],
       correctIndex: 1,
-      hint: "X-rays are safe and don't hurt at all!",
+      hint: "NOT AT ALL! 🎉 X-rays are super gentle and don't hurt ONE BIT! You're so brave! 💪",
     },
   },
   {
@@ -997,16 +997,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What is a wisdom tooth?",
-      options: ["A special back tooth", "A tiny fairy", "A candy tooth"],
+      question: "Adventure time! 🎒 What is a wisdom tooth?",
+      options: ["A special BACK tooth! 🦷", "A tiny fairy 🧚", "A candy tooth 🍬"],
       correctIndex: 0,
-      hint: "Wisdom teeth are special teeth that grow way in the back!",
+      hint: "EXPLORER FIND! 🎉🎒 Wisdom teeth live way WAY in the back like hidden treasure! 🗺️✨",
     },
     quiz2: {
-      question: "True or False – Wisdom teeth sometimes need to be removed.",
-      options: ["True", "False"],
+      question: "True or False: Wisdom teeth sometimes go on adventures! 🎒👋",
+      options: ["TRUE! ✅🎒", "False 🙅"],
       correctIndex: 0,
-      hint: "True! Sometimes there's not enough room for wisdom teeth!",
+      hint: "ADVENTURE TIME! 🎉 Sometimes wisdom teeth pack their bags for new journeys! Bye bye! 👋✨",
     },
   },
   {
@@ -1026,16 +1026,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What makes teeth sparkle?",
-      options: ["Magic potion", "Dirt", "Sugar"],
+      question: "SPARKLE SPARKLE! ✨ What makes teeth GLOW?",
+      options: ["MAGIC SPARKLE POTION! ✨", "Icky dirt 🥀", "Sweet sugar 🍬"],
       correctIndex: 0,
-      hint: "The sparkle potion (whitening) makes teeth shine!",
+      hint: "GLITTER MAGIC! 🎉✨ The sparkle potion makes teeth shine like STARS! ⭐✨⭐",
     },
     quiz2: {
-      question: "True or False – Healthy teeth are more important than just being shiny.",
-      options: ["True", "False"],
+      question: "True or False: Healthy teeth are MORE important than shiny! 💪",
+      options: ["TRUE! 💪✅", "False 🙅"],
       correctIndex: 0,
-      hint: "True! Health always comes first, shininess is a bonus!",
+      hint: "HEALTH FIRST! 🎉 Healthy teeth ARE sparkly teeth! Best of BOTH worlds! 💪✨🦷",
     },
   },
   {
@@ -1055,16 +1055,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "What does bonding fix?",
-      options: ["Small chips", "Large cavities only", "Hair"],
+      question: "Fairy magic! 🧚 What does bonding fix?",
+      options: ["Tiny CHIPS! 🔧✨", "Big big cavities 🕳️", "Silly hair 💇"],
       correctIndex: 0,
-      hint: "Bonding is perfect for fixing small chips and cracks!",
+      hint: "FAIRY FIX! 🎉🧚 Little chips get filled with magic and look PERFECT again! ✨🦷",
     },
     quiz2: {
-      question: "True or False – Bonding can make a tooth whole again.",
-      options: ["True", "False"],
+      question: "True or False: Bonding makes teeth WHOLE again! 🪄",
+      options: ["TRUE! ✨✅", "False 🙅"],
       correctIndex: 0,
-      hint: "True! Bonding fills in chips to make teeth whole!",
+      hint: "MAGIC COMPLETE! 🎉🪄 The tooth is perfect and whole again! Fairy sparkles! ✨🧚‍♀️",
     },
   },
   {
@@ -1084,16 +1084,16 @@ export const stories: Story[] = [
     },
     isFree: false,
     quiz: {
-      question: "Why do we wear mouth guards?",
-      options: ["To protect teeth during sports", "To eat candy", "To brush faster"],
+      question: "GAME TIME! 🏆 Why do we wear mouth guards?",
+      options: ["PROTECT teeth in sports! 🏀🛡️", "Munch candy 🍬", "Brush super fast 🪥💨"],
       correctIndex: 0,
-      hint: "Mouth guards are like helmets for your teeth!",
+      hint: "CHAMPION PROTECTION! 🎉🏆 Mouth guards are like HELMETS for your teeth! GO TEAM! 🏅",
     },
     quiz2: {
-      question: "True or False – Mouth guards keep teeth safe when playing games.",
-      options: ["True", "False"],
+      question: "True or False: Mouth guards keep teeth SAFE in games! 🏀",
+      options: ["TRUE! 🏆✅", "False 🙅"],
       correctIndex: 0,
-      hint: "True! Always wear a mouth guard when playing sports!",
+      hint: "SAFETY CHAMP! 🎉 Mouth guards = teeth stay SAFE during all the fun! Play hard! 🏆⚽🏀",
     },
   },
 ];
