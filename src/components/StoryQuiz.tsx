@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, Sparkles, HelpCircle, ChevronRight } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, HelpCircle, ChevronRight, PartyPopper, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
-
+import { useQuizSounds } from "@/hooks/useQuizSounds";
 interface StoryQuizProps {
   quiz: StoryQuiz;
   quiz2?: StoryQuiz;
@@ -20,7 +20,16 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
   const [showHint, setShowHint] = useState(false);
   const [quiz1Completed, setQuiz1Completed] = useState(false);
   const [quiz2Completed, setQuiz2Completed] = useState(false);
-
+  const [showSparkles, setShowSparkles] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const sparkleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  const { 
+    playCorrectSound, 
+    playIncorrectSound, 
+    playCelebrationSound,
+    playSparkleEffect 
+  } = useQuizSounds();
   const totalQuizzes = quiz2 ? 2 : 1;
   const activeQuiz = currentQuiz === 0 ? quiz : quiz2!;
 
@@ -32,12 +41,28 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
     }
   }, [isCompleted]);
 
+  // Cleanup sparkle timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (sparkleTimeoutRef.current) {
+        clearTimeout(sparkleTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleAnswer = (index: number) => {
     if (showResult || isCompleted) return;
     setSelectedAnswer(index);
     setShowResult(true);
     
     if (index === activeQuiz.correctIndex) {
+      // Play celebration sounds and show sparkles!
+      playCorrectSound();
+      setShowSparkles(true);
+      
+      // Clear sparkles after animation
+      sparkleTimeoutRef.current = setTimeout(() => setShowSparkles(false), 2000);
+      
       setTimeout(() => {
         if (currentQuiz === 0) {
           setQuiz1Completed(true);
@@ -47,14 +72,30 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
             setShowResult(false);
             setShowHint(false);
             setCurrentQuiz(1);
+            playSparkleEffect();
           } else {
-            onComplete();
+            // Final celebration!
+            setShowCelebration(true);
+            playCelebrationSound();
+            setTimeout(() => {
+              setShowCelebration(false);
+              onComplete();
+            }, 1500);
           }
         } else {
           setQuiz2Completed(true);
-          onComplete();
+          // Final celebration!
+          setShowCelebration(true);
+          playCelebrationSound();
+          setTimeout(() => {
+            setShowCelebration(false);
+            onComplete();
+          }, 1500);
         }
       }, 1500);
+    } else {
+      // Play incorrect sound
+      playIncorrectSound();
     }
   };
 
@@ -89,8 +130,79 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="p-5 rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20"
+      className="p-5 rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20 relative overflow-hidden"
     >
+      {/* Sparkle Effects */}
+      <AnimatePresence>
+        {showSparkles && (
+          <>
+            {[...Array(12)].map((_, i) => (
+              <motion.div
+                key={`sparkle-${i}`}
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0,
+                  x: "50%",
+                  y: "50%"
+                }}
+                animate={{ 
+                  opacity: [0, 1, 0],
+                  scale: [0, 1.5, 0],
+                  x: `${50 + (Math.random() - 0.5) * 100}%`,
+                  y: `${50 + (Math.random() - 0.5) * 100}%`,
+                }}
+                exit={{ opacity: 0 }}
+                transition={{ 
+                  duration: 1,
+                  delay: i * 0.08,
+                  ease: "easeOut"
+                }}
+                className="absolute pointer-events-none z-10"
+              >
+                <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
+              </motion.div>
+            ))}
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Celebration Overlay */}
+      <AnimatePresence>
+        {showCelebration && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-20 flex items-center justify-center bg-gradient-to-br from-accent/40 to-primary/40 backdrop-blur-sm rounded-2xl"
+          >
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", damping: 10 }}
+              className="flex flex-col items-center gap-3"
+            >
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 10, -10, 0]
+                }}
+                transition={{ repeat: Infinity, duration: 0.5 }}
+              >
+                <PartyPopper className="w-16 h-16 text-yellow-400" />
+              </motion.div>
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-2xl font-display font-bold text-white drop-shadow-lg"
+              >
+                🎉 AMAZING! 🎉
+              </motion.span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Question header with progress indicator */}
       <div className="flex items-center gap-2 mb-4">
         <div className="p-2 rounded-full bg-primary/20">
