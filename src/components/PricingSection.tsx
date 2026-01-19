@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { usePurchase, PRICING } from "@/hooks/usePurchase";
 import { useState } from "react";
 import PurchaseModal from "@/components/PurchaseModal";
+import PricingFAQ from "@/components/PricingFAQ";
+import SubscriptionManagement from "@/components/SubscriptionManagement";
 
 const freeFeatures = [
   "5 FREE dental quests",
@@ -295,6 +297,14 @@ export const PricingSection = () => {
             <span>No Ads, No Tracking</span>
           </div>
         </motion.div>
+
+        {/* Subscription Management (for existing subscribers) */}
+        <div className="mt-12">
+          <SubscriptionManagement />
+        </div>
+
+        {/* FAQ Section */}
+        <PricingFAQ />
       </div>
 
       <PurchaseModal 
