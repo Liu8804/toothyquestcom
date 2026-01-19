@@ -10,7 +10,8 @@ import {
   Star,
   Heart,
   Zap,
-  Users
+  Users,
+  HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -18,6 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
+import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
 
 interface VoiceSettingsModalProps {
   isOpen: boolean;
@@ -143,6 +145,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
   const [settings, setSettings] = useState<VoiceSettings>(getVoiceSettings);
   const [testPlaying, setTestPlaying] = useState(false);
   const [testingPersonality, setTestingPersonality] = useState<VoicePersonality | null>(null);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -153,6 +156,11 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
   const handleSave = () => {
     saveVoiceSettings(settings);
     onClose();
+  };
+
+  const handleQuizComplete = (personality: VoicePersonality) => {
+    setSettings({ ...settings, personality });
+    setShowQuiz(false);
   };
 
   const handleTestVoice = async (personalityToTest?: VoicePersonality) => {
@@ -375,10 +383,21 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
               exit={{ opacity: 0, height: 0 }}
               className="space-y-3"
             >
-              <Label className="text-sm font-display font-bold text-foreground flex items-center gap-2">
-                <span>Voice Personality</span>
-                <span className="text-lg">✨</span>
-              </Label>
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-display font-bold text-foreground flex items-center gap-2">
+                  <span>Voice Personality</span>
+                  <span className="text-lg">✨</span>
+                </Label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 text-xs h-7 text-primary hover:text-primary"
+                  onClick={() => setShowQuiz(true)}
+                >
+                  <HelpCircle className="w-3.5 h-3.5" />
+                  Take Quiz!
+                </Button>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 {VOICE_PERSONALITIES.map((personality) => {
                   const IconComponent = personality.icon;
@@ -537,6 +556,13 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
           </Button>
         </div>
       </DialogContent>
+
+      {/* Voice Personality Quiz Modal */}
+      <VoicePersonalityQuiz
+        isOpen={showQuiz}
+        onClose={() => setShowQuiz(false)}
+        onComplete={handleQuizComplete}
+      />
     </Dialog>
   );
 };
