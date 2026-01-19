@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => ({
       manifest: {
         name: "ToothyQuest - Make Brushing Fun!",
         short_name: "ToothyQuest",
-        description: "Join Toothy on magical dental adventures! Kids explore 42 quests learning brushing, flossing & healthy habits.",
+        description: "Join Toothy on magical dental adventures! Kids explore 50+ quests learning brushing, flossing & healthy habits.",
         theme_color: "#8B5CF6",
         background_color: "#FEF3E2",
         display: "standalone",

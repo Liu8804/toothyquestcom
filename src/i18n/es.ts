@@ -54,7 +54,7 @@ export const es = {
     multipleChoice: "❓ Preguntas de opción múltiple y pistas",
     bracesAdventures: "🦷 Aventuras extra con brackets",
     animations: "✨ Animaciones coloridas y recompensas",
-    unlockPrice: "🎉 ¡Desbloquea las 42 misiones por solo $3.99!",
+    unlockPrice: "🎉 ¡Desbloquea más de 50 misiones desde solo $4.99/mes!",
     features: {
       safe: {
         title: "Seguro para Niños",
@@ -65,8 +65,8 @@ export const es = {
         description: "Preguntas de opción múltiple, pistas y animaciones coloridas mantienen a los niños entretenidos",
       },
       quests: {
-        title: "42 Misiones + Recompensas",
-        description: "5 misiones GRATIS para empezar, ¡desbloquea las 42 por solo $3.99!",
+        title: "50+ Misiones + Recompensas",
+        description: "5 misiones GRATIS para empezar, ¡desbloquea más de 50 desde $4.99/mes!",
       },
       parentDashboard: {
         title: "Panel para Padres",
@@ -95,12 +95,12 @@ export const es = {
     },
     premium: {
       title: "Aventura Completa",
-      price: "$3.99",
-      period: "pago único",
-      noSubscription: "¡Sin suscripciones, sin cargos ocultos!",
+      price: "$4.99",
+      period: "/mes",
+      noSubscription: "Cancela cuando quieras • ¡El plan anual ahorra 17%!",
       bestValue: "⭐ MEJOR VALOR",
       features: [
-        "Las 42 misiones emocionantes",
+        "Más de 50 misiones emocionantes",
         "Contenido extra de aventura con brackets",
         "Desafíos diarios y recompensas",
         "Juegos avanzados desbloqueados",
@@ -109,7 +109,7 @@ export const es = {
         "Preguntas de opción múltiple y pistas",
         "Animaciones coloridas y celebraciones",
       ],
-      cta: "Desbloquear las 42 Misiones - $3.99",
+      cta: "Desbloquear 50+ Misiones - $4.99/mes",
       alreadyUnlocked: "¡Ya Desbloqueado! 🎉",
       processing: "Procesando...",
     },

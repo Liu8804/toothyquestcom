@@ -54,7 +54,7 @@ export const en = {
     multipleChoice: "❓ Multiple-choice questions & hints",
     bracesAdventures: "🦷 Bonus braces adventures",
     animations: "✨ Colorful animations & rewards",
-    unlockPrice: "🎉 Unlock all 42 quests for just $3.99!",
+    unlockPrice: "🎉 Unlock 50+ quests starting at just $4.99/mo!",
     features: {
       safe: {
         title: "Safe & Kid-Friendly",
@@ -65,8 +65,8 @@ export const en = {
         description: "Multiple-choice questions, hints, and colorful animations keep kids engaged",
       },
       quests: {
-        title: "42 Quests + Rewards",
-        description: "5 FREE quests to start, unlock all 42 for just $3.99!",
+        title: "50+ Quests + Rewards",
+        description: "5 FREE quests to start, unlock all 50+ starting at $4.99/mo!",
       },
       parentDashboard: {
         title: "Parent Dashboard",
@@ -95,12 +95,12 @@ export const en = {
     },
     premium: {
       title: "Full Adventure",
-      price: "$3.99",
-      period: "one-time",
-      noSubscription: "No subscriptions, no hidden fees!",
+      price: "$4.99",
+      period: "/month",
+      noSubscription: "Cancel anytime • Annual plan saves 17%!",
       bestValue: "⭐ BEST VALUE",
       features: [
-        "All 42 exciting quests",
+        "All 50+ exciting quests",
         "Braces adventure bonus content",
         "Daily challenges & rewards",
         "Advanced games unlocked",
@@ -109,7 +109,7 @@ export const en = {
         "Multiple-choice questions & hints",
         "Colorful animations & celebrations",
       ],
-      cta: "Unlock All 42 Quests - $3.99",
+      cta: "Unlock All 50+ Quests - $4.99/mo",
       alreadyUnlocked: "Already Unlocked! 🎉",
       processing: "Processing...",
     },
