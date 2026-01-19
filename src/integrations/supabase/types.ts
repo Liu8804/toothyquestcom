@@ -390,26 +390,32 @@ export type Database = {
       leaderboard_profiles: {
         Row: {
           child_id: string
+          consent_given_at: string | null
           created_at: string
           display_name: string
           id: string
           is_public: boolean
+          parent_acknowledged: boolean | null
           updated_at: string
         }
         Insert: {
           child_id: string
+          consent_given_at?: string | null
           created_at?: string
           display_name: string
           id?: string
           is_public?: boolean
+          parent_acknowledged?: boolean | null
           updated_at?: string
         }
         Update: {
           child_id?: string
+          consent_given_at?: string | null
           created_at?: string
           display_name?: string
           id?: string
           is_public?: boolean
+          parent_acknowledged?: boolean | null
           updated_at?: string
         }
         Relationships: [
