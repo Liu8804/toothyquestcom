@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3, Bell, Crown } from "lucide-react";
+import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3, Bell, Crown, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useAuth } from "@/hooks/useAuth";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
+import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { stories } from "@/data/stories";
 import { useState } from "react";
 import AddChildModal from "./AddChildModal";
@@ -13,6 +14,8 @@ import DailyChallengesPanel from "./DailyChallengesPanel";
 import ParentAnalyticsDashboard from "./ParentAnalyticsDashboard";
 import Leaderboard from "./Leaderboard";
 import NotificationSettings from "./NotificationSettings";
+import RewardsPanel from "./rewards/RewardsPanel";
+import SparkMeter from "./rewards/SparkMeter";
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -36,8 +39,10 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
   
   const { getCompletedCount, getChallengesWithProgress } = useDailyChallenges(selectedChild?.id);
+  const { totalPoints, currentLevel, streak, unlockedPets, unlockedBadges } = useRewardsSystem(selectedChild?.id);
 
   const completedQuests = questProgress.length;
   const totalQuests = stories.length;
@@ -71,6 +76,14 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
             <p className="text-muted-foreground">Track your child's dental adventure</p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              onClick={() => setShowRewards(true)}
+              className="rounded-full gap-2 bg-gradient-to-r from-star/10 to-accent/10 border-star/30"
+            >
+              <Gift className="w-4 h-4 text-star" />
+              Rewards
+            </Button>
             <Button
               variant="outline"
               onClick={() => setShowLeaderboard(true)}
@@ -162,6 +175,11 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
 
         {selectedChild && (
           <>
+            {/* Sparkle Meter */}
+            <div className="mb-6">
+              <SparkMeter totalPoints={totalPoints} showLevel />
+            </div>
+
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <motion.div
@@ -345,6 +363,11 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
       <NotificationSettings
         isOpen={showNotifications}
         onClose={() => setShowNotifications(false)}
+      />
+      <RewardsPanel
+        isOpen={showRewards}
+        onClose={() => setShowRewards(false)}
+        childId={selectedChild?.id}
       />
     </motion.div>
   );
