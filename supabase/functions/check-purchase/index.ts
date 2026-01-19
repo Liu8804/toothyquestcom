@@ -50,40 +50,62 @@ serve(async (req) => {
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
     
-    // Find customer by email
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    
-    if (customers.data.length === 0) {
-      logStep("No customer found, returning unpurchased state");
-      return new Response(JSON.stringify({ purchased: false }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      });
-    }
-
-    const customerId = customers.data[0].id;
-    logStep("Found Stripe customer", { customerId });
-
-    // Check for completed payment intents with any ToothyQuest product
-    const paymentIntents = await stripe.paymentIntents.list({
-      customer: customerId,
-      limit: 100,
-    });
-
-    // Check if any successful payment was for ToothyQuest
     let hasPurchased = false;
     let purchasedProductId: string | null = null;
+
+    // Method 1: Check by Stripe customer
+    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     
-    for (const pi of paymentIntents.data) {
-      if (pi.status === "succeeded") {
-        // Get the checkout session to verify the product
-        const sessions = await stripe.checkout.sessions.list({
-          payment_intent: pi.id,
-          limit: 1,
-        });
-        
-        if (sessions.data.length > 0) {
-          const session = sessions.data[0];
+    if (customers.data.length > 0) {
+      const customerId = customers.data[0].id;
+      logStep("Found Stripe customer", { customerId });
+
+      // Check for completed payment intents with any ToothyQuest product
+      const paymentIntents = await stripe.paymentIntents.list({
+        customer: customerId,
+        limit: 100,
+      });
+
+      for (const pi of paymentIntents.data) {
+        if (pi.status === "succeeded") {
+          // Get the checkout session to verify the product
+          const sessions = await stripe.checkout.sessions.list({
+            payment_intent: pi.id,
+            limit: 1,
+          });
+          
+          if (sessions.data.length > 0) {
+            const session = sessions.data[0];
+            const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
+            
+            for (const item of lineItems.data) {
+              const productId = item.price?.product as string;
+              if (VALID_PRODUCT_IDS.includes(productId)) {
+                hasPurchased = true;
+                purchasedProductId = productId;
+                logStep("Found ToothyQuest purchase via customer", { sessionId: session.id, productId });
+                break;
+              }
+            }
+          }
+        }
+        if (hasPurchased) break;
+      }
+    } else {
+      logStep("No Stripe customer found for email");
+    }
+
+    // Method 2: Also check checkout sessions by email directly (for guest checkouts)
+    if (!hasPurchased) {
+      logStep("Checking checkout sessions by email");
+      const sessions = await stripe.checkout.sessions.list({
+        customer_details: { email: user.email },
+        status: "complete",
+        limit: 50,
+      });
+
+      for (const session of sessions.data) {
+        if (session.payment_status === "paid") {
           const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
           
           for (const item of lineItems.data) {
@@ -91,13 +113,43 @@ serve(async (req) => {
             if (VALID_PRODUCT_IDS.includes(productId)) {
               hasPurchased = true;
               purchasedProductId = productId;
-              logStep("Found ToothyQuest purchase", { sessionId: session.id, productId });
+              logStep("Found ToothyQuest purchase via session email", { sessionId: session.id, productId });
               break;
             }
           }
         }
+        if (hasPurchased) break;
       }
-      if (hasPurchased) break;
+    }
+
+    // Method 3: Check sessions by metadata user_email
+    if (!hasPurchased) {
+      logStep("Checking sessions by metadata");
+      const allSessions = await stripe.checkout.sessions.list({
+        status: "complete",
+        limit: 100,
+      });
+
+      for (const session of allSessions.data) {
+        // Check if session metadata matches user email or ID
+        if (
+          session.payment_status === "paid" && 
+          (session.metadata?.user_email === user.email || session.metadata?.user_id === user.id)
+        ) {
+          const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 5 });
+          
+          for (const item of lineItems.data) {
+            const productId = item.price?.product as string;
+            if (VALID_PRODUCT_IDS.includes(productId)) {
+              hasPurchased = true;
+              purchasedProductId = productId;
+              logStep("Found ToothyQuest purchase via metadata", { sessionId: session.id, productId });
+              break;
+            }
+          }
+        }
+        if (hasPurchased) break;
+      }
     }
 
     logStep("Purchase check complete", { hasPurchased, purchasedProductId });

@@ -65,14 +65,23 @@ serve(async (req) => {
       apiVersion: "2025-08-27.basil",
     });
 
-    // Check if a Stripe customer record exists for this user
+    // Check if a Stripe customer record exists for this user, or create one
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
-    let customerId: string | undefined;
+    let customerId: string;
+    
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
       logStep("Found existing customer", { customerId });
     } else {
-      logStep("No existing customer found, will create new");
+      // Create a new customer so we can track them properly
+      const newCustomer = await stripe.customers.create({
+        email: user.email,
+        metadata: {
+          supabase_user_id: user.id,
+        },
+      });
+      customerId = newCustomer.id;
+      logStep("Created new customer", { customerId });
     }
 
     const origin = req.headers.get("origin") || "https://toothyquestcom.lovable.app";
@@ -81,10 +90,9 @@ serve(async (req) => {
     const priceId = planType === "annual" ? PRICES.ANNUAL : PRICES.MONTHLY;
     logStep("Using price", { priceId, planType });
 
-    // Create a one-time payment session
+    // Create a one-time payment session with the customer linked
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : user.email,
       line_items: [
         {
           price: priceId,
@@ -96,6 +104,7 @@ serve(async (req) => {
       cancel_url: `${origin}/payment-canceled`,
       metadata: {
         user_id: user.id,
+        user_email: user.email,
         plan_type: planType,
       },
     });
