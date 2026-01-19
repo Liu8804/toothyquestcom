@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { songs, Song } from "@/data/songs";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SingAlongModalProps {
   isOpen: boolean;
@@ -63,6 +64,14 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
     // Music generation requires special ElevenLabs permissions
     try {
       setIsLoadingMusic(true);
+      
+      // Get user session for authenticated request
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        console.log("Music generation requires authentication");
+        return null;
+      }
+      
       const prompt = musicPrompts[songId] || "Happy children's music, playful and fun";
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-music`,
@@ -70,8 +79,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            "Authorization": `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ 
             prompt,
@@ -116,6 +124,14 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
     setIsPlaying(false);
 
     try {
+      // Get user session for authenticated request
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error("Please sign in to play songs");
+        setIsLoadingVocals(false);
+        return;
+      }
+      
       // Load vocals
       const vocalsResponse = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
@@ -123,8 +139,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            "Authorization": `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ 
             text: song.lyrics,

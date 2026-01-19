@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { supabase } from "@/integrations/supabase/client";
 
 interface VoiceSettingsModalProps {
   isOpen: boolean;
@@ -90,15 +91,30 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
           setTestPlaying(false);
         }
       } else {
-        // Test ElevenLabs
+        // Test ElevenLabs - get user session for authenticated request
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          // Fallback to browser voice if not authenticated
+          if ("speechSynthesis" in window) {
+            const utterance = new SpeechSynthesisUtterance(testText);
+            utterance.rate = settings.speed;
+            utterance.pitch = settings.pitch;
+            utterance.onend = () => setTestPlaying(false);
+            utterance.onerror = () => setTestPlaying(false);
+            window.speechSynthesis.speak(utterance);
+          } else {
+            setTestPlaying(false);
+          }
+          return;
+        }
+        
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-              Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              "Authorization": `Bearer ${session.access_token}`,
             },
             body: JSON.stringify({
               text: testText,
