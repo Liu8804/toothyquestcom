@@ -3,10 +3,33 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
-export const PRODUCT_ID = 'prod_ToVdXfL4456xpF';
+export const PRODUCT_ID = 'prod_ToloozqRZM4fpp';
+export const ANNUAL_PRODUCT_ID = 'prod_ToloWHHcJ4wnOm';
 export const FREE_QUEST_LIMIT = 5;
-// Games are locked until 5 quests completed OR purchase made
 export const QUESTS_REQUIRED_FOR_GAMES = 5;
+
+// Pricing configuration
+export const PRICING = {
+  monthly: {
+    price: 4.99,
+    priceId: 'price_1Sr8GsLk8GbX7sRHrXxv3rwu',
+    label: '$4.99',
+    period: 'one-time',
+  },
+  annual: {
+    price: 49.99,
+    priceId: 'price_1Sr8HELk8GbX7sRHab1rRdNJ',
+    label: '$49.99',
+    period: 'one-time',
+    savings: '16%',
+  },
+  legacy: {
+    price: 3.99,
+    priceId: 'price_1SqsbxLk8GbX7sRHlqnZHOuD',
+    label: '$3.99',
+    period: 'one-time',
+  },
+};
 
 interface PurchaseState {
   isPurchased: boolean;
@@ -27,6 +50,8 @@ export const purchaseMessages: PurchaseMessages = {
   lockedContent: "Complete the first 5 quests or unlock the full adventure to play this quest!",
 };
 
+export type PlanType = 'monthly' | 'annual';
+
 export const usePurchase = () => {
   const { user, session } = useAuth();
   const [purchaseState, setPurchaseState] = useState<PurchaseState>({
@@ -36,12 +61,10 @@ export const usePurchase = () => {
     isCheckingPurchase: true,
   });
 
-  // Check for existing purchase on mount and when user changes
   useEffect(() => {
     if (user && session) {
       checkPurchaseStatus();
     } else {
-      // Check local storage as fallback for non-logged-in state
       const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id || 'anonymous'}`) === 'true';
       setPurchaseState(prev => ({ 
         ...prev, 
@@ -68,7 +91,6 @@ export const usePurchase = () => {
 
       if (error) {
         console.error('Error checking purchase:', error);
-        // Fall back to local storage
         const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id}`) === 'true';
         setPurchaseState(prev => ({ 
           ...prev, 
@@ -80,7 +102,6 @@ export const usePurchase = () => {
 
       const purchased = data?.purchased === true;
       
-      // Cache in local storage
       if (purchased && user?.id) {
         localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
       }
@@ -96,7 +117,7 @@ export const usePurchase = () => {
     }
   };
 
-  const purchase = useCallback(async (onLoadingStart?: () => void): Promise<boolean> => {
+  const purchase = useCallback(async (onLoadingStart?: () => void, planType: PlanType = 'monthly'): Promise<boolean> => {
     if (!session?.access_token) {
       toast.error('Please sign in to purchase ToothyQuest');
       return false;
@@ -109,6 +130,7 @@ export const usePurchase = () => {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
+        body: { planType },
       });
 
       if (error) {
@@ -116,13 +138,8 @@ export const usePurchase = () => {
       }
 
       if (data?.url) {
-        // Notify caller that redirect is about to happen
         onLoadingStart?.();
-        
-        // Small delay to show loading overlay before redirect
         await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Redirect to Stripe checkout (works better on Safari than window.open)
         window.location.href = data.url;
         return true;
       } else {
@@ -190,11 +207,9 @@ export const usePurchase = () => {
     if (purchaseState.isPurchased) return false;
     
     if (contentType === 'game') {
-      // Games are locked until 5 quests completed OR purchase
       return completedQuestsCount < QUESTS_REQUIRED_FOR_GAMES;
     }
     
-    // Quests after first 5 are locked
     return contentIndex >= FREE_QUEST_LIMIT;
   }, [purchaseState.isPurchased]);
 

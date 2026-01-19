@@ -12,6 +12,15 @@ const logStep = (step: string, details?: unknown) => {
   console.log(`[CREATE-PAYMENT] ${step}${detailsStr}`);
 };
 
+// Price IDs for different plans
+const PRICES = {
+  // Legacy price for existing subscribers
+  LEGACY_MONTHLY: "price_1SqsbxLk8GbX7sRHlqnZHOuD", // $3.99 one-time
+  // New prices for new users
+  MONTHLY: "price_1Sr8GsLk8GbX7sRHrXxv3rwu", // $4.99 one-time
+  ANNUAL: "price_1Sr8HELk8GbX7sRHab1rRdNJ", // $49.99 one-time (save 16%)
+};
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -25,6 +34,18 @@ serve(async (req) => {
 
   try {
     logStep("Function started");
+
+    // Parse request body to get plan type
+    let planType = "monthly"; // default to monthly
+    try {
+      const body = await req.json();
+      if (body.planType === "annual") {
+        planType = "annual";
+      }
+    } catch {
+      // No body or invalid JSON, use default
+    }
+    logStep("Plan type selected", { planType });
 
     // Retrieve authenticated user
     const authHeader = req.headers.get("Authorization");
@@ -56,13 +77,17 @@ serve(async (req) => {
 
     const origin = req.headers.get("origin") || "https://toothyquestcom.lovable.app";
 
-    // Create a one-time payment session for ToothyQuest Access ($3.99)
+    // Select price based on plan type
+    const priceId = planType === "annual" ? PRICES.ANNUAL : PRICES.MONTHLY;
+    logStep("Using price", { priceId, planType });
+
+    // Create a one-time payment session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [
         {
-          price: "price_1SqsbxLk8GbX7sRHlqnZHOuD",
+          price: priceId,
           quantity: 1,
         },
       ],
@@ -71,6 +96,7 @@ serve(async (req) => {
       cancel_url: `${origin}/payment-canceled`,
       metadata: {
         user_id: user.id,
+        plan_type: planType,
       },
     });
 

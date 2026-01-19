@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Lock, Unlock, RefreshCw, Crown, Star, Check } from "lucide-react";
+import { X, Sparkles, Lock, Unlock, RefreshCw, Crown, Star, Check, Zap, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePurchase, purchaseMessages, PRODUCT_ID } from "@/hooks/usePurchase";
+import { usePurchase, purchaseMessages, PRICING, PlanType } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PaymentLoadingOverlay from "./PaymentLoadingOverlay";
 
@@ -15,11 +15,12 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   const { purchase, restorePurchase, isLoading, isRestoring, isPurchased } = usePurchase();
   const { playWinFanfare, playAchievementUnlock } = useGameSounds();
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>("monthly");
 
   const handlePurchase = async () => {
     const success = await purchase(() => {
       setShowLoadingOverlay(true);
-    });
+    }, selectedPlan);
     if (success) {
       playWinFanfare();
     }
@@ -34,11 +35,11 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   };
 
   const features = [
-    { emoji: "🎯", text: "25 more exciting quests" },
-    { emoji: "🎮", text: "6 fun educational games" },
-    { emoji: "🏆", text: "All rewards & surprises" },
-    { emoji: "📖", text: "Every bedtime story" },
-    { emoji: "✨", text: "Unlimited brushing adventures" },
+    { emoji: "🎮", text: "50+ interactive quests & mini-games" },
+    { emoji: "🏆", text: "Points, badges, streaks & Tooth Pets" },
+    { emoji: "✨", text: "Fun animations & celebrations" },
+    { emoji: "📈", text: "Motivation for healthy habits" },
+    { emoji: "💡", text: "Safe & educational for ages 4-10" },
   ];
 
   return (
@@ -53,7 +54,7 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
           onClick={onClose}
         >
           <motion.div
-            className="relative w-full max-w-md bg-gradient-to-b from-card to-background rounded-3xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg bg-gradient-to-b from-card to-background rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
             initial={{ scale: 0.9, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -103,24 +104,15 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
               </motion.div>
 
               <h2 className="font-display text-2xl font-bold text-white mb-2">
-                🦷✨ Unlock ToothyQuest! ✨🦷
+                Turn Dental Care into a Fun Adventure! ✨
               </h2>
               <p className="text-white/90 text-sm">
-                Give your child full access to dental health fun!
+                Join thousands of kids exploring 50+ quests, games, and rewards!
               </p>
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-6">
-              {/* Message */}
-              <div className="text-center space-y-2">
-                <p className="text-foreground font-medium">
-                  Pay <span className="text-primary font-bold text-xl">$3.99</span> one time to unlock all games, stories, and activities!
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  One-time purchase. No subscriptions. Forever access.
-                </p>
-              </div>
+            <div className="p-6 space-y-5">
               {/* Already purchased state */}
               {isPurchased ? (
                 <motion.div
@@ -140,19 +132,79 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
                 </motion.div>
               ) : (
                 <>
+                  {/* Plan Selection */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Monthly Plan */}
+                    <button
+                      onClick={() => setSelectedPlan("monthly")}
+                      className={`relative p-4 rounded-xl border-2 transition-all ${
+                        selectedPlan === "monthly"
+                          ? "border-primary bg-primary/10"
+                          : "border-muted hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="text-center">
+                        <p className="text-sm text-muted-foreground mb-1">Monthly</p>
+                        <p className="text-2xl font-bold text-foreground">{PRICING.monthly.label}</p>
+                        <p className="text-xs text-muted-foreground">one-time</p>
+                      </div>
+                      {selectedPlan === "monthly" && (
+                        <motion.div
+                          className="absolute top-2 right-2"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                        >
+                          <Check className="w-5 h-5 text-primary" />
+                        </motion.div>
+                      )}
+                    </button>
+
+                    {/* Annual Plan */}
+                    <button
+                      onClick={() => setSelectedPlan("annual")}
+                      className={`relative p-4 rounded-xl border-2 transition-all ${
+                        selectedPlan === "annual"
+                          ? "border-primary bg-primary/10"
+                          : "border-muted hover:border-primary/50"
+                      }`}
+                    >
+                      {/* Best Value Badge */}
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2">
+                        <span className="bg-accent text-accent-foreground px-2 py-0.5 rounded-full text-xs font-bold whitespace-nowrap">
+                          SAVE {PRICING.annual.savings}!
+                        </span>
+                      </div>
+                      <div className="text-center mt-2">
+                        <p className="text-sm text-muted-foreground mb-1">Annual</p>
+                        <p className="text-2xl font-bold text-foreground">{PRICING.annual.label}</p>
+                        <p className="text-xs text-muted-foreground">one-time</p>
+                      </div>
+                      {selectedPlan === "annual" && (
+                        <motion.div
+                          className="absolute top-2 right-2"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                        >
+                          <Check className="w-5 h-5 text-primary" />
+                        </motion.div>
+                      )}
+                    </button>
+                  </div>
+
                   {/* Features list */}
-                  <div className="space-y-3">
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium text-foreground">What your child gets:</p>
                     {features.map((feature, index) => (
                       <motion.div
                         key={index}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-muted/50"
+                        className="flex items-center gap-3 p-2.5 rounded-xl bg-muted/50"
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
+                        transition={{ delay: index * 0.05 }}
                       >
-                        <span className="text-2xl">{feature.emoji}</span>
-                        <span className="text-foreground font-medium">{feature.text}</span>
-                        <Star className="w-4 h-4 text-star ml-auto" />
+                        <span className="text-xl">{feature.emoji}</span>
+                        <span className="text-foreground text-sm">{feature.text}</span>
+                        <Star className="w-3 h-3 text-star ml-auto" />
                       </motion.div>
                     ))}
                   </div>
@@ -175,12 +227,17 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
                     ) : (
                       <span className="flex items-center gap-2">
                         <Unlock className="w-5 h-5" />
-                        Pay $3.99 to Unlock ToothyQuest
+                        Unlock Now - {selectedPlan === "annual" ? PRICING.annual.label : PRICING.monthly.label}
                       </span>
                     )}
                   </Button>
 
-                  {/* Restore button - Required by Apple */}
+                  {/* Grandfather clause notice */}
+                  <p className="text-xs text-center text-muted-foreground">
+                    🎉 Existing subscribers at $3.99 stay at old price
+                  </p>
+
+                  {/* Restore button */}
                   <Button
                     onClick={handleRestore}
                     disabled={isLoading || isRestoring}
@@ -203,11 +260,6 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
                       </span>
                     )}
                   </Button>
-
-                  {/* Product ID note for developers */}
-                  <p className="text-xs text-center text-muted-foreground/50">
-                    Product ID: {PRODUCT_ID}
-                  </p>
                 </>
               )}
             </div>
@@ -216,7 +268,6 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
       )}
     </AnimatePresence>
     
-    {/* Full-screen loading overlay */}
     <PaymentLoadingOverlay isVisible={showLoadingOverlay} />
   </>
   );
