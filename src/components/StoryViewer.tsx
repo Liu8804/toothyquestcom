@@ -426,6 +426,22 @@ const StoryViewer = ({
               </motion.div>
             </div>
 
+            {/* Mini-Game Instructions (for procedure quests) */}
+            {story.miniGameInstructions && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="p-4 rounded-2xl bg-gradient-to-r from-secondary/20 to-bubble/20 border-2 border-secondary/30 mb-4"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">🎮</span>
+                  <span className="font-display font-bold text-secondary">Mini-Game:</span>
+                </div>
+                <p className="text-foreground/80 font-medium">{story.miniGameInstructions}</p>
+              </motion.div>
+            )}
+
             {/* Lesson box */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -439,6 +455,27 @@ const StoryViewer = ({
               </div>
               <p className="text-foreground/80 font-medium">{story.lesson}</p>
             </motion.div>
+
+            {/* Rewards info (for procedure quests) */}
+            {story.rewards && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45 }}
+                className="p-4 rounded-2xl bg-gradient-to-r from-star/10 to-accent/10 border-2 border-star/20 mb-4"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">🏆</span>
+                  <span className="font-display font-bold text-star">Rewards:</span>
+                </div>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="px-3 py-1 rounded-full bg-star/20 text-star font-bold text-sm">
+                    +{story.rewards.points} {story.rewards.pointsType}
+                  </span>
+                  <span className="text-foreground/70 text-sm">{story.rewards.feedback}</span>
+                </div>
+              </motion.div>
+            )}
 
             {/* Quest ending */}
             <motion.div
@@ -464,6 +501,7 @@ const StoryViewer = ({
               >
                 <StoryQuizComponent
                   quiz={story.quiz}
+                  quiz2={story.quiz2}
                   onComplete={() => setQuizCompleted(true)}
                   isCompleted={quizCompleted}
                 />
