@@ -1,14 +1,18 @@
 import { motion } from "framer-motion";
-import { Star, Trophy, Sparkles } from "lucide-react";
+import { Star, Trophy, Sparkles, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toothyLogo from "@/assets/toothyquest-logo.jpeg";
 import MascotWithExpression from "@/components/MascotWithExpression";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
-import { useEffect, useMemo } from "react";
+import { useAIEncouragement } from "@/hooks/useAIEncouragement";
+import { useEffect, useState } from "react";
 
 interface RewardCelebrationProps {
   onPlayAgain: () => void;
   onClose: () => void;
+  childName?: string;
+  sessionType?: string;
+  onChatWithToothy?: () => void;
 }
 
 const confettiColors = [
@@ -23,25 +27,39 @@ const confettiColors = [
 export const RewardCelebration = ({
   onPlayAgain,
   onClose,
+  childName,
+  sessionType = "morning",
+  onChatWithToothy,
 }: RewardCelebrationProps) => {
   const { speak, stop } = useQuestVoice();
+  const { getEncouragement, isLoading: isLoadingAI } = useAIEncouragement();
+  const [celebrationMessage, setCelebrationMessage] = useState<string>("");
+  const [shortTitle, setShortTitle] = useState<string>("Super Brusher!");
   
-  const messages = [
+  const titles = [
     "Super Brusher!",
     "Tooth Hero!",
     "Sparkling Champion!",
     "Dental Superstar!",
   ];
-  
-  const randomMessage = useMemo(() => messages[Math.floor(Math.random() * messages.length)], []);
 
-  // Speak celebration message when component mounts
+  // Fetch AI-generated encouragement message
   useEffect(() => {
-    const celebrationText = `${randomMessage}! You brushed for 2 whole minutes! Your teeth are sparkling clean! Fantastic brushing!`;
-    speak(celebrationText);
+    const fetchMessage = async () => {
+      // Set a random title immediately
+      setShortTitle(titles[Math.floor(Math.random() * titles.length)]);
+      
+      const result = await getEncouragement(childName, sessionType, 120);
+      setCelebrationMessage(result.message);
+      
+      // Speak the message
+      speak(result.message);
+    };
+
+    fetchMessage();
     
     return () => stop();
-  }, [randomMessage, speak, stop]);
+  }, [childName, sessionType, getEncouragement, speak, stop]);
 
   return (
     <div className="relative text-center py-8 overflow-hidden">
@@ -126,24 +144,34 @@ export const RewardCelebration = ({
         ))}
       </motion.div>
       
-      {/* Message */}
+      {/* Title */}
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
         className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2"
       >
-        {randomMessage}
+        {shortTitle}
       </motion.h2>
       
-      <motion.p
+      {/* AI-generated message */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
-        className="text-muted-foreground text-lg mb-2"
+        className="mb-2 px-4"
       >
-        You brushed for 2 whole minutes!
-      </motion.p>
+        {isLoadingAI ? (
+          <div className="flex items-center justify-center gap-2 text-muted-foreground">
+            <Loader2 className="w-4 h-4 animate-spin" />
+            <span>Toothy is thinking of something special...</span>
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-lg">
+            {celebrationMessage || "You brushed for 2 whole minutes!"}
+          </p>
+        )}
+      </motion.div>
       
       <motion.div
         initial={{ opacity: 0 }}
@@ -176,21 +204,34 @@ export const RewardCelebration = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.3 }}
-        className="flex flex-col sm:flex-row gap-3 justify-center"
+        className="flex flex-col gap-3 justify-center items-center"
       >
-        <Button
-          onClick={onPlayAgain}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl px-8 py-6 text-lg"
-        >
-          🦷 Brush Again!
-        </Button>
-        <Button
-          variant="outline"
-          onClick={onClose}
-          className="rounded-2xl px-8 py-6 text-lg"
-        >
-          All Done!
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={onPlayAgain}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl px-8 py-6 text-lg"
+          >
+            🦷 Brush Again!
+          </Button>
+          <Button
+            variant="outline"
+            onClick={onClose}
+            className="rounded-2xl px-8 py-6 text-lg"
+          >
+            All Done!
+          </Button>
+        </div>
+        
+        {onChatWithToothy && (
+          <Button
+            variant="ghost"
+            onClick={onChatWithToothy}
+            className="gap-2 text-primary hover:text-primary/80"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Ask Toothy a question!
+          </Button>
+        )}
       </motion.div>
     </div>
   );

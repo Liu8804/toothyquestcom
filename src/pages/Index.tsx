@@ -19,11 +19,12 @@ import FloatingUnlockCTA from "@/components/FloatingUnlockCTA";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import SplashScreen from "@/components/SplashScreen";
 import FreePreviewBanner from "@/components/FreePreviewBanner";
+import DentalTipsChatbot from "@/components/DentalTipsChatbot";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogIn } from "lucide-react";
+import { LayoutDashboard, LogIn, MessageCircle } from "lucide-react";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -32,6 +33,7 @@ const Index = () => {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showMotivation, setShowMotivation] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
+  const [showDentalChat, setShowDentalChat] = useState(false);
 
   // Track page views
   usePageViewTracking();
@@ -119,6 +121,21 @@ const Index = () => {
         <MotivationalPopup isOpen={showMotivation} onClose={() => setShowMotivation(false)} />
         <DailyReward />
         <FloatingUnlockCTA />
+        
+        {/* Floating Chat Button */}
+        <Button
+          onClick={() => setShowDentalChat(true)}
+          className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-primary to-secondary hover:scale-110 transition-transform"
+          size="icon"
+        >
+          <MessageCircle className="w-6 h-6 text-white" />
+        </Button>
+        
+        {/* Dental Tips Chatbot */}
+        <DentalTipsChatbot 
+          isOpen={showDentalChat} 
+          onClose={() => setShowDentalChat(false)}
+        />
       </main>
     </>
   );
