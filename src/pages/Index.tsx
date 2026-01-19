@@ -23,6 +23,7 @@ import FloatingToothPets from "@/components/FloatingToothPets";
 import DailyBonusModal from "@/components/DailyBonusModal";
 import RewardsPanel from "@/components/rewards/RewardsPanel";
 import SparkMeter from "@/components/rewards/SparkMeter";
+import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
@@ -197,6 +198,9 @@ const Index = () => {
           isOpen={showDentalChat} 
           onClose={() => setShowDentalChat(false)}
         />
+
+        {/* Price Change Announcement */}
+        <PriceChangeAnnouncement />
       </main>
     </>
   );
