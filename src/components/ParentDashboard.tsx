@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3, Bell, Crown, Gift } from "lucide-react";
+import { Trophy, Star, Target, Calendar, TrendingUp, Plus, LogOut, Volume2, VolumeX, Flame, BarChart3, Bell, Crown, Gift, RefreshCw, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
+import { usePurchase } from "@/hooks/usePurchase";
 import { stories } from "@/data/stories";
 import { useState } from "react";
 import AddChildModal from "./AddChildModal";
@@ -16,6 +17,7 @@ import Leaderboard from "./Leaderboard";
 import NotificationSettings from "./NotificationSettings";
 import RewardsPanel from "./rewards/RewardsPanel";
 import SparkMeter from "./rewards/SparkMeter";
+import SubscriptionManagement from "./SubscriptionManagement";
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -40,7 +42,9 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
+  const [showSubscription, setShowSubscription] = useState(false);
   
+  const { isPurchased } = usePurchase();
   const { getCompletedCount, getChallengesWithProgress } = useDailyChallenges(selectedChild?.id);
   const { totalPoints, currentLevel, streak, unlockedPets, unlockedBadges } = useRewardsSystem(selectedChild?.id);
 
@@ -76,6 +80,14 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
             <p className="text-muted-foreground">Track your child's dental adventure</p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              onClick={() => setShowSubscription(true)}
+              className={`rounded-full gap-2 ${isPurchased ? 'bg-gradient-to-r from-green-100 to-emerald-100 border-green-300 dark:from-green-900/30 dark:to-emerald-900/30' : 'bg-gradient-to-r from-amber-100 to-orange-100 border-amber-300 dark:from-amber-900/30 dark:to-orange-900/30'}`}
+            >
+              <CreditCard className={`w-4 h-4 ${isPurchased ? 'text-green-600' : 'text-amber-600'}`} />
+              {isPurchased ? 'Premium ✓' : 'Verify Purchase'}
+            </Button>
             <Button
               variant="outline"
               onClick={() => setShowRewards(true)}
@@ -369,6 +381,32 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
         onClose={() => setShowRewards(false)}
         childId={selectedChild?.id}
       />
+      
+      {/* Subscription Management Modal */}
+      {showSubscription && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4"
+          onClick={() => setShowSubscription(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <SubscriptionManagement />
+            <Button
+              variant="ghost"
+              onClick={() => setShowSubscription(false)}
+              className="w-full mt-4 text-muted-foreground"
+            >
+              Close
+            </Button>
+          </motion.div>
+        </motion.div>
+      )}
     </motion.div>
   );
 };
