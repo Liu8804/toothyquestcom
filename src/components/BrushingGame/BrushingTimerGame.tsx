@@ -8,6 +8,7 @@ import MouthGrid from "./MouthGrid";
 import RewardCelebration from "./RewardCelebration";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
+import DentalTipsChatbot from "@/components/DentalTipsChatbot";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 
@@ -43,6 +44,7 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
     title: string;
     xp: number;
   } | null>(null);
+  const [showDentalChat, setShowDentalChat] = useState(false);
 
   const currentQuadrant = Math.floor((TOTAL_TIME - timeRemaining) / QUADRANT_TIME);
   const completedQuadrants = Array.from(
@@ -174,7 +176,13 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
           {/* Content */}
           <div className="p-6">
             {phase === "completed" ? (
-              <RewardCelebration onPlayAgain={handleReset} onClose={onClose} />
+              <RewardCelebration 
+                onPlayAgain={handleReset} 
+                onClose={onClose}
+                childName={selectedChild?.name}
+                sessionType={new Date().getHours() < 12 ? "morning" : "evening"}
+                onChatWithToothy={() => setShowDentalChat(true)}
+              />
             ) : (
               <div className="flex flex-col items-center space-y-6">
                 {/* Progress Ring with Timer */}
@@ -316,6 +324,13 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
         </motion.div>
       </motion.div>
     </AnimatePresence>
+    
+    {/* Dental Tips Chatbot */}
+    <DentalTipsChatbot 
+      isOpen={showDentalChat} 
+      onClose={() => setShowDentalChat(false)}
+      childName={selectedChild?.name}
+    />
     </>
   );
 };

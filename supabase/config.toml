@@ -14,3 +14,9 @@ verify_jwt = false
 
 [functions.openai-realtime]
 verify_jwt = false
+
+[functions.ai-encouragement]
+verify_jwt = false
+
+[functions.dental-tips-chat]
+verify_jwt = false
