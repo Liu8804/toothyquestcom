@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getVoiceSettings, VoiceSettings } from "@/components/VoiceSettingsModal";
+import { getVoiceSettings, getVoicePersonalityConfig, VoiceSettings } from "@/components/VoiceSettingsModal";
 import { supabase } from "@/integrations/supabase/client";
 
 interface UseStoryNarrationReturn {
@@ -236,13 +236,25 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
           return;
         }
 
+        // Get voice personality settings
+        const personality = getVoicePersonalityConfig(voiceSettings.personality);
+        
         fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ text, voiceId: "pFZP5JQG7iQjIQuC4Bku" }),
+          body: JSON.stringify({ 
+            text, 
+            voiceId: personality.voiceId,
+            voiceSettings: {
+              stability: personality.stability,
+              similarityBoost: personality.similarityBoost,
+              style: personality.style,
+              speed: personality.speed,
+            },
+          }),
         })
         .then(async (response) => {
           if (!response.ok) {

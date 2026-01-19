@@ -103,7 +103,7 @@ serve(async (req) => {
 
     console.log(`Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for user ${user.id}`);
 
-    const { text, voiceId = "pFZP5JQG7iQjIQuC4Bku" } = await req.json();
+    const { text, voiceId = "pFZP5JQG7iQjIQuC4Bku", voiceSettings } = await req.json();
     const ELEVENLABS_API_KEY = (Deno.env.get("ELEVENLABS_API_KEY") ?? "").trim();
 
     if (!ELEVENLABS_API_KEY) {
@@ -133,7 +133,13 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Generating TTS for text of length ${trimmedText.length} with voice ${voiceId}`);
+    // Use custom voice settings if provided, otherwise use kid-friendly defaults
+    const stability = voiceSettings?.stability ?? 0.4;
+    const similarityBoost = voiceSettings?.similarityBoost ?? 0.75;
+    const style = voiceSettings?.style ?? 0.6;
+    const speed = voiceSettings?.speed ?? 0.9;
+
+    console.log(`Generating TTS for text of length ${trimmedText.length} with voice ${voiceId}, stability: ${stability}, style: ${style}, speed: ${speed}`);
 
     const response = await fetch(
       `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
@@ -147,11 +153,11 @@ serve(async (req) => {
           text: trimmedText,
           model_id: "eleven_multilingual_v2",
           voice_settings: {
-            stability: 0.4,
-            similarity_boost: 0.75,
-            style: 0.6,
+            stability,
+            similarity_boost: similarityBoost,
+            style,
             use_speaker_boost: true,
-            speed: 0.9, // Slightly slower for children
+            speed,
           },
         }),
       }
