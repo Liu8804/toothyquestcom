@@ -425,6 +425,7 @@ export type Database = {
       notification_preferences: {
         Row: {
           created_at: string
+          email_reminders: boolean
           evening_reminder: boolean
           evening_time: string
           id: string
@@ -436,6 +437,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          email_reminders?: boolean
           evening_reminder?: boolean
           evening_time?: string
           id?: string
@@ -447,6 +449,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          email_reminders?: boolean
           evening_reminder?: boolean
           evening_time?: string
           id?: string
@@ -568,6 +571,42 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          referral_code: string
+          referred_user_id: string | null
+          referrer_user_id: string
+          reward_type: string | null
+          rewarded_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code: string
+          referred_user_id?: string | null
+          referrer_user_id: string
+          reward_type?: string | null
+          rewarded_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          referral_code?: string
+          referred_user_id?: string | null
+          referrer_user_id?: string
+          reward_type?: string | null
+          rewarded_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -582,6 +621,39 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          email_reminder_sent_at: string | null
+          id: string
+          last_activity_date: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          email_reminder_sent_at?: string | null
+          id?: string
+          last_activity_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          email_reminder_sent_at?: string | null
+          id?: string
+          last_activity_date?: string | null
+          longest_streak?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -617,6 +689,7 @@ export type Database = {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
         Returns: boolean
       }
+      generate_referral_code: { Args: never; Returns: string }
       get_admin_audit_logs: {
         Args: never
         Returns: {
