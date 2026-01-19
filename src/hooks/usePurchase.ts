@@ -116,13 +116,8 @@ export const usePurchase = () => {
       }
 
       if (data?.url) {
-        // Open Stripe checkout in new tab
-        window.open(data.url, '_blank');
-        setPurchaseState(prev => ({ ...prev, isLoading: false }));
-        toast.info('Complete your payment in the new tab', {
-          icon: '💳',
-          duration: 5000,
-        });
+        // Redirect to Stripe checkout (works better on Safari than window.open)
+        window.location.href = data.url;
         return true;
       } else {
         throw new Error('No checkout URL received');
