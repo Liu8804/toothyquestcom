@@ -13,7 +13,7 @@ const logStep = (step: string, details?: unknown) => {
 };
 
 // Admin email to receive notifications
-const ADMIN_EMAIL = "admin@toothyquest.com"; // Change this to your email
+const ADMIN_EMAIL = "marliudlewis@gmail.com";
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
