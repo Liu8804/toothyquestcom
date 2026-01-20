@@ -21,14 +21,14 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   const [score, setScore] = useState(0);
   const [escaped, setEscaped] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(60); // More time for kids (was 30)
 
   const spawnBug = useCallback(() => {
     const newBug: SugarBug = {
       id: Date.now() + Math.random(),
-      x: Math.random() * 80 + 10,
+      x: Math.random() * 70 + 15, // More centered for easier tapping
       startY: -10,
-      speed: Math.random() * 0.5 + 0.3,
+      speed: Math.random() * 0.2 + 0.15, // Much slower speed (was 0.3-0.8)
     };
     setBugs(prev => [...prev, newBug]);
   }, []);
@@ -36,7 +36,8 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
-    const spawnInterval = setInterval(spawnBug, 800);
+    // Slower spawn rate - every 1.5 seconds instead of 0.8
+    const spawnInterval = setInterval(spawnBug, 1500);
     return () => clearInterval(spawnInterval);
   }, [gameStarted, spawnBug]);
 
@@ -122,27 +123,33 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
       </div>
 
       {/* Sugar Bugs */}
+      {/* Sugar Bugs - Larger and slower for kids */}
       <AnimatePresence>
         {bugs.map(bug => (
           <motion.button
             key={bug.id}
             initial={{ y: "-10%", x: `${bug.x}%`, scale: 0 }}
             animate={{ 
-              y: "90%", 
+              y: "85%", 
               scale: 1,
               rotate: [0, 10, -10, 0],
             }}
             transition={{ 
-              y: { duration: 4 / bug.speed, ease: "linear" },
-              rotate: { repeat: Infinity, duration: 0.5 },
-              scale: { duration: 0.2 }
+              y: { duration: 8 / bug.speed, ease: "linear" }, // Much slower fall (was 4)
+              rotate: { repeat: Infinity, duration: 0.8 },
+              scale: { duration: 0.3 }
             }}
             exit={{ scale: 0, opacity: 0 }}
             onAnimationComplete={() => handleBugEscape(bug.id)}
-            whileTap={{ scale: 0.5 }}
+            whileTap={{ scale: 0.7 }}
             onClick={() => tapBug(bug.id)}
-            className="absolute text-4xl cursor-pointer transform -translate-x-1/2"
-            style={{ left: `${bug.x}%` }}
+            className="absolute text-5xl md:text-6xl cursor-pointer transform -translate-x-1/2 p-2 select-none touch-manipulation"
+            style={{ 
+              left: `${bug.x}%`,
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              userSelect: 'none',
+            }}
           >
             🐛
           </motion.button>

@@ -9,7 +9,7 @@ export const FREE_QUEST_LIMIT = 5;
 export const QUESTS_REQUIRED_FOR_GAMES = 5;
 
 // Test mode - set to true to unlock all content for testing
-export const TEST_MODE_UNLOCK_ALL = false;
+export const TEST_MODE_UNLOCK_ALL = true;
 
 // Pricing configuration
 export const PRICING = {
