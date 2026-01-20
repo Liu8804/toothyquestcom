@@ -11,7 +11,7 @@ import ConfettiCelebration from "@/components/ConfettiCelebration";
 
 const Redeem = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [code, setCode] = useState("");
   const [isRedeeming, setIsRedeeming] = useState(false);
   const [redeemed, setRedeemed] = useState(false);
@@ -24,7 +24,7 @@ const Redeem = () => {
       return;
     }
 
-    if (!user) {
+    if (!user || !session?.access_token) {
       toast.error("Please sign in to redeem a code");
       return;
     }
@@ -34,6 +34,9 @@ const Redeem = () => {
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke("redeem-code", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: { code: code.trim() },
       });
 

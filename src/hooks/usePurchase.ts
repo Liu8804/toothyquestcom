@@ -241,13 +241,15 @@ export const usePurchase = () => {
   const isContentLocked = useCallback((contentIndex: number, contentType: 'quest' | 'game' = 'quest', completedQuestsCount: number = 0): boolean => {
     // Test mode unlocks everything
     if (TEST_MODE_UNLOCK_ALL) return false;
-    
-    if (purchaseState.isPurchased) return false;
-    
+
+    // Games: require BOTH purchase + 5 completed quests
     if (contentType === 'game') {
+      if (!purchaseState.isPurchased) return true;
       return completedQuestsCount < QUESTS_REQUIRED_FOR_GAMES;
     }
-    
+
+    // Quests: first 5 are free, rest require purchase
+    if (purchaseState.isPurchased) return false;
     return contentIndex >= FREE_QUEST_LIMIT;
   }, [purchaseState.isPurchased]);
 

@@ -18,7 +18,7 @@ interface PurchaseModalProps {
 const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
   const { purchase, restorePurchase, isLoading, isRestoring, isPurchased, refetchPurchase } = usePurchase();
   const { playWinFanfare, playAchievementUnlock } = useGameSounds();
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("monthly");
   const [promoCode, setPromoCode] = useState("");
@@ -27,7 +27,7 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
 
   const handleRedeemCode = async () => {
     if (!promoCode.trim()) return;
-    if (!user) {
+    if (!user || !session?.access_token) {
       toast.error("Please sign in to redeem a code");
       return;
     }
@@ -37,6 +37,9 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
 
     try {
       const { data, error } = await supabase.functions.invoke("redeem-code", {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: { code: promoCode.trim() },
       });
 
@@ -305,7 +308,7 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
                       />
                       <Button
                         onClick={handleRedeemCode}
-                        disabled={isRedeemingCode || !promoCode.trim() || !user}
+                        disabled={isRedeemingCode || !promoCode.trim() || !session?.access_token}
                         variant="secondary"
                         size="sm"
                       >

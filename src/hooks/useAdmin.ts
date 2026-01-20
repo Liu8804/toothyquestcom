@@ -97,18 +97,15 @@ export const useAdmin = () => {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
+    // Use secure backend function (security definer) to avoid RLS issues
+    const { data, error } = await supabase.rpc("is_admin");
 
-    if (!error && data) {
+    if (!error && data === true) {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
     }
+
     setLoading(false);
   }, [user]);
 
