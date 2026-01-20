@@ -18,8 +18,10 @@ import {
   Trash2,
   Shield,
   RefreshCw,
-  ClipboardList
+  ClipboardList,
+  Gift
 } from "lucide-react";
+import PromoCodesAdmin from "@/components/admin/PromoCodesAdmin";
 import { badgeSchema } from "@/lib/validation";
 
 interface BadgeFormData {
@@ -185,10 +187,11 @@ const AdminDashboard = () => {
 
       {/* Tabs */}
       <Tabs defaultValue="badges" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="badges">Badges</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="children">Children</TabsTrigger>
+          <TabsTrigger value="promo">Promo Codes</TabsTrigger>
           <TabsTrigger value="audit">Audit Logs</TabsTrigger>
         </TabsList>
 
@@ -366,6 +369,11 @@ const AdminDashboard = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Promo Codes Tab */}
+        <TabsContent value="promo" className="space-y-4">
+          <PromoCodesAdmin />
         </TabsContent>
 
         {/* Audit Logs Tab */}
