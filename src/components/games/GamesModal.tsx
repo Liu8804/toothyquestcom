@@ -65,8 +65,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
 
   const { incrementProgress } = useDailyChallenges(childId);
 
-  // All games are locked until 5 quests completed OR purchase made
-  const areGamesLocked = !isPurchased && completedQuestsCount < QUESTS_REQUIRED_FOR_GAMES;
+  // Games follow the same locking rules as the rest of the app (test mode included)
+  const areGamesLocked = isContentLocked(0, 'game', completedQuestsCount);
   
   const gamesWithLockStatus = games.map((game) => ({
     ...game,

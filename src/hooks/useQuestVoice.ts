@@ -1,13 +1,33 @@
 import { useCallback, useRef } from "react";
-import { getVoiceSettings } from "@/components/VoiceSettingsModal";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { getVoicePersonalityConfig, getVoiceSettings } from "@/components/VoiceSettingsModal";
 
 /**
- * A lightweight voice hook for quest narration throughout the app.
- * Uses browser speech synthesis for reliability (ElevenLabs often blocked on free tier).
+ * Quest voice hook for short narration lines (intro, ending, celebrations).
+ * - Uses Premium AI voice (ElevenLabs) when selected AND the user is signed in
+ * - Falls back to browser speech synthesis otherwise
  */
 export const useQuestVoice = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const isSpeakingRef = useRef(false);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+
+  const hasShownAuthToastRef = useRef(false);
+
+  const cleanupAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+      audioRef.current = null;
+    }
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+  }, []);
 
   const stop = useCallback(() => {
     if (typeof window !== "undefined" && "speechSynthesis" in window) {
@@ -15,95 +35,182 @@ export const useQuestVoice = () => {
     }
     utteranceRef.current = null;
     isSpeakingRef.current = false;
-  }, []);
+    cleanupAudio();
+  }, [cleanupAudio]);
 
-  const speak = useCallback((text: string, onEnd?: () => void) => {
-    if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
-      console.warn("Speech synthesis not available");
-      onEnd?.();
-      return;
-    }
-
-    // Stop any current speech
-    stop();
-
-    const voiceSettings = getVoiceSettings();
-    
-    const speakNow = () => {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = voiceSettings.speed;
-      utterance.pitch = voiceSettings.pitch;
-      utterance.volume = 1;
-      
-      // Find a good voice
-      const voices = window.speechSynthesis.getVoices();
-      const englishVoice = voices.find(v => v.lang.startsWith('en') && v.localService) 
-        || voices.find(v => v.lang.startsWith('en'))
-        || voices[0];
-      
-      if (englishVoice) {
-        utterance.voice = englishVoice;
+  const speakWithBrowserSpeech = useCallback(
+    (text: string, onEnd?: () => void) => {
+      if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
+        console.warn("Speech synthesis not available");
+        onEnd?.();
+        return;
       }
 
-      utterance.onstart = () => {
-        isSpeakingRef.current = true;
-      };
-      
-      utterance.onend = () => {
-        isSpeakingRef.current = false;
-        onEnd?.();
-      };
-      
-      utterance.onerror = (event) => {
-        console.error("Quest voice error:", event.error);
-        isSpeakingRef.current = false;
-        if (event.error !== "interrupted" && event.error !== "canceled") {
+      const voiceSettings = getVoiceSettings();
+
+      const speakNow = () => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = voiceSettings.speed;
+        utterance.pitch = voiceSettings.pitch;
+        utterance.volume = 1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice =
+          voices.find((v) => v.lang.startsWith("en") && v.localService) ||
+          voices.find((v) => v.lang.startsWith("en")) ||
+          voices[0];
+
+        if (englishVoice) utterance.voice = englishVoice;
+
+        utterance.onstart = () => {
+          isSpeakingRef.current = true;
+        };
+
+        utterance.onend = () => {
+          isSpeakingRef.current = false;
           onEnd?.();
-        }
+        };
+
+        utterance.onerror = (event) => {
+          console.error("Quest voice error:", event.error);
+          isSpeakingRef.current = false;
+          if (event.error !== "interrupted" && event.error !== "canceled") {
+            onEnd?.();
+          }
+        };
+
+        utteranceRef.current = utterance;
+        isSpeakingRef.current = true;
+        window.speechSynthesis.speak(utterance);
       };
 
-      utteranceRef.current = utterance;
-      isSpeakingRef.current = true;
-      window.speechSynthesis.speak(utterance);
-    };
-
-    // Wait for voices to load if needed
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length === 0) {
-      const handleVoicesChanged = () => {
-        window.speechSynthesis.onvoiceschanged = null;
-        speakNow();
-      };
-      window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
-      // Fallback timeout
-      setTimeout(() => {
-        if (!isSpeakingRef.current) {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        const handleVoicesChanged = () => {
           window.speechSynthesis.onvoiceschanged = null;
           speakNow();
+        };
+        window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+        setTimeout(() => {
+          if (!isSpeakingRef.current) {
+            window.speechSynthesis.onvoiceschanged = null;
+            speakNow();
+          }
+        }, 150);
+      } else {
+        speakNow();
+      }
+    },
+    []
+  );
+
+  const speak = useCallback(
+    (text: string, onEnd?: () => void) => {
+      // Stop any current voice
+      stop();
+
+      const settings = getVoiceSettings();
+      const wantsAiVoice = settings.provider === "elevenlabs";
+
+      if (!wantsAiVoice) {
+        speakWithBrowserSpeech(text, onEnd);
+        return;
+      }
+
+      // Try Premium AI voice (requires auth), otherwise fall back.
+      (async () => {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (!session?.access_token) {
+            if (!hasShownAuthToastRef.current) {
+              hasShownAuthToastRef.current = true;
+              toast.info("AI voice needs sign-in — using browser voice for now.");
+            }
+            speakWithBrowserSpeech(text, onEnd);
+            return;
+          }
+
+          const personality = getVoicePersonalityConfig(settings.personality);
+
+          const response = await fetch(
+            `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${session.access_token}`,
+              },
+              body: JSON.stringify({
+                text,
+                voiceId: personality.voiceId,
+                voiceSettings: {
+                  stability: personality.stability,
+                  similarityBoost: personality.similarityBoost,
+                  style: personality.style,
+                  speed: personality.speed,
+                },
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            // If AI fails, keep the app responsive.
+            speakWithBrowserSpeech(text, onEnd);
+            return;
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+          audioUrlRef.current = url;
+
+          const audio = new Audio(url);
+          audioRef.current = audio;
+
+          audio.onended = () => {
+            cleanupAudio();
+            onEnd?.();
+          };
+
+          audio.onerror = () => {
+            cleanupAudio();
+            speakWithBrowserSpeech(text, onEnd);
+          };
+
+          await audio.play();
+        } catch {
+          speakWithBrowserSpeech(text, onEnd);
         }
-      }, 150);
-    } else {
-      speakNow();
-    }
-  }, [stop]);
+      })();
+    },
+    [cleanupAudio, speakWithBrowserSpeech, stop]
+  );
 
   const speakIntro = useCallback((intro: string) => {
     speak(intro);
   }, [speak]);
 
-  const speakQuestComplete = useCallback((questTitle: string, xpEarned: number) => {
-    const message = `Quest Complete! ${questTitle}. You earned ${xpEarned} experience points. Great job!`;
-    speak(message);
-  }, [speak]);
+  const speakQuestComplete = useCallback(
+    (questTitle: string, xpEarned: number) => {
+      const message = `Quest Complete! ${questTitle}. You earned ${xpEarned} experience points. Great job!`;
+      speak(message);
+    },
+    [speak]
+  );
 
-  const speakBadgeEarned = useCallback((badgeName: string) => {
-    const message = `Congratulations! You earned a new badge: ${badgeName}!`;
-    speak(message);
-  }, [speak]);
+  const speakBadgeEarned = useCallback(
+    (badgeName: string) => {
+      const message = `Congratulations! You earned a new badge: ${badgeName}!`;
+      speak(message);
+    },
+    [speak]
+  );
 
-  const speakEnding = useCallback((ending: string) => {
-    speak(ending);
-  }, [speak]);
+  const speakEnding = useCallback(
+    (ending: string) => {
+      speak(ending);
+    },
+    [speak]
+  );
 
   return {
     speak,
