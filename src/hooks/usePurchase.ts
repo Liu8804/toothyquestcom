@@ -80,8 +80,14 @@ export const usePurchase = () => {
   }, [user, session?.access_token]);
 
   const checkPurchaseStatus = async () => {
-    if (!session?.access_token) {
-      setPurchaseState(prev => ({ ...prev, isCheckingPurchase: false }));
+    // Double-check we have valid auth before making the call
+    if (!user?.id || !session?.access_token) {
+      const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id || 'anonymous'}`) === 'true';
+      setPurchaseState(prev => ({ 
+        ...prev, 
+        isPurchased: localPurchase, 
+        isCheckingPurchase: false 
+      }));
       return;
     }
 
@@ -92,14 +98,12 @@ export const usePurchase = () => {
       const { data: entitlement } = await supabase
         .from("manual_entitlements")
         .select("*")
-        .eq("user_id", user?.id)
+        .eq("user_id", user.id)
         .maybeSingle();
 
       if (entitlement) {
         // User has a manual entitlement - they're unlocked!
-        if (user?.id) {
-          localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
-        }
+        localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
         setPurchaseState(prev => ({ 
           ...prev, 
           isPurchased: true, 
@@ -116,8 +120,8 @@ export const usePurchase = () => {
       });
 
       if (error) {
-        console.error('Error checking purchase:', error);
-        const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id}`) === 'true';
+        // Silently fall back to local storage for auth errors (user not logged in properly)
+        const localPurchase = localStorage.getItem(`toothyquest_purchased_${user.id}`) === 'true';
         setPurchaseState(prev => ({ 
           ...prev, 
           isPurchased: localPurchase, 
@@ -128,7 +132,7 @@ export const usePurchase = () => {
 
       const purchased = data?.purchased === true;
       
-      if (purchased && user?.id) {
+      if (purchased) {
         localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
       }
       
@@ -138,8 +142,13 @@ export const usePurchase = () => {
         isCheckingPurchase: false 
       }));
     } catch (error) {
-      console.error('Error checking purchase status:', error);
-      setPurchaseState(prev => ({ ...prev, isCheckingPurchase: false }));
+      // Silent fallback - don't log errors for unauthenticated users
+      const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id || 'anonymous'}`) === 'true';
+      setPurchaseState(prev => ({ 
+        ...prev, 
+        isPurchased: localPurchase, 
+        isCheckingPurchase: false 
+      }));
     }
   };
 
