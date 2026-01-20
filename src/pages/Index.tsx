@@ -149,6 +149,7 @@ const Index = () => {
 
           <LanguageSwitcher />
           <StreakTracker />
+          {!loading && (
             <>
               {user ? (
                 <Button
