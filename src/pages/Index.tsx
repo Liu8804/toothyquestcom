@@ -33,6 +33,7 @@ import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn, MessageCircle, Trophy } from "lucide-react";
+import PremiumBadge from "@/components/PremiumBadge";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -137,8 +138,11 @@ const Index = () => {
               {user ? (
                 <Button
                   onClick={() => setShowDashboard(true)}
-                  className="rounded-full gap-2 shadow-card"
+                  className="rounded-full gap-2 shadow-card relative"
                 >
+                  {isPurchased && (
+                    <PremiumBadge variant="small" className="absolute -top-1 -right-1" />
+                  )}
                   <LayoutDashboard className="w-4 h-4" />
                   <span className="hidden sm:inline">Dashboard</span>
                 </Button>
