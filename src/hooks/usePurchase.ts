@@ -255,5 +255,6 @@ export const usePurchase = () => {
     restorePurchase,
     isContentLocked,
     refreshPurchaseStatus,
+    refetchPurchase: refreshPurchaseStatus,
   };
 };
