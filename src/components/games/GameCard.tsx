@@ -7,9 +7,10 @@ interface GameCardProps {
   game: Game;
   onClick: () => void;
   delay?: number;
+  lockReason?: string;
 }
 
-const GameCard = ({ game, onClick, delay = 0 }: GameCardProps) => {
+const GameCard = ({ game, onClick, delay = 0, lockReason }: GameCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -41,6 +42,11 @@ const GameCard = ({ game, onClick, delay = 0 }: GameCardProps) => {
             <p className="text-xs text-center text-muted-foreground">
               {globalGameText.lockedGame}
             </p>
+            {!!lockReason && (
+              <p className="text-[11px] leading-snug text-center text-muted-foreground">
+                <span className="font-semibold">Reason:</span> {lockReason}
+              </p>
+            )}
           </div>
         ) : (
           <Button
