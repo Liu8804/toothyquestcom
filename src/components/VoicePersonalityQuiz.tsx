@@ -1,148 +1,39 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, RotateCcw, Volume2 } from "lucide-react";
+import { Sparkles, Volume2, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { 
-  VoiceMood, 
-  VOICE_MOODS, 
-  getVoiceSettings, 
-  saveVoiceSettings,
-  getVoicePersonalityConfig 
-} from "@/components/VoiceSettingsModal";
+import { getVoiceSettings, saveVoiceSettings } from "@/components/VoiceSettingsModal";
+import { getBaseVoice } from "@/config/voiceConfig";
 import { supabase } from "@/integrations/supabase/client";
 
 interface VoicePersonalityQuizProps {
   isOpen: boolean;
   onClose: () => void;
-  onComplete?: (mood: VoiceMood) => void;
+  onComplete?: () => void;
 }
-
-interface QuizQuestion {
-  id: number;
-  question: string;
-  emoji: string;
-  options: {
-    text: string;
-    emoji: string;
-    mood: VoiceMood;
-  }[];
-}
-
-const QUIZ_QUESTIONS: QuizQuestion[] = [
-  {
-    id: 1,
-    question: "What's your favorite kind of story?",
-    emoji: "📚",
-    options: [
-      { text: "Happy adventures with friends!", emoji: "🌈", mood: "happy" },
-      { text: "Cozy bedtime stories", emoji: "🌙", mood: "calm" },
-      { text: "Super exciting quests!", emoji: "🚀", mood: "excited" },
-      { text: "Stories with funny characters", emoji: "🎪", mood: "silly" },
-    ],
-  },
-  {
-    id: 2,
-    question: "When you brush your teeth, you feel like...",
-    emoji: "🦷",
-    options: [
-      { text: "A happy helper making smiles!", emoji: "😊", mood: "happy" },
-      { text: "A peaceful cloud floating", emoji: "☁️", mood: "calm" },
-      { text: "A superhero fighting germs!", emoji: "🦸", mood: "excited" },
-      { text: "A silly monster scaring bugs!", emoji: "👾", mood: "silly" },
-    ],
-  },
-  {
-    id: 3,
-    question: "Pick your favorite animal friend!",
-    emoji: "🐾",
-    options: [
-      { text: "A friendly puppy", emoji: "🐕", mood: "happy" },
-      { text: "A cuddly bunny", emoji: "🐰", mood: "calm" },
-      { text: "A brave lion", emoji: "🦁", mood: "excited" },
-      { text: "A silly monkey", emoji: "🐵", mood: "silly" },
-    ],
-  },
-  {
-    id: 4,
-    question: "What makes you smile the most?",
-    emoji: "😄",
-    options: [
-      { text: "Dancing and singing!", emoji: "💃", mood: "happy" },
-      { text: "Warm hugs", emoji: "🤗", mood: "calm" },
-      { text: "Going on adventures!", emoji: "🏔️", mood: "excited" },
-      { text: "Making funny faces!", emoji: "🤪", mood: "silly" },
-    ],
-  },
-  {
-    id: 5,
-    question: "If you had a magic power, it would be...",
-    emoji: "✨",
-    options: [
-      { text: "Making everyone happy!", emoji: "🌟", mood: "happy" },
-      { text: "Helping friends feel calm", emoji: "💫", mood: "calm" },
-      { text: "Flying super fast!", emoji: "⚡", mood: "excited" },
-      { text: "Talking to animals!", emoji: "🗣️", mood: "silly" },
-    ],
-  },
-];
 
 const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQuizProps) => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<VoiceMood[]>([]);
-  const [result, setResult] = useState<VoiceMood | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasListened, setHasListened] = useState(false);
 
-  const handleAnswer = (mood: VoiceMood) => {
-    const newAnswers = [...answers, mood];
-    setAnswers(newAnswers);
-
-    if (currentQuestion < QUIZ_QUESTIONS.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      // Calculate result
-      const counts: Record<VoiceMood, number> = {
-        happy: 0,
-        excited: 0,
-        calm: 0,
-        silly: 0,
-      };
-      
-      newAnswers.forEach((answer) => {
-        counts[answer]++;
-      });
-
-      const winner = (Object.entries(counts) as [VoiceMood, number][])
-        .sort((a, b) => b[1] - a[1])[0][0];
-      
-      setResult(winner);
-      
-      // Save to settings
-      const settings = getVoiceSettings();
-      saveVoiceSettings({ ...settings, personality: winner });
-      
-      onComplete?.(winner);
-    }
-  };
-
-  const handleRestart = () => {
-    setCurrentQuestion(0);
-    setAnswers([]);
-    setResult(null);
-  };
+  const voiceConfig = getBaseVoice();
 
   const handleTestVoice = async () => {
-    if (!result || isPlaying) return;
+    if (isPlaying) return;
     setIsPlaying(true);
 
-    const moodConfig = getVoicePersonalityConfig(result);
+    const testText = "Hey there, superstar! I'm your friendly guide, Toothy's Friend! I'll be here to cheer you on during all your brushing adventures. Ready to make those teeth sparkle and shine?";
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) {
         if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(moodConfig.previewPhrase);
-          utterance.onend = () => setIsPlaying(false);
+          const utterance = new SpeechSynthesisUtterance(testText);
+          utterance.onend = () => {
+            setIsPlaying(false);
+            setHasListened(true);
+          };
           utterance.onerror = () => setIsPlaying(false);
           window.speechSynthesis.speak(utterance);
         } else {
@@ -160,13 +51,13 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
             "Authorization": `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
-            text: moodConfig.previewPhrase,
-            voiceId: moodConfig.voiceId,
+            text: testText,
+            voiceId: voiceConfig.voiceId,
             voiceSettings: {
-              stability: moodConfig.stability,
-              similarityBoost: moodConfig.similarityBoost,
-              style: moodConfig.style,
-              speed: moodConfig.speed,
+              stability: voiceConfig.stability,
+              similarityBoost: voiceConfig.similarityBoost,
+              style: voiceConfig.style,
+              speed: voiceConfig.speed,
             },
           }),
         }
@@ -181,6 +72,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
       const audio = new Audio(url);
       audio.onended = () => {
         setIsPlaying(false);
+        setHasListened(true);
         URL.revokeObjectURL(url);
       };
       audio.onerror = () => {
@@ -193,7 +85,12 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
     }
   };
 
-  const resultMoodConfig = result ? getVoicePersonalityConfig(result) : null;
+  const handleComplete = () => {
+    const settings = getVoiceSettings();
+    saveVoiceSettings({ ...settings, provider: "elevenlabs" });
+    onComplete?.();
+    onClose();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -207,170 +104,104 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
             >
               <Sparkles className="w-5 h-5 text-white" />
             </motion.div>
-            <span>Voice Mood Quiz!</span>
+            <span>Meet Your Guide!</span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="mt-4">
           <AnimatePresence mode="wait">
-            {!result ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center space-y-4"
+            >
+              {/* Celebration */}
               <motion.div
-                key={`question-${currentQuestion}`}
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-4"
+                initial={{ y: -20 }}
+                animate={{ y: 0 }}
+                className="space-y-2"
               >
-                {/* Progress */}
-                <div className="flex gap-1.5 mb-4">
-                  {QUIZ_QUESTIONS.map((_, idx) => (
-                    <motion.div
-                      key={idx}
-                      className={`h-2 flex-1 rounded-full ${
-                        idx <= currentQuestion ? "bg-primary" : "bg-muted"
-                      }`}
-                      initial={idx === currentQuestion ? { scale: 0.8 } : {}}
-                      animate={idx === currentQuestion ? { scale: 1 } : {}}
-                    />
-                  ))}
-                </div>
-
-                {/* Question */}
-                <div className="text-center mb-6">
-                  <motion.span 
-                    className="text-4xl block mb-3"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                  >
-                    {QUIZ_QUESTIONS[currentQuestion].emoji}
-                  </motion.span>
-                  <h3 className="text-lg font-display font-bold text-foreground">
-                    {QUIZ_QUESTIONS[currentQuestion].question}
-                  </h3>
-                </div>
-
-                {/* Options */}
-                <div className="space-y-3">
-                  {QUIZ_QUESTIONS[currentQuestion].options.map((option, idx) => (
-                    <motion.button
-                      key={idx}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      whileHover={{ scale: 1.02, x: 5 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleAnswer(option.mood)}
-                      className="w-full p-4 rounded-2xl border-2 border-border bg-background hover:border-primary hover:bg-primary/5 transition-all text-left flex items-center gap-3"
-                    >
-                      <span className="text-2xl">{option.emoji}</span>
-                      <span className="font-medium text-foreground">{option.text}</span>
-                      <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground" />
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="result"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-4"
-              >
-                {/* Celebration */}
                 <motion.div
-                  initial={{ y: -20 }}
-                  animate={{ y: 0 }}
-                  className="space-y-2"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="text-6xl"
                 >
-                  <motion.div
-                    animate={{ 
-                      rotate: [0, -10, 10, -10, 10, 0],
-                      scale: [1, 1.1, 1]
-                    }}
-                    transition={{ duration: 0.5 }}
-                    className="text-6xl"
-                  >
-                    🎉
-                  </motion.div>
-                  <h3 className="text-xl font-display font-bold text-foreground">
-                    Your Perfect Voice Mood Is...
-                  </h3>
+                  🦷
                 </motion.div>
+                <h3 className="text-xl font-display font-bold text-foreground">
+                  Say Hello to Toothy's Friend!
+                </h3>
+              </motion.div>
 
-                {/* Result Card */}
-                {resultMoodConfig && (
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className={`p-6 rounded-3xl bg-gradient-to-br ${resultMoodConfig.gradient} text-white shadow-lg`}
-                  >
-                    <span className="text-5xl block mb-3">{resultMoodConfig.emoji}</span>
-                    <h4 className="text-2xl font-display font-bold mb-2">
-                      {resultMoodConfig.name}
-                    </h4>
-                    <p className="text-white/90 text-sm">
-                      {resultMoodConfig.description}
-                    </p>
-                  </motion.div>
-                )}
+              {/* Voice Card */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="p-6 rounded-3xl bg-gradient-to-br from-purple-400 to-pink-400 text-white shadow-lg"
+              >
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <div className="p-2 rounded-xl bg-white/20">
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <h4 className="text-2xl font-display font-bold mb-2">
+                  {voiceConfig.name}
+                </h4>
+                <p className="text-white/90 text-sm">
+                  A warm, kid-friendly voice that will be your friendly guide throughout all your dental adventures! 🌟
+                </p>
+              </motion.div>
 
-                {/* Test Voice Button */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.5 }}
+              {/* Test Voice Button */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <Button
+                  onClick={handleTestVoice}
+                  disabled={isPlaying}
+                  className="gap-2 rounded-xl"
+                  size="lg"
                 >
-                  <Button
-                    onClick={handleTestVoice}
-                    disabled={isPlaying}
-                    className="gap-2 rounded-xl"
-                    size="lg"
-                  >
-                    {isPlaying ? (
-                      <>
-                        <motion.div
-                          animate={{ scale: [1, 1.2, 1] }}
-                          transition={{ repeat: Infinity, duration: 0.5 }}
-                        >
-                          <Volume2 className="w-5 h-5" />
-                        </motion.div>
-                        Listening...
-                      </>
-                    ) : (
-                      <>
+                  {isPlaying ? (
+                    <>
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 0.5 }}
+                      >
                         <Volume2 className="w-5 h-5" />
-                        Hear Your Voice!
-                      </>
-                    )}
-                  </Button>
-                </motion.div>
-
-                {/* Action Buttons */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                  className="flex gap-3 pt-2"
-                >
-                  <Button
-                    variant="outline"
-                    onClick={handleRestart}
-                    className="flex-1 gap-2 rounded-xl"
-                  >
-                    <RotateCcw className="w-4 h-4" />
-                    Try Again
-                  </Button>
-                  <Button
-                    onClick={onClose}
-                    className="flex-1 rounded-xl font-display font-bold"
-                  >
-                    Let's Go! 🚀
-                  </Button>
-                </motion.div>
+                      </motion.div>
+                      Listening...
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="w-5 h-5" />
+                      {hasListened ? "Listen Again!" : "Hear the Voice!"}
+                    </>
+                  )}
+                </Button>
               </motion.div>
-            )}
+
+              {/* Action Button */}
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="pt-2"
+              >
+                <Button
+                  onClick={handleComplete}
+                  className="w-full rounded-xl font-display font-bold"
+                  size="lg"
+                >
+                  Let's Go! 🚀
+                </Button>
+              </motion.div>
+            </motion.div>
           </AnimatePresence>
         </div>
       </DialogContent>

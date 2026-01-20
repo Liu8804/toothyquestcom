@@ -90,6 +90,7 @@ export const getVoiceForMood = (mood: VoiceMood = "neutral") => {
 export const getBaseVoice = () => {
   return {
     voiceId: TOOTHY_VOICE.voiceId,
+    name: TOOTHY_VOICE.name,
     ...TOOTHY_VOICE.baseSettings,
   };
 };
