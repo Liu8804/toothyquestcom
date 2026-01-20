@@ -428,6 +428,24 @@ export type Database = {
           },
         ]
       }
+      manual_entitlements: {
+        Row: {
+          granted_at: string
+          granted_via: string
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_via?: string
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_via?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_preferences: {
         Row: {
           created_at: string
@@ -610,6 +628,33 @@ export type Database = {
           reward_type?: string | null
           rewarded_at?: string | null
           status?: string
+        }
+        Relationships: []
+      }
+      unlock_codes: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          note: string | null
+          redeemed_at: string | null
+          redeemed_by: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          redeemed_at?: string | null
+          redeemed_by?: string | null
         }
         Relationships: []
       }
