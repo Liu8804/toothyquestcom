@@ -26,16 +26,20 @@ serve(async (req) => {
       );
     }
 
-    // Create client with user's auth for RLS
-    const supabaseClient = createClient(
+    // Extract the token
+    const token = authHeader.replace("Bearer ", "");
+    
+    // Create admin client to verify user
+    const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { global: { headers: { Authorization: authHeader } } }
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
     );
 
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    // Get user from the JWT token
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    
     if (authError || !user) {
-      console.error("Authentication failed:", authError?.message);
+      console.error("Authentication failed:", authError?.message || "No user found");
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -43,12 +47,6 @@ serve(async (req) => {
     }
 
     console.log("Authenticated user:", user.id);
-
-    // Create service role client for rate limiting (bypasses RLS)
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
 
     // Rate limiting check
     const windowStart = new Date(Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS) * RATE_LIMIT_WINDOW_MS);
