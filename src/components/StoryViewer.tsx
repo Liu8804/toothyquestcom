@@ -15,7 +15,8 @@ import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
 import VoiceSettingsModal from "./VoiceSettingsModal";
 import InteractiveQuizWrapper from "./quiz/InteractiveQuizWrapper";
-import BracesQuestEffect, { BracesQuestReward, isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
+import AnimatedStoryImage from "./story/AnimatedStoryImage";
+import BracesQuestEffect, { BracesQuestReward, isBracesQuest } from "./BracesQuestEffects";
 interface StoryViewerProps {
   story: Story;
   currentIndex: number;
@@ -262,20 +263,14 @@ const StoryViewer = ({
             )}
           </AnimatePresence>
 
-          {/* Story illustration */}
+          {/* Story illustration - now animated! */}
           <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/20 to-bubble/30">
-            <img
+            <AnimatedStoryImage
               src={story.illustrationPath}
               alt={story.title}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-              }}
+              storyId={story.id}
+              className="w-full h-full"
             />
-            <div className="hidden absolute inset-0 flex items-center justify-center text-9xl">
-              {story.emoji}
-            </div>
             
             {/* Braces Quest Effect */}
             <BracesQuestEffect questId={story.id} isActive={showBracesEffect} />
@@ -502,6 +497,7 @@ const StoryViewer = ({
                 <InteractiveQuizWrapper
                   quiz={story.quiz}
                   quiz2={story.quiz2}
+                  storyId={story.id}
                   onComplete={() => setQuizCompleted(true)}
                   isCompleted={quizCompleted}
                 />

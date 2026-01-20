@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
-import QuizCharacter, { CharacterMood } from "./QuizCharacter";
+import { QuizCharacterAnimated, getCharacterForStory, CHARACTERS, type CharacterMood, type CharacterId } from "./QuizCharacters";
 
 interface InteractiveQuizWrapperProps {
   quiz: StoryQuiz;
   quiz2?: StoryQuiz;
   onComplete: () => void;
   isCompleted: boolean;
+  storyId?: string; // Used to determine which character appears
 }
 
 // Fun character messages for different quiz states
@@ -64,7 +65,11 @@ export const InteractiveQuizWrapper = ({
   quiz2,
   onComplete,
   isCompleted,
+  storyId = "",
 }: InteractiveQuizWrapperProps) => {
+  // Determine which character to use based on story theme
+  const characterId = getCharacterForStory(storyId);
+  const character = CHARACTERS[characterId];
   const { t } = useTranslation();
   const [currentQuiz, setCurrentQuiz] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -196,7 +201,7 @@ export const InteractiveQuizWrapper = ({
         className="p-4 rounded-2xl bg-gradient-to-r from-accent/20 to-primary/20 border-2 border-accent/30"
       >
         <div className="flex items-center gap-3">
-          <QuizCharacter mood="celebrating" size="sm" showSpeechBubble={false} />
+          <QuizCharacterAnimated characterId={characterId} mood="celebrating" size="sm" showSpeechBubble={false} />
           <div className="flex items-center gap-2 text-accent">
             <CheckCircle2 className="w-5 h-5" />
             <span className="font-display font-bold">{t("stories.quizCompleted")}</span>
@@ -223,7 +228,7 @@ export const InteractiveQuizWrapper = ({
             className="absolute inset-0 z-30 flex items-center justify-center bg-gradient-to-br from-accent/50 to-primary/50 backdrop-blur-sm"
           >
             <motion.div className="flex flex-col items-center gap-4">
-              <QuizCharacter mood="dancing" size="lg" showSpeechBubble={false} />
+              <QuizCharacterAnimated characterId={characterId} mood="dancing" size="lg" showSpeechBubble={false} />
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -262,7 +267,8 @@ export const InteractiveQuizWrapper = ({
 
       {/* Character Section */}
       <div className="p-4 flex justify-center border-b border-primary/10 bg-gradient-to-b from-white/50 to-transparent dark:from-white/5">
-        <QuizCharacter
+        <QuizCharacterAnimated
+          characterId={characterId}
           mood={characterMood}
           message={characterMessage}
           size="md"
