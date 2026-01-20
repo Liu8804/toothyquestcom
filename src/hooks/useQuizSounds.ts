@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { TOOTHY_VOICE } from "@/config/voiceConfig";
 
 // Quiz sound effect phrases for ElevenLabs TTS
 const SOUND_PHRASES = {
@@ -137,12 +138,12 @@ export const useQuizSounds = () => {
           },
           body: JSON.stringify({
             text: randomPhrase,
-            voiceId: "cgSgspJ2msm6clMCkdW9", // Jessica - cheerful voice
+            voiceId: TOOTHY_VOICE.voiceId, // Consistent Toothy voice
             voiceSettings: {
-              stability: 0.25,
-              similarityBoost: 0.85,
-              style: 0.95,
-              speed: 1.1,
+              stability: TOOTHY_VOICE.moods.excited.stability,
+              similarityBoost: TOOTHY_VOICE.moods.excited.similarityBoost,
+              style: TOOTHY_VOICE.moods.excited.style,
+              speed: TOOTHY_VOICE.moods.excited.speed,
             },
           }),
         }
