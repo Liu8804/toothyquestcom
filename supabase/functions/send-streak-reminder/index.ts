@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,7 +8,6 @@ const corsHeaders = {
 };
 
 interface StreakReminderRequest {
-  user_id?: string;
   email: string;
   child_name: string;
   current_streak: number;
@@ -22,22 +20,88 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // ========== AUTHENTICATION CHECK ==========
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.error("Missing authorization header");
+      return new Response(
+        JSON.stringify({ error: "Authentication required" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+
+    if (authError || !user) {
+      console.error("Authentication failed:", authError?.message || "No user found");
+      return new Response(
+        JSON.stringify({ error: "Authentication required" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("Authenticated user:", user.id);
+    // ========== END AUTHENTICATION CHECK ==========
+
     const { email, child_name, current_streak, reminder_type }: StreakReminderRequest = await req.json();
 
-    console.log(`Sending ${reminder_type} email to ${email} for ${child_name}`);
+    // Input validation
+    if (!email || typeof email !== "string" || !email.includes("@")) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!child_name || typeof child_name !== "string" || child_name.trim().length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Invalid child_name" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    if (typeof current_streak !== "number" || current_streak < 0) {
+      return new Response(
+        JSON.stringify({ error: "Invalid current_streak" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const validReminderTypes = ["streak_at_risk", "streak_broken", "encouragement"];
+    if (!validReminderTypes.includes(reminder_type)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid reminder_type" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Sanitize inputs
+    const safeChildName = child_name.trim().slice(0, 50);
+    const safeEmail = email.trim().toLowerCase().slice(0, 255);
+
+    console.log(`Sending ${reminder_type} email to ${safeEmail} for ${safeChildName}`);
+
+    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
     let subject = "";
     let htmlContent = "";
 
     switch (reminder_type) {
       case "streak_at_risk":
-        subject = `🔥 ${child_name}'s ${current_streak}-day streak is at risk!`;
+        subject = `🔥 ${safeChildName}'s ${current_streak}-day streak is at risk!`;
         htmlContent = `
           <div style="font-family: 'Comic Sans MS', cursive, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px;">
             <div style="background: white; border-radius: 20px; padding: 30px; text-align: center;">
               <h1 style="color: #667eea; font-size: 32px; margin-bottom: 20px;">🔥 Streak Alert! 🔥</h1>
               <p style="font-size: 20px; color: #333; margin-bottom: 20px;">
-                <strong>${child_name}</strong> has an amazing <strong style="color: #f59e0b;">${current_streak}-day</strong> brushing streak!
+                <strong>${safeChildName}</strong> has an amazing <strong style="color: #f59e0b;">${current_streak}-day</strong> brushing streak!
               </p>
               <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
                 Don't let it end! Open ToothyQuest now for a quick brushing adventure! 🦷✨
@@ -54,13 +118,13 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case "streak_broken":
-        subject = `💪 ${child_name} can start a new streak today!`;
+        subject = `💪 ${safeChildName} can start a new streak today!`;
         htmlContent = `
           <div style="font-family: 'Comic Sans MS', cursive, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 40px; border-radius: 20px;">
             <div style="background: white; border-radius: 20px; padding: 30px; text-align: center;">
               <h1 style="color: #f5576c; font-size: 32px; margin-bottom: 20px;">🌟 New Adventure Awaits! 🌟</h1>
               <p style="font-size: 20px; color: #333; margin-bottom: 20px;">
-                Hey there! <strong>${child_name}</strong> missed yesterday's brushing quest.
+                Hey there! <strong>${safeChildName}</strong> missed yesterday's brushing quest.
               </p>
               <p style="font-size: 18px; color: #666; margin-bottom: 30px;">
                 But that's okay! Every hero falls sometimes. Today is a brand new day to start an even BIGGER streak! 💪
@@ -77,13 +141,13 @@ const handler = async (req: Request): Promise<Response> => {
         break;
 
       case "encouragement":
-        subject = `🎉 Amazing! ${child_name} hit a ${current_streak}-day streak!`;
+        subject = `🎉 Amazing! ${safeChildName} hit a ${current_streak}-day streak!`;
         htmlContent = `
           <div style="font-family: 'Comic Sans MS', cursive, sans-serif; max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); padding: 40px; border-radius: 20px;">
             <div style="background: white; border-radius: 20px; padding: 30px; text-align: center;">
               <h1 style="color: #11998e; font-size: 32px; margin-bottom: 20px;">🎉 INCREDIBLE! 🎉</h1>
               <p style="font-size: 24px; color: #333; margin-bottom: 20px;">
-                <strong>${child_name}</strong> just hit a
+                <strong>${safeChildName}</strong> just hit a
               </p>
               <p style="font-size: 48px; color: #f59e0b; font-weight: bold; margin: 20px 0;">
                 ${current_streak} Day Streak! 🔥
@@ -105,7 +169,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "ToothyQuest <onboarding@resend.dev>",
-      to: [email],
+      to: [safeEmail],
       subject,
       html: htmlContent,
     });
