@@ -2,24 +2,34 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
+import DifficultySelector, { Difficulty } from "./DifficultySelector";
 
 interface FlossHeroGameProps {
   game: Game;
   onComplete: (won: boolean, stars: number) => void;
 }
 
+const DIFFICULTY_SETTINGS: Record<Difficulty, { totalGaps: number; progressSpeed: number }> = {
+  easy: { totalGaps: 3, progressSpeed: 8 },
+  medium: { totalGaps: 5, progressSpeed: 5 },
+  hard: { totalGaps: 7, progressSpeed: 3 },
+};
+
 const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
   const { t } = useTranslation();
   const [gameStarted, setGameStarted] = useState(false);
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [currentGap, setCurrentGap] = useState(0);
   const [flossedGaps, setFlossedGaps] = useState<number[]>([]);
   const [isFlossing, setIsFlossing] = useState(false);
   const [flossProgress, setFlossProgress] = useState(0);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
-  const totalGaps = 5;
+
+  const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
+  const totalGaps = settings?.totalGaps || 5;
 
   const startFlossing = (gapIndex: number) => {
-    if (flossedGaps.includes(gapIndex)) return;
+    if (flossedGaps.includes(gapIndex) || !settings) return;
     
     setCurrentGap(gapIndex);
     setIsFlossing(true);
@@ -33,11 +43,12 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           setIsFlossing(false);
           
           if (flossedGaps.length + 1 >= totalGaps) {
-            setTimeout(() => onComplete(true, 3), 500);
+            const stars = difficulty === "hard" ? 3 : difficulty === "medium" ? 3 : 2;
+            setTimeout(() => onComplete(true, stars), 500);
           }
           return 0;
         }
-        return prev + 5;
+        return prev + settings.progressSpeed;
       });
     }, 100);
   };
@@ -50,7 +61,12 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
     setFlossProgress(0);
   };
 
-  if (!gameStarted) {
+  const handleDifficultySelect = (diff: Difficulty) => {
+    setDifficulty(diff);
+    setGameStarted(true);
+  };
+
+  if (!difficulty) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
         <div className="text-6xl mb-4">{game.emoji}</div>
@@ -58,14 +74,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           {game.name}
         </h3>
         <p className="text-muted-foreground mb-6">{game.instructionsKids}</p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setGameStarted(true)}
-          className="px-8 py-4 bg-gradient-to-r from-purple-400 to-pink-500 text-white font-bold rounded-full text-xl"
-        >
-          {t("games.startFlossing")}
-        </motion.button>
+        <DifficultySelector onSelect={handleDifficultySelect} />
       </div>
     );
   }
@@ -89,19 +98,19 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
       </div>
 
       {/* Teeth Row */}
-      <div className="flex items-end justify-center gap-0 mt-16 select-none">
+      <div className="flex items-end justify-center gap-0 mt-16 select-none flex-wrap">
         {Array.from({ length: totalGaps + 1 }).map((_, i) => (
           <div key={i} className="flex items-end select-none">
             {/* Tooth */}
             <motion.div
-              className="text-6xl md:text-7xl select-none"
+              className="text-5xl md:text-6xl select-none"
               animate={{ y: [0, -5, 0] }}
               transition={{ repeat: Infinity, duration: 2, delay: i * 0.2 }}
             >
               🦷
             </motion.div>
             
-            {/* Gap between teeth - Larger touch target, no selection */}
+            {/* Gap between teeth */}
             {i < totalGaps && (
               <motion.button
                 onMouseDown={(e) => { e.preventDefault(); startFlossing(i); }}
@@ -110,7 +119,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
                 onTouchStart={(e) => { e.preventDefault(); startFlossing(i); }}
                 onTouchEnd={stopFlossing}
                 onContextMenu={(e) => e.preventDefault()}
-                className={`relative w-12 h-20 -mx-3 z-10 cursor-pointer flex items-center justify-center touch-manipulation select-none ${
+                className={`relative w-10 h-16 -mx-2 z-10 cursor-pointer flex items-center justify-center touch-manipulation select-none ${
                   flossedGaps.includes(i) ? 'opacity-50' : ''
                 }`}
                 style={{

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import DifficultySelector, { Difficulty, DifficultySettings } from "./DifficultySelector";
 
 interface ToothDefenderGameProps {
   game: Game;
@@ -20,19 +21,27 @@ interface FallingItem {
 const healthyItems = ["🥕", "🍎", "🥛", "🧀", "💧", "🥦"];
 const unhealthyItems = ["🍭", "🍫", "🥤", "🍰", "🍬", "🍪"];
 
+const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
+  easy: { spawnInterval: 2000, fallSpeed: 1.5, timeLimit: 60, winCondition: 10, lives: 5 },
+  medium: { spawnInterval: 1200, fallSpeed: 2.5, timeLimit: 45, winCondition: 15, lives: 3 },
+  hard: { spawnInterval: 800, fallSpeed: 3.5, timeLimit: 30, winCondition: 20, lives: 2 },
+};
+
 const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   const { t } = useTranslation();
   const [items, setItems] = useState<FallingItem[]>([]);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [gameStarted, setGameStarted] = useState(false);
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [totalCaught, setTotalCaught] = useState(0);
   const { playSound } = useGameSounds();
 
-  useEffect(() => {
-    if (!gameStarted) return;
+  const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
 
-    // Fun spawn rate - every 1.2 seconds for engaging gameplay
+  useEffect(() => {
+    if (!gameStarted || !settings) return;
+
     const spawnInterval = setInterval(() => {
       const isHealthy = Math.random() > 0.4;
       const itemList = isHealthy ? healthyItems : unhealthyItems;
@@ -44,18 +53,17 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
         emoji: itemList[Math.floor(Math.random() * itemList.length)],
       };
       setItems(prev => [...prev, newItem]);
-    }, 1200);
+    }, settings.spawnInterval);
 
     return () => clearInterval(spawnInterval);
-  }, [gameStarted]);
+  }, [gameStarted, settings]);
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || !settings) return;
 
-    // Moderate falling speed - engaging but not frustrating
     const moveInterval = setInterval(() => {
       setItems(prev => {
-        const updated = prev.map(item => ({ ...item, y: item.y + 2.5 }));
+        const updated = prev.map(item => ({ ...item, y: item.y + settings.fallSpeed }));
         const remaining = updated.filter(item => {
           if (item.y >= 90) {
             if (item.isHealthy) {
@@ -70,19 +78,21 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
     }, 100);
 
     return () => clearInterval(moveInterval);
-  }, [gameStarted]);
+  }, [gameStarted, settings]);
 
   useEffect(() => {
     if (lives <= 0) {
-      onComplete(false, 1);
+      const stars = difficulty === "hard" ? 2 : 1;
+      onComplete(false, stars);
     }
-  }, [lives, onComplete]);
+  }, [lives, onComplete, difficulty]);
 
   useEffect(() => {
-    if (totalCaught >= 15) {
-      onComplete(true, 3);
+    if (settings && totalCaught >= settings.winCondition) {
+      const stars = difficulty === "hard" ? 3 : difficulty === "medium" ? 3 : 2;
+      onComplete(true, stars);
     }
-  }, [totalCaught, onComplete]);
+  }, [totalCaught, onComplete, settings, difficulty]);
 
   const handleItemTap = (item: FallingItem) => {
     setItems(prev => prev.filter(i => i.id !== item.id));
@@ -96,32 +106,21 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
     }
   };
 
-  if (!gameStarted) {
+  const handleDifficultySelect = (diff: Difficulty) => {
+    setDifficulty(diff);
+    setLives(DIFFICULTY_SETTINGS[diff].lives || 3);
+    setGameStarted(true);
+  };
+
+  if (!difficulty) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
         <div className="text-6xl mb-4">{game.emoji}</div>
         <h3 className="font-display text-2xl font-bold text-foreground mb-2">
           {game.name}
         </h3>
-        <p className="text-muted-foreground mb-4">{game.instructionsKids}</p>
-        <div className="flex gap-4 mb-6">
-          <div className="text-center">
-            <div className="text-2xl">✅</div>
-            <p className="text-xs text-muted-foreground">{t("games.tapHealthy")}</p>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl">❌</div>
-            <p className="text-xs text-muted-foreground">{t("games.avoidCandy")}</p>
-          </div>
-        </div>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setGameStarted(true)}
-          className="px-8 py-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-white font-bold rounded-full text-xl"
-        >
-          {t("games.startGame")}
-        </motion.button>
+        <p className="text-muted-foreground mb-6">{game.instructionsKids}</p>
+        <DifficultySelector onSelect={handleDifficultySelect} />
       </div>
     );
   }
@@ -133,9 +132,12 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">{t("games.score")}: {score}</span>
         </div>
+        <div className="bg-card/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg text-xs">
+          <span className="font-bold text-foreground">{totalCaught}/{settings?.winCondition}</span>
+        </div>
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">
-            {"❤️".repeat(lives)}{"🖤".repeat(3 - lives)}
+            {"❤️".repeat(lives)}{"🖤".repeat((settings?.lives || 3) - lives)}
           </span>
         </div>
       </div>
@@ -145,7 +147,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
         🦷
       </div>
 
-      {/* Falling Items - Larger tap targets for kids */}
+      {/* Falling Items */}
       <AnimatePresence>
         {items.map(item => (
           <motion.button
