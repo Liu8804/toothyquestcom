@@ -82,11 +82,14 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
         data: { session },
       } = await supabase.auth.getSession();
 
-      // Not signed in -> browser voice
+      // Not signed in -> browser voice with clear message
       if (!session?.access_token) {
+        toast.info("Sign in to unlock the premium AI voice!");
         playBrowserVoice();
         return;
       }
+
+      console.log("Attempting ElevenLabs TTS with authenticated user");
 
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
@@ -110,6 +113,8 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
       );
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error("ElevenLabs TTS error:", response.status, errorData);
         toast.info("AI voice isn't available right now — using browser voice.");
         playBrowserVoice();
         return;
@@ -127,14 +132,16 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
 
       audio.onerror = () => {
         URL.revokeObjectURL(url);
-        toast.error("Couldn't play AI voice — using browser voice.");
+        console.error("Audio playback error");
+        toast.info("Couldn't play AI voice — using browser voice.");
         playBrowserVoice();
       };
 
       await audio.play();
+      toast.success("🎤 Toothy's Friend is speaking!");
     } catch (err) {
       console.error("Voice test failed:", err);
-      toast.error("Couldn't play AI voice — using browser voice.");
+      toast.info("Couldn't connect to AI voice — using browser voice.");
       playBrowserVoice();
     }
   };
