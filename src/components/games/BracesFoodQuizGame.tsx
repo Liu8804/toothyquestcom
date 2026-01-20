@@ -32,25 +32,58 @@ const foodItems: FoodItem[] = [
   { id: "hardcandy", name: "Hard Candy", emoji: "🍭", isGood: false, explanation: "Too hard and sugary. Skip it!" },
 ];
 
+type Difficulty = "easy" | "medium" | "hard";
+
+const DIFFICULTY_CONFIG = {
+  easy: { totalRounds: 5, timePerQuestion: null },
+  medium: { totalRounds: 10, timePerQuestion: null },
+  hard: { totalRounds: 15, timePerQuestion: 10 },
+};
+
 interface BracesFoodQuizGameProps {
   onComplete?: (score: number, total: number) => void;
   onClose?: () => void;
 }
 
 const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) => {
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [gameState, setGameState] = useState<"playing" | "result" | "complete">("playing");
   const [currentRound, setCurrentRound] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<boolean | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [shuffledItems, setShuffledItems] = useState<FoodItem[]>([]);
-  const totalRounds = 10;
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
-  // Shuffle and pick items on mount
+  const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
+  const totalRounds = config.totalRounds;
+
+  // Shuffle and pick items when difficulty is selected
   useEffect(() => {
-    const shuffled = [...foodItems].sort(() => Math.random() - 0.5).slice(0, totalRounds);
-    setShuffledItems(shuffled);
-  }, []);
+    if (difficulty) {
+      const shuffled = [...foodItems].sort(() => Math.random() - 0.5).slice(0, totalRounds);
+      setShuffledItems(shuffled);
+      if (config.timePerQuestion) {
+        setTimeLeft(config.timePerQuestion);
+      }
+    }
+  }, [difficulty, totalRounds]);
+
+  // Timer for hard mode
+  useEffect(() => {
+    if (difficulty !== "hard" || gameState !== "playing" || timeLeft === null) return;
+    
+    if (timeLeft <= 0) {
+      handleAnswer(false); // Auto-wrong if time runs out
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => prev !== null ? prev - 1 : null);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, gameState, difficulty]);
 
   const currentFood = shuffledItems[currentRound];
   const progress = ((currentRound) / totalRounds) * 100;
@@ -78,22 +111,25 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
       setSelectedAnswer(null);
       setShowExplanation(false);
       setGameState("playing");
+      if (config.timePerQuestion) {
+        setTimeLeft(config.timePerQuestion);
+      }
     }
   };
 
   const resetGame = () => {
-    const shuffled = [...foodItems].sort(() => Math.random() - 0.5).slice(0, totalRounds);
-    setShuffledItems(shuffled);
+    setDifficulty(null);
     setCurrentRound(0);
     setScore(0);
     setSelectedAnswer(null);
     setShowExplanation(false);
     setGameState("playing");
+    setTimeLeft(null);
   };
 
   const getBraceyMood = () => {
     if (gameState === "complete") {
-      return score >= 8 ? "celebrating" : score >= 5 ? "encouraging" : "thinking";
+      return score >= totalRounds * 0.8 ? "celebrating" : score >= totalRounds * 0.5 ? "encouraging" : "thinking";
     }
     if (gameState === "result") {
       return selectedAnswer === currentFood?.isGood ? "excited" : "encouraging";
@@ -103,8 +139,8 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
 
   const getBraceyMessage = () => {
     if (gameState === "complete") {
-      if (score >= 8) return `Amazing! ${score}/${totalRounds}! You're a braces food expert! 🌟`;
-      if (score >= 5) return `Good job! ${score}/${totalRounds}! Keep learning! 💪`;
+      if (score >= totalRounds * 0.8) return `Amazing! ${score}/${totalRounds}! You're a braces food expert! 🌟`;
+      if (score >= totalRounds * 0.5) return `Good job! ${score}/${totalRounds}! Keep learning! 💪`;
       return `${score}/${totalRounds}. Let's practice more! You'll get better! 🦷`;
     }
     if (gameState === "result") {
@@ -114,6 +150,52 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
     }
     return "Is this food good or bad for braces? 🤔";
   };
+
+  // Difficulty selection screen
+  if (!difficulty) {
+    return (
+      <div className="relative bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-3xl p-6 shadow-card max-w-lg mx-auto">
+        <div className="text-center py-8">
+          <span className="text-6xl mb-4 block">🦷</span>
+          <h3 className="font-display text-2xl font-bold text-foreground mb-2">Braces Food Quiz</h3>
+          <p className="text-muted-foreground mb-6">Choose your difficulty level!</p>
+          
+          <div className="space-y-3">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setDifficulty("easy")}
+              className="w-full p-4 rounded-2xl bg-gradient-to-r from-green-400 to-emerald-500 text-white font-bold text-lg"
+            >
+              🌱 Easy (5 questions)
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setDifficulty("medium")}
+              className="w-full p-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold text-lg"
+            >
+              ⭐ Medium (10 questions)
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setDifficulty("hard")}
+              className="w-full p-4 rounded-2xl bg-gradient-to-r from-red-400 to-rose-500 text-white font-bold text-lg"
+            >
+              🔥 Hard (15 questions + timer!)
+            </motion.button>
+          </div>
+
+          {onClose && (
+            <Button variant="ghost" onClick={onClose} className="mt-4">
+              Cancel
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (!currentFood && gameState !== "complete") {
     return <div className="p-8 text-center">Loading...</div>;
@@ -127,7 +209,7 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
           <span className="text-2xl">🦷</span>
           <div>
             <h3 className="font-display text-lg font-bold text-foreground">Braces Food Quiz</h3>
-            <p className="text-xs text-muted-foreground">Can you eat this with braces?</p>
+            <p className="text-xs text-muted-foreground capitalize">{difficulty} mode</p>
           </div>
         </div>
         {onClose && (
@@ -141,7 +223,14 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
       <div className="mb-6">
         <div className="flex justify-between text-xs text-muted-foreground mb-2">
           <span>Question {Math.min(currentRound + 1, totalRounds)} of {totalRounds}</span>
-          <span>Score: {score} ⭐</span>
+          <div className="flex items-center gap-3">
+            {difficulty === "hard" && timeLeft !== null && gameState === "playing" && (
+              <span className={`font-bold ${timeLeft <= 3 ? 'text-destructive animate-pulse' : ''}`}>
+                ⏱️ {timeLeft}s
+              </span>
+            )}
+            <span>Score: {score} ⭐</span>
+          </div>
         </div>
         <Progress value={progress} className="h-2" />
       </div>
@@ -184,7 +273,7 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 + i * 0.2 }}
                 >
-                  {score >= (i + 1) * 3 ? "⭐" : "☆"}
+                  {score >= (i + 1) * (totalRounds / 3) ? "⭐" : "☆"}
                 </motion.span>
               ))}
             </div>

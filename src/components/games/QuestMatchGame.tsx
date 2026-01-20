@@ -3,20 +3,29 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import DifficultySelector, { Difficulty } from "./DifficultySelector";
 
 interface QuestMatchGameProps {
   game: Game;
   onComplete: (won: boolean, stars: number) => void;
 }
 
-const cardPairs = [
+const allCardPairs = [
   { id: "tooth", emoji: "🦷" },
   { id: "brush", emoji: "🪥" },
   { id: "floss", emoji: "🧵" },
   { id: "paste", emoji: "🧴" },
   { id: "water", emoji: "💧" },
   { id: "smile", emoji: "😁" },
+  { id: "apple", emoji: "🍎" },
+  { id: "dentist", emoji: "🩺" },
 ];
+
+const DIFFICULTY_CONFIG = {
+  easy: { pairs: 4, starThresholds: [8, 12] },
+  medium: { pairs: 6, starThresholds: [10, 15] },
+  hard: { pairs: 8, starThresholds: [12, 18] },
+};
 
 interface Card {
   id: string;
@@ -28,15 +37,20 @@ interface Card {
 
 const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   const { t } = useTranslation();
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [moves, setMoves] = useState(0);
   const [matchedPairs, setMatchedPairs] = useState(0);
+  const [totalPairs, setTotalPairs] = useState(6);
   const { playSound } = useGameSounds();
 
-  const initializeGame = () => {
-    const shuffledCards = [...cardPairs, ...cardPairs]
+  const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
+
+  const initializeGame = (pairCount: number) => {
+    const selectedPairs = allCardPairs.slice(0, pairCount);
+    const shuffledCards = [...selectedPairs, ...selectedPairs]
       .map((card, index) => ({
         ...card,
         uniqueId: index,
@@ -51,17 +65,19 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   };
 
   useEffect(() => {
-    if (gameStarted) {
-      initializeGame();
+    if (gameStarted && difficulty) {
+      initializeGame(config.pairs);
+      setTotalPairs(config.pairs);
     }
-  }, [gameStarted]);
+  }, [gameStarted, difficulty]);
 
   useEffect(() => {
-    if (matchedPairs === cardPairs.length && matchedPairs > 0) {
-      const stars = moves <= 10 ? 3 : moves <= 15 ? 2 : 1;
+    if (matchedPairs === totalPairs && matchedPairs > 0) {
+      const [threshold3, threshold2] = config.starThresholds;
+      const stars = moves <= threshold3 ? 3 : moves <= threshold2 ? 2 : 1;
       setTimeout(() => onComplete(true, stars), 500);
     }
-  }, [matchedPairs, moves, onComplete]);
+  }, [matchedPairs, moves, onComplete, totalPairs, config.starThresholds]);
 
   const handleCardClick = (uniqueId: number) => {
     if (flippedCards.length === 2) return;
@@ -107,6 +123,20 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
     }
   };
 
+  const startGame = (selectedDifficulty: Difficulty) => {
+    setDifficulty(selectedDifficulty);
+    setGameStarted(true);
+  };
+
+  if (!difficulty) {
+    return (
+      <DifficultySelector
+        game={game}
+        onSelectDifficulty={startGame}
+      />
+    );
+  }
+
   if (!gameStarted) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
@@ -127,6 +157,8 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
     );
   }
 
+  const gridCols = totalPairs <= 4 ? 4 : totalPairs <= 6 ? 4 : 4;
+
   return (
     <div className="h-full w-full flex flex-col p-4">
       {/* HUD */}
@@ -134,15 +166,18 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">{t("games.moves")}: {moves}</span>
         </div>
+        <div className="bg-card/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg">
+          <span className="text-xs font-medium text-muted-foreground capitalize">{difficulty}</span>
+        </div>
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">
-            {t("games.matched")}: {matchedPairs}/{cardPairs.length}
+            {t("games.matched")}: {matchedPairs}/{totalPairs}
           </span>
         </div>
       </div>
 
       {/* Card Grid */}
-      <div className="flex-1 grid grid-cols-4 gap-2 md:gap-3">
+      <div className={`flex-1 grid grid-cols-${gridCols} gap-2 md:gap-3`} style={{ gridTemplateColumns: `repeat(4, 1fr)` }}>
         {cards.map(card => (
           <motion.button
             key={card.uniqueId}

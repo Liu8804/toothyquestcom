@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import DifficultySelector, { Difficulty } from "./DifficultySelector";
 
 interface PlaquePatrolGameProps {
   game: Game;
@@ -16,14 +17,23 @@ interface PlaqueBug {
   size: number;
 }
 
+const DIFFICULTY_CONFIG = {
+  easy: { spawnInterval: 2000, maxBugs: 4, timeLimit: 45, winCondition: 8 },
+  medium: { spawnInterval: 1500, maxBugs: 5, timeLimit: 30, winCondition: 10 },
+  hard: { spawnInterval: 1000, maxBugs: 6, timeLimit: 25, winCondition: 15 },
+};
+
 const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   const { t } = useTranslation();
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [bugs, setBugs] = useState<PlaqueBug[]>([]);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
   const [gameStarted, setGameStarted] = useState(false);
-  const [totalBugs] = useState(15);
+  const [totalBugs, setTotalBugs] = useState(10);
   const { playSound } = useGameSounds();
+
+  const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
   const spawnBug = useCallback(() => {
     const newBug: PlaqueBug = {
@@ -42,25 +52,25 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   };
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || !difficulty) return;
 
     const spawnInterval = setInterval(() => {
-      if (bugs.length < 5) {
+      if (bugs.length < config.maxBugs) {
         spawnBug();
       }
-    }, 1500);
+    }, config.spawnInterval);
 
     return () => clearInterval(spawnInterval);
-  }, [gameStarted, bugs.length, spawnBug]);
+  }, [gameStarted, bugs.length, spawnBug, config.spawnInterval, config.maxBugs, difficulty]);
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || !difficulty) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          const won = score >= 10;
+          const won = score >= config.winCondition;
           onComplete(won, won ? 3 : 1);
           return 0;
         }
@@ -69,13 +79,31 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameStarted, score, onComplete]);
+  }, [gameStarted, score, onComplete, config.winCondition, difficulty]);
 
   useEffect(() => {
-    if (score >= totalBugs) {
+    if (score >= totalBugs && gameStarted) {
       onComplete(true, 3);
     }
-  }, [score, totalBugs, onComplete]);
+  }, [score, totalBugs, onComplete, gameStarted]);
+
+  const startGame = (selectedDifficulty: Difficulty) => {
+    setDifficulty(selectedDifficulty);
+    const cfg = DIFFICULTY_CONFIG[selectedDifficulty];
+    setTimeLeft(cfg.timeLimit);
+    setTotalBugs(cfg.winCondition);
+    setGameStarted(true);
+    spawnBug();
+  };
+
+  if (!difficulty) {
+    return (
+      <DifficultySelector
+        game={game}
+        onSelectDifficulty={startGame}
+      />
+    );
+  }
 
   if (!gameStarted) {
     return (
@@ -106,6 +134,9 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
       <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">{t("games.score")}: {score}/{totalBugs}</span>
+        </div>
+        <div className="bg-card/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg">
+          <span className="text-xs font-medium text-muted-foreground capitalize">{difficulty}</span>
         </div>
         <div className={`bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg ${timeLeft <= 10 ? 'text-destructive animate-pulse' : 'text-foreground'}`}>
           <span className="font-bold">⏱️ {timeLeft}s</span>
