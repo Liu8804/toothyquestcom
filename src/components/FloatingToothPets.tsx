@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { TOOTH_PETS, type ToothPet } from "@/data/rewardsConfig";
@@ -16,12 +17,12 @@ const PET_REACTIONS = {
   bouncing: { y: [0, -20, 0, -15, 0] },
 };
 
-const FloatingToothPets = ({ 
+const FloatingToothPets = forwardRef<HTMLDivElement, FloatingToothPetsProps>(({ 
   unlockedPets, 
   activePetId = "toothy",
   onQuestComplete,
   className = "" 
-}: FloatingToothPetsProps) => {
+}, ref) => {
   const [currentReaction, setCurrentReaction] = useState<keyof typeof PET_REACTIONS>("idle");
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState("");
@@ -114,7 +115,7 @@ const FloatingToothPets = ({
   }, []);
 
   return (
-    <div className={`fixed z-50 pointer-events-none ${className}`}>
+    <div ref={ref} className={`fixed z-50 pointer-events-none ${className}`}>
       {/* Main Pet */}
       <motion.div
         style={{ x: petX, y: petY }}
@@ -188,6 +189,8 @@ const FloatingToothPets = ({
       ))}
     </div>
   );
-};
+});
+
+FloatingToothPets.displayName = "FloatingToothPets";
 
 export default FloatingToothPets;

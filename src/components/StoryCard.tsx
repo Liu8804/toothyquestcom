@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Sword, Map, Trophy, Scroll, Lock, CheckCircle, Smile } from "lucide-react";
 import type { Story } from "@/data/stories";
@@ -14,7 +15,7 @@ interface StoryCardProps {
 
 const questIcons = [Sword, Map, Trophy, Scroll];
 
-const StoryCard = ({ story, index, onClick, isCompleted = false, isLocked = false }: StoryCardProps) => {
+const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(({ story, index, onClick, isCompleted = false, isLocked = false }, ref) => {
   const QuestIcon = questIcons[index % questIcons.length];
   const isFreeQuest = story.isFree === true || index < FREE_QUEST_LIMIT;
   const isBraces = isBracesQuest(story.id);
@@ -200,6 +201,8 @@ const StoryCard = ({ story, index, onClick, isCompleted = false, isLocked = fals
       </div>
     </motion.div>
   );
-};
+});
+
+StoryCard.displayName = "StoryCard";
 
 export default StoryCard;

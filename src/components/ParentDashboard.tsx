@@ -18,6 +18,7 @@ import NotificationSettings from "./NotificationSettings";
 import RewardsPanel from "./rewards/RewardsPanel";
 import SparkMeter from "./rewards/SparkMeter";
 import SubscriptionManagement from "./SubscriptionManagement";
+import PremiumBadge from "./PremiumBadge";
 
 interface ParentDashboardProps {
   onClose: () => void;
@@ -75,9 +76,14 @@ const ParentDashboard = ({ onClose }: ParentDashboardProps) => {
       <div className="min-h-screen p-4 md:p-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="font-display text-3xl font-bold text-foreground">Parent Dashboard</h1>
-            <p className="text-muted-foreground">Track your child's dental adventure</p>
+          <div className="flex items-center gap-3">
+            <div>
+              <h1 className="font-display text-3xl font-bold text-foreground flex items-center gap-2">
+                Parent Dashboard
+                {isPurchased && <PremiumBadge variant="medium" />}
+              </h1>
+              <p className="text-muted-foreground">Track your child's dental adventure</p>
+            </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
             <Button
