@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Game } from "@/data/games";
 import { Button } from "@/components/ui/button";
+import DifficultySelector, { Difficulty } from "./DifficultySelector";
 
 interface BuildASmileGameProps {
   game: Game;
@@ -25,24 +26,33 @@ const habitsOptions = [
   { id: "candy", emoji: "🍭", label: "Lots of Candy", isHealthy: false },
   { id: "water", emoji: "💧", label: "Drink Water", isHealthy: true },
   { id: "floss", emoji: "🧵", label: "Floss Daily", isHealthy: true },
+  { id: "soda", emoji: "🥤", label: "Sugary Drinks", isHealthy: false },
+  { id: "dentist", emoji: "🩺", label: "Visit Dentist", isHealthy: true },
 ];
 
+const DIFFICULTY_CONFIG = {
+  easy: { steps: 2, requiredHabits: 1 },
+  medium: { steps: 3, requiredHabits: 2 },
+  hard: { steps: 3, requiredHabits: 3 },
+};
+
 const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [step, setStep] = useState(0);
-  const [choices, setChoices] = useState<string[]>([]);
   const [selectedTeeth, setSelectedTeeth] = useState<string | null>(null);
   const [selectedGums, setSelectedGums] = useState<string | null>(null);
   const [selectedHabits, setSelectedHabits] = useState<string[]>([]);
 
+  const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
+  const maxSteps = config.steps;
+
   const handleTeethSelect = (id: string) => {
     setSelectedTeeth(id);
-    setChoices([...choices, id]);
   };
 
   const handleGumsSelect = (id: string) => {
     setSelectedGums(id);
-    setChoices([...choices, id]);
   };
 
   const handleHabitToggle = (id: string) => {
@@ -52,7 +62,7 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
   };
 
   const nextStep = () => {
-    if (step < 2) {
+    if (step < maxSteps - 1) {
       setStep(step + 1);
     } else {
       // Calculate score
@@ -62,14 +72,31 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
         habitsOptions.find(opt => opt.id === h)?.isHealthy
       );
       
-      const isWin = 
-        teethChoice?.isHealthy && 
-        gumsChoice?.isHealthy && 
-        healthyHabits.length >= 2;
+      let correctChoices = 0;
+      if (teethChoice?.isHealthy) correctChoices++;
+      if (maxSteps >= 3 && gumsChoice?.isHealthy) correctChoices++;
+      if (healthyHabits.length >= config.requiredHabits) correctChoices++;
       
-      onComplete(isWin, isWin ? 3 : 1);
+      const isWin = correctChoices >= maxSteps;
+      const stars = correctChoices >= maxSteps ? 3 : correctChoices >= maxSteps - 1 ? 2 : 1;
+      
+      onComplete(isWin, stars);
     }
   };
+
+  const startGame = (selectedDifficulty: Difficulty) => {
+    setDifficulty(selectedDifficulty);
+    setGameStarted(true);
+  };
+
+  if (!difficulty) {
+    return (
+      <DifficultySelector
+        game={game}
+        onSelectDifficulty={startGame}
+      />
+    );
+  }
 
   if (!gameStarted) {
     return (
@@ -94,13 +121,16 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
   return (
     <div className="h-full w-full flex flex-col p-6">
       {/* Progress */}
-      <div className="flex justify-center gap-2 mb-6">
-        {[0, 1, 2].map(i => (
+      <div className="flex justify-center gap-2 mb-4">
+        {[...Array(maxSteps)].map((_, i) => (
           <div
             key={i}
             className={`w-3 h-3 rounded-full ${i <= step ? 'bg-primary' : 'bg-muted'}`}
           />
         ))}
+      </div>
+      <div className="text-center mb-2">
+        <span className="text-xs font-medium text-muted-foreground capitalize px-2 py-1 bg-muted rounded-full">{difficulty}</span>
       </div>
 
       {/* Step Content */}
@@ -133,7 +163,7 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
           </motion.div>
         )}
 
-        {step === 1 && (
+        {step === 1 && maxSteps >= 3 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -161,14 +191,14 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
           </motion.div>
         )}
 
-        {step === 2 && (
+        {((step === 1 && maxSteps === 2) || (step === 2 && maxSteps === 3)) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
             <h3 className="font-display text-xl font-bold mb-4">Pick Healthy Habits!</h3>
-            <p className="text-sm text-muted-foreground mb-4">Select at least 2</p>
+            <p className="text-sm text-muted-foreground mb-4">Select at least {config.requiredHabits}</p>
             <div className="flex flex-wrap justify-center gap-4">
               {habitsOptions.map(option => (
                 <motion.button
@@ -196,12 +226,12 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
         onClick={nextStep}
         disabled={
           (step === 0 && !selectedTeeth) ||
-          (step === 1 && !selectedGums) ||
-          (step === 2 && selectedHabits.length < 2)
+          (step === 1 && maxSteps >= 3 && !selectedGums) ||
+          ((step === 1 && maxSteps === 2) || (step === 2 && maxSteps === 3)) && selectedHabits.length < config.requiredHabits
         }
         className="w-full mt-4"
       >
-        {step === 2 ? "Build My Smile!" : "Next"}
+        {step === maxSteps - 1 ? "Build My Smile!" : "Next"}
       </Button>
     </div>
   );

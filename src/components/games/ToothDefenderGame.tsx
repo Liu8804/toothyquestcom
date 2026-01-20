@@ -120,7 +120,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
           {game.name}
         </h3>
         <p className="text-muted-foreground mb-6">{game.instructionsKids}</p>
-        <DifficultySelector onSelect={handleDifficultySelect} />
+        <DifficultySelector game={game} onSelectDifficulty={handleDifficultySelect} />
       </div>
     );
   }

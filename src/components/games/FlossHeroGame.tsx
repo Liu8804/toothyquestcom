@@ -74,7 +74,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           {game.name}
         </h3>
         <p className="text-muted-foreground mb-6">{game.instructionsKids}</p>
-        <DifficultySelector onSelect={handleDifficultySelect} />
+        <DifficultySelector game={game} onSelectDifficulty={handleDifficultySelect} />
       </div>
     );
   }
