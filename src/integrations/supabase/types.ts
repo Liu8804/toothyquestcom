@@ -163,6 +163,35 @@ export type Database = {
         }
         Relationships: []
       }
+      code_redemptions: {
+        Row: {
+          code_id: string
+          id: string
+          redeemed_at: string
+          user_id: string
+        }
+        Insert: {
+          code_id: string
+          id?: string
+          redeemed_at?: string
+          user_id: string
+        }
+        Update: {
+          code_id?: string
+          id?: string
+          redeemed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "code_redemptions_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "unlock_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_challenge_progress: {
         Row: {
           challenge_date: string
@@ -635,26 +664,41 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          created_by: string | null
+          expires_at: string | null
           id: string
+          is_active: boolean | null
+          max_redemptions: number | null
           note: string | null
           redeemed_at: string | null
           redeemed_by: string | null
+          redemption_count: number | null
         }
         Insert: {
           code: string
           created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
           id?: string
+          is_active?: boolean | null
+          max_redemptions?: number | null
           note?: string | null
           redeemed_at?: string | null
           redeemed_by?: string | null
+          redemption_count?: number | null
         }
         Update: {
           code?: string
           created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
           id?: string
+          is_active?: boolean | null
+          max_redemptions?: number | null
           note?: string | null
           redeemed_at?: string | null
           redeemed_by?: string | null
+          redemption_count?: number | null
         }
         Relationships: []
       }

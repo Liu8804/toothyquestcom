@@ -86,6 +86,27 @@ export const usePurchase = () => {
     try {
       setPurchaseState(prev => ({ ...prev, isCheckingPurchase: true }));
       
+      // First check for manual entitlements (promo codes, admin grants)
+      const { data: entitlement } = await supabase
+        .from("manual_entitlements")
+        .select("*")
+        .eq("user_id", user?.id)
+        .maybeSingle();
+
+      if (entitlement) {
+        // User has a manual entitlement - they're unlocked!
+        if (user?.id) {
+          localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
+        }
+        setPurchaseState(prev => ({ 
+          ...prev, 
+          isPurchased: true, 
+          isCheckingPurchase: false 
+        }));
+        return;
+      }
+      
+      // Otherwise, check Stripe purchase
       const { data, error } = await supabase.functions.invoke('check-purchase', {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
