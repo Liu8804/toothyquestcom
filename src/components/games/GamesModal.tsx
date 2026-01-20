@@ -20,6 +20,8 @@ import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
+import { useEntitlementStatus } from "@/hooks/useEntitlementStatus";
 
 interface GamesModalProps {
   isOpen: boolean;
@@ -42,6 +44,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   
   const { user } = useAuth();
   const { isPurchased, isContentLocked } = usePurchase();
+  const { isAdmin } = useAdminStatus();
+  const { hasEntitlement } = useEntitlementStatus();
   const { questProgress } = useQuestProgress();
   const completedQuestsCount = questProgress.length;
   const { 
@@ -66,7 +70,9 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   const { incrementProgress } = useDailyChallenges(childId);
 
   // Games follow the same locking rules as the rest of the app (test mode included)
-  const areGamesLocked = isContentLocked(0, 'game', completedQuestsCount);
+  // plus a server-validated override for admin accounts / manual entitlements.
+  const baseGamesLocked = isContentLocked(0, 'game', completedQuestsCount);
+  const areGamesLocked = baseGamesLocked && !(isAdmin || hasEntitlement);
   
   const gamesWithLockStatus = games.map((game) => ({
     ...game,
