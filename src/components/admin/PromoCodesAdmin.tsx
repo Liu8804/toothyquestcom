@@ -11,7 +11,8 @@ import {
   Users,
   ToggleLeft,
   ToggleRight,
-  Loader2
+  Loader2,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -252,6 +253,43 @@ const PromoCodesAdmin = () => {
     return redemptions.filter(r => r.code_id === codeId).length;
   };
 
+  const handleExportCSV = () => {
+    if (codes.length === 0) {
+      toast.error("No codes to export");
+      return;
+    }
+
+    // Build CSV content
+    const headers = ["Code", "Note", "Max Redemptions", "Redemption Count", "Expires At", "Is Active", "Created At"];
+    const rows = codes.map(code => [
+      code.code,
+      `"${(code.note || '').replace(/"/g, '""')}"`,
+      code.max_redemptions || "Unlimited",
+      code.redemption_count,
+      code.expires_at ? format(new Date(code.expires_at), "yyyy-MM-dd HH:mm") : "Never",
+      code.is_active ? "Yes" : "No",
+      format(new Date(code.created_at), "yyyy-MM-dd HH:mm")
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.join(","))
+    ].join("\n");
+
+    // Create and download file
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `promo-codes-${format(new Date(), "yyyy-MM-dd")}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success(`Exported ${codes.length} codes to CSV`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Create New Code */}
@@ -418,10 +456,16 @@ const PromoCodesAdmin = () => {
             <Users className="w-5 h-5 text-primary" />
             Promo Codes ({codes.length})
           </CardTitle>
-          <Button variant="outline" size="sm" onClick={fetchCodes}>
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleExportCSV} disabled={codes.length === 0}>
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={fetchCodes}>
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {isLoading ? (
