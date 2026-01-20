@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
-import { QuizCharacterAnimated, getCharacterForStory, CHARACTERS, type CharacterMood, type CharacterId } from "./QuizCharacters";
+import { QuizCharacterAnimated, getCharacterForStory, CHARACTERS, CHARACTER_DIALOGUES, type CharacterMood, type CharacterId } from "./QuizCharacters";
 
 interface InteractiveQuizWrapperProps {
   quiz: StoryQuiz;
@@ -15,48 +15,13 @@ interface InteractiveQuizWrapperProps {
   storyId?: string; // Used to determine which character appears
 }
 
-// Fun character messages for different quiz states
-const CHARACTER_MESSAGES = {
-  intro: [
-    "Hey there, superstar! Ready to test your knowledge? 🌟",
-    "Ooh, quiz time! This is my favorite part! 🎉",
-    "Let's see how much you learned! You've got this!",
-  ],
-  thinking: [
-    "Hmm, what do you think? Take your time!",
-    "Think about what we learned in the story...",
-    "I believe in you! Which one feels right?",
-  ],
-  correct: [
-    "WOOHOO! You're a genius! 🎉",
-    "That's absolutely right! You're amazing!",
-    "YES! I knew you could do it! ⭐",
-    "Sparkle power! You nailed it! ✨",
-  ],
-  incorrect: [
-    "Oopsie daisy! That's not quite it, but let's try again!",
-    "Almost! Don't worry, even I make mistakes sometimes!",
-    "Hmm, not that one. But hey, learning is fun!",
-  ],
-  hint: [
-    "Here's a little hint from your buddy...",
-    "Psst! Let me help you out!",
-    "Don't worry! Here's a clue!",
-  ],
-  celebrate: [
-    "🎉 YOU DID IT! You're officially a dental superstar! 🌟",
-    "AMAZING! Look at you go! High five! ✋",
-    "WOW! You're the best! Let's celebrate! 🎊",
-  ],
-  nextQuestion: [
-    "Awesome! Ready for one more?",
-    "Great job! Let's keep the fun going!",
-    "You're on fire! Here comes another one!",
-  ],
-};
-
-const getRandomMessage = (type: keyof typeof CHARACTER_MESSAGES): string => {
-  const messages = CHARACTER_MESSAGES[type];
+// Helper to get character-specific random message
+const getRandomMessage = (
+  type: "intro" | "thinking" | "correct" | "incorrect" | "hint" | "celebrate" | "nextQuestion",
+  characterId: CharacterId
+): string => {
+  const dialogues = CHARACTER_DIALOGUES[characterId];
+  const messages = dialogues[type];
   return messages[Math.floor(Math.random() * messages.length)];
 };
 
@@ -98,14 +63,14 @@ export const InteractiveQuizWrapper = ({
   useEffect(() => {
     if (!isCompleted) {
       setCharacterMood("waving");
-      setCharacterMessage(getRandomMessage("intro"));
+      setCharacterMessage(getRandomMessage("intro", characterId));
       const timer = setTimeout(() => {
         setCharacterMood("idle");
-        setCharacterMessage(getRandomMessage("thinking"));
+        setCharacterMessage(getRandomMessage("thinking", characterId));
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [isCompleted]);
+  }, [isCompleted, characterId]);
 
   useEffect(() => {
     if (isCompleted) {
@@ -126,7 +91,7 @@ export const InteractiveQuizWrapper = ({
     if (isCorrect) {
       playCorrectSound();
       setCharacterMood("celebrating");
-      setCharacterMessage(getRandomMessage("correct"));
+      setCharacterMessage(getRandomMessage("correct", characterId));
       setStreak(prev => prev + 1);
 
       // Show streak bonus for consecutive correct answers
@@ -145,13 +110,13 @@ export const InteractiveQuizWrapper = ({
             setShowHint(false);
             setCurrentQuiz(1);
             setCharacterMood("excited");
-            setCharacterMessage(getRandomMessage("nextQuestion"));
+            setCharacterMessage(getRandomMessage("nextQuestion", characterId));
             playSparkleEffect();
           } else {
             // Final celebration!
             setShowCelebration(true);
             setCharacterMood("dancing");
-            setCharacterMessage(getRandomMessage("celebrate"));
+            setCharacterMessage(getRandomMessage("celebrate", characterId));
             playCelebrationSound();
             setTimeout(() => {
               setShowCelebration(false);
@@ -162,7 +127,7 @@ export const InteractiveQuizWrapper = ({
           setQuiz2Completed(true);
           setShowCelebration(true);
           setCharacterMood("dancing");
-          setCharacterMessage(getRandomMessage("celebrate"));
+          setCharacterMessage(getRandomMessage("celebrate", characterId));
           playCelebrationSound();
           setTimeout(() => {
             setShowCelebration(false);
@@ -173,7 +138,7 @@ export const InteractiveQuizWrapper = ({
     } else {
       playIncorrectSound();
       setCharacterMood("encouraging");
-      setCharacterMessage(getRandomMessage("incorrect"));
+      setCharacterMessage(getRandomMessage("incorrect", characterId));
       setStreak(0);
     }
   }, [
@@ -187,9 +152,9 @@ export const InteractiveQuizWrapper = ({
     setShowResult(false);
     setShowHint(true);
     setCharacterMood("thinking");
-    setCharacterMessage(getRandomMessage("hint"));
+    setCharacterMessage(getRandomMessage("hint", characterId));
     playSynthSound("whoosh");
-  }, [playSynthSound]);
+  }, [playSynthSound, characterId]);
 
   const isCorrect = selectedAnswer === activeQuiz.correctIndex;
 

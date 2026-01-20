@@ -28,7 +28,248 @@ interface CharacterConfig {
   borderColor: string;
   shadowColor: string;
   isVillain?: boolean;
+  personality: string;
 }
+
+// Unique dialogue messages for each character
+export const CHARACTER_DIALOGUES: Record<CharacterId, {
+  intro: string[];
+  thinking: string[];
+  correct: string[];
+  incorrect: string[];
+  hint: string[];
+  celebrate: string[];
+  nextQuestion: string[];
+}> = {
+  toothy: {
+    intro: [
+      "Hey there, superstar! Ready to test your knowledge? 🌟",
+      "Ooh, quiz time! This is my favorite part! 🎉",
+      "Let's see how much you learned! You've got this!",
+    ],
+    thinking: [
+      "Hmm, what do you think? Take your time!",
+      "Think about what we learned in the story...",
+      "I believe in you! Which one feels right?",
+    ],
+    correct: [
+      "WOOHOO! You're a genius! 🎉",
+      "That's absolutely right! You're amazing!",
+      "YES! I knew you could do it! ⭐",
+      "Sparkle power! You nailed it! ✨",
+    ],
+    incorrect: [
+      "Oopsie daisy! That's not quite it, but let's try again!",
+      "Almost! Don't worry, even I make mistakes sometimes!",
+      "Hmm, not that one. But hey, learning is fun!",
+    ],
+    hint: [
+      "Here's a little hint from your buddy...",
+      "Psst! Let me help you out!",
+      "Don't worry! Here's a clue!",
+    ],
+    celebrate: [
+      "🎉 YOU DID IT! You're officially a dental superstar! 🌟",
+      "AMAZING! Look at you go! High five! ✋",
+      "WOW! You're the best! Let's celebrate! 🎊",
+    ],
+    nextQuestion: [
+      "Awesome! Ready for one more?",
+      "Great job! Let's keep the fun going!",
+      "You're on fire! Here comes another one!",
+    ],
+  },
+  bracey: {
+    intro: [
+      "Hiiii! I'm Bracey! Let's sparkle together! 🎀✨",
+      "OMG, quiz time! This is gonna be SO fun! 💖",
+      "Ready to shine bright? Let's do this, bestie!",
+    ],
+    thinking: [
+      "Ooh, take your time! Think pretty thoughts! 💭",
+      "Remember what we learned about braces? 🦷",
+      "You're gonna get this, I just know it! 💕",
+    ],
+    correct: [
+      "YAAAY! You're absolutely FABULOUS! 💖🎀",
+      "That's right! Your smile is gonna be SO pretty!",
+      "YES YES YES! Bracey is SO proud! ✨",
+      "Sparkle sparkle! You got it! 💎",
+    ],
+    incorrect: [
+      "Aww, not quite! But your braces still look cute! 🎀",
+      "Oopsie! Let's try again, pretty please?",
+      "Almost there, superstar! One more try! 💫",
+    ],
+    hint: [
+      "Here's a tip from your Bracey bestie... 🎀",
+      "Let me share a secret with you! 💖",
+      "Psst! Bracey knows the answer! 😉",
+    ],
+    celebrate: [
+      "EEEEEK! You're a BRACES SUPERSTAR! 🎀💖✨",
+      "SO PROUD! Your smile is gonna be AMAZING! 🌟",
+      "We did it together! BFFs forever! 💕🎊",
+    ],
+    nextQuestion: [
+      "Ooh ooh! Ready for more sparkle fun? ✨",
+      "That was amazing! Let's keep going, bestie!",
+      "You're doing SO well! Next question! 💖",
+    ],
+  },
+  "captain-floss": {
+    intro: [
+      "CAPTAIN FLOSS to the rescue! Ready for action? ⚡",
+      "Attention, dental hero! Mission: Quiz Time! 🦸",
+      "Floss Force, ACTIVATE! Let's save those teeth!",
+    ],
+    thinking: [
+      "Use your hero brain, cadet! You've got this! 💪",
+      "Every hero knows this one! Think hard! ⚡",
+      "The answer is in your heroic memory! 🦸",
+    ],
+    correct: [
+      "HEROIC! That's the answer of a TRUE champion! ⚡💪",
+      "Captain Floss approves! You're a LEGEND! 🏆",
+      "SPECTACULAR! You've saved the day! 🦸‍♂️",
+      "Floss Force VICTORY! AMAZING work! 🎖️",
+    ],
+    incorrect: [
+      "Even heroes need practice! Try again, cadet! 💪",
+      "Almost got it! Heroes never give up! ⚡",
+      "Not quite! But a true hero keeps trying! 🦸",
+    ],
+    hint: [
+      "Captain Floss has intel for you, cadet! 🎖️",
+      "Here's a top-secret hero tip! ⚡",
+      "Listen up, dental warrior! 💪",
+    ],
+    celebrate: [
+      "MISSION ACCOMPLISHED! You're a DENTAL HERO! ⚡🦸🏆",
+      "LEGENDARY! The teeth are SAVED! 💪✨",
+      "Captain Floss salutes YOU, champion! 🎖️🎊",
+    ],
+    nextQuestion: [
+      "Ready for the next mission, hero? ⚡",
+      "Heroes don't stop! Here comes another! 💪",
+      "Your next challenge awaits, champion! 🦸",
+    ],
+  },
+  "sugar-bug": {
+    intro: [
+      "Mwahahaha! Think you can beat ME? 👾🍬",
+      "Ooh, a little challenger! This'll be fun... 😈",
+      "The Sugar Bug challenges you! Are you ready? 🍭",
+    ],
+    thinking: [
+      "Hmm? Don't know? That's what I thought! 😏",
+      "Take your time... I'm not going anywhere! 🍬",
+      "Even I wonder what you'll pick! Hehe! 👾",
+    ],
+    correct: [
+      "WHAT?! You actually got it right?! 😱",
+      "Grr... okay okay, that was pretty good! 👾",
+      "Fine! You win THIS time! But I'll be back! 🍬",
+      "Nooo! My cavity plans are RUINED! 😭",
+    ],
+    incorrect: [
+      "Hehehehe! Nice try, little tooth friend! 😈🍬",
+      "Oops! Maybe sugar bugs ARE tricky! 👾",
+      "Almost! But the Sugar Bug prevails... for now! 🍭",
+    ],
+    hint: [
+      "Even I'll give you a hint... just this once! 😏",
+      "Okay okay, here's a clue, tooth warrior! 🍬",
+      "The Sugar Bug is feeling generous... 👾",
+    ],
+    celebrate: [
+      "You BEAT the Sugar Bug?! IMPOSSIBLE! 😱👾",
+      "My sweet plans... DEFEATED! You're too smart! 🍬😭",
+      "Okay, you win! But I'll be hiding in the candy jar! 😈🎊",
+    ],
+    nextQuestion: [
+      "You got lucky! Try THIS one! 😈",
+      "Hmph! Here's another challenge! 🍬",
+      "Let's see if you can do THAT again! 👾",
+    ],
+  },
+  sparkle: {
+    intro: [
+      "Hello, shining star! Ready to sparkle? ✨👑",
+      "Welcome to the Kingdom of Clean Teeth! 🏰✨",
+      "Princess Sparkle believes in you! Let's shine! 👑",
+    ],
+    thinking: [
+      "Think like royalty... what's the sparkly answer? 👑",
+      "Your wisdom will light the way! ✨",
+      "Close your eyes and let your smile guide you! 🌟",
+    ],
+    correct: [
+      "MAGICAL! You shine brighter than any star! ✨👑",
+      "Royally correct! The kingdom celebrates! 🏰🎉",
+      "Your wisdom is as beautiful as your smile! 🌟",
+      "Sparkling BRILLIANCE! Well done! 💎✨",
+    ],
+    incorrect: [
+      "Even stars flicker sometimes! Try again! ✨",
+      "Not quite, but your sparkle never dims! 👑",
+      "Almost there, shining one! One more try! 🌟",
+    ],
+    hint: [
+      "Here's a magical hint from the kingdom... 👑✨",
+      "Let Princess Sparkle guide you! 🏰",
+      "A sprinkle of wisdom for you! 🌟",
+    ],
+    celebrate: [
+      "MAGNIFICENT! You're the BRIGHTEST star! ✨👑🎊",
+      "The kingdom rejoices! ALL HAIL the champion! 🏰🎉",
+      "You've earned a place in the Hall of Sparkles! 💎✨",
+    ],
+    nextQuestion: [
+      "Ready for more royal adventures? 👑",
+      "Your sparkle journey continues! ✨",
+      "Another magical question awaits! 🌟",
+    ],
+  },
+  "molar-mike": {
+    intro: [
+      "Hey champ! Ready to flex that brain? 💪🦷",
+      "Molar Mike is here! Let's get STRONG! 🏆",
+      "Time to train your tooth knowledge, buddy! 💪",
+    ],
+    thinking: [
+      "Think strong thoughts, champ! You've got power! 💪",
+      "Every champion knows this! Use that brain muscle! 🧠",
+      "Molar Mike believes in you! Take your shot! 🏆",
+    ],
+    correct: [
+      "YEAH BUDDY! That's CHAMPION material! 💪🏆",
+      "STRONG and SMART! You're unstoppable! 🦷💪",
+      "Molar Mike high-five! CRUSHING IT! ✋🏆",
+      "NOW THAT'S what I call tooth power! 💪✨",
+    ],
+    incorrect: [
+      "No pain no gain! Let's try again, champ! 💪",
+      "Even champions miss sometimes! Keep going! 🏆",
+      "Almost had it! Molar Mike says try again! 🦷",
+    ],
+    hint: [
+      "Here's a power-up hint for you, buddy! 💪",
+      "Molar Mike's training tip coming up! 🏆",
+      "Listen up, future champion! 🦷",
+    ],
+    celebrate: [
+      "CHAMPION!! You're the STRONGEST tooth warrior! 💪🏆🎊",
+      "Molar Mike is SO proud! LEGENDARY! 🦷✨",
+      "You've earned your place in the HALL OF FAME! 🏆🎉",
+    ],
+    nextQuestion: [
+      "Ready for the next challenge, champ? 💪",
+      "Champions never stop! Here we go! 🏆",
+      "Keep that momentum going, buddy! 🦷",
+    ],
+  },
+};
 
 // Character configurations
 export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
@@ -40,6 +281,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     gradientTo: "to-cyan-50",
     borderColor: "border-primary/50",
     shadowColor: "shadow-primary/30",
+    personality: "friendly",
   },
   bracey: {
     name: "Bracey",
@@ -50,6 +292,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: "🎀",
     borderColor: "border-pink-400",
     shadowColor: "shadow-pink-300/50",
+    personality: "bubbly",
   },
   "captain-floss": {
     name: "Captain Floss",
@@ -60,6 +303,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: "⚡",
     borderColor: "border-yellow-400",
     shadowColor: "shadow-yellow-300/50",
+    personality: "heroic",
   },
   "sugar-bug": {
     name: "Sugar Bug",
@@ -71,6 +315,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     borderColor: "border-purple-400",
     shadowColor: "shadow-purple-300/50",
     isVillain: true,
+    personality: "mischievous",
   },
   sparkle: {
     name: "Sparkle",
@@ -81,6 +326,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: "👑",
     borderColor: "border-amber-400",
     shadowColor: "shadow-amber-300/50",
+    personality: "royal",
   },
   "molar-mike": {
     name: "Molar Mike",
@@ -91,6 +337,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     accessory: "🏆",
     borderColor: "border-green-400",
     shadowColor: "shadow-green-300/50",
+    personality: "athletic",
   },
 };
 
