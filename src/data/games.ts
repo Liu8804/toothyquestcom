@@ -96,7 +96,7 @@ export const games: Game[] = [
 
 export const globalGameText = {
   starsEarned: "You earned stars for helping your smile!",
-  lockedGame: "Complete the first 5 quests or unlock the full adventure to play this game!",
-  lockedContent: "Complete more quests or unlock full access to play!",
+  lockedGame: "Unlock the full adventure to play this game!",
+  lockedContent: "Unlock full access to play!",
   unlockButton: "Unlock All Games",
 };

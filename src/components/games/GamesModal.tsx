@@ -18,7 +18,7 @@ import { useGameProgress } from "@/hooks/useGameProgress";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
-import { usePurchase, QUESTS_REQUIRED_FOR_GAMES } from "@/hooks/usePurchase";
+import { usePurchase } from "@/hooks/usePurchase";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 
 interface GamesModalProps {
@@ -399,7 +399,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                                 All games locked
                               </p>
                               <p className="text-sm text-muted-foreground">
-                                Complete {QUESTS_REQUIRED_FOR_GAMES - completedQuestsCount} more quests or unlock the full adventure!
+                                Unlock the full adventure to play all games!
                               </p>
                             </div>
                           </div>
