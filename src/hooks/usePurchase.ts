@@ -93,6 +93,19 @@ export const usePurchase = () => {
 
     try {
       setPurchaseState(prev => ({ ...prev, isCheckingPurchase: true }));
+
+      // Admin bypass: admin accounts should always be unlocked (server-validated)
+      // This keeps behavior unchanged for all other users.
+      const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin");
+      if (!adminError && isAdmin === true) {
+        localStorage.setItem(`toothyquest_purchased_${user.id}`, 'true');
+        setPurchaseState(prev => ({
+          ...prev,
+          isPurchased: true,
+          isCheckingPurchase: false,
+        }));
+        return;
+      }
       
       // First check for manual entitlements (promo codes, admin grants)
       const { data: entitlement } = await supabase
