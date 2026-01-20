@@ -32,19 +32,19 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
-    // Slower spawn rate for kids - every 2 seconds instead of 1.2
+    // Fun spawn rate - every 1.2 seconds for engaging gameplay
     const spawnInterval = setInterval(() => {
       const isHealthy = Math.random() > 0.4;
       const itemList = isHealthy ? healthyItems : unhealthyItems;
       const newItem: FallingItem = {
         id: Date.now() + Math.random(),
-        x: Math.random() * 70 + 15, // More centered for easier tapping
+        x: Math.random() * 70 + 15,
         y: 0,
         isHealthy,
         emoji: itemList[Math.floor(Math.random() * itemList.length)],
       };
       setItems(prev => [...prev, newItem]);
-    }, 2000); // Slower spawn for kids
+    }, 1200);
 
     return () => clearInterval(spawnInterval);
   }, [gameStarted]);
@@ -52,10 +52,10 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
-    // Much slower falling speed - 1.5 pixels every 100ms (was 3)
+    // Moderate falling speed - engaging but not frustrating
     const moveInterval = setInterval(() => {
       setItems(prev => {
-        const updated = prev.map(item => ({ ...item, y: item.y + 1.5 }));
+        const updated = prev.map(item => ({ ...item, y: item.y + 2.5 }));
         const remaining = updated.filter(item => {
           if (item.y >= 90) {
             if (item.isHealthy) {

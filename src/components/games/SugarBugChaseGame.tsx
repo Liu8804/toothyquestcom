@@ -21,14 +21,14 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   const [score, setScore] = useState(0);
   const [escaped, setEscaped] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60); // More time for kids (was 30)
+  const [timeLeft, setTimeLeft] = useState(45); // Good challenge time
 
   const spawnBug = useCallback(() => {
     const newBug: SugarBug = {
       id: Date.now() + Math.random(),
-      x: Math.random() * 70 + 15, // More centered for easier tapping
+      x: Math.random() * 70 + 15,
       startY: -10,
-      speed: Math.random() * 0.2 + 0.15, // Much slower speed (was 0.3-0.8)
+      speed: Math.random() * 0.4 + 0.3, // Fun speed range
     };
     setBugs(prev => [...prev, newBug]);
   }, []);
@@ -36,8 +36,8 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
-    // Slower spawn rate - every 1.5 seconds instead of 0.8
-    const spawnInterval = setInterval(spawnBug, 1500);
+    // Fun spawn rate - every second for engaging gameplay
+    const spawnInterval = setInterval(spawnBug, 1000);
     return () => clearInterval(spawnInterval);
   }, [gameStarted, spawnBug]);
 
@@ -135,7 +135,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
               rotate: [0, 10, -10, 0],
             }}
             transition={{ 
-              y: { duration: 8 / bug.speed, ease: "linear" }, // Much slower fall (was 4)
+              y: { duration: 5 / bug.speed, ease: "linear" }, // Fun fall speed
               rotate: { repeat: Infinity, duration: 0.8 },
               scale: { duration: 0.3 }
             }}

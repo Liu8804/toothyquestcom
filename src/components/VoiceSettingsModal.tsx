@@ -2,17 +2,14 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Volume2, 
-  Mic, 
   Settings2,
   Check,
   Sparkles,
   Monitor,
-  Star,
   Heart,
+  Star,
   Zap,
   Users,
-  HelpCircle,
-  Disc3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -20,8 +17,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
-import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
-import VoiceDJMixer from "./VoiceDJMixer";
+import { getBaseVoice } from "@/config/voiceConfig";
 
 interface VoiceSettingsModalProps {
   isOpen: boolean;
@@ -156,9 +152,6 @@ export const saveVoiceSettings = (settings: VoiceSettings) => {
 const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
   const [settings, setSettings] = useState<VoiceSettings>(getVoiceSettings);
   const [testPlaying, setTestPlaying] = useState(false);
-  const [testingPersonality, setTestingPersonality] = useState<VoicePersonality | null>(null);
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [showDJMixer, setShowDJMixer] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -168,27 +161,68 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
 
   const handleSave = () => {
     saveVoiceSettings(settings);
-    // Dispatch a custom event so other components know settings changed
     window.dispatchEvent(new CustomEvent('voiceSettingsChanged', { detail: settings }));
     onClose();
   };
 
-  const handleQuizComplete = (personality: VoicePersonality) => {
-    setSettings({ ...settings, personality });
-    setShowQuiz(false);
-  };
-
-  const handleTestVoice = async (personalityToTest?: VoicePersonality) => {
+  const handleTestVoice = async () => {
     if (testPlaying) return;
     setTestPlaying(true);
-    const testPersonality = personalityToTest || settings.personality;
-    setTestingPersonality(testPersonality);
 
-    const personality = getVoicePersonalityConfig(testPersonality);
-    
-    // Get the preview phrase from mood config
-    const moodConfig = getVoicePersonalityConfig(testPersonality);
-    const testText = moodConfig.previewPhrase;
+    // Use the consistent Toothy voice
+    const voiceConfig = getBaseVoice();
+    const testText = "Hey there, superstar! I'm your friendly guide. Ready to make those teeth sparkle and shine?";
+
+    try {
+      if (settings.provider === "browser") {
+        if ("speechSynthesis" in window) {
+          const utterance = new SpeechSynthesisUtterance(testText);
+          utterance.rate = settings.speed;
+          utterance.pitch = settings.pitch;
+          utterance.onend = () => setTestPlaying(false);
+          utterance.onerror = () => setTestPlaying(false);
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(utterance);
+        } else {
+          setTestPlaying(false);
+        }
+      } else {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.access_token) {
+          // Fallback to browser voice
+          if ("speechSynthesis" in window) {
+            const utterance = new SpeechSynthesisUtterance(testText);
+            utterance.rate = settings.speed;
+            utterance.pitch = settings.pitch;
+            utterance.onend = () => setTestPlaying(false);
+            utterance.onerror = () => setTestPlaying(false);
+            window.speechSynthesis.speak(utterance);
+          } else {
+            setTestPlaying(false);
+          }
+          return;
+        }
+        
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              text: testText,
+              voiceId: voiceConfig.voiceId,
+              voiceSettings: {
+                stability: voiceConfig.stability,
+                similarityBoost: voiceConfig.similarityBoost,
+                style: voiceConfig.style,
+                speed: voiceConfig.speed,
+              },
+            }),
+          }
+        );
 
     try {
       if (settings.provider === "browser") {
@@ -384,7 +418,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
             </RadioGroup>
           </div>
 
-          {/* Voice Personality Selection (only for ElevenLabs) */}
+          {/* AI Voice Info (only for ElevenLabs) */}
           {settings.provider === "elevenlabs" && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
@@ -392,104 +426,45 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
               exit={{ opacity: 0, height: 0 }}
               className="space-y-3"
             >
-              <div className="flex items-center justify-between">
-                <Label className="text-sm font-display font-bold text-foreground flex items-center gap-2">
-                  <span>Voice Mood</span>
-                  <span className="text-lg">✨</span>
-                </Label>
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1.5 text-xs h-7 text-accent hover:text-accent"
-                    onClick={() => setShowDJMixer(true)}
-                  >
-                    <Disc3 className="w-3.5 h-3.5" />
-                    DJ Mix!
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="gap-1.5 text-xs h-7 text-primary hover:text-primary"
-                    onClick={() => setShowQuiz(true)}
-                  >
-                    <HelpCircle className="w-3.5 h-3.5" />
-                    Quiz
-                  </Button>
+              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-2 border-purple-200 dark:border-purple-800">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-purple-400 to-pink-400">
+                    <Heart className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-bold text-foreground">Toothy's Friend</h4>
+                    <p className="text-xs text-muted-foreground">Your friendly guide voice</p>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {VOICE_MOODS.map((mood) => {
-                  const IconComponent = mood.icon;
-                  const isSelected = settings.personality === mood.id;
-                  const isTesting = testingPersonality === mood.id;
-                  
-                  return (
-                    <motion.div
-                      key={mood.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`relative flex flex-col p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                        isSelected
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50 bg-background"
-                      }`}
-                      onClick={() => setSettings({ ...settings, personality: mood.id })}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className={`p-1.5 rounded-lg bg-gradient-to-br ${mood.gradient}`}>
-                          <IconComponent className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="text-lg">{mood.emoji}</span>
-                      </div>
-                      <span className="font-display font-bold text-sm text-foreground">
-                        {mood.name}
-                      </span>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {mood.description}
-                      </p>
-                      
-                      {/* Quick test button */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="mt-2 h-7 text-xs gap-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleTestVoice(mood.id);
-                        }}
-                        disabled={testPlaying}
+                <p className="text-sm text-muted-foreground">
+                  A warm, kid-friendly voice that stays consistent throughout your adventure. 
+                  The voice naturally adjusts its tone for exciting moments, encouragement, and calm storytelling! 🌟
+                </p>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3 gap-2"
+                  onClick={() => handleTestVoice()}
+                  disabled={testPlaying}
+                >
+                  {testPlaying ? (
+                    <>
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 0.5 }}
                       >
-                        {isTesting ? (
-                          <>
-                            <motion.div
-                              animate={{ scale: [1, 1.2, 1] }}
-                              transition={{ repeat: Infinity, duration: 0.5 }}
-                            >
-                              <Volume2 className="w-3 h-3" />
-                            </motion.div>
-                            Playing...
-                          </>
-                        ) : (
-                          <>
-                            <Volume2 className="w-3 h-3" />
-                            Listen
-                          </>
-                        )}
-                      </Button>
-                      
-                      {isSelected && (
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className="absolute -top-1 -right-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center"
-                        >
-                          <Check className="w-3 h-3 text-primary-foreground" />
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  );
-                })}
+                        <Volume2 className="w-4 h-4" />
+                      </motion.div>
+                      Playing...
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="w-4 h-4" />
+                      Test Voice
+                    </>
+                  )}
+                </Button>
               </div>
             </motion.div>
           )}
@@ -561,7 +536,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
               </>
             ) : (
               <>
-                <Mic className="w-4 h-4" />
+                <Volume2 className="w-4 h-4" />
                 Test Current Voice
               </>
             )}
@@ -576,19 +551,6 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
           </Button>
         </div>
       </DialogContent>
-
-      {/* Voice Personality Quiz Modal */}
-      <VoicePersonalityQuiz
-        isOpen={showQuiz}
-        onClose={() => setShowQuiz(false)}
-        onComplete={handleQuizComplete}
-      />
-
-      {/* Voice DJ Mixer Modal */}
-      <VoiceDJMixer
-        isOpen={showDJMixer}
-        onClose={() => setShowDJMixer(false)}
-      />
     </Dialog>
   );
 };
