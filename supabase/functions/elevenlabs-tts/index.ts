@@ -10,6 +10,9 @@ const corsHeaders = {
 const RATE_LIMIT_REQUESTS = 20; // Max requests per window
 const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute window
 
+// Default Toothy voice ID
+const DEFAULT_VOICE_ID = "OC9hDauvuNDOmVtStV9K";
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -19,35 +22,42 @@ serve(async (req) => {
   try {
     // Validate authentication
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      console.error("Missing authorization header");
+    if (!authHeader?.startsWith("Bearer ")) {
+      console.error("Missing or invalid authorization header");
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Extract the token
     const token = authHeader.replace("Bearer ", "");
-    
-    // Create admin client to verify user
-    const supabaseAdmin = createClient(
+
+    // Use anon key client for auth verification (same pattern as redeem-code)
+    const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
     );
 
-    // Get user from the JWT token
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    // Verify user with the token
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
     
-    if (authError || !user) {
-      console.error("Authentication failed:", authError?.message || "No user found");
+    if (userError || !userData.user) {
+      console.error("Authentication failed:", userError?.message || "No user found");
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    const user = userData.user;
     console.log("Authenticated user:", user.id);
+
+    // Create admin client for rate limiting (bypasses RLS)
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
 
     // Rate limiting check
     const windowStart = new Date(Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS) * RATE_LIMIT_WINDOW_MS);
@@ -101,7 +111,7 @@ serve(async (req) => {
 
     console.log(`Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for user ${user.id}`);
 
-    const { text, voiceId = "pFZP5JQG7iQjIQuC4Bku", voiceSettings } = await req.json();
+    const { text, voiceId = DEFAULT_VOICE_ID, voiceSettings } = await req.json();
 
     // Normalize the key in case it was pasted with quotes or a header prefix
     const rawElevenKey = Deno.env.get("ELEVENLABS_API_KEY") ?? "";
@@ -141,11 +151,10 @@ serve(async (req) => {
     }
 
     // Kid-friendly voice settings: playful, energetic, and fun for ages 4-8
-    // Optimized for short sentences, emotional inflection, and excitement
-    const stability = voiceSettings?.stability ?? 0.25;     // Lower = more expressive/animated
-    const similarityBoost = voiceSettings?.similarityBoost ?? 0.85;  // Higher = clearer pronunciation
-    const style = voiceSettings?.style ?? 0.9;              // Higher = more playful/exaggerated
-    const speed = voiceSettings?.speed ?? 1.0;              // Medium-fast pace for energy
+    const stability = voiceSettings?.stability ?? 0.25;
+    const similarityBoost = voiceSettings?.similarityBoost ?? 0.85;
+    const style = voiceSettings?.style ?? 0.9;
+    const speed = voiceSettings?.speed ?? 1.0;
 
     console.log(`Generating TTS for text of length ${trimmedText.length} with voice ${voiceId}, stability: ${stability}, style: ${style}, speed: ${speed}`);
 

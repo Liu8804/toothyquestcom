@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
+import { TOOTHY_VOICE } from "@/config/voiceConfig";
 
 interface VoiceDJMixerProps {
   isOpen: boolean;
@@ -132,7 +133,7 @@ const VoiceDJMixer = ({ isOpen, onClose }: VoiceDJMixerProps) => {
           },
           body: JSON.stringify({
             text: customPhrase,
-            voiceId: "cgSgspJ2msm6clMCkdW9",
+            voiceId: TOOTHY_VOICE.voiceId, // Consistent Toothy voice
             voiceSettings: {
               stability: settings.stability,
               similarityBoost: 0.85,

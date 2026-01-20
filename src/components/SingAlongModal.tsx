@@ -16,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { songs, Song } from "@/data/songs";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { TOOTHY_VOICE } from "@/config/voiceConfig";
 
 interface SingAlongModalProps {
   isOpen: boolean;
@@ -143,7 +144,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
           },
           body: JSON.stringify({ 
             text: song.lyrics,
-            voiceId: "pFZP5JQG7iQjIQuC4Bku" // Lily - child-friendly voice
+            voiceId: TOOTHY_VOICE.voiceId // Consistent Toothy voice
           }),
         }
       );

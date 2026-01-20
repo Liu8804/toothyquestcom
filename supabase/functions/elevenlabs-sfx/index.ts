@@ -18,35 +18,42 @@ serve(async (req) => {
   try {
     // Validate authentication
     const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      console.error("Missing authorization header");
+    if (!authHeader?.startsWith("Bearer ")) {
+      console.error("Missing or invalid authorization header");
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Extract the token
     const token = authHeader.replace("Bearer ", "");
-    
-    // Create admin client to verify user
-    const supabaseAdmin = createClient(
+
+    // Use anon key client for auth verification (same pattern as redeem-code)
+    const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
     );
 
-    // Get user from the JWT token
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    // Verify user with the token
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
     
-    if (authError || !user) {
-      console.error("Authentication failed:", authError?.message || "No user found");
+    if (userError || !userData.user) {
+      console.error("Authentication failed:", userError?.message || "No user found");
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    const user = userData.user;
     console.log("Authenticated user:", user.id);
+
+    // Create admin client for rate limiting (bypasses RLS)
+    const supabaseAdmin = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      { auth: { persistSession: false } }
+    );
 
     // Rate limiting check
     const windowStart = new Date(Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS) * RATE_LIMIT_WINDOW_MS);
@@ -62,7 +69,6 @@ serve(async (req) => {
       .single();
 
     if (limitError && limitError.code !== "PGRST116") {
-      // PGRST116 = no rows found, which is fine
       console.error("Rate limit check error:", limitError);
     }
 
@@ -134,7 +140,7 @@ serve(async (req) => {
       );
     }
 
-    // Normalize the key in case it was pasted with quotes or a header prefix
+    // Normalize the key
     const rawElevenKey = Deno.env.get("ELEVENLABS_API_KEY") ?? "";
     const ELEVENLABS_API_KEY = rawElevenKey
       .trim()
@@ -147,7 +153,6 @@ serve(async (req) => {
     }
 
     console.log(`ELEVENLABS_API_KEY loaded (length: ${ELEVENLABS_API_KEY.length})`);
-
     console.log("Generating sound for prompt:", trimmedPrompt.substring(0, 50), "duration:", safeDuration);
 
     const response = await fetch(
