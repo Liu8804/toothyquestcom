@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Lock, Unlock, RefreshCw, Crown, Star, Check, Zap, Gift } from "lucide-react";
+import { X, Sparkles, Lock, Unlock, RefreshCw, Crown, Star, Check, Zap, Gift, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { usePurchase, purchaseMessages, PRICING, PlanType } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import PaymentLoadingOverlay from "./PaymentLoadingOverlay";
 
 interface PurchaseModalProps {
@@ -12,10 +16,55 @@ interface PurchaseModalProps {
 }
 
 const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
-  const { purchase, restorePurchase, isLoading, isRestoring, isPurchased } = usePurchase();
+  const { purchase, restorePurchase, isLoading, isRestoring, isPurchased, refetchPurchase } = usePurchase();
   const { playWinFanfare, playAchievementUnlock } = useGameSounds();
+  const { user } = useAuth();
   const [showLoadingOverlay, setShowLoadingOverlay] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("monthly");
+  const [promoCode, setPromoCode] = useState("");
+  const [isRedeemingCode, setIsRedeemingCode] = useState(false);
+  const [promoError, setPromoError] = useState("");
+
+  const handleRedeemCode = async () => {
+    if (!promoCode.trim()) return;
+    if (!user) {
+      toast.error("Please sign in to redeem a code");
+      return;
+    }
+
+    setIsRedeemingCode(true);
+    setPromoError("");
+
+    try {
+      const { data, error } = await supabase.functions.invoke("redeem-code", {
+        body: { code: promoCode.trim() },
+      });
+
+      if (error) {
+        setPromoError("Failed to redeem code");
+        return;
+      }
+
+      if (data?.success) {
+        if (data.already_unlocked) {
+          toast.info("You already have full access!");
+        } else {
+          playAchievementUnlock();
+          toast.success(data.message || "Code redeemed!");
+          refetchPurchase();
+          setTimeout(onClose, 1500);
+        }
+        setPromoCode("");
+      } else {
+        setPromoError(data?.message || "Invalid code");
+      }
+    } catch (err) {
+      console.error("Redeem error:", err);
+      setPromoError("Something went wrong");
+    } finally {
+      setIsRedeemingCode(false);
+    }
+  };
 
   const handlePurchase = async () => {
     const success = await purchase(() => {
@@ -236,6 +285,49 @@ const PurchaseModal = ({ isOpen, onClose }: PurchaseModalProps) => {
                   <p className="text-xs text-center text-muted-foreground">
                     🎉 Existing subscribers at $3.99 stay at old price
                   </p>
+
+                  {/* Promo Code Section */}
+                  <div className="border-t border-muted pt-4 space-y-3">
+                    <p className="text-sm font-medium text-foreground flex items-center gap-2">
+                      <Gift className="w-4 h-4 text-primary" />
+                      Have a promo code?
+                    </p>
+                    <div className="flex gap-2">
+                      <Input
+                        value={promoCode}
+                        onChange={(e) => {
+                          setPromoCode(e.target.value.toUpperCase());
+                          setPromoError("");
+                        }}
+                        placeholder="Enter code"
+                        className="font-mono text-sm"
+                        disabled={isRedeemingCode}
+                      />
+                      <Button
+                        onClick={handleRedeemCode}
+                        disabled={isRedeemingCode || !promoCode.trim() || !user}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        {isRedeemingCode ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          "Redeem"
+                        )}
+                      </Button>
+                    </div>
+                    {promoError && (
+                      <p className="text-xs text-destructive flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        {promoError}
+                      </p>
+                    )}
+                    {!user && (
+                      <p className="text-xs text-muted-foreground">
+                        Sign in to use a promo code
+                      </p>
+                    )}
+                  </div>
 
                   {/* Restore button */}
                   <Button

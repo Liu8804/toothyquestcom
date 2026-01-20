@@ -59,6 +59,7 @@ const PromoCodesAdmin = () => {
   const [redemptions, setRedemptions] = useState<CodeRedemption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
+  const [isBulkCreating, setIsBulkCreating] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // New code form state
@@ -66,6 +67,12 @@ const PromoCodesAdmin = () => {
   const [note, setNote] = useState("");
   const [maxRedemptions, setMaxRedemptions] = useState<number>(1);
   const [expiresAt, setExpiresAt] = useState("");
+  
+  // Bulk generation state
+  const [bulkCount, setBulkCount] = useState(10);
+  const [bulkNote, setBulkNote] = useState("");
+  const [bulkMaxRedemptions, setBulkMaxRedemptions] = useState<number>(1);
+  const [bulkExpiresAt, setBulkExpiresAt] = useState("");
 
   const fetchCodes = async () => {
     setIsLoading(true);
@@ -145,6 +152,52 @@ const PromoCodesAdmin = () => {
       toast.error("Failed to create code");
     } finally {
       setIsCreating(false);
+    }
+  };
+
+  const handleBulkCreate = async () => {
+    if (bulkCount < 1 || bulkCount > 100) {
+      toast.error("Please enter a count between 1 and 100");
+      return;
+    }
+
+    setIsBulkCreating(true);
+    try {
+      const { data: session } = await supabase.auth.getSession();
+      
+      const codesToCreate = [];
+      for (let i = 0; i < bulkCount; i++) {
+        codesToCreate.push({
+          code: generateCode(),
+          note: bulkNote.trim() || `Bulk generated ${i + 1}/${bulkCount}`,
+          max_redemptions: bulkMaxRedemptions || null,
+          expires_at: bulkExpiresAt || null,
+          is_active: true,
+          created_by: session?.session?.user?.id,
+        });
+      }
+
+      const { error } = await supabase
+        .from("unlock_codes" as any)
+        .insert(codesToCreate);
+
+      if (error) {
+        console.error("Error creating bulk codes:", error);
+        toast.error("Failed to create codes");
+        return;
+      }
+
+      toast.success(`Created ${bulkCount} promo codes!`);
+      setBulkNote("");
+      setBulkCount(10);
+      setBulkMaxRedemptions(1);
+      setBulkExpiresAt("");
+      fetchCodes();
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Failed to create codes");
+    } finally {
+      setIsBulkCreating(false);
     }
   };
 
@@ -277,6 +330,81 @@ const PromoCodesAdmin = () => {
               <>
                 <Plus className="w-4 h-4 mr-2" />
                 Create Code
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Bulk Code Generator */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="w-5 h-5 text-primary" />
+            Bulk Code Generator
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bulkCount">Number of Codes</Label>
+              <Input
+                id="bulkCount"
+                type="number"
+                min="1"
+                max="100"
+                value={bulkCount}
+                onChange={(e) => setBulkCount(parseInt(e.target.value) || 10)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bulkNote">Note (optional)</Label>
+              <Input
+                id="bulkNote"
+                value={bulkNote}
+                onChange={(e) => setBulkNote(e.target.value)}
+                placeholder="e.g., Launch giveaway"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bulkMaxRedemptions">Max Redemptions Each</Label>
+              <Input
+                id="bulkMaxRedemptions"
+                type="number"
+                min="1"
+                value={bulkMaxRedemptions}
+                onChange={(e) => setBulkMaxRedemptions(parseInt(e.target.value) || 1)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bulkExpiresAt">Expires At (optional)</Label>
+              <Input
+                id="bulkExpiresAt"
+                type="datetime-local"
+                value={bulkExpiresAt}
+                onChange={(e) => setBulkExpiresAt(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <Button
+            onClick={handleBulkCreate}
+            disabled={isBulkCreating}
+            className="mt-4"
+            variant="secondary"
+          >
+            {isBulkCreating ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Creating {bulkCount} codes...
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4 mr-2" />
+                Generate {bulkCount} Codes
               </>
             )}
           </Button>
