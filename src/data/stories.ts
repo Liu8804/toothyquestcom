@@ -48,6 +48,7 @@ export const stories: Story[] = [
       options: ["Take a nap 😴", "Brush his teeth 🪥", "Eat candy 🍬"],
       correctIndex: 1,
       hint: "HOORAY! You got it! 🎉 Brushing first makes teeth sparkle like stars! ⭐",
+      parentTip: "Make brushing a fun ritual! Let your child pick their toothbrush and toothpaste flavor. Set a consistent time each morning and night.",
     },
   },
   {
@@ -65,6 +66,7 @@ export const stories: Story[] = [
       options: ["Flossy the Hero! 🦸", "Sugar Monster 👾", "Sleepy Tooth 😴"],
       correctIndex: 0,
       hint: "YAY! Flossy is the BEST brushing buddy ever! 🎉 High five! ✋",
+      parentTip: "Demonstrate proper brushing technique: small circles on each tooth, brushing the gum line, and spending 2 minutes total. Use a timer or song!",
     },
   },
   {
@@ -82,6 +84,7 @@ export const stories: Story[] = [
       options: ["A spoon 🥄", "Super Floss! 🦸", "A blanket 🛏️"],
       correctIndex: 1,
       hint: "WOOHOO! Super Floss saves the day! 🎉 It swooshes out all the hidden yucky stuff! 💨",
+      parentTip: "Start flossing as soon as two teeth touch. Floss picks or flossers are easier for kids to use. Help them until they develop the dexterity (usually around age 8-10).",
     },
   },
   {
@@ -99,6 +102,7 @@ export const stories: Story[] = [
       options: ["Sticky candy 🍬", "Crunchy carrots! 🥕", "Fizzy soda 🥤"],
       correctIndex: 1,
       hint: "CRUNCH CRUNCH! 🥕 You're SO smart! Carrots are tooth superfoods! 🦸‍♀️✨",
+      parentTip: "Stock up on tooth-friendly snacks: cheese, apples, carrots, nuts. Limit sugary treats to mealtimes when saliva production helps neutralize acids.",
     },
   },
   {
@@ -116,6 +120,7 @@ export const stories: Story[] = [
       options: ["Brush brush brush! 🪥✨", "Oops, ignore it 🙈", "Go sleepy time 😴"],
       correctIndex: 0,
       hint: "AMAZING! 🎉 Quick brushing saves the day! Bye bye sticky stuff! 👋💨",
+      parentTip: "If your child has braces, emphasize brushing after every meal. Consider a water flosser for easier cleaning around brackets.",
     },
   },
   // ===== PAID / LOCKED QUESTS (6–42) =====
@@ -134,6 +139,7 @@ export const stories: Story[] = [
       options: ["Sugar Monster 👾", "Flossy the Hero! 🦸", "Sleepy Tooth 😴"],
       correctIndex: 1,
       hint: "YAY! Flossy and Toothy are the BEST team! 🎉 Adventure friends forever! 🤝✨",
+      parentTip: "Celebrate dental milestones! Consider a reward chart for consistent brushing habits. Praise effort, not just results.",
     },
   },
   {
@@ -151,6 +157,7 @@ export const stories: Story[] = [
       options: ["Front tooth hero! 🦸", "Sneaky back tooth 👀", "Silly tongue 👅"],
       correctIndex: 0,
       hint: "HOORAY for bravery! 🎉 The front tooth was SO brave and sparkly! ✨⭐",
+      parentTip: "When your child has a loose tooth, let them wiggle it naturally. Avoid pulling it before it's ready. The Tooth Fairy tradition can make the experience exciting!",
     },
   },
   {
@@ -168,6 +175,7 @@ export const stories: Story[] = [
       options: ["The Tooth Fairy! 🧚‍♀️", "Flossy 🦸", "Sugar Monster 👾"],
       correctIndex: 0,
       hint: "MAGICAL! 🎉 The Tooth Fairy LOVES super clean sparkly teeth! ✨🦷💫",
+      parentTip: "Use the Tooth Fairy as motivation: 'Clean teeth get extra sparkle for the Tooth Fairy!' Consider leaving a note from the Tooth Fairy praising good dental habits.",
     },
   },
   {
@@ -185,6 +193,7 @@ export const stories: Story[] = [
       options: ["Super sparkly teeth ✨", "CAVITY MONSTERS! 👾", "Lost toothbrushes 🪥"],
       correctIndex: 1,
       hint: "You found them! 🔍 But don't worry - brushing makes them RUN AWAY! 💨👾 Bye bye!",
+      parentTip: "Explain cavities in kid-friendly terms: 'tiny holes that sugar bugs make.' Schedule regular dental checkups every 6 months to catch cavities early.",
     },
   },
   {
@@ -202,6 +211,7 @@ export const stories: Story[] = [
       options: ["Munched candy 🍬", "SUPER FLOSS POWER! 🧵✨", "Took a snooze 😴"],
       correctIndex: 1,
       hint: "WHOOOOSH! 🎉 Captain Floss zooms in and gets ALL the hidden yuckies! 💪✨",
+      parentTip: "Make flossing a nightly habit before brushing. It only takes a minute but prevents cavities between teeth where brushing can't reach.",
     },
   },
   {
@@ -219,6 +229,7 @@ export const stories: Story[] = [
       options: ["SUGAR BUGS! 🐛", "Yummy candy 🍬", "Plaque pirates 🏴‍☠️"],
       correctIndex: 0,
       hint: "GOTCHA! 🎉 Sugar bugs are SO scared of our toothbrush! Bye bye buggies! 👋🐛💨",
+      parentTip: "If your child eats sweets, have them rinse with water immediately and brush within 30 minutes. This reduces the time sugar can damage teeth.",
     },
   },
   {
@@ -236,6 +247,7 @@ export const stories: Story[] = [
       options: ["Sad and grumpy 😢", "SUPER HAPPY! 🎉😁", "Sleepy snoozy 😴"],
       correctIndex: 1,
       hint: "WOOHOO! 🎉 Everyone feels AMAZING after brushing! Sparkle sparkle! ✨😁✨",
+      parentTip: "Connect brushing to positive feelings: 'Doesn't your mouth feel so fresh and clean?' This builds intrinsic motivation for good habits.",
     },
   },
   {
@@ -253,6 +265,7 @@ export const stories: Story[] = [
       options: ["Swishy mouthwash! 💫", "Yummy juice 🧃", "Candy syrup 🍯"],
       correctIndex: 0,
       hint: "SWISH SWISH! 🎉 The magic mouthwash makes your whole mouth feel like a sparkle party! ✨🎊",
+      parentTip: "Mouthwash is optional for kids. If using it, choose an alcohol-free, fluoride mouthwash appropriate for their age. Supervise to ensure they don't swallow.",
     },
   },
   {
@@ -270,6 +283,7 @@ export const stories: Story[] = [
       options: ["Dance and brush! 💃🪥", "Hide and seek 🙈", "Snooze time 😴"],
       correctIndex: 0,
       hint: "DANCE PARTY! 🎉💃 Brush to the beat and your teeth will LOVE it! Wiggle wiggle sparkle! ✨",
+      parentTip: "Play a 2-minute song during brushing time. This makes the routine fun and ensures they brush long enough!",
     },
   },
   {
@@ -287,6 +301,7 @@ export const stories: Story[] = [
       options: ["SHINY STICKERS! ⭐", "Candy treats 🍬", "Sleepy time 😴"],
       correctIndex: 0,
       hint: "STICKER TIME! 🎉⭐ You earned it for having the SPARKLIEST teeth! So proud of you! 🏆✨",
+      parentTip: "Create a brushing chart with stickers or stamps. Small rewards (not candy!) for consistency help build lasting habits.",
     },
   },
   {
@@ -304,6 +319,7 @@ export const stories: Story[] = [
       options: ["PLAQUE PIRATES! 🏴‍☠️", "Sweet Tooth Fairy 🧚", "Hero Flossy 🦸"],
       correctIndex: 0,
       hint: "Ahoy! 🏴‍☠️ But YOU defeated them! SWISH SWASH with your brush! 🪥💪 Pirates overboard! 🎉",
+      parentTip: "Show your child plaque disclosing tablets occasionally. They make plaque visible so kids can see exactly where they need to brush better.",
     },
   },
   {
@@ -321,6 +337,7 @@ export const stories: Story[] = [
       options: ["To hide away 🙈", "Gentle brushing is NICE! 🪥💕", "Munch munch candy 🍬"],
       correctIndex: 1,
       hint: "SO SWEET! 🥹 The shy tooth learned brushing feels like tickly hugs! Hehe! 🤗✨",
+      parentTip: "If your child resists brushing, try a softer brush or let them 'practice' on a stuffed animal first. Patience and gentle encouragement work better than force.",
     },
   },
   {
@@ -338,6 +355,7 @@ export const stories: Story[] = [
       options: ["WIGGLE WIGGLE! 🕺", "Sleepy tooth 😴", "Turned blue 🔵"],
       correctIndex: 0,
       hint: "WIGGLE WIGGLE WOO! 🎉 That means a BIG KID tooth is coming! You're growing up! 🌟",
+      parentTip: "Wiggly teeth are normal between ages 5-7. Encourage gentle wiggling but never force. If bleeding occurs, have them bite on a clean cloth.",
     },
   },
   {
@@ -355,6 +373,7 @@ export const stories: Story[] = [
       options: ["So kind and friendly! 🤗", "Wore a mask 😷", "Gave candy 🍬"],
       correctIndex: 0,
       hint: "YAY! 🎉 Dentists are SMILE FRIENDS! They help teeth be their sparkliest! 👩‍⚕️✨🦷",
+      parentTip: "Prepare your child for dental visits with positive language. Avoid words like 'hurt' or 'shot.' Read books about dentist visits beforehand. Schedule first visits by age 1.",
     },
   },
   {
@@ -372,6 +391,7 @@ export const stories: Story[] = [
       options: ["PATIENCE power! ⏰💪", "Wiggle super fast 🏃", "Hide and seek 🙈"],
       correctIndex: 0,
       hint: "GOOD JOB! 🎉 Brush first, THEN treats taste even YUMMIER! You're so smart! 🧠⭐",
+      parentTip: "Establish 'brush before treats' as a household rule. This teaches delayed gratification and protects teeth from immediate sugar exposure.",
     },
   },
   {
@@ -389,6 +409,7 @@ export const stories: Story[] = [
       options: ["SUGAR BUGS! 🐛", "Plaque pirates 🏴‍☠️", "Tooth Fairy 🧚"],
       correctIndex: 0,
       hint: "CAUGHT THEM! 🔍 But your toothbrush scared them ALL away! 💨🐛 Victory! 🏆",
+      parentTip: "Explain that bacteria in our mouths love sugar and create acid that hurts teeth. This helps kids understand WHY limiting sugar matters.",
     },
   },
   {
@@ -406,6 +427,7 @@ export const stories: Story[] = [
       options: ["Munch more candy 🍬", "HELP clean teeth! 🧹✨", "Hide under pillow 🛏️"],
       correctIndex: 1,
       hint: "AMAZING! 🎉 Even monsters can change! Brushing makes EVERYONE happy! 👾💕✨",
+      parentTip: "If your child develops a cavity, don't shame them. Use it as a learning opportunity and focus on improving habits going forward.",
     },
   },
   {
@@ -423,6 +445,7 @@ export const stories: Story[] = [
       options: ["Sticky candy 🍬", "HEALTHY snack! 🥕", "Fizzy soda 🥤"],
       correctIndex: 1,
       hint: "YUM YUM! 🎉 Healthy snacks are sleepy teeth's BEST friends! Sweet dreams! 🌙💤",
+      parentTip: "Establish 'nothing but water after brushing' as a bedtime rule. This protects teeth during the 8+ hours of sleep when saliva production decreases.",
     },
   },
   {
@@ -440,6 +463,7 @@ export const stories: Story[] = [
       options: ["BUBBLE TOOTHPASTE! 🫧", "Yummy juice 🧃", "A silly spoon 🥄"],
       correctIndex: 0,
       hint: "POP POP POP! 🎉🫧 Bubbles are SO fun and clean every tiny spot! Wheee! 🌟",
+      parentTip: "Use only a pea-sized amount of fluoride toothpaste for kids 3+. For under 3, just a rice-grain smear. Supervise to ensure they spit, not swallow.",
     },
   },
   {
@@ -457,6 +481,7 @@ export const stories: Story[] = [
       options: ["Sneaky candy 🍬", "CORN piece! 🌽", "Tiny toothbrush 🪥"],
       correctIndex: 1,
       hint: "FOUND IT! 🎉🌽 Captain Floss zoomed in and rescued it! Super hero move! 🦸‍♂️💨",
+      parentTip: "After meals with fibrous foods (corn, meat, celery), remind your child to floss. These foods commonly get stuck between teeth.",
     },
   },
   {
@@ -474,6 +499,7 @@ export const stories: Story[] = [
       options: ["PLAQUE PIRATES! 🏴‍☠️", "Sweet Tooth Fairy 🧚", "Flossy hero 🦸"],
       correctIndex: 0,
       hint: "WALK THE PLANK, pirates! 🎉 Your brush is mightier than any pirate! 🪥⚔️ Victory! 🏆",
+      parentTip: "Plaque forms within 24 hours, which is why daily brushing and flossing is essential. Consistency matters more than perfection.",
     },
   },
   {
@@ -491,6 +517,7 @@ export const stories: Story[] = [
       options: ["Magic TIMER! ⏱️✨", "Candy treat 🍬", "Cozy blanket 🛏️"],
       correctIndex: 0,
       hint: "DING DING! 🎉 Two minutes of brushing = SUPER SPARKLY teeth! You're a champion! 🏆✨",
+      parentTip: "Two minutes is the recommended brushing time. Use an hourglass, phone timer, or electric toothbrush with a built-in timer to help.",
     },
   },
   {
@@ -508,6 +535,7 @@ export const stories: Story[] = [
       options: ["GOLDEN STARS! ⭐✨", "Candy treats 🍬", "Sleepy time 😴"],
       correctIndex: 0,
       hint: "TEAMWORK MAKES THE DREAM WORK! 🎉 You earned SO many sparkly stars! ⭐⭐⭐✨",
+      parentTip: "Make dental care a family activity. Brush together! Kids learn by example, and it's more fun as a team effort.",
     },
   },
   {
@@ -525,6 +553,7 @@ export const stories: Story[] = [
       options: ["Her LOST MAP! 🗺️✨", "Candy bag 🍬", "Fluffy pillow 🛏️"],
       correctIndex: 0,
       hint: "WE FOUND IT! 🎉 The Tooth Fairy is SO happy! Magic sparkles everywhere! ✨🧚‍♀️💫",
+      parentTip: "Use the Tooth Fairy story to encourage good habits. The Tooth Fairy could leave notes praising your child's brushing efforts!",
     },
   },
   {
@@ -542,6 +571,7 @@ export const stories: Story[] = [
       options: ["MOONLIGHT PARADE! 🌙✨", "Play hide and seek 🙈", "Snooze away 😴"],
       correctIndex: 0,
       hint: "SPARKLE SPARKLE! 🎉 The cleanest teeth GLOW in the moonlight parade! So pretty! 🌟🦷✨",
+      parentTip: "Make bedtime brushing special by dimming lights and having your child smile at their 'glowing' teeth in the mirror after brushing.",
     },
   },
   {
@@ -559,6 +589,7 @@ export const stories: Story[] = [
       options: ["MAGIC SPELL! ✨🪄", "Candy magic 🍬", "Juicy juice 🧃"],
       correctIndex: 0,
       hint: "SPARKLE SCRUB SWISH! 🎉🪄 The magic spell worked! Your teeth are GLOWING! ✨✨✨",
+      parentTip: "Create a fun 'magic spell' chant for brushing: 'Sparkle, scrub, swish!' Makes the routine playful and memorable.",
     },
   },
   {
@@ -576,6 +607,7 @@ export const stories: Story[] = [
       options: ["DREAMLAND! 🌈💫", "Candy land 🍬", "Fun playground 🎢"],
       correctIndex: 0,
       hint: "SWEET DREAMS! 🎉 Clean teeth have the BEST adventures in Dreamland! 🌙💫✨",
+      parentTip: "Associate bedtime brushing with peaceful sleep. Say things like, 'Now your teeth are ready to have sweet dreams!'",
     },
   },
   {
@@ -593,6 +625,7 @@ export const stories: Story[] = [
       options: ["CRUNCHY APPLE! 🍎", "Soft cookie 🍪", "Sticky candy 🍬"],
       correctIndex: 0,
       hint: "CRUNCH CRUNCH YUM! 🎉🍎 Apples are like toothbrushes you can EAT! So cool! 🦷💪",
+      parentTip: "Crunchy fruits and vegetables naturally clean teeth. End meals with an apple slice or carrot sticks when brushing isn't immediately possible.",
     },
   },
   {
@@ -610,6 +643,7 @@ export const stories: Story[] = [
       options: ["SECRET SUGAR! 🍬😱", "Too chilly 🥶", "Too yummy 😋"],
       correctIndex: 0,
       hint: "AHA! Good detective! 🔍 Juice has sneaky sugar! Water is teeth's BEST friend! 💧🦷",
+      parentTip: "Limit juice to mealtimes and dilute with water. Encourage water throughout the day. Read labels - even '100% juice' contains natural sugars that can harm teeth.",
     },
   },
   {
@@ -627,6 +661,7 @@ export const stories: Story[] = [
       options: ["SUPER WATER! 💧🦸", "Fizzy soda 🥤", "Sweet juice 🧃"],
       correctIndex: 0,
       hint: "SPLASH SPLASH! 🎉💧 Water is the #1 CHAMPION for happy healthy teeth! 🏆🦷",
+      parentTip: "Make water exciting with a special cup or water bottle. Add ice or fruit slices for variety. Tap water often contains fluoride for extra tooth protection.",
     },
   },
   {
@@ -644,6 +679,7 @@ export const stories: Story[] = [
       options: ["Sticky candy 🍬", "YUMMY FRUIT! 🍎🍇", "Sugary cookies 🍪"],
       correctIndex: 1,
       hint: "SMART CHOICE! 🎉 Fruits are nature's candy AND they love your teeth! 🍎💕🦷",
+      parentTip: "Involve your child in grocery shopping and let them pick tooth-friendly snacks. Ownership increases their interest in making healthy choices.",
     },
   },
   // === BONUS BRACES QUESTS (37-42) ===
@@ -662,6 +698,7 @@ export const stories: Story[] = [
       options: ["Brush around EACH bracket! 🪥✨", "Quick water splash 💧", "Skip today 🙈"],
       correctIndex: 0,
       hint: "PERFECT! 🎉🌈 Each little bracket gets sparkle time! Your rainbow smile is GLOWING! ✨🦷",
+      parentTip: "Let your child choose their band colors - it makes braces more fun! Orthodontic appointments every 4-8 weeks are normal for adjustments.",
     },
   },
   {
@@ -679,6 +716,7 @@ export const stories: Story[] = [
       options: ["Brush and floss rescue! 🪥🧵", "Oops, ignore it 🙈", "Shake shake shake 🙃"],
       correctIndex: 0,
       hint: "RESCUE COMPLETE! 🎉 Brush + floss = sticky candy's WORST ENEMY! Bye bye goo! 👋💨",
+      parentTip: "Keep a travel toothbrush and floss in your child's backpack for after-school snack cleanup. Orthodontic wax helps with any bracket discomfort.",
     },
   },
   {
@@ -713,6 +751,7 @@ export const stories: Story[] = [
       options: ["BEFORE BED! 🌙🪥", "Just morning time ☀️", "Only after lunch 🥪"],
       correctIndex: 0,
       hint: "PERFECT! 🎉🌙 Nighttime brushing = NO sugar bug parties while you sleep! 💤✨",
+      parentTip: "For braces wearers, bedtime brushing is crucial. Food trapped overnight leads to plaque buildup and potential white spots around brackets.",
     },
   },
   {
@@ -730,6 +769,7 @@ export const stories: Story[] = [
       options: ["Brush EACH band carefully! 🪥🌈", "Just front teeth 😬", "Skip the bands 🙈"],
       correctIndex: 0,
       hint: "RAINBOW SPARKLE! 🎉🌈 Every colorful band gets love! Your smile is like a treasure! 💎✨",
+      parentTip: "Schedule band color changes as a fun reward. Blue and green bands are popular! Avoid white or clear bands as they can stain easily.",
     },
   },
   {
@@ -747,6 +787,7 @@ export const stories: Story[] = [
       options: ["Brush and floss every day", "Eat candy whenever you want", "Skip brushing sometimes"],
       correctIndex: 0,
       hint: "Yes! Brushing and flossing every day gives your teeth superpowers!",
+      parentTip: "Celebrate braces milestones! Take progress photos monthly. Remind your child that the temporary inconvenience leads to a lifetime of beautiful smiles.",
     },
   },
 
@@ -772,12 +813,14 @@ export const stories: Story[] = [
       options: ["Teeth stay happy 😊", "Sugar Monsters make BIGGER holes! 👾😱", "Teeth grow super fast 🚀"],
       correctIndex: 1,
       hint: "OH NO! 👾 But we stopped them! Fill those holes and Sugar Monsters have NO home! 🎉🏆",
+      parentTip: "If your child needs a filling, stay calm and positive. Modern fillings are quick and usually painless. Praise their bravery afterwards!",
     },
     quiz2: {
       question: "What's the BEST way to stop cavities? 🛡️✨",
       options: ["BRUSH EVERY DAY! 🪥💪", "Only eat candy 🍬", "Never see dentist 🙈"],
       correctIndex: 0,
       hint: "CHAMPION BRUSHER! 🎉 Daily brushing is your SUPER SHIELD against cavities! 🛡️✨",
+      parentTip: "Prevention is key! Regular brushing, flossing, and dental visits reduce the need for fillings dramatically.",
     },
   },
   {
@@ -801,12 +844,14 @@ export const stories: Story[] = [
       options: ["Deep inside germs! 🦠💨", "Make teeth sparkly ✨", "Straighten teeth 📐"],
       correctIndex: 0,
       hint: "MISSION COMPLETE! 🎉🔦 We found ALL the hidden germs and cleaned them out! Hero work! 🦸",
+      parentTip: "Root canals save teeth! If your child needs one, explain it's like 'cleaning out a tunnel' so the tooth can stay healthy instead of being removed.",
     },
     quiz2: {
       question: "True or False: Root canals are scary and hurt! 😰",
       options: ["True 😱", "FALSE! 😊"],
       correctIndex: 1,
       hint: "NOT SCARY AT ALL! 🎉 Dentists are super gentle! You're SO brave! 💪🦷",
+      parentTip: "Pediatric endodontists specialize in making root canals comfortable for kids. Ask your dentist for a referral if needed.",
     },
   },
   {
@@ -830,12 +875,14 @@ export const stories: Story[] = [
       options: ["Stay PERFECTLY straight! 📐✨", "Turn purple 💜", "Fall out 😱"],
       correctIndex: 0,
       hint: "ALL ABOARD! 🎉🚂 The tooth train lines up every smile PERFECTLY! Choo choo! ✨",
+      parentTip: "Orthodontic treatment is an investment in your child's confidence and health. Start consultations around age 7 to catch issues early.",
     },
     quiz2: {
       question: "How long is the braces adventure? ⏰🦷",
       options: ["Just a few days 📅", "Many months to years! 📆✨", "Only at night 🌙"],
       correctIndex: 1,
       hint: "It's a BIG adventure! 🎉 But the AMAZING smile at the end is SO worth it! 😁✨",
+      parentTip: "Average braces treatment is 18-24 months. Compliance with wearing rubber bands and avoiding hard foods helps stay on track.",
     },
   },
   {
@@ -859,12 +906,14 @@ export const stories: Story[] = [
       options: ["Once a week 📅", "TWICE A DAY! ☀️🌙", "Only before candy 🍬"],
       correctIndex: 1,
       hint: "MORNING AND NIGHT! 🎉 Twice a day keeps your smile shining like the SUN! ☀️✨",
+      parentTip: "Professional cleanings every 6 months remove buildup that home brushing misses. Make it a family event by scheduling appointments together!",
     },
     quiz2: {
       question: "Ew! What is icky plaque? 🤢",
       options: ["STICKY GERMS! 🦠", "Tooth fairy sparkles ✨", "Candy sugar 🍬"],
       correctIndex: 0,
       hint: "YUCKY GERMS! 🦠 But YOUR toothbrush is their WORST nightmare! 🪥💪 Bye bye plaque! 👋",
+      parentTip: "Explain that plaque is a 'sticky film of germs.' This helps kids understand why brushing all surfaces, not just the front, matters.",
     },
   },
   {
@@ -888,12 +937,14 @@ export const stories: Story[] = [
       options: ["Makes teeth squishy 🫠", "PROTECTS from cavities! 🛡️✨", "Makes candy yummier 🍬"],
       correctIndex: 1,
       hint: "ARMOR UP! 🎉🛡️ Sealants are like INVISIBLE SHIELDS for teeth! Candy bounces right off! 💨",
+      parentTip: "Sealants are a quick, painless preventive treatment. Ask your dentist about applying them to your child's permanent molars when they come in (around ages 6 and 12).",
     },
     quiz2: {
       question: "Which teeth get the super armor? 🦷🛡️",
       options: ["Front teeth 😁", "MIGHTY MOLARS! 🦷💪", "Only wisdom teeth 🧠"],
       correctIndex: 1,
       hint: "MOLARS WIN! 🎉 They have lots of grooves that need extra protection! 🛡️✨",
+      parentTip: "Sealants can reduce cavity risk by up to 80% in molars. They last several years and can be reapplied as needed.",
     },
   },
   {
@@ -917,12 +968,14 @@ export const stories: Story[] = [
       options: ["Make room for NEW teeth! 🌟", "It's too happy 😊", "Turn teeth purple 💜"],
       correctIndex: 0,
       hint: "NEW TOOTH COMING! 🎉 Little tooth makes way for a BIG KID tooth! Growing up! 🌟",
+      parentTip: "If a tooth needs extraction, stay positive. Modern techniques minimize discomfort. Afterward, ice and soft foods help healing.",
     },
     quiz2: {
       question: "True or False: Losing teeth keeps mouths healthy! 🦷❤️",
       options: ["TRUE! 😊✅", "False 🙅"],
       correctIndex: 0,
       hint: "TRUE TRUE TRUE! 🎉 Baby teeth say bye so big teeth can say HI! 👋🦷✨",
+      parentTip: "Baby teeth fall out between ages 6-12. If a tooth is extracted by a dentist, they may recommend a space maintainer until the adult tooth comes in.",
     },
   },
   {
@@ -946,12 +999,14 @@ export const stories: Story[] = [
       options: ["Makes them weaker 😢", "Makes them SUPER STRONG! 💪", "Changes colors 🎨"],
       correctIndex: 1,
       hint: "POWER BOOST! 🎉💎 Fluoride is like drinking STRENGTH POTION for your teeth! 💪✨",
+      parentTip: "Fluoride strengthens enamel and fights cavities. Use fluoride toothpaste and ask your dentist about fluoride treatments during checkups.",
     },
     quiz2: {
       question: "True or False: Fluoride is a SUPERHERO for teeth! 🦸",
       options: ["TRUE! 💪✅", "False 🙅"],
       correctIndex: 0,
       hint: "SUPERHERO CONFIRMED! 🎉🦸 Fluoride gives teeth SHIELDS that bounce germs away! 💨👾",
+      parentTip: "Most tap water contains fluoride. If you use filtered or bottled water, ensure your child gets fluoride from other sources like toothpaste or treatments.",
     },
   },
   {
@@ -975,12 +1030,14 @@ export const stories: Story[] = [
       options: ["See HIDDEN stuff! 🔍✨", "Play fun games 🎮", "Make teeth sparkle ✨"],
       correctIndex: 0,
       hint: "CASE SOLVED! 🎉🔍 X-rays are like MAGIC glasses that see secret problems! You're a detective! 🕵️",
+      parentTip: "Dental X-rays use minimal radiation and are safe. They catch problems early when they're easiest to treat. Digital X-rays use even less radiation.",
     },
     quiz2: {
       question: "True or False: X-rays hurt your teeth! 😰",
       options: ["True 😢", "FALSE! 😊✅"],
       correctIndex: 1,
       hint: "NOT AT ALL! 🎉 X-rays are super gentle and don't hurt ONE BIT! You're so brave! 💪",
+      parentTip: "If your child is nervous about X-rays, explain they're just 'special pictures.' The process takes only seconds per image.",
     },
   },
   {
@@ -1004,12 +1061,14 @@ export const stories: Story[] = [
       options: ["A special BACK tooth! 🦷", "A tiny fairy 🧚", "A candy tooth 🍬"],
       correctIndex: 0,
       hint: "EXPLORER FIND! 🎉🎒 Wisdom teeth live way WAY in the back like hidden treasure! 🗺️✨",
+      parentTip: "Wisdom teeth typically emerge between ages 17-25. Regular dental visits help monitor if they need removal before they cause problems.",
     },
     quiz2: {
       question: "True or False: Wisdom teeth sometimes go on adventures! 🎒👋",
       options: ["TRUE! ✅🎒", "False 🙅"],
       correctIndex: 0,
       hint: "ADVENTURE TIME! 🎉 Sometimes wisdom teeth pack their bags for new journeys! Bye bye! 👋✨",
+      parentTip: "Not all wisdom teeth need removal. Your dentist will monitor their growth and recommend extraction only if necessary for your child's oral health.",
     },
   },
   {
@@ -1033,12 +1092,14 @@ export const stories: Story[] = [
       options: ["MAGIC SPARKLE POTION! ✨", "Icky dirt 🥀", "Sweet sugar 🍬"],
       correctIndex: 0,
       hint: "GLITTER MAGIC! 🎉✨ The sparkle potion makes teeth shine like STARS! ⭐✨⭐",
+      parentTip: "Professional whitening is typically not recommended for children. Focus on good hygiene for naturally healthy, bright teeth.",
     },
     quiz2: {
       question: "True or False: Healthy teeth are MORE important than shiny! 💪",
       options: ["TRUE! 💪✅", "False 🙅"],
       correctIndex: 0,
       hint: "HEALTH FIRST! 🎉 Healthy teeth ARE sparkly teeth! Best of BOTH worlds! 💪✨🦷",
+      parentTip: "Teach that healthy habits lead to naturally beautiful smiles. Avoid overemphasizing appearance - confidence comes from healthy teeth, not just white teeth.",
     },
   },
   {
@@ -1062,12 +1123,14 @@ export const stories: Story[] = [
       options: ["Tiny CHIPS! 🔧✨", "Big big cavities 🕳️", "Silly hair 💇"],
       correctIndex: 0,
       hint: "FAIRY FIX! 🎉🧚 Little chips get filled with magic and look PERFECT again! ✨🦷",
+      parentTip: "Dental bonding is a quick, usually painless procedure to repair small chips or gaps. It's a great option for minor cosmetic fixes in children.",
     },
     quiz2: {
       question: "True or False: Bonding makes teeth WHOLE again! 🪄",
       options: ["TRUE! ✨✅", "False 🙅"],
       correctIndex: 0,
       hint: "MAGIC COMPLETE! 🎉🪄 The tooth is perfect and whole again! Fairy sparkles! ✨🧚‍♀️",
+      parentTip: "If your child chips a tooth, save any pieces and contact your dentist. Even small chips should be evaluated to prevent further damage.",
     },
   },
   {
@@ -1091,12 +1154,14 @@ export const stories: Story[] = [
       options: ["PROTECT teeth in sports! 🏀🛡️", "Munch candy 🍬", "Brush super fast 🪥💨"],
       correctIndex: 0,
       hint: "CHAMPION PROTECTION! 🎉🏆 Mouth guards are like HELMETS for your teeth! GO TEAM! 🏅",
+      parentTip: "Custom-fitted mouth guards from your dentist offer the best protection. Over-the-counter options are better than nothing for any contact sport.",
     },
     quiz2: {
       question: "True or False: Mouth guards keep teeth SAFE in games! 🏀",
       options: ["TRUE! 🏆✅", "False 🙅"],
       correctIndex: 0,
       hint: "SAFETY CHAMP! 🎉 Mouth guards = teeth stay SAFE during all the fun! Play hard! 🏆⚽🏀",
+      parentTip: "Mouth guards should be worn for basketball, soccer, football, hockey, skateboarding, and any sport with collision risk. Replace them each season or when damaged.",
     },
   },
 
