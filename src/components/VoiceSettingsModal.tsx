@@ -7,9 +7,6 @@ import {
   Sparkles,
   Monitor,
   Heart,
-  Star,
-  Zap,
-  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -26,99 +23,14 @@ interface VoiceSettingsModalProps {
 
 export type VoiceProvider = "elevenlabs" | "browser";
 
-// Voice moods for kids - warm, happy, playful as base with variations
-export type VoiceMood = "happy" | "excited" | "calm" | "silly";
-
-export interface VoiceMoodConfig {
-  id: VoiceMood;
-  name: string;
-  description: string;
-  emoji: string;
-  icon: typeof Star;
-  voiceId: string; // ElevenLabs voice ID
-  stability: number;
-  similarityBoost: number;
-  style: number;
-  speed: number;
-  gradient: string;
-  previewPhrase: string;
-}
-
-// Voice moods with ElevenLabs configurations - all warm and kid-friendly
-export const VOICE_MOODS: VoiceMoodConfig[] = [
-  {
-    id: "happy",
-    name: "Happy & Warm",
-    description: "Friendly, cheerful, and full of sunshine! ☀️",
-    emoji: "😊",
-    icon: Star,
-    voiceId: "cgSgspJ2msm6clMCkdW9", // Jessica - cheerful, upbeat
-    stability: 0.35,
-    similarityBoost: 0.8,
-    style: 0.75,
-    speed: 0.95,
-    gradient: "from-yellow-400 to-orange-400",
-    previewPhrase: "Hey there, superstar! I'm so happy to see you! Ready to make those teeth sparkle and shine?",
-  },
-  {
-    id: "excited",
-    name: "Super Excited",
-    description: "High energy and ready for adventure! ⚡",
-    emoji: "🎉",
-    icon: Zap,
-    voiceId: "TX3LPaxmHKxFdv7VOQHJ", // Liam - energetic, expressive
-    stability: 0.25,
-    similarityBoost: 0.85,
-    style: 0.9,
-    speed: 1.05,
-    gradient: "from-pink-500 to-rose-500",
-    previewPhrase: "WOOHOO! This is going to be AMAZING! Let's GO on the most EPIC brushing adventure EVER!",
-  },
-  {
-    id: "calm",
-    name: "Calm & Gentle",
-    description: "Soft and soothing like a bedtime story 🌙",
-    emoji: "💜",
-    icon: Heart,
-    voiceId: "pFZP5JQG7iQjIQuC4Bku", // Lily - soft, gentle
-    stability: 0.6,
-    similarityBoost: 0.7,
-    style: 0.4,
-    speed: 0.85,
-    gradient: "from-purple-400 to-indigo-400",
-    previewPhrase: "Hello, sweet one. Let's take a nice, peaceful journey together. Everything is going to be just fine.",
-  },
-  {
-    id: "silly",
-    name: "Silly & Playful",
-    description: "Giggly, goofy, and super fun! 🤪",
-    emoji: "🎭",
-    icon: Users,
-    voiceId: "IKne3meq5aSn9XLyUdCD", // Charlie - versatile character voice
-    stability: 0.2,
-    similarityBoost: 0.75,
-    style: 0.95,
-    speed: 1.0,
-    gradient: "from-green-400 to-teal-400",
-    previewPhrase: "Hee hee hee! Did you know that teeth love to do the wiggle dance? Wiggle wiggle wiggle! So silly!",
-  },
-];
-
-// Legacy type aliases for backwards compatibility
-export type VoicePersonality = VoiceMood;
-export type VoicePersonalityConfig = VoiceMoodConfig;
-export const VOICE_PERSONALITIES = VOICE_MOODS;
-
 export interface VoiceSettings {
   provider: VoiceProvider;
-  personality: VoicePersonality;
   speed: number;
   pitch: number;
 }
 
 const DEFAULT_SETTINGS: VoiceSettings = {
   provider: "elevenlabs",
-  personality: "happy",
   speed: 0.95,
   pitch: 1.1,
 };
@@ -135,10 +47,6 @@ export const getVoiceSettings = (): VoiceSettings => {
     // ignore
   }
   return DEFAULT_SETTINGS;
-};
-
-export const getVoicePersonalityConfig = (personality: VoicePersonality): VoicePersonalityConfig => {
-  return VOICE_PERSONALITIES.find(p => p.id === personality) || VOICE_PERSONALITIES[0];
 };
 
 export const saveVoiceSettings = (settings: VoiceSettings) => {
@@ -169,7 +77,6 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
     if (testPlaying) return;
     setTestPlaying(true);
 
-    // Use the consistent Toothy voice
     const voiceConfig = getBaseVoice();
     const testText = "Hey there, superstar! I'm your friendly guide. Ready to make those teeth sparkle and shine?";
 
@@ -189,7 +96,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
       } else {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.access_token) {
-          // Fallback to browser voice
+          // Fallback to browser voice if not authenticated
           if ("speechSynthesis" in window) {
             const utterance = new SpeechSynthesisUtterance(testText);
             utterance.rate = settings.speed;
@@ -224,90 +131,17 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
           }
         );
 
-    try {
-      if (settings.provider === "browser") {
-        if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(testText);
-          utterance.rate = settings.speed;
-          utterance.pitch = settings.pitch;
-          utterance.onend = () => {
-            setTestPlaying(false);
-            setTestingPersonality(null);
-          };
-          utterance.onerror = () => {
-            setTestPlaying(false);
-            setTestingPersonality(null);
-          };
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(utterance);
-        } else {
-          setTestPlaying(false);
-          setTestingPersonality(null);
-        }
-      } else {
-        // Test ElevenLabs with personality settings
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.access_token) {
-          // Fallback to browser voice if not authenticated
-          if ("speechSynthesis" in window) {
-            const utterance = new SpeechSynthesisUtterance(testText);
-            utterance.rate = settings.speed;
-            utterance.pitch = settings.pitch;
-            utterance.onend = () => {
-              setTestPlaying(false);
-              setTestingPersonality(null);
-            };
-            utterance.onerror = () => {
-              setTestPlaying(false);
-              setTestingPersonality(null);
-            };
-            window.speechSynthesis.speak(utterance);
-          } else {
-            setTestPlaying(false);
-            setTestingPersonality(null);
-          }
-          return;
-        }
-        
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              text: testText,
-              voiceId: personality.voiceId,
-              voiceSettings: {
-                stability: personality.stability,
-                similarityBoost: personality.similarityBoost,
-                style: personality.style,
-                speed: personality.speed,
-              },
-            }),
-          }
-        );
-
         if (!response.ok) {
           // Fallback to browser voice if ElevenLabs fails
           if ("speechSynthesis" in window) {
             const utterance = new SpeechSynthesisUtterance(testText);
             utterance.rate = settings.speed;
             utterance.pitch = settings.pitch;
-            utterance.onend = () => {
-              setTestPlaying(false);
-              setTestingPersonality(null);
-            };
-            utterance.onerror = () => {
-              setTestPlaying(false);
-              setTestingPersonality(null);
-            };
+            utterance.onend = () => setTestPlaying(false);
+            utterance.onerror = () => setTestPlaying(false);
             window.speechSynthesis.speak(utterance);
           } else {
             setTestPlaying(false);
-            setTestingPersonality(null);
           }
           return;
         }
@@ -317,19 +151,16 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
         const audio = new Audio(url);
         audio.onended = () => {
           setTestPlaying(false);
-          setTestingPersonality(null);
           URL.revokeObjectURL(url);
         };
         audio.onerror = () => {
           setTestPlaying(false);
-          setTestingPersonality(null);
           URL.revokeObjectURL(url);
         };
         await audio.play();
       }
     } catch {
       setTestPlaying(false);
-      setTestingPersonality(null);
     }
   };
 
@@ -440,31 +271,6 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
                   A warm, kid-friendly voice that stays consistent throughout your adventure. 
                   The voice naturally adjusts its tone for exciting moments, encouragement, and calm storytelling! 🌟
                 </p>
-                
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="mt-3 gap-2"
-                  onClick={() => handleTestVoice()}
-                  disabled={testPlaying}
-                >
-                  {testPlaying ? (
-                    <>
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ repeat: Infinity, duration: 0.5 }}
-                      >
-                        <Volume2 className="w-4 h-4" />
-                      </motion.div>
-                      Playing...
-                    </>
-                  ) : (
-                    <>
-                      <Volume2 className="w-4 h-4" />
-                      Test Voice
-                    </>
-                  )}
-                </Button>
               </div>
             </motion.div>
           )}
@@ -524,7 +330,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
             onClick={() => handleTestVoice()}
             disabled={testPlaying}
           >
-            {testPlaying && !testingPersonality ? (
+            {testPlaying ? (
               <>
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
@@ -537,7 +343,7 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
             ) : (
               <>
                 <Volume2 className="w-4 h-4" />
-                Test Current Voice
+                Test Voice
               </>
             )}
           </Button>
