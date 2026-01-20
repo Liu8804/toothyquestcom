@@ -42,10 +42,20 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     xp: number;
   } | null>(null);
   
-  const { user } = useAuth();
-  const { isPurchased, isContentLocked } = usePurchase();
-  const { isAdmin } = useAdminStatus();
-  const { hasEntitlement } = useEntitlementStatus();
+  const { user, session } = useAuth();
+  const { isPurchased, isContentLocked, isCheckingPurchase, lastPurchaseCheckAt } = usePurchase();
+  const {
+    isAdmin,
+    isAdminLoading,
+    adminError,
+    adminCheckedAt,
+  } = useAdminStatus();
+  const {
+    hasEntitlement,
+    entitlementLoading,
+    entitlementError,
+    entitlementCheckedAt,
+  } = useEntitlementStatus();
   const { questProgress } = useQuestProgress();
   const completedQuestsCount = questProgress.length;
   const { 
@@ -73,6 +83,17 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   // plus a server-validated override for admin accounts / manual entitlements.
   const baseGamesLocked = isContentLocked(0, 'game', completedQuestsCount);
   const areGamesLocked = baseGamesLocked && !(isAdmin || hasEntitlement);
+
+  const gamesLockReason = (() => {
+    if (!user) return "Not signed in.";
+    if (!session?.access_token) return "Session missing/expired.";
+    if (isCheckingPurchase || isAdminLoading || entitlementLoading) return "Checking your access…";
+    if (adminError) return "Admin check failed.";
+    if (entitlementError) return "Entitlement check failed.";
+    if (!baseGamesLocked) return null;
+    if (isAdmin || hasEntitlement || isPurchased) return null;
+    return "Premium access required.";
+  })();
   
   const gamesWithLockStatus = games.map((game) => ({
     ...game,
@@ -384,6 +405,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                           game={game}
                           onClick={() => handleGameSelect(game, game.isLocked || false)}
                           delay={index * 0.1}
+                          lockReason={game.isLocked ? gamesLockReason ?? undefined : undefined}
                         />
                       ))}
                     </div>
@@ -406,6 +428,17 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                               </p>
                               <p className="text-sm text-muted-foreground">
                                 Unlock the full adventure to play all games!
+                              </p>
+                              {!!gamesLockReason && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  <span className="font-semibold">Reason:</span> {gamesLockReason}
+                                </p>
+                              )}
+                              <p className="text-[11px] text-muted-foreground mt-1">
+                                Status: auth {user ? "✓" : "✕"} · session {session?.access_token ? "✓" : "✕"} · admin {isAdmin ? "✓" : "✕"} · entitlement {hasEntitlement ? "✓" : "✕"} · purchased {isPurchased ? "✓" : "✕"}
+                              </p>
+                              <p className="text-[11px] text-muted-foreground">
+                                Checked: purchase {lastPurchaseCheckAt ? new Date(lastPurchaseCheckAt).toLocaleString() : "—"} · admin {adminCheckedAt ? new Date(adminCheckedAt).toLocaleString() : "—"} · entitlement {entitlementCheckedAt ? new Date(entitlementCheckedAt).toLocaleString() : "—"}
                               </p>
                             </div>
                           </div>
