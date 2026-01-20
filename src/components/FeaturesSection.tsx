@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
@@ -6,6 +6,13 @@ import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
 export const FeaturesSection = () => {
   const { t } = useTranslation();
   const [showQuiz, setShowQuiz] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handler = () => setShowQuiz(true);
+    window.addEventListener("toothyquest:openVoiceQuiz", handler);
+    return () => window.removeEventListener("toothyquest:openVoiceQuiz", handler);
+  }, []);
 
   const features = [
     {

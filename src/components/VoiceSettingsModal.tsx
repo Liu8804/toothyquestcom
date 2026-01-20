@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  Volume2, 
+import {
+  Volume2,
   Settings2,
   Check,
   Sparkles,
   Monitor,
   Heart,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -80,87 +81,112 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
     const voiceConfig = getBaseVoice();
     const testText = "Hey there, superstar! I'm your friendly guide. Ready to make those teeth sparkle and shine?";
 
+    const playBrowserVoice = () => {
+      if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
+        toast.error("Voice playback isn't available on this device.");
+        setTestPlaying(false);
+        return;
+      }
+
+      const utterance = new SpeechSynthesisUtterance(testText);
+      utterance.rate = settings.speed;
+      utterance.pitch = settings.pitch;
+      utterance.volume = 1;
+
+      const speakNow = () => {
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice =
+          voices.find((v) => v.lang.startsWith("en") && v.localService) ||
+          voices.find((v) => v.lang.startsWith("en")) ||
+          voices[0];
+        if (englishVoice) utterance.voice = englishVoice;
+
+        utterance.onend = () => setTestPlaying(false);
+        utterance.onerror = () => {
+          setTestPlaying(false);
+          toast.error("Couldn't play the voice. Please try again.");
+        };
+
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      };
+
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.onvoiceschanged = null;
+          speakNow();
+        };
+        setTimeout(() => {
+          speakNow();
+        }, 150);
+      } else {
+        speakNow();
+      }
+    };
+
     try {
       if (settings.provider === "browser") {
-        if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(testText);
-          utterance.rate = settings.speed;
-          utterance.pitch = settings.pitch;
-          utterance.onend = () => setTestPlaying(false);
-          utterance.onerror = () => setTestPlaying(false);
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(utterance);
-        } else {
-          setTestPlaying(false);
-        }
-      } else {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.access_token) {
-          // Fallback to browser voice if not authenticated
-          if ("speechSynthesis" in window) {
-            const utterance = new SpeechSynthesisUtterance(testText);
-            utterance.rate = settings.speed;
-            utterance.pitch = settings.pitch;
-            utterance.onend = () => setTestPlaying(false);
-            utterance.onerror = () => setTestPlaying(false);
-            window.speechSynthesis.speak(utterance);
-          } else {
-            setTestPlaying(false);
-          }
-          return;
-        }
-        
-        const response = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${session.access_token}`,
-            },
-            body: JSON.stringify({
-              text: testText,
-              voiceId: voiceConfig.voiceId,
-              voiceSettings: {
-                stability: voiceConfig.stability,
-                similarityBoost: voiceConfig.similarityBoost,
-                style: voiceConfig.style,
-                speed: voiceConfig.speed,
-              },
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          // Fallback to browser voice if ElevenLabs fails
-          if ("speechSynthesis" in window) {
-            const utterance = new SpeechSynthesisUtterance(testText);
-            utterance.rate = settings.speed;
-            utterance.pitch = settings.pitch;
-            utterance.onend = () => setTestPlaying(false);
-            utterance.onerror = () => setTestPlaying(false);
-            window.speechSynthesis.speak(utterance);
-          } else {
-            setTestPlaying(false);
-          }
-          return;
-        }
-
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audio.onended = () => {
-          setTestPlaying(false);
-          URL.revokeObjectURL(url);
-        };
-        audio.onerror = () => {
-          setTestPlaying(false);
-          URL.revokeObjectURL(url);
-        };
-        await audio.play();
+        playBrowserVoice();
+        return;
       }
-    } catch {
-      setTestPlaying(false);
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        toast.info("AI voice needs sign-in — using browser voice for now.");
+        playBrowserVoice();
+        return;
+      }
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            text: testText,
+            voiceId: voiceConfig.voiceId,
+            voiceSettings: {
+              stability: voiceConfig.stability,
+              similarityBoost: voiceConfig.similarityBoost,
+              style: voiceConfig.style,
+              speed: voiceConfig.speed,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        toast.info("AI voice isn't available right now — using browser voice.");
+        playBrowserVoice();
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+
+      audio.onended = () => {
+        setTestPlaying(false);
+        URL.revokeObjectURL(url);
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        toast.error("Couldn't play AI voice — using browser voice.");
+        playBrowserVoice();
+      };
+
+      await audio.play();
+    } catch (err) {
+      console.error("Voice settings test failed:", err);
+      toast.error("Couldn't play AI voice — using browser voice.");
+      playBrowserVoice();
     }
   };
 

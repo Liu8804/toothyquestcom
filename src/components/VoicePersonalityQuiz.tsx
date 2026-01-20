@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Volume2, Heart } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { getVoiceSettings, saveVoiceSettings } from "@/components/VoiceSettingsModal";
@@ -23,22 +24,67 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
     if (isPlaying) return;
     setIsPlaying(true);
 
-    const testText = "Hey there, superstar! I'm your friendly guide, Toothy's Friend! I'll be here to cheer you on during all your brushing adventures. Ready to make those teeth sparkle and shine?";
+    const testText =
+      "Hey there, superstar! I'm your friendly guide, Toothy's Friend! I'll be here to cheer you on during all your brushing adventures. Ready to make those teeth sparkle and shine?";
+
+    const playBrowserVoice = () => {
+      if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
+        toast.error("Voice playback isn't available on this device.");
+        setIsPlaying(false);
+        return;
+      }
+
+      const settings = getVoiceSettings();
+      const utterance = new SpeechSynthesisUtterance(testText);
+      utterance.rate = settings.speed;
+      utterance.pitch = settings.pitch;
+      utterance.volume = 1;
+
+      const speakNow = () => {
+        const voices = window.speechSynthesis.getVoices();
+        const englishVoice =
+          voices.find((v) => v.lang.startsWith("en") && v.localService) ||
+          voices.find((v) => v.lang.startsWith("en")) ||
+          voices[0];
+        if (englishVoice) utterance.voice = englishVoice;
+
+        utterance.onend = () => {
+          setIsPlaying(false);
+          setHasListened(true);
+        };
+
+        utterance.onerror = () => {
+          setIsPlaying(false);
+          toast.error("Couldn't play the voice. Please try again.");
+        };
+
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      };
+
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          window.speechSynthesis.onvoiceschanged = null;
+          speakNow();
+        };
+        // Fallback if onvoiceschanged doesn't fire
+        setTimeout(() => {
+          speakNow();
+        }, 150);
+      } else {
+        speakNow();
+      }
+    };
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      // Not signed in -> browser voice
       if (!session?.access_token) {
-        if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(testText);
-          utterance.onend = () => {
-            setIsPlaying(false);
-            setHasListened(true);
-          };
-          utterance.onerror = () => setIsPlaying(false);
-          window.speechSynthesis.speak(utterance);
-        } else {
-          setIsPlaying(false);
-        }
+        playBrowserVoice();
         return;
       }
 
@@ -48,7 +94,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.access_token}`,
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
             text: testText,
@@ -64,24 +110,32 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
       );
 
       if (!response.ok) {
-        throw new Error("Voice failed");
+        toast.info("AI voice isn't available right now — using browser voice.");
+        playBrowserVoice();
+        return;
       }
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
+
       audio.onended = () => {
         setIsPlaying(false);
         setHasListened(true);
         URL.revokeObjectURL(url);
       };
+
       audio.onerror = () => {
-        setIsPlaying(false);
         URL.revokeObjectURL(url);
+        toast.error("Couldn't play AI voice — using browser voice.");
+        playBrowserVoice();
       };
+
       await audio.play();
-    } catch {
-      setIsPlaying(false);
+    } catch (err) {
+      console.error("Voice test failed:", err);
+      toast.error("Couldn't play AI voice — using browser voice.");
+      playBrowserVoice();
     }
   };
 
