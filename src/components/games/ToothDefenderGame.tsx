@@ -32,18 +32,19 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
+    // Slower spawn rate for kids - every 2 seconds instead of 1.2
     const spawnInterval = setInterval(() => {
       const isHealthy = Math.random() > 0.4;
       const itemList = isHealthy ? healthyItems : unhealthyItems;
       const newItem: FallingItem = {
         id: Date.now() + Math.random(),
-        x: Math.random() * 80 + 10,
+        x: Math.random() * 70 + 15, // More centered for easier tapping
         y: 0,
         isHealthy,
         emoji: itemList[Math.floor(Math.random() * itemList.length)],
       };
       setItems(prev => [...prev, newItem]);
-    }, 1200);
+    }, 2000); // Slower spawn for kids
 
     return () => clearInterval(spawnInterval);
   }, [gameStarted]);
@@ -51,9 +52,10 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   useEffect(() => {
     if (!gameStarted) return;
 
+    // Much slower falling speed - 1.5 pixels every 100ms (was 3)
     const moveInterval = setInterval(() => {
       setItems(prev => {
-        const updated = prev.map(item => ({ ...item, y: item.y + 3 }));
+        const updated = prev.map(item => ({ ...item, y: item.y + 1.5 }));
         const remaining = updated.filter(item => {
           if (item.y >= 90) {
             if (item.isHealthy) {
@@ -143,7 +145,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
         🦷
       </div>
 
-      {/* Falling Items */}
+      {/* Falling Items - Larger tap targets for kids */}
       <AnimatePresence>
         {items.map(item => (
           <motion.button
@@ -151,12 +153,15 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            whileTap={{ scale: 0.5 }}
+            whileTap={{ scale: 0.7 }}
             onClick={() => handleItemTap(item)}
-            className="absolute text-4xl cursor-pointer transform -translate-x-1/2 -translate-y-1/2"
+            className="absolute text-5xl md:text-6xl cursor-pointer transform -translate-x-1/2 -translate-y-1/2 p-2 select-none touch-manipulation"
             style={{
               left: `${item.x}%`,
               top: `${item.y}%`,
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              userSelect: 'none',
             }}
           >
             {item.emoji}

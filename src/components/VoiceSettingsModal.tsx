@@ -168,6 +168,8 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
 
   const handleSave = () => {
     saveVoiceSettings(settings);
+    // Dispatch a custom event so other components know settings changed
+    window.dispatchEvent(new CustomEvent('voiceSettingsChanged', { detail: settings }));
     onClose();
   };
 

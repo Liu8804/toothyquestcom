@@ -71,7 +71,14 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
   }
 
   return (
-    <div className="relative h-full w-full flex flex-col items-center justify-center p-6">
+    <div 
+      className="relative h-full w-full flex flex-col items-center justify-center p-6 select-none"
+      style={{
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
+      }}
+    >
       {/* Progress */}
       <div className="absolute top-4 left-4 right-4">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg text-center">
@@ -82,42 +89,48 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
       </div>
 
       {/* Teeth Row */}
-      <div className="flex items-end justify-center gap-0 mt-16">
+      <div className="flex items-end justify-center gap-0 mt-16 select-none">
         {Array.from({ length: totalGaps + 1 }).map((_, i) => (
-          <div key={i} className="flex items-end">
+          <div key={i} className="flex items-end select-none">
             {/* Tooth */}
             <motion.div
-              className="text-6xl md:text-7xl"
+              className="text-6xl md:text-7xl select-none"
               animate={{ y: [0, -5, 0] }}
               transition={{ repeat: Infinity, duration: 2, delay: i * 0.2 }}
             >
               🦷
             </motion.div>
             
-            {/* Gap between teeth */}
+            {/* Gap between teeth - Larger touch target, no selection */}
             {i < totalGaps && (
               <motion.button
-                onMouseDown={() => startFlossing(i)}
+                onMouseDown={(e) => { e.preventDefault(); startFlossing(i); }}
                 onMouseUp={stopFlossing}
                 onMouseLeave={stopFlossing}
-                onTouchStart={() => startFlossing(i)}
+                onTouchStart={(e) => { e.preventDefault(); startFlossing(i); }}
                 onTouchEnd={stopFlossing}
-                className={`relative w-8 h-16 -mx-2 z-10 cursor-pointer flex items-center justify-center ${
+                onContextMenu={(e) => e.preventDefault()}
+                className={`relative w-12 h-20 -mx-3 z-10 cursor-pointer flex items-center justify-center touch-manipulation select-none ${
                   flossedGaps.includes(i) ? 'opacity-50' : ''
                 }`}
+                style={{
+                  WebkitTouchCallout: 'none',
+                  WebkitUserSelect: 'none',
+                  userSelect: 'none',
+                }}
                 whileHover={{ scale: 1.1 }}
               >
                 {currentGap === i && isFlossing ? (
                   <motion.div
-                    className="absolute w-1 bg-gradient-to-b from-pink-400 to-purple-500 rounded-full"
+                    className="absolute w-2 bg-gradient-to-b from-pink-400 to-purple-500 rounded-full"
                     style={{ height: `${flossProgress}%` }}
                     animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ repeat: Infinity, duration: 0.3 }}
                   />
                 ) : flossedGaps.includes(i) ? (
-                  <span className="text-2xl">✨</span>
+                  <span className="text-2xl select-none">✨</span>
                 ) : (
-                  <div className="w-1 h-8 bg-yellow-400/50 rounded-full" />
+                  <div className="w-2 h-10 bg-yellow-400/50 rounded-full" />
                 )}
               </motion.button>
             )}
