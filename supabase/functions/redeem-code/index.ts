@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,6 +11,9 @@ const logStep = (step: string, details?: unknown) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
   console.log(`[REDEEM-CODE] ${step}${detailsStr}`);
 };
+
+// Admin email to receive notifications
+const ADMIN_EMAIL = "admin@toothyquest.com"; // Change this to your email
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -41,7 +45,7 @@ serve(async (req) => {
     if (userError) throw new Error(`Authentication error: ${userError.message}`);
     const user = userData.user;
     if (!user?.id) throw new Error("User not authenticated");
-    logStep("User authenticated", { userId: user.id });
+    logStep("User authenticated", { userId: user.id, email: user.email });
 
     // Parse request body
     const { code } = await req.json();
@@ -193,6 +197,77 @@ serve(async (req) => {
     }
 
     logStep("Code redeemed successfully");
+
+    // Send email notification to admin
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (resendApiKey) {
+      try {
+        const resend = new Resend(resendApiKey);
+        
+        const redemptionTime = new Date().toLocaleString('en-US', {
+          timeZone: 'America/New_York',
+          dateStyle: 'full',
+          timeStyle: 'long'
+        });
+
+        const emailHtml = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h1 style="color: #6366f1; margin-bottom: 20px;">🎉 Promo Code Redeemed!</h1>
+            
+            <div style="background: #f3f4f6; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+              <h2 style="margin: 0 0 15px 0; color: #374151;">Redemption Details</h2>
+              
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280; width: 140px;"><strong>Code:</strong></td>
+                  <td style="padding: 8px 0; font-family: monospace; font-size: 16px; color: #6366f1; font-weight: bold;">${normalizedCode}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280;"><strong>User Email:</strong></td>
+                  <td style="padding: 8px 0;">${user.email || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280;"><strong>User ID:</strong></td>
+                  <td style="padding: 8px 0; font-family: monospace; font-size: 12px;">${user.id}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280;"><strong>Code Note:</strong></td>
+                  <td style="padding: 8px 0;">${unlockCode.note || 'No note'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280;"><strong>Redemptions:</strong></td>
+                  <td style="padding: 8px 0;">${(unlockCode.redemption_count || 0) + 1}/${unlockCode.max_redemptions || '∞'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; color: #6b7280;"><strong>Time:</strong></td>
+                  <td style="padding: 8px 0;">${redemptionTime}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <p style="color: #6b7280; font-size: 14px;">
+              This is an automated notification from ToothyQuest.
+            </p>
+          </div>
+        `;
+
+        await resend.emails.send({
+          from: "ToothyQuest <onboarding@resend.dev>",
+          to: [ADMIN_EMAIL],
+          subject: `🎁 Promo Code Redeemed: ${normalizedCode}`,
+          html: emailHtml,
+        });
+
+        logStep("Admin notification email sent", { to: ADMIN_EMAIL });
+      } catch (emailError) {
+        // Don't fail the redemption if email fails
+        logStep("Failed to send admin notification email", { 
+          error: emailError instanceof Error ? emailError.message : String(emailError) 
+        });
+      }
+    } else {
+      logStep("RESEND_API_KEY not configured, skipping email notification");
+    }
 
     return new Response(JSON.stringify({ 
       success: true, 
