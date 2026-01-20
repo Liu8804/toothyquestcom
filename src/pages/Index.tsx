@@ -26,6 +26,7 @@ import RewardsPanel from "@/components/rewards/RewardsPanel";
 import SparkMeter from "@/components/rewards/SparkMeter";
 import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
 import ReferralProgram from "@/components/ReferralProgram";
+import AdminDiagnosticsPanel from "@/components/admin/AdminDiagnosticsPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
@@ -226,6 +227,9 @@ const Index = () => {
 
         {/* Price Change Announcement */}
         <PriceChangeAnnouncement />
+
+        {/* Admin-only diagnostics (no sensitive data) */}
+        <AdminDiagnosticsPanel />
       </main>
     </>
   );

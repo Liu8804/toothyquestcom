@@ -63,6 +63,7 @@ export const usePurchase = () => {
     isRestoring: false,
     isCheckingPurchase: true,
   });
+  const [lastPurchaseCheckAt, setLastPurchaseCheckAt] = useState<string | null>(null);
 
   useEffect(() => {
     // Only check purchase status if we have both user and a valid access token
@@ -76,6 +77,7 @@ export const usePurchase = () => {
         isPurchased: localPurchase, 
         isCheckingPurchase: false 
       }));
+      setLastPurchaseCheckAt(new Date().toISOString());
     }
   }, [user, session?.access_token]);
 
@@ -88,6 +90,7 @@ export const usePurchase = () => {
         isPurchased: localPurchase, 
         isCheckingPurchase: false 
       }));
+      setLastPurchaseCheckAt(new Date().toISOString());
       return;
     }
 
@@ -104,6 +107,7 @@ export const usePurchase = () => {
           isPurchased: true,
           isCheckingPurchase: false,
         }));
+        setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
       
@@ -122,6 +126,7 @@ export const usePurchase = () => {
           isPurchased: true, 
           isCheckingPurchase: false 
         }));
+        setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
       
@@ -140,6 +145,7 @@ export const usePurchase = () => {
           isPurchased: localPurchase, 
           isCheckingPurchase: false 
         }));
+        setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
 
@@ -154,6 +160,7 @@ export const usePurchase = () => {
         isPurchased: purchased, 
         isCheckingPurchase: false 
       }));
+      setLastPurchaseCheckAt(new Date().toISOString());
     } catch (error) {
       // Silent fallback - don't log errors for unauthenticated users
       const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id || 'anonymous'}`) === 'true';
@@ -162,6 +169,7 @@ export const usePurchase = () => {
         isPurchased: localPurchase, 
         isCheckingPurchase: false 
       }));
+      setLastPurchaseCheckAt(new Date().toISOString());
     }
   };
 
@@ -278,6 +286,7 @@ export const usePurchase = () => {
     isLoading: purchaseState.isLoading,
     isRestoring: purchaseState.isRestoring,
     isCheckingPurchase: purchaseState.isCheckingPurchase,
+    lastPurchaseCheckAt,
     purchase,
     restorePurchase,
     isContentLocked,
