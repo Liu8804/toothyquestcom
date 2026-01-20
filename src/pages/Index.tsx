@@ -32,7 +32,7 @@ import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogIn, MessageCircle, Trophy } from "lucide-react";
+import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 
 const Index = () => {
@@ -54,6 +54,11 @@ const Index = () => {
   const [showDentalChat, setShowDentalChat] = useState(false);
   const [showDailyBonus, setShowDailyBonus] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
+
+  const openVoiceQuiz = useCallback(() => {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event("toothyquest:openVoiceQuiz"));
+  }, []);
 
   // Track page views
   usePageViewTracking();
@@ -131,9 +136,19 @@ const Index = () => {
               <span className="hidden sm:inline text-muted-foreground text-xs">pts</span>
             </Button>
           )}
+
+          {/* Quick Voice access */}
+          <Button
+            onClick={openVoiceQuiz}
+            variant="outline"
+            className="rounded-full gap-2 bg-card/80 backdrop-blur-sm shadow-card"
+          >
+            <Mic className="w-4 h-4" />
+            <span className="hidden sm:inline">Voice</span>
+          </Button>
+
           <LanguageSwitcher />
           <StreakTracker />
-          {!loading && (
             <>
               {user ? (
                 <Button
