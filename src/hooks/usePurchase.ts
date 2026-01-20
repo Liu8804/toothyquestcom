@@ -65,9 +65,11 @@ export const usePurchase = () => {
   });
 
   useEffect(() => {
-    if (user && session) {
+    // Only check purchase status if we have both user and a valid access token
+    if (user && session?.access_token) {
       checkPurchaseStatus();
     } else {
+      // No valid session - check local storage or default to not purchased
       const localPurchase = localStorage.getItem(`toothyquest_purchased_${user?.id || 'anonymous'}`) === 'true';
       setPurchaseState(prev => ({ 
         ...prev, 
@@ -75,7 +77,7 @@ export const usePurchase = () => {
         isCheckingPurchase: false 
       }));
     }
-  }, [user, session]);
+  }, [user, session?.access_token]);
 
   const checkPurchaseStatus = async () => {
     if (!session?.access_token) {
