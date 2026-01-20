@@ -14,7 +14,7 @@ import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
 import VoiceSettingsModal from "./VoiceSettingsModal";
-import StoryQuizComponent from "./StoryQuiz";
+import InteractiveQuizWrapper from "./quiz/InteractiveQuizWrapper";
 import BracesQuestEffect, { BracesQuestReward, isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
 interface StoryViewerProps {
   story: Story;
@@ -499,7 +499,7 @@ const StoryViewer = ({
                 transition={{ delay: 0.55 }}
                 className="mt-4"
               >
-                <StoryQuizComponent
+                <InteractiveQuizWrapper
                   quiz={story.quiz}
                   quiz2={story.quiz2}
                   onComplete={() => setQuizCompleted(true)}
