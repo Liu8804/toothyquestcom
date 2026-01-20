@@ -242,14 +242,15 @@ export const usePurchase = () => {
     // Test mode unlocks everything
     if (TEST_MODE_UNLOCK_ALL) return false;
 
-    // Games: require BOTH purchase + 5 completed quests
+    // If user has purchased/entitlement, everything is unlocked
+    if (purchaseState.isPurchased) return false;
+
+    // Games: require purchase (quest requirement removed for simplicity)
     if (contentType === 'game') {
-      if (!purchaseState.isPurchased) return true;
-      return completedQuestsCount < QUESTS_REQUIRED_FOR_GAMES;
+      return true; // Not purchased = locked
     }
 
     // Quests: first 5 are free, rest require purchase
-    if (purchaseState.isPurchased) return false;
     return contentIndex >= FREE_QUEST_LIMIT;
   }, [purchaseState.isPurchased]);
 
