@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
+import DifficultySelector, { Difficulty, DifficultySettings } from "./DifficultySelector";
 
 interface SugarBugChaseGameProps {
   game: Game;
@@ -15,41 +16,51 @@ interface SugarBug {
   speed: number;
 }
 
+const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings & { maxEscaped: number; bugSpeedMin: number; bugSpeedMax: number }> = {
+  easy: { spawnInterval: 2000, fallSpeed: 8, timeLimit: 60, winCondition: 10, maxEscaped: 8, bugSpeedMin: 0.2, bugSpeedMax: 0.4 },
+  medium: { spawnInterval: 1000, fallSpeed: 5, timeLimit: 45, winCondition: 15, maxEscaped: 5, bugSpeedMin: 0.3, bugSpeedMax: 0.5 },
+  hard: { spawnInterval: 600, fallSpeed: 3, timeLimit: 30, winCondition: 20, maxEscaped: 3, bugSpeedMin: 0.5, bugSpeedMax: 0.8 },
+};
+
 const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   const { t } = useTranslation();
   const [bugs, setBugs] = useState<SugarBug[]>([]);
   const [score, setScore] = useState(0);
   const [escaped, setEscaped] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(45); // Good challenge time
+  const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
+  const [timeLeft, setTimeLeft] = useState(45);
+
+  const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
 
   const spawnBug = useCallback(() => {
+    if (!settings) return;
     const newBug: SugarBug = {
       id: Date.now() + Math.random(),
       x: Math.random() * 70 + 15,
       startY: -10,
-      speed: Math.random() * 0.4 + 0.3, // Fun speed range
+      speed: Math.random() * (settings.bugSpeedMax - settings.bugSpeedMin) + settings.bugSpeedMin,
     };
     setBugs(prev => [...prev, newBug]);
-  }, []);
+  }, [settings]);
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || !settings) return;
 
-    // Fun spawn rate - every second for engaging gameplay
-    const spawnInterval = setInterval(spawnBug, 1000);
+    const spawnInterval = setInterval(spawnBug, settings.spawnInterval);
     return () => clearInterval(spawnInterval);
-  }, [gameStarted, spawnBug]);
+  }, [gameStarted, spawnBug, settings]);
 
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || !settings) return;
 
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
           clearInterval(timer);
-          const won = escaped < 5;
-          onComplete(won, won ? 3 : 1);
+          const won = escaped < settings.maxEscaped;
+          const stars = won ? (difficulty === "hard" ? 3 : difficulty === "medium" ? 3 : 2) : 1;
+          onComplete(won, stars);
           return 0;
         }
         return prev - 1;
@@ -57,13 +68,13 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [gameStarted, escaped, onComplete]);
+  }, [gameStarted, escaped, onComplete, settings, difficulty]);
 
   useEffect(() => {
-    if (escaped >= 5) {
+    if (settings && escaped >= settings.maxEscaped) {
       onComplete(false, 1);
     }
-  }, [escaped, onComplete]);
+  }, [escaped, onComplete, settings]);
 
   const tapBug = (bugId: number) => {
     setBugs(prev => prev.filter(b => b.id !== bugId));
@@ -75,7 +86,13 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
     setEscaped(prev => prev + 1);
   };
 
-  if (!gameStarted) {
+  const handleDifficultySelect = (diff: Difficulty) => {
+    setDifficulty(diff);
+    setTimeLeft(DIFFICULTY_SETTINGS[diff].timeLimit);
+    setGameStarted(true);
+  };
+
+  if (!difficulty) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
         <div className="text-6xl mb-4">{game.emoji}</div>
@@ -83,14 +100,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
           {game.name}
         </h3>
         <p className="text-muted-foreground mb-6">{game.instructionsKids}</p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setGameStarted(true)}
-          className="px-8 py-4 bg-gradient-to-r from-orange-400 to-red-500 text-white font-bold rounded-full text-xl"
-        >
-          {t("games.startChasing")}
-        </motion.button>
+        <DifficultySelector onSelect={handleDifficultySelect} />
       </div>
     );
   }
@@ -106,7 +116,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
           <span className="font-bold">⏱️ {timeLeft}s</span>
         </div>
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-          <span className="font-bold text-destructive">💀 {escaped}/5</span>
+          <span className="font-bold text-destructive">💀 {escaped}/{settings?.maxEscaped}</span>
         </div>
       </div>
 
@@ -123,7 +133,6 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
       </div>
 
       {/* Sugar Bugs */}
-      {/* Sugar Bugs - Larger and slower for kids */}
       <AnimatePresence>
         {bugs.map(bug => (
           <motion.button
@@ -135,7 +144,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
               rotate: [0, 10, -10, 0],
             }}
             transition={{ 
-              y: { duration: 5 / bug.speed, ease: "linear" }, // Fun fall speed
+              y: { duration: settings!.fallSpeed / bug.speed, ease: "linear" },
               rotate: { repeat: Infinity, duration: 0.8 },
               scale: { duration: 0.3 }
             }}
