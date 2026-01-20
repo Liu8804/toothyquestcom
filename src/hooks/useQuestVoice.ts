@@ -1,10 +1,12 @@
 import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { getVoicePersonalityConfig, getVoiceSettings } from "@/components/VoiceSettingsModal";
+import { getVoiceSettings } from "@/components/VoiceSettingsModal";
+import { getBaseVoice, getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 
 /**
  * Quest voice hook for short narration lines (intro, ending, celebrations).
+ * Uses ONE consistent voice (Lily) with mood variations for emotional context.
  * - Uses Premium AI voice (ElevenLabs) when selected AND the user is signed in
  * - Falls back to browser speech synthesis otherwise
  */
@@ -105,7 +107,7 @@ export const useQuestVoice = () => {
   );
 
   const speak = useCallback(
-    (text: string, onEnd?: () => void) => {
+    (text: string, mood: VoiceMood = "neutral", onEnd?: () => void) => {
       // Stop any current voice
       stop();
 
@@ -117,7 +119,7 @@ export const useQuestVoice = () => {
         return;
       }
 
-      // Try Premium AI voice (requires auth), otherwise fall back.
+      // Try Premium AI voice with consistent Toothy voice
       (async () => {
         try {
           const { data: { session } } = await supabase.auth.getSession();
@@ -130,7 +132,8 @@ export const useQuestVoice = () => {
             return;
           }
 
-          const personality = getVoicePersonalityConfig(settings.personality);
+          // Get the consistent Toothy voice with mood variation
+          const voiceConfig = getVoiceForMood(mood);
 
           const response = await fetch(
             `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
@@ -142,12 +145,12 @@ export const useQuestVoice = () => {
               },
               body: JSON.stringify({
                 text,
-                voiceId: personality.voiceId,
+                voiceId: voiceConfig.voiceId,
                 voiceSettings: {
-                  stability: personality.stability,
-                  similarityBoost: personality.similarityBoost,
-                  style: personality.style,
-                  speed: personality.speed,
+                  stability: voiceConfig.stability,
+                  similarityBoost: voiceConfig.similarityBoost,
+                  style: voiceConfig.style,
+                  speed: voiceConfig.speed,
                 },
               }),
             }
@@ -186,28 +189,35 @@ export const useQuestVoice = () => {
   );
 
   const speakIntro = useCallback((intro: string) => {
-    speak(intro);
+    speak(intro, "curious");
   }, [speak]);
 
   const speakQuestComplete = useCallback(
     (questTitle: string, xpEarned: number) => {
-      const message = `Quest Complete! ${questTitle}. You earned ${xpEarned} experience points. Great job!`;
-      speak(message);
+      const message = `Yay! Quest Complete! ${questTitle}. You earned ${xpEarned} experience points. Tooth-tastic job!`;
+      speak(message, "excited");
     },
     [speak]
   );
 
   const speakBadgeEarned = useCallback(
     (badgeName: string) => {
-      const message = `Congratulations! You earned a new badge: ${badgeName}!`;
-      speak(message);
+      const message = `Wow! You earned a new badge: ${badgeName}! You're amazing!`;
+      speak(message, "excited");
     },
     [speak]
   );
 
   const speakEnding = useCallback(
     (ending: string) => {
-      speak(ending);
+      speak(ending, "positive");
+    },
+    [speak]
+  );
+
+  const speakEncouragement = useCallback(
+    (message: string) => {
+      speak(message, "encouraging");
     },
     [speak]
   );
@@ -218,6 +228,7 @@ export const useQuestVoice = () => {
     speakQuestComplete,
     speakBadgeEarned,
     speakEnding,
+    speakEncouragement,
     stop,
   };
 };

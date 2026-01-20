@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getVoiceSettings, getVoicePersonalityConfig, VoiceSettings } from "@/components/VoiceSettingsModal";
+import { getVoiceSettings } from "@/components/VoiceSettingsModal";
+import { getBaseVoice, getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 import { supabase } from "@/integrations/supabase/client";
 
 interface UseStoryNarrationReturn {
@@ -7,7 +8,7 @@ interface UseStoryNarrationReturn {
   isLoading: boolean;
   isPaused: boolean;
   error: string | null;
-  play: (text: string) => void;
+  play: (text: string, mood?: VoiceMood) => void;
   pause: () => void;
   resume: () => void;
   stop: () => void;
@@ -100,7 +101,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     return () => stop();
   }, [stop]);
 
-  const playWithBrowserSpeech = useCallback((text: string, settings?: VoiceSettings) => {
+  const playWithBrowserSpeech = useCallback((text: string) => {
     if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
       setError("Audio playback isn't available on this device.");
       return;
@@ -114,7 +115,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     setIsLoading(false);
     setIsPaused(false);
 
-    const voiceSettings = settings || getVoiceSettings();
+    const voiceSettings = getVoiceSettings();
     
     // Wait for voices to load if needed
     const speakNow = () => {
@@ -181,7 +182,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
   }, [cleanupAudio, cleanupSpeech]);
 
   const play = useCallback(
-    (text: string) => {
+    (text: string, mood: VoiceMood = "neutral") => {
       stop();
       setError(null);
 
@@ -190,16 +191,15 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
 
       // If user prefers browser voice, use it directly
       if (voiceSettings.provider === "browser") {
-        playWithBrowserSpeech(text, voiceSettings);
+        playWithBrowserSpeech(text);
         return;
       }
 
-      // Otherwise try ElevenLabs
+      // Otherwise use ElevenLabs with consistent Toothy voice
       setIsLoading(true);
       modeRef.current = "audio";
 
       // Create the audio element immediately on the user click.
-      // Also start a tiny silent audio loop to "unlock" playback on strict autoplay policies.
       const audio = new Audio();
       audioRef.current = audio;
 
@@ -215,29 +215,27 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
         setError("Sorry, there was an error playing the story.");
       };
 
+      // Unlock audio for autoplay policies
       try {
         const unlockUrl = URL.createObjectURL(createSilenceWavBlob(350));
         unlockUrlRef.current = unlockUrl;
         audio.src = unlockUrl;
         audio.loop = true;
         audio.volume = 0;
-        // Fire-and-forget: if this fails, we still try to play real audio later.
         void audio.play();
       } catch {
         // ignore
       }
 
-      // Get user session for authenticated request
+      // Get the consistent Toothy voice with mood variation
+      const voiceConfig = getVoiceForMood(mood);
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (!session?.access_token) {
           console.log("ElevenLabs TTS requires authentication, falling back to browser speech");
           setIsLoading(false);
-          playWithBrowserSpeech(text, voiceSettings);
+          playWithBrowserSpeech(text);
           return;
         }
-
-        // Get voice personality settings
-        const personality = getVoicePersonalityConfig(voiceSettings.personality);
         
         fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
           method: "POST",
@@ -247,12 +245,12 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
           },
           body: JSON.stringify({ 
             text, 
-            voiceId: personality.voiceId,
+            voiceId: voiceConfig.voiceId,
             voiceSettings: {
-              stability: personality.stability,
-              similarityBoost: personality.similarityBoost,
-              style: personality.style,
-              speed: personality.speed,
+              stability: voiceConfig.stability,
+              similarityBoost: voiceConfig.similarityBoost,
+              style: voiceConfig.style,
+              speed: voiceConfig.speed,
             },
           }),
         })
@@ -280,7 +278,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
             // If provider blocked (401/402/429 etc), fall back so narration still works.
             if ([401, 402, 429, 403].includes(response.status)) {
               setError(serverMessage);
-              playWithBrowserSpeech(text, voiceSettings);
+              playWithBrowserSpeech(text);
               return;
             }
 
@@ -319,8 +317,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
               setIsPlaying(false);
               setIsPaused(false);
               setError("Audio playback was blocked. Tap Listen again, or allow audio playback.");
-              // Fallback to speech synthesis if available
-              playWithBrowserSpeech(text, voiceSettings);
+              playWithBrowserSpeech(text);
             }
           );
         })
