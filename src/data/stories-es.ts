@@ -17,6 +17,7 @@ export const storiesEs: Story[] = [
       options: ["Tomar una siesta", "Cepillarse los dientes", "Comer dulces"],
       correctIndex: 1,
       hint: "¡Excelente! ¡Cepillarse primero mantiene los dientes felices y brillantes!",
+      parentTip: "Haz que saludar a los dientes en el espejo sea parte de la rutina matutina. Esto ayuda a los niños a ver el cepillado como una aventura divertida en lugar de una tarea."
     },
   },
   {
@@ -34,6 +35,7 @@ export const storiesEs: Story[] = [
       options: ["Flossy", "Monstruo de Azúcar", "Diente Dormilón"],
       correctIndex: 0,
       hint: "¡Flossy es un compañero de cepillado que conoce todos los trucos!",
+      parentTip: "Demuestra la técnica de cepillado circular en tus propios dientes. A los niños les encanta imitar a los padres — ¡cepíllense juntos!"
     },
   },
   {
@@ -51,6 +53,7 @@ export const storiesEs: Story[] = [
       options: ["Cuchara", "Hilo dental", "Cobija"],
       correctIndex: 1,
       hint: "¡El hilo dental se desliza entre los dientes para mantenerlos súper limpios!",
+      parentTip: "Los palitos de hilo dental para niños son más fáciles de usar que el hilo regular. Deja que tu hijo elija colores divertidos para hacerlo emocionante."
     },
   },
   {
@@ -68,6 +71,7 @@ export const storiesEs: Story[] = [
       options: ["Dulces", "Zanahorias", "Refresco"],
       correctIndex: 1,
       hint: "¡Las zanahorias crujientes hacen los dientes fuertes y felices!",
+      parentTip: "Mantén snacks saludables como manzanas y queso a la altura de los ojos en el refrigerador. Cuando los niños ayudan a elegir, están más entusiasmados por comerlos."
     },
   },
   {
@@ -85,6 +89,7 @@ export const storiesEs: Story[] = [
       options: ["Cepillarse los dientes", "Ignorarlo", "Irse a dormir"],
       correctIndex: 0,
       hint: "¡Muy bien! ¡Cepillarse después de dulces pegajosos mantiene los frenos limpios y felices!",
+      parentTip: "Haz un 'kit de frenos' con un cepillo de viaje e hilo dental para la mochila de tu hijo. Esto los empodera para limpiar después de los snacks escolares."
     },
   },
   // ===== MISIONES DE PAGO / BLOQUEADAS (6–42) =====
@@ -103,6 +108,7 @@ export const storiesEs: Story[] = [
       options: ["Monstruo de Azúcar", "Flossy", "Diente Dormilón"],
       correctIndex: 1,
       hint: "¡A Flossy le encantan las aventuras y cepillarse juntos!",
+      parentTip: "Celebra los hitos del cepillado de tu hijo con pequeñas recompensas como calcomanías o choca esos cinco. ¡El refuerzo positivo construye hábitos duraderos!"
     },
   },
   {
@@ -120,6 +126,7 @@ export const storiesEs: Story[] = [
       options: ["Diente delantero", "Diente trasero", "Lengua"],
       correctIndex: 0,
       hint: "¡El diente delantero fue valiente y listo para brillar!",
+      parentTip: "Cuando un diente está flojo, tranquiliza a tu hijo de que es parte normal del crecimiento. ¡Deja que mueva el diente naturalmente — forzarlo puede causar dolor!"
     },
   },
   {
@@ -137,6 +144,7 @@ export const storiesEs: Story[] = [
       options: ["Hada de los Dientes", "Flossy", "Monstruo de Azúcar"],
       correctIndex: 0,
       hint: "¡Al Hada de los Dientes le encantan los dientes brillantes y las sonrisas!",
+      parentTip: "Convierte la visita del Hada de los Dientes en una celebración del cuidado dental. Considera dejar una nota del 'Hada' elogiando los buenos hábitos de cepillado."
     },
   },
   {
@@ -154,6 +162,7 @@ export const storiesEs: Story[] = [
       options: ["Dientes brillantes", "Monstruos de caries", "Cepillos perdidos"],
       correctIndex: 1,
       hint: "¡Los monstruos de caries se esconden si no nos cepillamos bien!",
+      parentTip: "Usa una solución reveladora de placa ocasionalmente para mostrar visualmente dónde se esconden los gérmenes. ¡Los niños se sorprenden cuando ven las áreas coloridas que pasaron por alto!"
     },
   },
   {
@@ -171,6 +180,7 @@ export const storiesEs: Story[] = [
       options: ["Comió dulces", "Usó hilo dental cuidadosamente", "Tomó una siesta"],
       correctIndex: 1,
       hint: "¡El hilo dental elimina el azúcar escondido en lugares difíciles!",
+      parentTip: "Haz del hilo dental un 'rescate' en equipo. Deja que tu hijo sostenga el hilo dental mientras lo guías — esto desarrolla coordinación y hace que la técnica sea memorable."
     },
   },
   {
@@ -188,6 +198,7 @@ export const storiesEs: Story[] = [
       options: ["Bichos del azúcar", "Dulces", "Piratas de la placa"],
       correctIndex: 0,
       hint: "¡Los bichos del azúcar huyen cuando nos cepillamos y usamos hilo dental!",
+      parentTip: "Después de las golosinas, convierte el cepillado en un juego de 'caza'. Pregunta a tu hijo cuántos bichos del azúcar pueden atrapar con su cepillo."
     },
   },
   {
@@ -205,6 +216,7 @@ export const storiesEs: Story[] = [
       options: ["Tristes", "Felices y orgullosos", "Somnolientos"],
       correctIndex: 1,
       hint: "¡Los dientes limpios hacen que todos sonrían grande!",
+      parentTip: "Crea una 'carta de búsqueda de sonrisa' donde tu hijo gane estrellas por cepillado y uso de hilo dental consistente. ¡Pequeñas recompensas mantienen la motivación alta!"
     },
   },
   {
@@ -222,6 +234,7 @@ export const storiesEs: Story[] = [
       options: ["Enjuague bucal", "Jugo", "Jarabe de dulces"],
       correctIndex: 0,
       hint: "¡El enjuague bucal mantiene los dientes extra frescos y saludables!",
+      parentTip: "Para niños de 6+, introduce el enjuague bucal sin alcohol gradualmente. Demuestra la técnica de enjuague y supervisa hasta que puedan escupir de manera confiable."
     },
   },
   {
@@ -239,6 +252,7 @@ export const storiesEs: Story[] = [
       options: ["Saltando y cepillándose", "Escondiéndose", "Durmiendo"],
       correctIndex: 0,
       hint: "¡Bailar mientras te cepillas hace felices a los dientes!",
+      parentTip: "Pon una canción de 2 minutos durante el cepillado. ¡A los niños les encanta cepillarse al ritmo — y asegura que cepillen por la cantidad correcta de tiempo!"
     },
   },
   {
@@ -256,6 +270,7 @@ export const storiesEs: Story[] = [
       options: ["Calcomanías", "Dulces", "Sueño"],
       correctIndex: 0,
       hint: "¡Las calcomanías son recompensas por dientes súper limpios!",
+      parentTip: "Crea un cuadro de 'Club del Diente Brillante' para tu familia. Cepillarse juntos y ganar insignias hace que el cuidado dental sea un hábito social divertido."
     },
   },
   {
@@ -273,6 +288,7 @@ export const storiesEs: Story[] = [
       options: ["Piratas de la Placa", "Hada de los Dientes", "Flossy"],
       correctIndex: 0,
       hint: "¡Los Piratas de la Placa esconden azúcar y gérmenes — cepíllalos!",
+      parentTip: "Explica que la placa es un 'equipo de villanos' que crece de noche. El cepillado nocturno es el 'escudo protector' más importante del día."
     },
   },
   {
@@ -290,6 +306,7 @@ export const storiesEs: Story[] = [
       options: ["A esconderse", "A cepillarse cuidadosamente", "A comer dulces"],
       correctIndex: 1,
       hint: "¡Cada diente puede brillar con un cepillado cuidadoso!",
+      parentTip: "Si tu hijo se resiste al cepillado, comienza con solo sostener el cepillo en la boca. Desarrolla gradualmente la rutina — ¡la paciencia gana sobre la presión!"
     },
   },
   {
@@ -307,6 +324,7 @@ export const storiesEs: Story[] = [
       options: ["Se movió", "Se durmió", "Se puso azul"],
       correctIndex: 0,
       hint: "¡Los dientes que se mueven se están preparando para hacer espacio a nuevos!",
+      parentTip: "Los dientes flojos generalmente se caen en 1-2 semanas. Deja que tu hijo lo mueva naturalmente — forzar puede causar sangrado y dolor innecesario."
     },
   },
   {
@@ -324,6 +342,7 @@ export const storiesEs: Story[] = [
       options: ["Era amable y simpático", "Usaba una máscara", "Daba dulces"],
       correctIndex: 0,
       hint: "¡Los dentistas son amigos que ayudan a los dientes a mantenerse saludables!",
+      parentTip: "Programa una 'visita de exploración' solo para conocer al dentista sin procedimientos. ¡La familiaridad reduce el miedo más que cualquier explicación!"
     },
   },
   {
@@ -341,6 +360,7 @@ export const storiesEs: Story[] = [
       options: ["A esperar pacientemente", "A moverse rápido", "A esconderse"],
       correctIndex: 0,
       hint: "¡La paciencia hace el cepillado y cuidado dental más fácil!",
+      parentTip: "Usa el cepillado como un momento de calma antes de acostarse. Llámalo 'hora tranquila de dientes' — ayuda a los niños a relajarse y asociar el cepillado con la paz."
     },
   },
   {
@@ -358,6 +378,7 @@ export const storiesEs: Story[] = [
       options: ["Bichos del azúcar", "Piratas de la placa", "Hada de los Dientes"],
       correctIndex: 0,
       hint: "¡Los bichos del azúcar se esconden entre los dientes si olvidamos cepillarnos!",
+      parentTip: "Explica que los bichos del azúcar son más activos justo después de comer dulces. El cepillado o enjuague dentro de 20 minutos detiene su 'fiesta'."
     },
   },
   {
@@ -375,6 +396,7 @@ export const storiesEs: Story[] = [
       options: ["Comió dulces", "Aprendió a ayudar a limpiar dientes", "Se escondió bajo la almohada"],
       correctIndex: 1,
       hint: "¡Hasta los problemas difíciles de dientes se pueden arreglar!",
+      parentTip: "Enseña a tu hijo que los pequeños problemas dentales se vuelven grandes si se ignoran. Chequeos regulares detectan los 'monstruos de caries' antes de que crezcan."
     },
   },
   {
@@ -392,6 +414,7 @@ export const storiesEs: Story[] = [
       options: ["Dulces", "Snack saludable", "Refresco"],
       correctIndex: 1,
       hint: "¡Los snacks saludables mantienen los dientes fuertes incluso de noche!",
+      parentTip: "Establece una regla de 'nada de comida después de cepillarse'. Si tu hijo tiene hambre, el agua es la única opción. ¡La consistencia es clave!"
     },
   },
   {
@@ -409,6 +432,7 @@ export const storiesEs: Story[] = [
       options: ["Con pasta dental de burbujas", "Con jugo", "Con una cuchara"],
       correctIndex: 0,
       hint: "¡La pasta dental de burbujas es divertida y limpia cada rincón!",
+      parentTip: "Deja que tu hijo elija su sabor de pasta dental (aprobada por el dentista). ¡La propiedad sobre su 'poción mágica' aumenta el entusiasmo por el cepillado!"
     },
   },
   {
@@ -426,6 +450,7 @@ export const storiesEs: Story[] = [
       options: ["Dulces", "Maíz", "Cepillo de dientes"],
       correctIndex: 1,
       hint: "¡El hilo dental puede sacar los pedacitos más pequeños escondidos en los dientes!",
+      parentTip: "Usa la hora de la cena para recordar el hilo dental. '¿Qué está escondido en tus dientes de la cena?' es un juego que refuerza por qué el hilo dental es importante."
     },
   },
   {
@@ -443,6 +468,7 @@ export const storiesEs: Story[] = [
       options: ["Piratas de la Placa", "Hada de los Dientes", "Flossy"],
       correctIndex: 0,
       hint: "¡Los Piratas de la Placa desaparecen cuando nos cepillamos y usamos hilo dental!",
+      parentTip: "Muestra a tu hijo la placa raspando suavemente un diente con la uña (antes de cepillar). Cuando vean la acumulación, ¡entenderán por qué el cepillado importa!"
     },
   },
   {
@@ -460,6 +486,7 @@ export const storiesEs: Story[] = [
       options: ["Temporizador", "Dulces", "Cobija"],
       correctIndex: 0,
       hint: "¡Cepillarse por 2 minutos mantiene los dientes súper limpios!",
+      parentTip: "Usa un reloj de arena de 2 minutos o la función de temporizador de la app. ¡Los niños les encanta 'ganarle al reloj' mientras se cepillan a fondo!"
     },
   },
   {
@@ -477,6 +504,7 @@ export const storiesEs: Story[] = [
       options: ["Estrellas", "Dulces", "Sueño"],
       correctIndex: 0,
       hint: "¡El cepillado en equipo es divertido y gana estrellas!",
+      parentTip: "Crea un equipo familiar de salud dental. Cuando todos se cepillan juntos, los niños ven el cuidado dental como un valor familiar compartido."
     },
   },
   {
@@ -494,6 +522,7 @@ export const storiesEs: Story[] = [
       options: ["Mapa perdido", "Bolsa de dulces", "Almohada"],
       correctIndex: 0,
       hint: "¡El Hada de los Dientes necesita nuestra ayuda para encontrar todos los dientes brillantes!",
+      parentTip: "Mantén viva la magia del Hada de los Dientes con notas personalizadas elogiando buenos hábitos de cepillado. Esto refuerza que los dientes limpios atraen magia."
     },
   },
   {
@@ -511,6 +540,7 @@ export const storiesEs: Story[] = [
       options: ["Desfilaron a la luz de la luna", "Se escondieron", "Durmieron"],
       correctIndex: 0,
       hint: "¡A los dientes les encanta brillar en un desfile divertido!",
+      parentTip: "Haz del cepillado nocturno un ritual especial. Luz tenue, música suave y rutinas predecibles ayudan a los niños a asociar el cepillado con la hora de dormir."
     },
   },
   {
@@ -528,6 +558,7 @@ export const storiesEs: Story[] = [
       options: ["Hechizo mágico", "Dulces", "Jugo"],
       correctIndex: 0,
       hint: "¡Un hechizo brillante + cepillado = dientes brillantes y felices!",
+      parentTip: "Deja que tu hijo cree su propio 'hechizo de cepillado'. ¡Las palabras tontas como 'brillar-deslizar-frotar' hacen que el cepillado sea una aventura creativa!"
     },
   },
   {
@@ -545,6 +576,7 @@ export const storiesEs: Story[] = [
       options: ["País de los Sueños", "Tierra de dulces", "Parque de juegos"],
       correctIndex: 0,
       hint: "¡El País de los Sueños está lleno de aventuras divertidas de dientes!",
+      parentTip: "Haz el cepillado nocturno 15 minutos antes de la hora de acostarse. Esto elimina la prisa y hace que la transición al sueño sea más suave."
     },
   },
   {
@@ -562,6 +594,7 @@ export const storiesEs: Story[] = [
       options: ["Manzana", "Galleta", "Dulces"],
       correctIndex: 0,
       hint: "¡Las manzanas crujientes son ricas y mantienen los dientes fuertes!",
+      parentTip: "Corta manzanas en rodajas para snacks fáciles. Las comidas crujientes ayudan a limpiar los dientes naturalmente y fortalecen las mandíbulas."
     },
   },
   {
@@ -579,6 +612,7 @@ export const storiesEs: Story[] = [
       options: ["Demasiado azucarado", "Demasiado frío", "Demasiado rico"],
       correctIndex: 0,
       hint: "¡Las bebidas azucaradas pueden esconderse en los dientes — cepíllate después del jugo!",
+      parentTip: "Lee las etiquetas de jugo con tu hijo. Muéstrales cómo el azúcar a menudo se esconde en bebidas de apariencia saludable — ¡es una lección de detective!"
     },
   },
   {
@@ -596,6 +630,7 @@ export const storiesEs: Story[] = [
       options: ["Agua", "Refresco", "Jugo"],
       correctIndex: 0,
       hint: "¡El agua mantiene los dientes limpios y felices!",
+      parentTip: "Mantén una botella de agua cerca durante el día. Enjuagar con agua después de snacks es un buen hábito cuando el cepillado no es posible."
     },
   },
   {
@@ -613,6 +648,7 @@ export const storiesEs: Story[] = [
       options: ["Dulces", "Fruta", "Galletas"],
       correctIndex: 1,
       hint: "¡Las frutas son ricas y buenas para dientes brillantes!",
+      parentTip: "Involucra a tu hijo en la compra de comestibles. Déjalos elegir una fruta o verdura — ¡es más probable que coman lo que eligieron!"
     },
   },
   // === MISIONES BONUS DE FRENOS (37-42) ===
@@ -631,6 +667,7 @@ export const storiesEs: Story[] = [
       options: ["Cepillarse cuidadosamente alrededor de los brackets", "Solo enjuagar con agua", "Saltarse el cepillado hoy"],
       correctIndex: 0,
       hint: "¡Sí! ¡Cepillarse cuidadosamente alrededor de cada bracket mantiene los dientes de Bracey brillantes!",
+      parentTip: "Deja que tu hijo elija los colores de las bandas de los frenos en las citas. ¡Es una forma divertida de darles control y hacer que las visitas ortodónticas sean emocionantes!"
     },
   },
   {
@@ -648,6 +685,7 @@ export const storiesEs: Story[] = [
       options: ["Cepillarse y usar hilo dental cuidadosamente", "Ignorarlo", "Sacudir sus dientes"],
       correctIndex: 0,
       hint: "¡Excelente! Cepillarse y usar hilo dental cuidadosamente mantiene los frenos limpios y cómodos.",
+      parentTip: "Mantén un 'kit de emergencia de frenos' con un cepillo de viaje, hilo dental y cera para brackets. ¡Estar preparado reduce el estrés de los accidentes pegajosos!"
     },
   },
   {
@@ -665,6 +703,7 @@ export const storiesEs: Story[] = [
       options: ["Mantener la calma y seguir cepillándose", "Quitarse los frenos", "Dejar de cepillarse"],
       correctIndex: 0,
       hint: "¡Perfecto! Los frenos flojos solo significan que tus dientes se están moviendo — cepillarse los ayuda a mantenerse saludables.",
+      parentTip: "Después de ajustes de frenos, ofrece alimentos suaves por un día. El malestar es normal y el cuidado reconfortante ayuda a los niños a mantenerse positivos sobre el tratamiento."
     },
   },
   {
@@ -682,6 +721,7 @@ export const storiesEs: Story[] = [
       options: ["Antes de dormir", "Solo en la mañana", "Solo después del almuerzo"],
       correctIndex: 0,
       hint: "¡Genial! Cepillarse antes de dormir mantiene los frenos y dientes limpios toda la noche.",
+      parentTip: "Los cepillos eléctricos pueden ser más efectivos para niños con frenos. El temporizador incorporado asegura un cepillado completo de 2 minutos."
     },
   },
   {
@@ -699,6 +739,7 @@ export const storiesEs: Story[] = [
       options: ["Cepillarse cuidadosamente alrededor de cada banda", "Cepillar solo los dientes delanteros", "Saltarse el cepillado de las bandas"],
       correctIndex: 0,
       hint: "¡Muy bien! El cepillado cuidadoso alrededor de las bandas mantiene tu sonrisa brillante y saludable.",
+      parentTip: "Usa un espejo de aumento para ayudar a tu hijo a ver alrededor de los brackets. ¡Ver de cerca les ayuda a cepillar con más precisión!"
     },
   },
   {
@@ -716,6 +757,7 @@ export const storiesEs: Story[] = [
       options: ["Cepillarse y usar hilo dental todos los días", "Comer dulces cuando quieras", "Saltarse el cepillado a veces"],
       correctIndex: 0,
       hint: "¡Increíble! Cepillarse y usar hilo dental todos los días desbloquea los superpoderes de los frenos.",
+      parentTip: "Celebra el 'día de retiro de frenos' con anticipación. Saber que hay una meta final ayuda a los niños a mantenerse motivados durante meses de tratamiento."
     },
   },
 
