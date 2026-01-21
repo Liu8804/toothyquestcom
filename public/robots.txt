@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://toothyquestcom.lovable.app/sitemap.xml
