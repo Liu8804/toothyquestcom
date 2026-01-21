@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, Shield, FileText, Info } from "lucide-react";
+import { Heart, Shield, FileText, Info, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ToothyMascot from "@/components/ToothyMascot";
@@ -41,13 +41,20 @@ export const FooterSection = () => {
                 <span className="font-display font-bold text-foreground">ToothyQuest</span>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-6 mt-4">
+            <div className="flex items-center justify-center gap-6 mt-4 flex-wrap">
               <Link 
                 to="/about" 
                 className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
               >
                 <Info className="w-3 h-3" />
                 {t("footer.links.about", "About")}
+              </Link>
+              <Link 
+                to="/contact" 
+                className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <Mail className="w-3 h-3" />
+                {t("footer.links.contact")}
               </Link>
               <Link 
                 to="/privacy" 

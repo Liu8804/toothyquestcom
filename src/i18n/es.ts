@@ -372,8 +372,71 @@ export const es = {
       terms: "Términos de Servicio",
       contact: "Contáctanos",
       support: "Soporte",
+      about: "Acerca de",
     },
     copyright: "© 2026 ToothyQuest. Ayudando a los niños a sonreír más.",
+  },
+
+  // Página Acerca de
+  aboutPage: {
+    title: "Acerca de ToothyQuest",
+    mission: {
+      title: "Nuestra Misión",
+      p1: "ToothyQuest es una aplicación educativa diseñada para ayudar a los niños a aprender hábitos dentales saludables a través de historias divertidas, cuestionarios interactivos y juegos entretenidos.",
+      p2: "Todo el contenido de ToothyQuest — incluyendo historias, personajes, cuestionarios, juegos y actividades de aprendizaje — es original y creado específicamente para esta aplicación para apoyar la educación dental de los niños de una manera divertida, atractiva y apropiada para su edad.",
+      p3: "Nuestra misión es hacer que el aprendizaje de la salud bucal sea agradable para los niños mientras brinda a los padres confianza en la calidad, seguridad y valor educativo del contenido.",
+    },
+    copyright: {
+      title: "Propiedad del Contenido y Derechos de Autor",
+      p1: "Todas las historias, personajes, cuestionarios, juegos, ilustraciones, conceptos de audio y materiales educativos disponibles en ToothyQuest son originales y exclusivos de esta aplicación.",
+      p2: "Este contenido está protegido por derechos de autor y no puede ser copiado, reproducido, distribuido, modificado o reutilizado sin permiso previo por escrito.",
+      notice: "© ToothyQuest. Todos los derechos reservados.",
+    },
+    disclaimer: {
+      title: "Aviso Educativo",
+      p1: "ToothyQuest es una aplicación educativa creada para apoyar el aprendizaje sobre higiene dental y hábitos saludables. El contenido se proporciona solo con fines educativos y no reemplaza el consejo dental profesional, diagnóstico o tratamiento.",
+      p2: "Para preocupaciones médicas o dentales, consulte a un profesional dental licenciado.",
+    },
+    audio: {
+      title: "Uso de Audio y Música",
+      p1: "La música, efectos de sonido y audio utilizados en ToothyQuest son originales, licenciados o libres de regalías y se utilizan de acuerdo con los derechos de uso aplicables.",
+    },
+    safety: {
+      title: "Confianza y Seguridad",
+      p1: "ToothyQuest está diseñado pensando en los niños y las familias. La aplicación sigue estándares de privacidad y seguridad apropiados para aplicaciones educativas para niños y no vende datos personales.",
+      p2: "Se fomenta la participación de los padres.",
+    },
+    contact: {
+      title: "Contáctanos",
+      p1: "Si tienes alguna pregunta sobre ToothyQuest, nuestro contenido o cualquier otra cosa, contáctanos en",
+    },
+  },
+
+  // Página de Contacto
+  contactPage: {
+    title: "Contáctanos",
+    subtitle: "¡Nos encantaría saber de ti! Envíanos un mensaje y te responderemos pronto.",
+    form: {
+      name: "Tu Nombre",
+      namePlaceholder: "Ingresa tu nombre",
+      email: "Correo Electrónico",
+      emailPlaceholder: "tu@correo.com",
+      subject: "Asunto",
+      subjectPlaceholder: "¿De qué se trata?",
+      message: "Mensaje",
+      messagePlaceholder: "Cuéntanos lo que tienes en mente...",
+      submit: "Enviar Mensaje",
+      sending: "Enviando...",
+    },
+    success: {
+      title: "¡Mensaje Enviado! 🎉",
+      message: "Gracias por comunicarte. ¡Te responderemos lo antes posible!",
+    },
+    info: {
+      title: "Otras Formas de Contactarnos",
+      email: "Envíanos un correo directamente a",
+      response: "Normalmente respondemos en 24-48 horas.",
+    },
   },
 
   // Autenticación

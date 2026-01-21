@@ -372,8 +372,71 @@ export const en = {
       terms: "Terms of Service",
       contact: "Contact Us",
       support: "Support",
+      about: "About",
     },
     copyright: "© 2026 ToothyQuest. Helping kids smile brighter.",
+  },
+
+  // About Page
+  aboutPage: {
+    title: "About ToothyQuest",
+    mission: {
+      title: "Our Mission",
+      p1: "ToothyQuest is an educational app designed to help children learn healthy dental habits through fun stories, interactive quizzes, and playful games.",
+      p2: "All content in ToothyQuest — including stories, characters, quizzes, games, and learning activities — is original and created specifically for this app to support children's dental education in a fun, engaging, and age-appropriate way.",
+      p3: "Our mission is to make oral health learning enjoyable for kids while giving parents confidence in the quality, safety, and educational value of the content.",
+    },
+    copyright: {
+      title: "Content Ownership & Copyright",
+      p1: "All stories, characters, quizzes, games, illustrations, audio concepts, and educational materials available in ToothyQuest are original and exclusive to this app.",
+      p2: "This content is protected by copyright and may not be copied, reproduced, distributed, modified, or reused without prior written permission.",
+      notice: "© ToothyQuest. All rights reserved.",
+    },
+    disclaimer: {
+      title: "Educational Disclaimer",
+      p1: "ToothyQuest is an educational app created to support learning about dental hygiene and healthy habits. The content is provided for educational purposes only and does not replace professional dental advice, diagnosis, or treatment.",
+      p2: "For medical or dental concerns, please consult a licensed dental professional.",
+    },
+    audio: {
+      title: "Audio & Music Usage",
+      p1: "Music, sound effects, and audio used in ToothyQuest are original, licensed, or royalty-free and are used in accordance with applicable usage rights.",
+    },
+    safety: {
+      title: "Trust & Safety",
+      p1: "ToothyQuest is designed with children and families in mind. The app follows privacy and safety standards appropriate for children's educational apps and does not sell personal data.",
+      p2: "Parental involvement is encouraged.",
+    },
+    contact: {
+      title: "Contact Us",
+      p1: "If you have any questions about ToothyQuest, our content, or anything else, please reach out to us at",
+    },
+  },
+
+  // Contact Page
+  contactPage: {
+    title: "Contact Us",
+    subtitle: "We'd love to hear from you! Send us a message and we'll get back to you soon.",
+    form: {
+      name: "Your Name",
+      namePlaceholder: "Enter your name",
+      email: "Email Address",
+      emailPlaceholder: "your@email.com",
+      subject: "Subject",
+      subjectPlaceholder: "What is this about?",
+      message: "Message",
+      messagePlaceholder: "Tell us what's on your mind...",
+      submit: "Send Message",
+      sending: "Sending...",
+    },
+    success: {
+      title: "Message Sent! 🎉",
+      message: "Thank you for reaching out. We'll get back to you as soon as possible!",
+    },
+    info: {
+      title: "Other Ways to Reach Us",
+      email: "Email us directly at",
+      response: "We typically respond within 24-48 hours.",
+    },
   },
 
   // Auth
