@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, Shield, FileText } from "lucide-react";
+import { Heart, Shield, FileText, Info } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ToothyMascot from "@/components/ToothyMascot";
@@ -42,6 +42,13 @@ export const FooterSection = () => {
               </div>
             </div>
             <div className="flex items-center justify-center gap-6 mt-4">
+              <Link 
+                to="/about" 
+                className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <Info className="w-3 h-3" />
+                {t("footer.links.about", "About")}
+              </Link>
               <Link 
                 to="/privacy" 
                 className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
