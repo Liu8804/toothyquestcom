@@ -220,7 +220,7 @@ export const WORLDS: World[] = [
     description: "Master the art of brushing with fun challenges and power-ups!",
     descriptionEs: "¡Domina el arte del cepillado con desafíos divertidos y poderes!",
     emoji: "🦸",
-    color: "from-rose-500 to-pink-600",
+    color: "from-pink-400 to-fuchsia-500",
     isLocked: false,
     phases: [
       {
