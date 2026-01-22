@@ -14,13 +14,51 @@ interface PuzzlePiece {
   currentPos: number;
   correctPos: number;
   emoji: string;
+  label: string;
+  color: string;
 }
 
-const PUZZLE_IMAGES = [
-  { emojis: ['🦷', '✨', '🪥', '💎'], fact: 'Teeth are the hardest part of your body!' },
-  { emojis: ['😁', '🌟', '💪', '❤️'], fact: 'Smiling makes you feel happier!' },
-  { emojis: ['🧵', '🦷', '💫', '👑'], fact: 'Flossing reaches places brushes can\'t!' },
-  { emojis: ['💧', '🦷', '🌊', '🎉'], fact: 'Water helps wash away food and germs!' },
+const PUZZLE_SETS = [
+  { 
+    pieces: [
+      { emoji: '🦷', label: 'Tooth', color: 'bg-white border-blue-300' },
+      { emoji: '🪥', label: 'Brush', color: 'bg-blue-100 border-blue-400' },
+      { emoji: '✨', label: 'Sparkle', color: 'bg-yellow-100 border-yellow-400' },
+      { emoji: '😁', label: 'Smile', color: 'bg-pink-100 border-pink-400' },
+    ],
+    title: 'Brushing Makes Smiles!',
+    fact: 'Brushing your teeth makes them sparkle!'
+  },
+  { 
+    pieces: [
+      { emoji: '💧', label: 'Water', color: 'bg-blue-100 border-blue-400' },
+      { emoji: '🦷', label: 'Tooth', color: 'bg-white border-gray-300' },
+      { emoji: '💪', label: 'Strong', color: 'bg-green-100 border-green-400' },
+      { emoji: '❤️', label: 'Healthy', color: 'bg-red-100 border-red-400' },
+    ],
+    title: 'Water Keeps Teeth Strong!',
+    fact: 'Water helps wash away food and keeps teeth healthy!'
+  },
+  { 
+    pieces: [
+      { emoji: '🧵', label: 'Floss', color: 'bg-purple-100 border-purple-400' },
+      { emoji: '🦷', label: 'Teeth', color: 'bg-white border-gray-300' },
+      { emoji: '🌟', label: 'Clean', color: 'bg-yellow-100 border-yellow-400' },
+      { emoji: '👑', label: 'Perfect', color: 'bg-amber-100 border-amber-400' },
+    ],
+    title: 'Flossing is Super!',
+    fact: 'Floss reaches spots your brush cannot!'
+  },
+  { 
+    pieces: [
+      { emoji: '🍎', label: 'Apple', color: 'bg-red-100 border-red-400' },
+      { emoji: '🥕', label: 'Carrot', color: 'bg-orange-100 border-orange-400' },
+      { emoji: '🦷', label: 'Happy', color: 'bg-white border-green-300' },
+      { emoji: '🎉', label: 'Yay!', color: 'bg-pink-100 border-pink-400' },
+    ],
+    title: 'Healthy Snacks!',
+    fact: 'Fruits and veggies are great for teeth!'
+  },
 ];
 
 export const ToothPuzzleAdventureGame: React.FC<ToothPuzzleAdventureGameProps> = ({ onComplete, onClose }) => {
@@ -45,13 +83,15 @@ export const ToothPuzzleAdventureGame: React.FC<ToothPuzzleAdventureGameProps> =
   };
 
   const initPuzzle = useCallback((index: number) => {
-    const puzzle = PUZZLE_IMAGES[index];
+    const puzzle = PUZZLE_SETS[index];
     const positions = shuffleArray([0, 1, 2, 3]);
-    const newPieces: PuzzlePiece[] = puzzle.emojis.map((emoji, i) => ({
+    const newPieces: PuzzlePiece[] = puzzle.pieces.map((piece, i) => ({
       id: i,
       currentPos: positions[i],
       correctPos: i,
-      emoji,
+      emoji: piece.emoji,
+      label: piece.label,
+      color: piece.color,
     }));
     setPieces(newPieces);
     setSelectedPiece(null);
@@ -76,7 +116,6 @@ export const ToothPuzzleAdventureGame: React.FC<ToothPuzzleAdventureGameProps> =
     } else if (selectedPiece === pieceId) {
       setSelectedPiece(null);
     } else {
-      // Swap pieces
       setPieces(prev => {
         const newPieces = [...prev];
         const piece1 = newPieces.find(p => p.id === selectedPiece)!;
@@ -117,7 +156,19 @@ export const ToothPuzzleAdventureGame: React.FC<ToothPuzzleAdventureGameProps> =
   if (!difficulty) {
     return (
       <DifficultySelector
-        game={{ id: 'tooth_puzzle_adventure', name: t('games.toothPuzzle', 'Tooth Puzzle Adventure'), shortDescription: '', instructionsKids: t('games.toothPuzzleInstructions', 'Put the puzzle pieces together to see the picture!'), instructionsParents: '', winMessage: '', loseMessage: '', reward: '', badgeName: '', emoji: '🧩', color: '' }}
+        game={{ 
+          id: 'tooth_puzzle_adventure', 
+          name: t('games.toothPuzzle', 'Tooth Puzzle Adventure'), 
+          shortDescription: '', 
+          instructionsKids: t('games.toothPuzzleInstructions', 'Put the pictures in the right order! Tap 2 pictures to swap them!'), 
+          instructionsParents: '', 
+          winMessage: '', 
+          loseMessage: '', 
+          reward: '', 
+          badgeName: '', 
+          emoji: '🧩', 
+          color: '' 
+        }}
         onSelectDifficulty={startGame}
       />
     );
@@ -142,61 +193,91 @@ export const ToothPuzzleAdventureGame: React.FC<ToothPuzzleAdventureGameProps> =
   }
 
   const sortedPieces = [...pieces].sort((a, b) => a.currentPos - b.currentPos);
+  const currentPuzzle = PUZZLE_SETS[puzzleIndex];
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <div className="flex justify-between w-full max-w-xs">
-        <div className="text-lg">⭐ {score}</div>
-        <div className="text-lg">🧩 {puzzleIndex + 1}/{difficulty === 'easy' ? 2 : difficulty === 'medium' ? 3 : 4}</div>
-        <div className="text-lg">{t('games.moves', 'Moves')}: {moves}</div>
+      {/* Stats */}
+      <div className="flex justify-between w-full max-w-xs bg-card rounded-lg p-3">
+        <div className="text-lg font-bold">⭐ {score}</div>
+        <div className="text-lg font-bold">🧩 {puzzleIndex + 1}/{difficulty === 'easy' ? 2 : difficulty === 'medium' ? 3 : 4}</div>
+        <div className="text-lg font-bold">👆 {moves}</div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-xl">
-        {sortedPieces.map((piece) => (
-          <motion.button
-            key={piece.id}
-            onClick={() => handlePieceClick(piece.id)}
-            className={`w-20 h-20 rounded-lg flex items-center justify-center text-4xl ${
-              selectedPiece === piece.id
-                ? 'bg-purple-400 ring-2 ring-purple-600'
-                : solved && piece.currentPos === piece.correctPos
-                ? 'bg-green-200'
-                : 'bg-white hover:bg-purple-50'
-            }`}
-            whileHover={{ scale: solved ? 1 : 1.05 }}
-            whileTap={{ scale: solved ? 1 : 0.95 }}
-            animate={solved ? { scale: [1, 1.1, 1] } : {}}
-            transition={{ duration: 0.3 }}
-          >
-            {piece.emoji}
-          </motion.button>
+      {/* Instructions */}
+      <div className="text-center bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl p-3 max-w-xs">
+        <p className="font-bold text-primary mb-1">🧩 {currentPuzzle.title}</p>
+        <p className="text-sm">
+          {selectedPiece !== null 
+            ? '👆 Now tap another piece to SWAP!' 
+            : '👇 Tap a piece to select it!'}
+        </p>
+      </div>
+
+      {/* Goal Preview */}
+      <div className="flex gap-1 items-center bg-green-100 dark:bg-green-900/30 rounded-xl px-4 py-2">
+        <span className="text-sm font-medium mr-2">Goal:</span>
+        {PUZZLE_SETS[puzzleIndex].pieces.map((piece, i) => (
+          <div key={i} className="flex flex-col items-center">
+            <span className="text-xl">{piece.emoji}</span>
+            <span className="text-[10px]">{i + 1}</span>
+          </div>
         ))}
       </div>
 
+      {/* Puzzle Grid */}
+      <div className="grid grid-cols-2 gap-3 bg-gradient-to-br from-purple-200 to-pink-200 dark:from-purple-900/50 dark:to-pink-900/50 p-6 rounded-2xl shadow-lg">
+        {sortedPieces.map((piece) => {
+          const isCorrect = piece.currentPos === piece.correctPos;
+          const isSelected = selectedPiece === piece.id;
+          
+          return (
+            <motion.button
+              key={piece.id}
+              onClick={() => handlePieceClick(piece.id)}
+              className={`w-24 h-24 rounded-xl flex flex-col items-center justify-center gap-1 border-4 shadow-md ${piece.color} ${
+                isSelected
+                  ? 'ring-4 ring-primary ring-offset-2 scale-105'
+                  : solved && isCorrect
+                    ? 'ring-4 ring-green-400'
+                    : ''
+              }`}
+              whileHover={{ scale: solved ? 1 : 1.05 }}
+              whileTap={{ scale: solved ? 1 : 0.95 }}
+              animate={solved ? { scale: [1, 1.1, 1] } : isSelected ? { rotate: [-2, 2, -2, 0] } : {}}
+              transition={{ duration: 0.3, repeat: isSelected ? Infinity : 0 }}
+            >
+              <span className="text-4xl">{piece.emoji}</span>
+              <span className="text-sm font-bold">{piece.label}</span>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${
+                isCorrect ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-600'
+              }`}>
+                Slot {piece.currentPos + 1}
+              </span>
+            </motion.button>
+          );
+        })}
+      </div>
+
+      {/* Fun Fact */}
       <AnimatePresence>
         {showFact && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-xl text-center max-w-xs"
+            className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/50 dark:to-emerald-900/50 p-4 rounded-xl text-center max-w-xs shadow-lg"
           >
-            <p className="text-lg font-bold mb-2">🎉 {t('games.puzzleComplete', 'Puzzle Complete!')}</p>
-            <p className="text-sm text-muted-foreground mb-4">{PUZZLE_IMAGES[puzzleIndex].fact}</p>
-            <Button onClick={handleNextPuzzle}>
+            <p className="text-2xl mb-2">🎉 Great Job!</p>
+            <p className="text-sm font-medium mb-3">{currentPuzzle.fact}</p>
+            <Button onClick={handleNextPuzzle} className="w-full">
               {puzzleIndex + 1 >= (difficulty === 'easy' ? 2 : difficulty === 'medium' ? 3 : 4)
-                ? t('games.seeResults', 'See Results')
-                : t('games.nextPuzzle', 'Next Puzzle')}
+                ? '🏆 See Results'
+                : '➡️ Next Puzzle'}
             </Button>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {!solved && (
-        <p className="text-sm text-muted-foreground text-center">
-          {selectedPiece !== null ? t('games.tapAnotherToSwap', 'Tap another piece to swap!') : t('games.tapPieceToSelect', 'Tap a piece to select it!')}
-        </p>
-      )}
     </div>
   );
 };

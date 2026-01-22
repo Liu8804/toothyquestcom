@@ -14,6 +14,7 @@ interface ArtElement {
   emoji: string;
   name: string;
   type: 'candy' | 'tooth' | 'effect' | 'protection';
+  description: string;
 }
 
 interface PlacedElement {
@@ -24,25 +25,22 @@ interface PlacedElement {
   side: 'candy' | 'tooth';
 }
 
-const ART_ELEMENTS: ArtElement[] = [
-  // Candy side
-  { id: 'lollipop', emoji: '🍭', name: 'Lollipop', type: 'candy' },
-  { id: 'chocolate', emoji: '🍫', name: 'Chocolate', type: 'candy' },
-  { id: 'cookie', emoji: '🍪', name: 'Cookie', type: 'candy' },
-  { id: 'cake', emoji: '🎂', name: 'Cake', type: 'candy' },
-  { id: 'icecream', emoji: '🍦', name: 'Ice Cream', type: 'candy' },
-  // Negative effects
-  { id: 'bug', emoji: '🦠', name: 'Sugar Bug', type: 'effect' },
-  { id: 'sad', emoji: '😢', name: 'Sad', type: 'effect' },
-  { id: 'cavity', emoji: '🕳️', name: 'Cavity', type: 'effect' },
-  // Tooth side  
-  { id: 'tooth', emoji: '🦷', name: 'Tooth', type: 'tooth' },
-  { id: 'brush', emoji: '🪥', name: 'Brush', type: 'protection' },
-  { id: 'sparkle', emoji: '✨', name: 'Sparkle', type: 'protection' },
-  { id: 'shield', emoji: '🛡️', name: 'Shield', type: 'protection' },
-  { id: 'water', emoji: '💧', name: 'Water', type: 'protection' },
-  { id: 'happy', emoji: '😊', name: 'Happy', type: 'protection' },
-  { id: 'star', emoji: '⭐', name: 'Star', type: 'protection' },
+const CANDY_ELEMENTS: ArtElement[] = [
+  { id: 'lollipop', emoji: '🍭', name: 'Lollipop', type: 'candy', description: 'Sugary!' },
+  { id: 'chocolate', emoji: '🍫', name: 'Chocolate', type: 'candy', description: 'Sweet!' },
+  { id: 'cookie', emoji: '🍪', name: 'Cookie', type: 'candy', description: 'Crunchy!' },
+  { id: 'cake', emoji: '🎂', name: 'Cake', type: 'candy', description: 'Yummy!' },
+  { id: 'bug', emoji: '🦠', name: 'Sugar Bug', type: 'effect', description: 'Bad germs!' },
+  { id: 'sad', emoji: '😢', name: 'Sad Tooth', type: 'effect', description: 'Hurting!' },
+];
+
+const TOOTH_ELEMENTS: ArtElement[] = [
+  { id: 'tooth', emoji: '🦷', name: 'Happy Tooth', type: 'tooth', description: 'Healthy!' },
+  { id: 'brush', emoji: '🪥', name: 'Toothbrush', type: 'protection', description: 'Cleans!' },
+  { id: 'sparkle', emoji: '✨', name: 'Sparkle', type: 'protection', description: 'Shiny!' },
+  { id: 'shield', emoji: '🛡️', name: 'Shield', type: 'protection', description: 'Protects!' },
+  { id: 'water', emoji: '💧', name: 'Water', type: 'protection', description: 'Rinses!' },
+  { id: 'happy', emoji: '😊', name: 'Happy Face', type: 'protection', description: 'Healthy!' },
 ];
 
 export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComplete, onClose }) => {
@@ -70,7 +68,6 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
 
-    // Check if element matches the side
     const isCorrectSide = 
       (side === 'candy' && (selectedElement.type === 'candy' || selectedElement.type === 'effect')) ||
       (side === 'tooth' && (selectedElement.type === 'tooth' || selectedElement.type === 'protection'));
@@ -84,16 +81,16 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
     };
 
     setPlacedElements(prev => [...prev, newPlaced]);
-    setScore(s => s + (isCorrectSide ? 10 : 2));
+    setScore(s => s + (isCorrectSide ? 15 : 5));
     setSelectedElement(null);
   };
 
-  const handleRemoveElement = (id: string) => {
-    setPlacedElements(prev => prev.filter(e => e.id !== id));
+  const handleRemoveElement = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setPlacedElements(prev => prev.filter(el => el.id !== id));
   };
 
   const handleComplete = () => {
-    // Calculate bonus
     const candySide = placedElements.filter(e => e.side === 'candy');
     const toothSide = placedElements.filter(e => e.side === 'tooth');
     
@@ -112,7 +109,19 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
   if (!difficulty) {
     return (
       <DifficultySelector
-        game={{ id: 'candy_vs_tooth_art', name: t('games.candyVsTooth', 'Candy vs Tooth Art'), shortDescription: '', instructionsKids: t('games.candyVsToothInstructions', 'Draw what happens when candy meets teeth!'), instructionsParents: '', winMessage: '', loseMessage: '', reward: '', badgeName: '', emoji: '🖼️', color: '' }}
+        game={{ 
+          id: 'candy_vs_tooth_art', 
+          name: t('games.candyVsTooth', 'Candy vs Tooth Art'), 
+          shortDescription: '', 
+          instructionsKids: t('games.candyVsToothInstructions', 'Create art showing candy vs healthy teeth! Put candy items on the red side and tooth-healthy items on the blue side!'), 
+          instructionsParents: '', 
+          winMessage: '', 
+          loseMessage: '', 
+          reward: '', 
+          badgeName: '', 
+          emoji: '🎨', 
+          color: '' 
+        }}
         onSelectDifficulty={startGame}
       />
     );
@@ -126,29 +135,31 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
         className="text-center p-6"
       >
         <div className="text-6xl mb-4">🎨</div>
-        <h2 className="text-2xl font-bold text-primary mb-2">{t('games.amazingArt', 'Amazing Art!')}</h2>
+        <h2 className="text-2xl font-bold text-primary mb-2">{t('games.amazingArt', 'Amazing Artwork!')}</h2>
         <p className="text-lg mb-2">{t('games.score', 'Score')}: {score}</p>
-        <p className="text-sm text-muted-foreground mb-4">{t('games.youUnderstandSugarAndTeeth', 'You understand sugar and teeth!')}</p>
+        <p className="text-sm text-muted-foreground mb-4">{t('games.youUnderstandSugarAndTeeth', 'You showed how to protect teeth from candy!')}</p>
         
         {/* Show the final art */}
-        <div className="flex gap-2 justify-center mb-4">
-          <div className="relative w-24 h-24 bg-red-100 rounded-xl overflow-hidden">
-            {placedElements.filter(e => e.side === 'candy').slice(0, 4).map(placed => (
+        <div className="flex gap-3 justify-center mb-4 items-center">
+          <div className="relative w-28 h-28 bg-gradient-to-br from-red-200 to-orange-200 rounded-xl overflow-hidden shadow-md">
+            <p className="absolute top-1 left-1/2 -translate-x-1/2 text-xs font-bold bg-red-400 text-white px-2 rounded">Candy</p>
+            {placedElements.filter(e => e.side === 'candy').slice(0, 6).map(placed => (
               <div
                 key={placed.id}
-                className="absolute text-lg"
+                className="absolute text-xl"
                 style={{ left: `${placed.x}%`, top: `${placed.y}%`, transform: 'translate(-50%, -50%)' }}
               >
                 {placed.element.emoji}
               </div>
             ))}
           </div>
-          <div className="flex items-center text-2xl">⚔️</div>
-          <div className="relative w-24 h-24 bg-blue-100 rounded-xl overflow-hidden">
-            {placedElements.filter(e => e.side === 'tooth').slice(0, 4).map(placed => (
+          <div className="text-3xl">⚔️</div>
+          <div className="relative w-28 h-28 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-xl overflow-hidden shadow-md">
+            <p className="absolute top-1 left-1/2 -translate-x-1/2 text-xs font-bold bg-blue-400 text-white px-2 rounded">Teeth</p>
+            {placedElements.filter(e => e.side === 'tooth').slice(0, 6).map(placed => (
               <div
                 key={placed.id}
-                className="absolute text-lg"
+                className="absolute text-xl"
                 style={{ left: `${placed.x}%`, top: `${placed.y}%`, transform: 'translate(-50%, -50%)' }}
               >
                 {placed.element.emoji}
@@ -165,25 +176,41 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
     );
   }
 
-  const candyElements = ART_ELEMENTS.filter(e => e.type === 'candy' || e.type === 'effect');
-  const toothElements = ART_ELEMENTS.filter(e => e.type === 'tooth' || e.type === 'protection');
+  const currentElements = activeSide === 'candy' ? CANDY_ELEMENTS : TOOTH_ELEMENTS;
+  const candyCount = placedElements.filter(e => e.side === 'candy').length;
+  const toothCount = placedElements.filter(e => e.side === 'tooth').length;
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
-      <div className="flex justify-between w-full max-w-md">
-        <div className="text-lg">⭐ {score}</div>
-        <div className="text-lg">🎨 {placedElements.length} items</div>
+    <div className="flex flex-col items-center gap-3 p-4">
+      {/* Stats */}
+      <div className="flex justify-between w-full max-w-md bg-card rounded-lg p-3">
+        <div className="text-lg font-bold">⭐ {score}</div>
+        <div className="text-lg font-bold">🎨 {placedElements.length} items</div>
       </div>
 
-      {/* Art Canvas - Two Sides */}
-      <div className="flex gap-4">
+      {/* Instructions */}
+      <div className="text-center bg-gradient-to-r from-orange-100 to-blue-100 dark:from-orange-900/30 dark:to-blue-900/30 rounded-xl p-3 max-w-md">
+        <p className="font-bold text-primary mb-1">🎨 Candy vs Teeth Battle!</p>
+        <p className="text-sm">
+          {selectedElement 
+            ? `👆 Tap a canvas to place your ${selectedElement.name}!`
+            : `👇 Pick an item from the ${activeSide === 'candy' ? '🍬 candy' : '🦷 teeth'} section!`}
+        </p>
+      </div>
+
+      {/* Art Canvases - Two Sides */}
+      <div className="flex gap-4 items-center">
         {/* Candy Side */}
         <div className="text-center">
-          <p className="text-sm font-bold mb-1">🍬 Candy Side</p>
+          <div className="flex items-center justify-center gap-1 mb-2">
+            <span className="text-xl">🍬</span>
+            <span className="text-sm font-bold text-red-600">Candy Side</span>
+            <span className="bg-red-100 text-red-600 text-xs px-2 rounded-full">{candyCount}</span>
+          </div>
           <div
             onClick={(e) => handleCanvasClick('candy', e)}
-            className={`relative w-36 h-36 bg-gradient-to-br from-red-100 to-orange-100 rounded-xl cursor-pointer overflow-hidden ${
-              activeSide === 'candy' ? 'ring-2 ring-red-400' : ''
+            className={`relative w-36 h-40 bg-gradient-to-br from-red-100 to-orange-200 dark:from-red-900/50 dark:to-orange-900/50 rounded-xl cursor-pointer overflow-hidden shadow-lg border-3 ${
+              activeSide === 'candy' ? 'border-red-400 ring-2 ring-red-300' : 'border-red-200'
             }`}
           >
             <AnimatePresence>
@@ -193,27 +220,35 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute text-2xl cursor-pointer"
+                  className="absolute text-2xl cursor-pointer hover:scale-125 transition-transform"
                   style={{ left: `${placed.x}%`, top: `${placed.y}%`, transform: 'translate(-50%, -50%)' }}
-                  onClick={(e) => { e.stopPropagation(); handleRemoveElement(placed.id); }}
-                  whileHover={{ scale: 1.2 }}
+                  onClick={(e) => handleRemoveElement(placed.id, e)}
                 >
                   {placed.element.emoji}
                 </motion.div>
               ))}
             </AnimatePresence>
+            {selectedElement && activeSide === 'candy' && (
+              <div className="absolute inset-0 border-2 border-dashed border-red-500 rounded-xl bg-red-500/10 flex items-center justify-center">
+                <span className="text-xs bg-white px-2 py-1 rounded font-bold">Tap here!</span>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center text-3xl">⚔️</div>
+        <div className="text-4xl">⚔️</div>
 
         {/* Tooth Side */}
         <div className="text-center">
-          <p className="text-sm font-bold mb-1">🦷 Tooth Side</p>
+          <div className="flex items-center justify-center gap-1 mb-2">
+            <span className="text-xl">🦷</span>
+            <span className="text-sm font-bold text-blue-600">Teeth Side</span>
+            <span className="bg-blue-100 text-blue-600 text-xs px-2 rounded-full">{toothCount}</span>
+          </div>
           <div
             onClick={(e) => handleCanvasClick('tooth', e)}
-            className={`relative w-36 h-36 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-xl cursor-pointer overflow-hidden ${
-              activeSide === 'tooth' ? 'ring-2 ring-blue-400' : ''
+            className={`relative w-36 h-40 bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/50 dark:to-cyan-900/50 rounded-xl cursor-pointer overflow-hidden shadow-lg border-3 ${
+              activeSide === 'tooth' ? 'border-blue-400 ring-2 ring-blue-300' : 'border-blue-200'
             }`}
           >
             <AnimatePresence>
@@ -223,15 +258,19 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute text-2xl cursor-pointer"
+                  className="absolute text-2xl cursor-pointer hover:scale-125 transition-transform"
                   style={{ left: `${placed.x}%`, top: `${placed.y}%`, transform: 'translate(-50%, -50%)' }}
-                  onClick={(e) => { e.stopPropagation(); handleRemoveElement(placed.id); }}
-                  whileHover={{ scale: 1.2 }}
+                  onClick={(e) => handleRemoveElement(placed.id, e)}
                 >
                   {placed.element.emoji}
                 </motion.div>
               ))}
             </AnimatePresence>
+            {selectedElement && activeSide === 'tooth' && (
+              <div className="absolute inset-0 border-2 border-dashed border-blue-500 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                <span className="text-xs bg-white px-2 py-1 rounded font-bold">Tap here!</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -242,45 +281,49 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
           size="sm" 
           variant={activeSide === 'candy' ? 'default' : 'outline'}
           onClick={() => setActiveSide('candy')}
+          className={activeSide === 'candy' ? 'bg-red-500 hover:bg-red-600' : ''}
         >
-          🍬 Candy
+          🍬 Candy Items
         </Button>
         <Button 
           size="sm" 
           variant={activeSide === 'tooth' ? 'default' : 'outline'}
           onClick={() => setActiveSide('tooth')}
+          className={activeSide === 'tooth' ? 'bg-blue-500 hover:bg-blue-600' : ''}
         >
-          🦷 Tooth
+          🦷 Teeth Items
         </Button>
       </div>
 
       {/* Element Picker */}
-      <div className="flex flex-wrap gap-2 justify-center max-w-sm">
-        {(activeSide === 'candy' ? candyElements : toothElements).map(element => (
+      <div className={`grid grid-cols-3 gap-2 p-3 rounded-xl ${
+        activeSide === 'candy' ? 'bg-red-50 dark:bg-red-900/20' : 'bg-blue-50 dark:bg-blue-900/20'
+      }`}>
+        {currentElements.map(element => (
           <motion.button
             key={element.id}
             onClick={() => setSelectedElement(element)}
-            className={`w-10 h-10 rounded-lg text-xl ${
+            className={`flex flex-col items-center gap-1 p-2 rounded-lg ${
               selectedElement?.id === element.id 
-                ? 'bg-blue-200 ring-2 ring-blue-400' 
-                : 'bg-gray-100 hover:bg-gray-200'
+                ? 'bg-primary ring-2 ring-primary-foreground scale-105' 
+                : 'bg-white dark:bg-gray-700 hover:scale-105'
             }`}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            {element.emoji}
+            <span className="text-2xl">{element.emoji}</span>
+            <span className="text-[10px] font-bold">{element.name}</span>
           </motion.button>
         ))}
       </div>
 
-      {selectedElement && (
-        <p className="text-sm text-muted-foreground">
-          {t('games.tapCanvasToPlace', 'Tap the canvas to place')} {selectedElement.emoji}
-        </p>
-      )}
-
-      <Button onClick={handleComplete} className="w-full max-w-xs" disabled={placedElements.length < 3}>
-        🎨 {t('games.finishArt', 'Finish Art!')}
+      <Button 
+        onClick={handleComplete} 
+        className="w-full max-w-xs" 
+        size="lg"
+        disabled={placedElements.length < 3}
+      >
+        🎨 Finish My Art! ({placedElements.length} items)
       </Button>
     </div>
   );
