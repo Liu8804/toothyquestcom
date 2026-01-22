@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import DifficultySelector, { Difficulty } from './DifficultySelector';
@@ -14,17 +14,17 @@ interface Position {
   y: number;
 }
 
-const MAZE_SIZE = 7;
+const MAZE_SIZE = 6;
 
 const generateMaze = (difficulty: Difficulty): number[][] => {
   const maze: number[][] = [];
-  const wallDensity = difficulty === 'easy' ? 0.2 : difficulty === 'medium' ? 0.25 : 0.3;
+  const wallDensity = difficulty === 'easy' ? 0.15 : difficulty === 'medium' ? 0.2 : 0.25;
   
   for (let y = 0; y < MAZE_SIZE; y++) {
     maze[y] = [];
     for (let x = 0; x < MAZE_SIZE; x++) {
       if ((y === 0 && x === 0) || (y === MAZE_SIZE - 1 && x === MAZE_SIZE - 1)) {
-        maze[y][x] = 0; // Start and end are always clear
+        maze[y][x] = 0;
       } else {
         maze[y][x] = Math.random() < wallDensity ? 1 : 0;
       }
@@ -35,7 +35,9 @@ const generateMaze = (difficulty: Difficulty): number[][] => {
 
 const generateSugarMonsters = (maze: number[][], count: number): Position[] => {
   const monsters: Position[] = [];
-  while (monsters.length < count) {
+  let attempts = 0;
+  while (monsters.length < count && attempts < 100) {
+    attempts++;
     const x = Math.floor(Math.random() * MAZE_SIZE);
     const y = Math.floor(Math.random() * MAZE_SIZE);
     if (maze[y][x] === 0 && !(x === 0 && y === 0) && !(x === MAZE_SIZE - 1 && y === MAZE_SIZE - 1)) {
@@ -58,10 +60,11 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
   const [moves, setMoves] = useState(0);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   const startGame = useCallback((diff: Difficulty) => {
     const newMaze = generateMaze(diff);
-    const monsterCount = diff === 'easy' ? 3 : diff === 'medium' ? 5 : 7;
+    const monsterCount = diff === 'easy' ? 2 : diff === 'medium' ? 3 : 4;
     setMaze(newMaze);
     setMonsters(generateSugarMonsters(newMaze, monsterCount));
     setPlayerPos({ x: 0, y: 0 });
@@ -80,12 +83,11 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
     const newY = playerPos.y + dy;
 
     if (newX < 0 || newX >= MAZE_SIZE || newY < 0 || newY >= MAZE_SIZE) return;
-    if (maze[newY][newX] === 1) return; // Wall
+    if (maze[newY][newX] === 1) return;
 
     setPlayerPos({ x: newX, y: newY });
     setMoves(m => m + 1);
 
-    // Check for monster collision
     if (monsters.some(m => m.x === newX && m.y === newY)) {
       setLives(l => {
         const newLives = l - 1;
@@ -94,11 +96,9 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
         }
         return newLives;
       });
-      // Remove the monster
       setMonsters(prev => prev.filter(m => !(m.x === newX && m.y === newY)));
     }
 
-    // Check for win
     if (newX === MAZE_SIZE - 1 && newY === MAZE_SIZE - 1) {
       const baseScore = difficulty === 'easy' ? 50 : difficulty === 'medium' ? 75 : 100;
       const moveBonus = Math.max(0, 50 - moves);
@@ -109,6 +109,7 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
     }
   }, [playerPos, maze, monsters, gameOver, won, lives, moves, difficulty]);
 
+  // Keyboard controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
@@ -123,10 +124,45 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [movePlayer]);
 
+  // Touch/swipe controls
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartRef.current.x;
+    const dy = touch.clientY - touchStartRef.current.y;
+    const minSwipe = 30;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > minSwipe) movePlayer(1, 0);
+      else if (dx < -minSwipe) movePlayer(-1, 0);
+    } else {
+      if (dy > minSwipe) movePlayer(0, 1);
+      else if (dy < -minSwipe) movePlayer(0, -1);
+    }
+    touchStartRef.current = null;
+  };
+
   if (!difficulty) {
     return (
       <DifficultySelector
-        game={{ id: 'sugar_rush_maze', name: t('games.sugarRushMaze', 'Sugar Rush Maze'), shortDescription: '', instructionsKids: t('games.sugarRushMazeInstructions', 'Guide your tooth through the maze and dodge the sugar!'), instructionsParents: '', winMessage: '', loseMessage: '', reward: '', badgeName: '', emoji: '🍬', color: '' }}
+        game={{ 
+          id: 'sugar_rush_maze', 
+          name: t('games.sugarRushMaze', 'Sugar Rush Maze'), 
+          shortDescription: '', 
+          instructionsKids: t('games.sugarRushMazeInstructions', 'Move the tooth 🦷 to the green goal 🏁! Avoid the sugar candies 🍬!'), 
+          instructionsParents: '', 
+          winMessage: '', 
+          loseMessage: '', 
+          reward: '', 
+          badgeName: '', 
+          emoji: '🍬', 
+          color: '' 
+        }}
         onSelectDifficulty={startGame}
       />
     );
@@ -140,7 +176,7 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
         className="text-center p-6"
       >
         <div className="text-6xl mb-4">🏆</div>
-        <h2 className="text-2xl font-bold text-primary mb-2">{t('games.youEscaped', 'You Escaped!')}</h2>
+        <h2 className="text-2xl font-bold text-primary mb-2">{t('games.youEscaped', 'You Escaped the Sugar!')}</h2>
         <p className="text-lg mb-4">{t('games.score', 'Score')}: {score}</p>
         <div className="flex gap-2 justify-center">
           <Button onClick={() => startGame(difficulty)}>{t('common.playAgain', 'Play Again')}</Button>
@@ -158,7 +194,7 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
         className="text-center p-6"
       >
         <div className="text-6xl mb-4">🍬</div>
-        <h2 className="text-2xl font-bold text-destructive mb-2">{t('games.sugarCaught', 'Sugar Caught You!')}</h2>
+        <h2 className="text-2xl font-bold text-destructive mb-2">{t('games.sugarCaught', 'Sugar Got You!')}</h2>
         <p className="text-muted-foreground mb-4">{t('games.tryDifferentPath', 'Try a different path!')}</p>
         <div className="flex gap-2 justify-center">
           <Button onClick={() => startGame(difficulty)}>{t('common.tryAgain', 'Try Again')}</Button>
@@ -169,42 +205,112 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
-      <div className="flex justify-between w-full max-w-xs">
-        <div className="text-lg">❤️ {lives}</div>
-        <div className="text-lg">{t('games.moves', 'Moves')}: {moves}</div>
+    <div 
+      className="flex flex-col items-center gap-4 p-4"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Stats */}
+      <div className="flex justify-between w-full max-w-xs bg-card rounded-lg p-3">
+        <div className="text-lg font-bold">❤️ {lives}</div>
+        <div className="text-lg font-bold">👣 {moves}</div>
       </div>
 
-      <div className="grid gap-1 p-4 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl">
+      {/* Instructions */}
+      <div className="text-center bg-gradient-to-r from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 rounded-xl p-3 max-w-xs">
+        <p className="text-sm font-medium">
+          🦷 Move tooth to 🏁 goal! Avoid 🍬 sugar!
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">Use arrows or swipe!</p>
+      </div>
+
+      {/* Maze Grid */}
+      <div className="grid gap-1 p-4 bg-gradient-to-br from-amber-100 to-orange-200 dark:from-amber-900/50 dark:to-orange-900/50 rounded-2xl shadow-lg">
         {maze.map((row, y) => (
           <div key={y} className="flex gap-1">
-            {row.map((cell, x) => (
-              <motion.div
-                key={`${x}-${y}`}
-                className={`w-10 h-10 rounded flex items-center justify-center text-xl ${
-                  cell === 1 ? 'bg-amber-800' : 'bg-white'
-                } ${x === MAZE_SIZE - 1 && y === MAZE_SIZE - 1 ? 'bg-green-200' : ''}`}
-                whileHover={{ scale: cell === 0 ? 1.05 : 1 }}
-              >
-                {playerPos.x === x && playerPos.y === y && '🦷'}
-                {monsters.some(m => m.x === x && m.y === y) && '🍬'}
-                {x === MAZE_SIZE - 1 && y === MAZE_SIZE - 1 && playerPos.x !== x && '🏁'}
-              </motion.div>
-            ))}
+            {row.map((cell, x) => {
+              const isPlayer = playerPos.x === x && playerPos.y === y;
+              const isMonster = monsters.some(m => m.x === x && m.y === y);
+              const isGoal = x === MAZE_SIZE - 1 && y === MAZE_SIZE - 1;
+              const isStart = x === 0 && y === 0;
+              const isWall = cell === 1;
+              
+              return (
+                <motion.div
+                  key={`${x}-${y}`}
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-bold shadow-sm ${
+                    isWall 
+                      ? 'bg-amber-800 dark:bg-amber-900' 
+                      : isGoal 
+                        ? 'bg-green-300 dark:bg-green-700 ring-2 ring-green-500' 
+                        : isStart
+                          ? 'bg-blue-200 dark:bg-blue-800'
+                          : 'bg-white dark:bg-gray-700'
+                  }`}
+                  whileHover={{ scale: cell === 0 ? 1.05 : 1 }}
+                >
+                  {isPlayer && (
+                    <motion.span
+                      animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
+                      transition={{ repeat: Infinity, duration: 1 }}
+                      className="text-3xl"
+                    >
+                      🦷
+                    </motion.span>
+                  )}
+                  {isMonster && !isPlayer && (
+                    <motion.span
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ repeat: Infinity, duration: 0.5 }}
+                    >
+                      🍬
+                    </motion.span>
+                  )}
+                  {isGoal && !isPlayer && '🏁'}
+                  {isStart && !isPlayer && !isMonster && (
+                    <span className="text-xs text-blue-600">START</span>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         ))}
       </div>
 
-      {/* Touch controls for mobile */}
-      <div className="grid grid-cols-3 gap-2 mt-4">
+      {/* Touch/Click Controls */}
+      <div className="grid grid-cols-3 gap-2 mt-2">
         <div />
-        <Button size="sm" onClick={() => movePlayer(0, -1)}>⬆️</Button>
+        <Button 
+          size="lg" 
+          onClick={() => movePlayer(0, -1)}
+          className="w-14 h-14 text-2xl"
+        >
+          ⬆️
+        </Button>
         <div />
-        <Button size="sm" onClick={() => movePlayer(-1, 0)}>⬅️</Button>
-        <div className="w-10 h-10" />
-        <Button size="sm" onClick={() => movePlayer(1, 0)}>➡️</Button>
+        <Button 
+          size="lg" 
+          onClick={() => movePlayer(-1, 0)}
+          className="w-14 h-14 text-2xl"
+        >
+          ⬅️
+        </Button>
+        <div className="w-14 h-14 flex items-center justify-center text-3xl">🦷</div>
+        <Button 
+          size="lg" 
+          onClick={() => movePlayer(1, 0)}
+          className="w-14 h-14 text-2xl"
+        >
+          ➡️
+        </Button>
         <div />
-        <Button size="sm" onClick={() => movePlayer(0, 1)}>⬇️</Button>
+        <Button 
+          size="lg" 
+          onClick={() => movePlayer(0, 1)}
+          className="w-14 h-14 text-2xl"
+        >
+          ⬇️
+        </Button>
         <div />
       </div>
     </div>
