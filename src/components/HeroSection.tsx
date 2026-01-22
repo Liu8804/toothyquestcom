@@ -35,14 +35,17 @@ export const HeroSection = () => {
             />
           </div>
           <div className="hidden md:flex items-center gap-6">
+            <a href="#worlds" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
+              {t('nav.worlds', 'Worlds')}
+            </a>
             <a href="#adventures" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
               {t('nav.adventures')}
             </a>
-            <a href="#facts" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              {t('nav.funFacts')}
-            </a>
             <a href="#games" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
               {t('nav.games')}
+            </a>
+            <a href="/about" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
+              {t('nav.about', 'About')}
             </a>
           </div>
           <div className="flex items-center gap-2">

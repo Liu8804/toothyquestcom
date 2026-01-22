@@ -31,6 +31,8 @@ export const en = {
     dashboard: "Dashboard",
     parentLogin: "Parent Login",
     signOut: "Sign Out",
+    worlds: "Worlds",
+    about: "About",
   },
 
   // Hero Section
