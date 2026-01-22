@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Shield, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import WorldCard from "./WorldCard";
 import PhaseCard from "./PhaseCard";
+import PhaseCompletionModal from "./PhaseCompletionModal";
 import { WORLDS, World, Phase, getPhaseProgress, isPhaseCompleted } from "@/data/worldsConfig";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useStories } from "@/hooks/useStories";
@@ -27,9 +28,31 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [completedPhase, setCompletedPhase] = useState<{ phase: Phase; world: World } | null>(null);
+  const previousCompletedPhasesRef = useRef<Set<string>>(new Set());
 
   const isSpanish = i18n.language === "es";
   const completedQuestIds = questProgress.map(q => q.quest_id);
+
+  // Track phase completions
+  useEffect(() => {
+    const currentCompletedPhases = new Set<string>();
+    
+    for (const world of WORLDS) {
+      for (const phase of world.phases) {
+        if (isPhaseCompleted(phase.id, completedQuestIds)) {
+          currentCompletedPhases.add(phase.id);
+          
+          // Check if this is newly completed
+          if (!previousCompletedPhasesRef.current.has(phase.id)) {
+            setCompletedPhase({ phase, world });
+          }
+        }
+      }
+    }
+    
+    previousCompletedPhasesRef.current = currentCompletedPhases;
+  }, [completedQuestIds]);
 
   // Get world progress
   const getWorldProgress = (world: World) => {
@@ -328,6 +351,21 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
           isOpen={showPurchaseModal}
           onClose={() => setShowPurchaseModal(false)}
         />
+
+        {/* Phase Completion Modal */}
+        {completedPhase && (
+          <PhaseCompletionModal
+            isOpen={!!completedPhase}
+            onClose={() => setCompletedPhase(null)}
+            phaseName={isSpanish ? completedPhase.phase.nameEs : completedPhase.phase.name}
+            phaseEmoji={completedPhase.phase.emoji}
+            badgeName={isSpanish ? completedPhase.phase.badgeNameEs : completedPhase.phase.badgeName}
+            phaseNumber={completedPhase.world.phases.findIndex(p => p.id === completedPhase.phase.id) + 1}
+            worldName={isSpanish ? completedPhase.world.nameEs : completedPhase.world.name}
+            color={completedPhase.phase.color}
+            isSpanish={isSpanish}
+          />
+        )}
       </div>
     </section>
   );
