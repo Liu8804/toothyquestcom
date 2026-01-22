@@ -257,7 +257,7 @@ export const en = {
       routine: "Routine / Brushing Games",
       creative: "Creative / Reward Games",
     },
-    // New games
+    // New games - Names
     toothFairyRun: "Tooth Fairy Run",
     plaquePop: "Plaque Pop Party",
     sugarRushMaze: "Sugar Rush Maze",
@@ -283,6 +283,62 @@ export const en = {
     candyVsTooth: "Candy vs Tooth Art",
     comingSoon: "Coming Soon!",
     gameInDevelopment: "This exciting game is being developed!",
+    // Game instructions for kids
+    instructions: {
+      sugarRushMaze: "Guide your tooth through the maze! Use arrows or swipe to move. Avoid sugar and reach the finish!",
+      bracesBuilder: "Drag the colorful pieces to the right spots! Place brackets, wires, and bands to build perfect braces.",
+      toothPuzzle: "Tap the pieces in number order (1, 2, 3...) to complete the puzzle! Look at the example above.",
+      buildYourSmilePro: "Find problems on teeth and use tools to fix them! Tap a tooth, then choose the right tool.",
+      cavityMaze: "Move the brush through the maze to clean all cavities! Use arrows or swipe to move.",
+      enamelMatch: "Find the matching pairs! Tap two cards with the same name to make a match.",
+      smileSelfie: "Create a fun selfie! Choose a face, add dental stickers, and decorate your smile.",
+      candyVsTooth: "Draw on both sides! Left side is for candy, right side for healthy teeth. Show the difference!",
+      plaquePopParty: "Tap the plaque bubbles quickly to pop them before they escape!",
+      mouthwashSplash: "Tap to splash mouthwash and clean all the germs!",
+      germBlaster: "Tap the germs to blast them with your toothbrush laser!",
+      dentalMemoryMatch: "Flip cards and find matching pairs of dental items!",
+      toothTrivia: "Answer fun questions about teeth and dental care!",
+      plaqueDetective: "Look carefully and tap where you see plaque hiding!",
+      flossSequence: "Tap the steps in the right order to show how to floss correctly!",
+      brushTimerChallenge: "Hold on each mouth section to brush for the required time!",
+      morningRoutineRace: "Hold the button to complete each step of your morning routine!",
+      nighttimeBrushQuest: "Move the brush over the sleepy germs to put them to sleep!",
+      superSmileMaker: "Select the right tool for each dental problem and create a super smile!",
+      designASmile: "Choose teeth, lips, accessories, and backgrounds to design your perfect smile!",
+      toothFairyTreasure: "Complete dental challenges to unlock treasure chests!",
+    },
+    // Win messages
+    winMessages: {
+      sugarRushMaze: "You escaped the sugar maze!",
+      bracesBuilder: "Perfect braces! Those teeth will be straight!",
+      toothPuzzle: "Puzzle complete! You're so smart!",
+      buildYourSmilePro: "What a gorgeous smile you made!",
+      cavityMaze: "Maze complete! Cavities cleaned!",
+      enamelMatch: "Perfect matches! Enamel protected!",
+      smileSelfie: "What a great smile selfie!",
+      candyVsTooth: "Beautiful art! You understand the difference!",
+    },
+    // Lose messages
+    loseMessages: {
+      sugarRushMaze: "The sugar caught you! Try a different path!",
+      bracesBuilder: "Almost there! Try placing them again!",
+      toothPuzzle: "Keep trying! You'll get it!",
+      buildYourSmilePro: "Let's try different tools!",
+      cavityMaze: "That's a dead end! Try another way!",
+      enamelMatch: "Those don't match! Look again!",
+      smileSelfie: "Try another pose!",
+      candyVsTooth: "Try a different design!",
+    },
+    // Difficulty levels
+    difficulty: {
+      chooseLevel: "Choose Your Level",
+      easy: "Easy",
+      easyDesc: "Perfect for beginners!",
+      medium: "Medium",
+      mediumDesc: "A fun challenge!",
+      hard: "Hard",
+      hardDesc: "For champions!",
+    },
   },
 
   // Stories

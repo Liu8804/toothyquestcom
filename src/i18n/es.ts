@@ -257,7 +257,7 @@ export const es = {
       routine: "Juegos de Rutina",
       creative: "Juegos Creativos",
     },
-    // Nuevos juegos
+    // Nuevos juegos - Nombres
     toothFairyRun: "Carrera del Hada de los Dientes",
     plaquePop: "Fiesta de Explotar Placa",
     sugarRushMaze: "Laberinto del Azúcar",
@@ -283,6 +283,62 @@ export const es = {
     candyVsTooth: "Arte Dulce vs Diente",
     comingSoon: "¡Próximamente!",
     gameInDevelopment: "¡Este emocionante juego está en desarrollo!",
+    // Instrucciones de juegos para niños
+    instructions: {
+      sugarRushMaze: "¡Guía tu diente a través del laberinto! Usa las flechas o desliza para moverte. ¡Evita el azúcar y llega a la meta!",
+      bracesBuilder: "¡Arrastra las piezas de colores a los espacios correctos! Coloca brackets, alambres y bandas para construir frenos perfectos.",
+      toothPuzzle: "¡Toca las piezas en orden numérico (1, 2, 3...) para armar el rompecabezas! Mira el ejemplo arriba.",
+      buildYourSmilePro: "¡Encuentra problemas en los dientes y usa las herramientas para arreglarlos! Toca un diente, luego elige la herramienta correcta.",
+      cavityMaze: "¡Mueve el cepillo por el laberinto para limpiar todas las caries! Usa flechas o desliza para moverte.",
+      enamelMatch: "¡Encuentra los pares que combinan! Toca dos cartas con el mismo nombre para hacer una pareja.",
+      smileSelfie: "¡Crea una selfie divertida! Elige una cara, añade pegatinas dentales y decora tu sonrisa.",
+      candyVsTooth: "¡Dibuja en ambos lados! El lado izquierdo es para dulces, el derecho para dientes saludables. ¡Muestra la diferencia!",
+      plaquePopParty: "¡Toca las burbujas de placa rápidamente para explotarlas antes de que se escapen!",
+      mouthwashSplash: "¡Toca para salpicar enjuague bucal y limpiar todos los gérmenes!",
+      germBlaster: "¡Toca los gérmenes para destruirlos con tu cepillo láser!",
+      dentalMemoryMatch: "¡Voltea las cartas y encuentra los pares de artículos dentales!",
+      toothTrivia: "¡Responde preguntas divertidas sobre dientes y cuidado dental!",
+      plaqueDetective: "¡Busca cuidadosamente y toca donde veas placa escondida!",
+      flossSequence: "¡Toca los pasos en el orden correcto para mostrar cómo usar hilo dental!",
+      brushTimerChallenge: "¡Mantén presionado en cada sección de la boca para cepillarte por el tiempo indicado!",
+      morningRoutineRace: "¡Mantén presionado el botón para completar cada paso de tu rutina matutina!",
+      nighttimeBrushQuest: "¡Mueve el cepillo sobre los gérmenes dormilones para ponerlos a dormir!",
+      superSmileMaker: "¡Selecciona la herramienta correcta para cada problema dental y crea una super sonrisa!",
+      designASmile: "¡Elige dientes, labios, accesorios y fondos para diseñar tu sonrisa perfecta!",
+      toothFairyTreasure: "¡Completa desafíos dentales para desbloquear cofres del tesoro!",
+    },
+    // Mensajes de victoria
+    winMessages: {
+      sugarRushMaze: "¡Escapaste del laberinto de azúcar!",
+      bracesBuilder: "¡Frenos perfectos! ¡Esos dientes estarán derechos!",
+      toothPuzzle: "¡Rompecabezas completo! ¡Eres muy listo!",
+      buildYourSmilePro: "¡Qué sonrisa tan hermosa creaste!",
+      cavityMaze: "¡Laberinto completo! ¡Caries limpiadas!",
+      enamelMatch: "¡Parejas perfectas! ¡Esmalte protegido!",
+      smileSelfie: "¡Qué selfie de sonrisa tan genial!",
+      candyVsTooth: "¡Hermoso arte! ¡Entiendes la diferencia!",
+    },
+    // Mensajes de derrota
+    loseMessages: {
+      sugarRushMaze: "¡El azúcar te atrapó! ¡Intenta otro camino!",
+      bracesBuilder: "¡Casi lo logras! ¡Intenta colocarlos de nuevo!",
+      toothPuzzle: "¡Sigue intentando! ¡Lo lograrás!",
+      buildYourSmilePro: "¡Probemos diferentes herramientas!",
+      cavityMaze: "¡Es un callejón sin salida! ¡Prueba otro camino!",
+      enamelMatch: "¡Esos no combinan! ¡Mira de nuevo!",
+      smileSelfie: "¡Intenta otra pose!",
+      candyVsTooth: "¡Intenta otro diseño!",
+    },
+    // Dificultades
+    difficulty: {
+      chooseLevel: "Elige Tu Nivel",
+      easy: "Fácil",
+      easyDesc: "¡Perfecto para principiantes!",
+      medium: "Medio",
+      mediumDesc: "¡Un desafío divertido!",
+      hard: "Difícil",
+      hardDesc: "¡Para campeones!",
+    },
   },
 
   // Cuentos
