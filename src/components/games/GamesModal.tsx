@@ -11,6 +11,19 @@ import BuildASmileGame from "./BuildASmileGame";
 import QuestMatchGame from "./QuestMatchGame";
 import ToothFairyRunGame from "./ToothFairyRunGame";
 import HealthyFoodSortGame from "./HealthyFoodSortGame";
+import PlaquePopPartyGame from "./PlaquePopPartyGame";
+import MouthwashSplashGame from "./MouthwashSplashGame";
+import GermBlasterGame from "./GermBlasterGame";
+import ToothTriviaGame from "./ToothTriviaGame";
+import DentalMemoryMatchGame from "./DentalMemoryMatchGame";
+import BrushTimerChallengeGame from "./BrushTimerChallengeGame";
+import MorningRoutineRaceGame from "./MorningRoutineRaceGame";
+import NighttimeBrushQuestGame from "./NighttimeBrushQuestGame";
+import DesignASmileGame from "./DesignASmileGame";
+import ToothFairyTreasureGame from "./ToothFairyTreasureGame";
+import PlaqueDetectiveGame from "./PlaqueDetectiveGame";
+import FlossSequenceGame from "./FlossSequenceGame";
+import SuperSmileMakerGame from "./SuperSmileMakerGame";
 import ComingSoonGame from "./ComingSoonGame";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
@@ -178,13 +191,6 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       onComplete: (won: boolean, stars: number) => handleGameComplete(won, stars, stars * 10),
     };
 
-    // Implemented games
-    const implementedGames = ["plaque_patrol", "tooth_defender", "floss_hero", "sugar_bug_chase", "build_a_smile", "quest_match", "tooth_fairy_run", "healthy_food_sort"];
-    
-    if (!implementedGames.includes(selectedGame.id)) {
-      return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
-    }
-
     switch (selectedGame.id) {
       case "plaque_patrol":
         return <PlaquePatrolGame {...gameProps} />;
@@ -202,6 +208,32 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         return <ToothFairyRunGame {...gameProps} />;
       case "healthy_food_sort":
         return <HealthyFoodSortGame {...gameProps} />;
+      case "plaque_pop_party":
+        return <PlaquePopPartyGame {...gameProps} />;
+      case "mouthwash_splash":
+        return <MouthwashSplashGame {...gameProps} />;
+      case "germ_blaster":
+        return <GermBlasterGame {...gameProps} />;
+      case "tooth_trivia":
+        return <ToothTriviaGame {...gameProps} />;
+      case "dental_memory_match":
+        return <DentalMemoryMatchGame {...gameProps} />;
+      case "brush_timer_challenge":
+        return <BrushTimerChallengeGame {...gameProps} />;
+      case "morning_routine_race":
+        return <MorningRoutineRaceGame {...gameProps} />;
+      case "nighttime_brush_quest":
+        return <NighttimeBrushQuestGame {...gameProps} />;
+      case "design_a_smile":
+        return <DesignASmileGame {...gameProps} />;
+      case "tooth_fairy_treasure":
+        return <ToothFairyTreasureGame {...gameProps} />;
+      case "plaque_detective":
+        return <PlaqueDetectiveGame {...gameProps} />;
+      case "floss_sequence":
+        return <FlossSequenceGame {...gameProps} />;
+      case "super_smile_maker":
+        return <SuperSmileMakerGame {...gameProps} />;
       default:
         return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
     }
