@@ -80,9 +80,22 @@ export const HeroSection = () => {
               <span className="text-gradient-hero">{t('hero.titleHighlight')}</span> {t('hero.titleEnd')}
             </h1>
 
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl mx-auto lg:mx-0">
+            <p className="text-xl md:text-2xl text-foreground font-semibold mb-4 max-w-xl mx-auto lg:mx-0">
               {t('hero.description')}
             </p>
+            
+            {/* Trust badges - More visible */}
+            <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-8">
+              <span className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+                ✅ Kid-Safe
+              </span>
+              <span className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+                🚫 No Ads
+              </span>
+              <span className="inline-flex items-center gap-2 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+                💪 Reduces Dental Fear
+              </span>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
               <Button 
