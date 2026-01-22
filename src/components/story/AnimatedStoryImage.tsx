@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 interface AnimatedStoryImageProps {
@@ -14,41 +14,49 @@ const CHARACTER_TAP_EFFECTS: Record<string, {
   sounds: string[];
   emojis: string[];
   message: string;
+  particleColor: string;
 }> = {
   braces: {
     sounds: ["✨ Sparkle!", "💎 Shine!", "🎀 Pretty!"],
     emojis: ["✨", "💎", "🎀", "💖", "⭐"],
     message: "Bracey says hi! 🎀",
+    particleColor: "#ec4899",
   },
   floss: {
     sounds: ["⚡ Swoosh!", "💪 Power!", "🦸 Hero!"],
     emojis: ["⚡", "💫", "🦸", "🌟", "💪"],
     message: "Captain Floss saves the day! ⚡",
+    particleColor: "#eab308",
   },
   sugar: {
     sounds: ["👾 Mwaha!", "🍬 Yummy!", "😈 Gotcha!"],
     emojis: ["👾", "🍬", "🍭", "🧁", "🦠"],
     message: "Sugar Bug is hiding! 👾",
+    particleColor: "#a855f7",
   },
   brush: {
     sounds: ["🪥 Brush!", "💧 Splash!", "✨ Clean!"],
     emojis: ["🪥", "💧", "✨", "🫧", "🌊"],
     message: "Squeaky clean! 🪥",
+    particleColor: "#06b6d4",
   },
   dentist: {
     sounds: ["👨‍⚕️ Hello!", "🏥 Check!", "😁 Smile!"],
     emojis: ["👨‍⚕️", "🏥", "😁", "🦷", "💙"],
     message: "The dentist is your friend! 👨‍⚕️",
+    particleColor: "#3b82f6",
   },
   fairy: {
     sounds: ["🧚 Magic!", "✨ Wish!", "🌙 Dream!"],
     emojis: ["🧚", "✨", "⭐", "🌙", "💫"],
     message: "Tooth fairy sprinkles magic! 🧚",
+    particleColor: "#f59e0b",
   },
   default: {
     sounds: ["🦷 Yay!", "😊 Happy!", "⭐ Star!"],
     emojis: ["🦷", "⭐", "✨", "😊", "💙"],
     message: "Keep smiling! 🦷",
+    particleColor: "#10b981",
   },
 };
 
@@ -185,10 +193,25 @@ export const AnimatedStoryImage = ({
   const [tapEffects, setTapEffects] = useState<{ id: number; x: number; y: number; emoji: string }[]>([]);
   const [showMessage, setShowMessage] = useState<string | null>(null);
   const [tappedCharacter, setTappedCharacter] = useState<number | null>(null);
+  const [dragTrail, setDragTrail] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [floatingParticles, setFloatingParticles] = useState<{ id: number; x: number; y: number; emoji: string; delay: number }[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { playSynthSound } = useQuizSounds();
   
   const config = getStoryAnimationConfig(storyId);
   const tapConfig = CHARACTER_TAP_EFFECTS[config.theme] || CHARACTER_TAP_EFFECTS.default;
+
+  // Generate floating particles on load
+  useEffect(() => {
+    const particles = Array(6).fill(null).map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      emoji: tapConfig.emojis[i % tapConfig.emojis.length],
+      delay: i * 0.5,
+    }));
+    setFloatingParticles(particles);
+  }, [storyId, tapConfig.emojis]);
 
   // Periodic interaction animation
   useEffect(() => {
@@ -261,14 +284,40 @@ export const AnimatedStoryImage = ({
     }, 1000);
   }, [playSynthSound, tapConfig]);
 
+  // Handle drag/swipe to create trail effect
+  const handleDrag = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    
+    let x: number, y: number;
+    if ('touches' in e) {
+      x = e.touches[0].clientX - rect.left;
+      y = e.touches[0].clientY - rect.top;
+    } else {
+      x = e.clientX - rect.left;
+      y = e.clientY - rect.top;
+    }
+    
+    const newTrail = { id: Date.now(), x, y };
+    setDragTrail(prev => [...prev.slice(-10), newTrail]);
+    
+    // Clear old trails
+    setTimeout(() => {
+      setDragTrail(prev => prev.filter(t => t.id !== newTrail.id));
+    }, 500);
+  }, []);
+
   return (
     <motion.div
+      ref={containerRef}
       className={`relative overflow-hidden rounded-2xl cursor-pointer touch-manipulation ${className}`}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
       onClick={handleImageTap}
       onTouchStart={handleImageTap}
+      onMouseMove={handleDrag}
+      onTouchMove={handleDrag}
     >
       {/* Animated glow background */}
       <motion.div
@@ -420,34 +469,254 @@ export const AnimatedStoryImage = ({
         )}
       </AnimatePresence>
 
+      {/* Floating ambient particles */}
+      {floatingParticles.map((particle) => (
+        <motion.div
+          key={`particle-${particle.id}`}
+          className="absolute z-15 pointer-events-none text-lg opacity-40"
+          style={{
+            left: `${particle.x}%`,
+            top: `${particle.y}%`,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            x: [0, particle.id % 2 === 0 ? 10 : -10, 0],
+            opacity: [0.2, 0.5, 0.2],
+            scale: [0.8, 1.1, 0.8],
+          }}
+          transition={{
+            duration: 4 + particle.id * 0.5,
+            repeat: Infinity,
+            delay: particle.delay,
+            ease: "easeInOut",
+          }}
+        >
+          {particle.emoji}
+        </motion.div>
+      ))}
+
+      {/* Drag trail effect */}
+      <AnimatePresence>
+        {dragTrail.map((trail) => (
+          <motion.div
+            key={trail.id}
+            className="absolute z-35 pointer-events-none rounded-full"
+            style={{
+              left: trail.x,
+              top: trail.y,
+              width: 20,
+              height: 20,
+              background: `radial-gradient(circle, ${tapConfig.particleColor}60 0%, transparent 70%)`,
+            }}
+            initial={{ opacity: 0.8, scale: 1 }}
+            animate={{ opacity: 0, scale: 2 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          />
+        ))}
+      </AnimatePresence>
+
       {/* Theme-specific effects */}
       {config.theme === "sugar" && (
-        <motion.div
-          className="absolute inset-0 z-15 pointer-events-none"
-          animate={{
-            background: [
-              "radial-gradient(circle, rgba(147,51,234,0) 0%, rgba(147,51,234,0.1) 100%)",
-              "radial-gradient(circle, rgba(147,51,234,0.1) 0%, rgba(147,51,234,0) 100%)",
-            ],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
+        <>
+          <motion.div
+            className="absolute inset-0 z-15 pointer-events-none"
+            animate={{
+              background: [
+                "radial-gradient(circle, rgba(147,51,234,0) 0%, rgba(147,51,234,0.1) 100%)",
+                "radial-gradient(circle, rgba(147,51,234,0.1) 0%, rgba(147,51,234,0) 100%)",
+              ],
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+          {/* Floating sugar bugs */}
+          {[...Array(4)].map((_, i) => (
+            <motion.div
+              key={`sugar-${i}`}
+              className="absolute z-20 pointer-events-none text-xl"
+              style={{
+                top: `${15 + i * 20}%`,
+                left: `${5 + i * 25}%`,
+              }}
+              animate={{
+                y: [0, -15, 5, 0],
+                x: [0, 8, -8, 0],
+                rotate: [0, 10, -10, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                delay: i * 0.7,
+              }}
+            >
+              🦠
+            </motion.div>
+          ))}
+        </>
       )}
 
       {config.theme === "fairy" && (
         <>
-          {[...Array(5)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={`fairy-${i}`}
-              className="absolute z-20 pointer-events-none text-sm"
+              className="absolute z-20 pointer-events-none"
               style={{
-                top: `${20 + i * 15}%`,
-                left: `${10 + i * 18}%`,
+                top: `${10 + (i % 4) * 20}%`,
+                left: `${5 + i * 12}%`,
               }}
               animate={{
                 opacity: [0, 1, 0],
-                y: [0, -30],
-                x: [0, i % 2 === 0 ? 10 : -10],
+                y: [0, -40],
+                x: [0, i % 2 === 0 ? 15 : -15],
+                scale: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                delay: i * 0.4,
+              }}
+            >
+              <span className="text-sm">✨</span>
+            </motion.div>
+          ))}
+          {/* Moon glow effect */}
+          <motion.div
+            className="absolute top-4 right-8 z-15 pointer-events-none"
+            animate={{
+              boxShadow: [
+                "0 0 20px 10px rgba(251,191,36,0.2)",
+                "0 0 40px 20px rgba(251,191,36,0.3)",
+                "0 0 20px 10px rgba(251,191,36,0.2)",
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <span className="text-3xl">🌙</span>
+          </motion.div>
+        </>
+      )}
+
+      {config.theme === "braces" && (
+        <>
+          <motion.div
+            className="absolute bottom-0 left-0 right-0 h-1 z-20 pointer-events-none"
+            animate={{
+              background: [
+                "linear-gradient(90deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%)",
+                "linear-gradient(90deg, #3b82f6 0%, #ec4899 50%, #8b5cf6 100%)",
+                "linear-gradient(90deg, #8b5cf6 0%, #3b82f6 50%, #ec4899 100%)",
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+          {/* Shimmer effect across image */}
+          <motion.div
+            className="absolute inset-0 z-15 pointer-events-none"
+            animate={{
+              background: [
+                "linear-gradient(120deg, transparent 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 60%, transparent 100%)",
+              ],
+              backgroundPosition: ["-200% 0%", "200% 0%"],
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            style={{ backgroundSize: "200% 100%" }}
+          />
+        </>
+      )}
+
+      {config.theme === "brush" && (
+        <>
+          {/* Floating bubbles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={`bubble-${i}`}
+              className="absolute z-20 pointer-events-none"
+              style={{
+                bottom: `${10 + (i % 3) * 10}%`,
+                left: `${10 + i * 15}%`,
+              }}
+              animate={{
+                y: [0, -80],
+                opacity: [0, 0.7, 0],
+                scale: [0.5, 1, 0.8],
+              }}
+              transition={{
+                duration: 3 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 0.6,
+              }}
+            >
+              <span className="text-lg">🫧</span>
+            </motion.div>
+          ))}
+          {/* Water droplet splash */}
+          <motion.div
+            className="absolute bottom-8 right-8 z-20 pointer-events-none"
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.6, 1, 0.6],
+            }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <span className="text-2xl">💧</span>
+          </motion.div>
+        </>
+      )}
+
+      {config.theme === "floss" && (
+        <>
+          {/* Action lines / speed streaks */}
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={`streak-${i}`}
+              className="absolute z-15 pointer-events-none bg-gradient-to-r from-yellow-400/40 to-transparent h-0.5"
+              style={{
+                top: `${20 + i * 15}%`,
+                left: 0,
+                width: `${40 + i * 10}%`,
+              }}
+              animate={{
+                opacity: [0, 0.6, 0],
+                x: ["-100%", "100%"],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+              }}
+            />
+          ))}
+        </>
+      )}
+
+      {config.theme === "dentist" && (
+        <>
+          {/* Calming pulse effect */}
+          <motion.div
+            className="absolute inset-0 z-15 pointer-events-none rounded-2xl"
+            animate={{
+              boxShadow: [
+                "inset 0 0 30px 0 rgba(59,130,246,0)",
+                "inset 0 0 30px 10px rgba(59,130,246,0.1)",
+                "inset 0 0 30px 0 rgba(59,130,246,0)",
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity }}
+          />
+          {/* Floating hearts for friendly feel */}
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={`heart-${i}`}
+              className="absolute z-20 pointer-events-none text-lg"
+              style={{
+                top: `${30 + i * 20}%`,
+                right: `${10 + i * 8}%`,
+              }}
+              animate={{
+                y: [0, -20, 0],
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 0.8, 0.5],
               }}
               transition={{
                 duration: 2,
@@ -455,24 +724,10 @@ export const AnimatedStoryImage = ({
                 delay: i * 0.5,
               }}
             >
-              ✨
+              💙
             </motion.div>
           ))}
         </>
-      )}
-
-      {config.theme === "braces" && (
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-1 z-20 pointer-events-none"
-          animate={{
-            background: [
-              "linear-gradient(90deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%)",
-              "linear-gradient(90deg, #3b82f6 0%, #ec4899 50%, #8b5cf6 100%)",
-              "linear-gradient(90deg, #8b5cf6 0%, #3b82f6 50%, #ec4899 100%)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
       )}
     </motion.div>
   );
