@@ -28,33 +28,27 @@ export interface World {
 
 // Phase 1 - Before the Visit: Prepare kids emotionally and introduce basic habits
 const PHASE_1_QUESTS = [
+  "dental-castle-welcome", // NEW: Episode 1 - Welcome to Dental Castle
+  "before-appointment-calm", // NEW: Calm breathing guide
   "sparkle-start",        // Quest 1 - Welcome/start
   "brushing-basics",      // Quest 2 - Brushing basics
   "floss-fun",            // Quest 3 - Flossing basics
   "healthy-bites",        // Quest 4 - Healthy eating
-  "first-adventure-complete", // Quest 6 - First adventure milestone
   "brave-little-tooth",   // Quest 7 - Losing teeth (emotional prep)
   "tooth-fairy-adventure", // Quest 8 - Tooth fairy (emotional reward)
   "magic-mouthwash",      // Quest 13 - Mouthwash
   "brush-and-bounce",     // Quest 14 - Fun brushing
-  "shiny-tooth-club",     // Quest 15 - Rewards for habits
-  "apple-crunch-test",    // Quest 33 - Healthy snacks
-  "juice-tried-too-hard", // Quest 34 - Sugar awareness
-  "water-super-drink",    // Quest 35 - Water importance
-  "snack-time-choices",   // Quest 36 - Food choices
   "mouth-habits",         // Quest 55 - Habit awareness
   "baby-teeth-matter",    // Quest 64 - Baby teeth importance
-  "healthy-snacks",       // Quest 66 - Smart snacking
   "tooth-safety-rules",   // Quest 67 - Safety rules
 ];
 
 // Phase 2 - At the Dentist: Introduce the dental environment and tools
 const PHASE_2_QUESTS = [
+  "magic-chair-ride",     // NEW: Episode 2 - Magic Chair
+  "meet-dental-tools",    // NEW: Meet friendly dental tools
   "friendly-dentist",     // Quest 17 - Friendly dentist intro
   "explore-office-tour",  // Quest 25 - Office tour
-  "tooth-detective",      // Quest 50 - X-rays explained
-  "fluoride-power",       // Quest 49 - Fluoride power
-  "sparkle-shower",       // Quest 44 - Cleaning sparkle
   "shy-tooth",            // Quest 23 - Shy tooth at dentist
   "dentist-visits",       // Quest 63 - Dentist day
   "bracey-first-day",     // Quest 5 - First braces day
@@ -65,48 +59,29 @@ const PHASE_2_QUESTS = [
 
 // Phase 3 - During the Checkup: Proper procedures, protection, cooperation
 const PHASE_3_QUESTS = [
+  "counting-cleaning",    // NEW: Episode 3 - Counting & Cleaning
   "cavity-monster-trouble", // Quest 9 - Cavity awareness
   "captain-floss",        // Quest 10 - Floss hero
   "sugar-bug-hunt",       // Quest 11 - Sugar bugs
   "smile-quest",          // Quest 12 - Daily care quest
   "plaque-pirates",       // Quest 16 - Plaque fight
-  "midnight-snack-attack", // Quest 18 - Night eating
-  "wiggly-tooth-tale",    // Quest 19 - Wiggly teeth
-  "bubble-rescue",        // Quest 20 - Brushing rescue
-  "tooth-tunnel-adventure", // Quest 21 - Tooth tunnels
-  "patient-tooth",        // Quest 24 - Patience during visit
-  "plaque-battle",        // Quest 26 - Plaque battle
   "brushing-timer-challenge", // Quest 27 - Timer challenge
   "super-smile-squad",    // Quest 28 - Team brushing
-  "sparkle-spell",        // Quest 31 - Magic brushing
-  "cavity-castle-rescue", // Quest 43 - Cavity filling
-  "germ-tunnel",          // Quest 45 - Root canal
-  "crown-kingdom",        // Quest 46 - Dental crowns
-  "wobbly-tooth",         // Quest 47 - Extractions
-  "tooth-fixing-fairy",   // Quest 53 - Bonding
   "mouthguards-hero",     // Quest 60 - Mouthguards
   "sports-shield",        // Quest 54 - Sports protection
   "dental-trauma",        // Quest 56 - Tooth rescue
-  "flossing-mistakes",    // Quest 61 - Proper flossing
-  "sugar-and-teeth",      // Quest 62 - Sugar effects
   "plaque-and-germs",     // Quest 65 - Plaque patrol
-  "bracey-colorful-bands", // Quest 37 - Braces bands
-  "bracey-sticky-snack",  // Quest 38 - Braces & sticky food
-  "bracey-wiggly-adventure", // Quest 39 - Wiggly braces
-  "bracey-nighttime-brushing", // Quest 40 - Nighttime braces care
-  "bracey-colored-bands-challenge", // Quest 41 - Bands challenge
 ];
 
 // Phase 4 - After the Visit: Celebrate, review, reinforce habits
 const PHASE_4_QUESTS = [
-  "dreamland-snack-monster", // Quest 22 - Dream adventure
+  "mission-complete-celebration", // NEW: Episode 4 - Mission Complete!
+  "after-appointment-celebration", // NEW: Post-appointment celebration
   "tooth-fairy-lost-map", // Quest 29 - Tooth fairy reward
   "moonlight-tooth-parade", // Quest 30 - Celebration parade
   "dreamland-dental-adventure", // Quest 32 - Sweet dreams
-  "bracey-braces-superpowers", // Quest 42 - Braces superpowers celebration
-  "sparkle-potion",       // Quest 52 - Sparkle celebration
-  "adventure-tooth",      // Quest 51 - Wisdom tooth adventure
-  "gum-guardian",         // Quest 48 - Gum health celebration
+  "shiny-tooth-club",     // Quest 15 - Rewards for habits
+  "first-adventure-complete", // Quest 6 - First adventure milestone
 ];
 
 export const WORLDS: World[] = [
