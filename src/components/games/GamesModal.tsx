@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown, Lock, Unlock } from "lucide-react";
-import { games, Game, globalGameText } from "@/data/games";
+import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown, Lock, Unlock, Sparkles } from "lucide-react";
+import { games, Game, globalGameText, allGames, gameCategories, GameCategory } from "@/data/games";
 import GameCard from "./GameCard";
 import PlaquePatrolGame from "./PlaquePatrolGame";
 import ToothDefenderGame from "./ToothDefenderGame";
@@ -9,6 +9,7 @@ import FlossHeroGame from "./FlossHeroGame";
 import SugarBugChaseGame from "./SugarBugChaseGame";
 import BuildASmileGame from "./BuildASmileGame";
 import QuestMatchGame from "./QuestMatchGame";
+import ComingSoonGame from "./ComingSoonGame";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import PurchaseModal from "@/components/PurchaseModal";
@@ -34,6 +35,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
   const [gameResult, setGameResult] = useState<{ won: boolean; stars: number; score: number } | null>(null);
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("games");
+  const [selectedCategory, setSelectedCategory] = useState<GameCategory | "all">("all");
   const [showConfetti, setShowConfetti] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [challengeNotification, setChallengeNotification] = useState<{
@@ -95,10 +97,16 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     return "Premium access required.";
   })();
   
-  const gamesWithLockStatus = games.map((game) => ({
+  // Create lock status for ALL games
+  const allGamesWithLockStatus = allGames.map((game) => ({
     ...game,
     isLocked: areGamesLocked,
   }));
+  
+  // Filter games by category
+  const displayedGames = selectedCategory === "all" 
+    ? allGamesWithLockStatus 
+    : allGamesWithLockStatus.filter(g => g.category === selectedCategory);
 
   useEffect(() => {
     if (isOpen && selectedGame) {
@@ -168,6 +176,13 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       onComplete: (won: boolean, stars: number) => handleGameComplete(won, stars, stars * 10),
     };
 
+    // Implemented games
+    const implementedGames = ["plaque_patrol", "tooth_defender", "floss_hero", "sugar_bug_chase", "build_a_smile", "quest_match"];
+    
+    if (!implementedGames.includes(selectedGame.id)) {
+      return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
+    }
+
     switch (selectedGame.id) {
       case "plaque_patrol":
         return <PlaquePatrolGame {...gameProps} />;
@@ -182,7 +197,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       case "quest_match":
         return <QuestMatchGame {...gameProps} />;
       default:
-        return null;
+        return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
     }
   };
 
@@ -398,13 +413,36 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                   </TabsList>
 
                   <TabsContent value="games">
+                    {/* Category Filter */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <Button
+                        variant={selectedCategory === "all" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedCategory("all")}
+                        className="gap-1"
+                      >
+                        🎮 All ({allGamesWithLockStatus.length})
+                      </Button>
+                      {(Object.entries(gameCategories) as [GameCategory, typeof gameCategories.action][]).map(([key, category]) => (
+                        <Button
+                          key={key}
+                          variant={selectedCategory === key ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setSelectedCategory(key)}
+                          className="gap-1"
+                        >
+                          {category.emoji} {category.name.split(" / ")[0]} ({category.games.length})
+                        </Button>
+                      ))}
+                    </div>
+                    
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {gamesWithLockStatus.map((game, index) => (
+                      {displayedGames.map((game, index) => (
                         <GameCard
                           key={game.id}
                           game={game}
                           onClick={() => handleGameSelect(game, game.isLocked || false)}
-                          delay={index * 0.1}
+                          delay={index * 0.05}
                           lockReason={game.isLocked ? gamesLockReason ?? undefined : undefined}
                         />
                       ))}
@@ -492,8 +530,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                       <p className="text-center text-muted-foreground mb-4">
                         Select a game to see its leaderboard
                       </p>
-                      <div className="grid grid-cols-3 md:grid-cols-6 gap-2 mb-6">
-                        {games.map((game) => (
+                      <div className="grid grid-cols-4 md:grid-cols-8 gap-2 mb-6 max-h-32 overflow-y-auto">
+                        {allGames.map((game) => (
                           <Button
                             key={game.id}
                             variant="outline"
