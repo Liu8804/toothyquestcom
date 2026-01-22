@@ -114,7 +114,7 @@ export const stories: Story[] = [
     questEnding: "Welcome to the braces adventure, Bracey!",
     illustrationPath: "/stories/bracey-first-day.png",
     emoji: "🦷",
-    isFree: true,
+    isFree: false,
     quiz: {
       question: "Uh-oh! Bracey ate sticky candy! 🍬 What should she do NOW? ⏰",
       options: ["Brush brush brush! 🪥✨", "Oops, ignore it 🙈", "Go sleepy time 😴"],
@@ -151,7 +151,7 @@ export const stories: Story[] = [
     questEnding: "Be brave like the little tooth!",
     illustrationPath: "/stories/brave-little-tooth.png",
     emoji: "🦷",
-    isFree: false,
+    isFree: true,
     quiz: {
       question: "WOW! Which tooth was super duper BRAVE? 💪🦷",
       options: ["Front tooth hero! 🦸", "Sneaky back tooth 👀", "Silly tongue 👅"],
@@ -169,7 +169,7 @@ export const stories: Story[] = [
     questEnding: "Keep your teeth clean for the Tooth Fairy!",
     illustrationPath: "/stories/tooth-fairy.png",
     emoji: "🧚",
-    isFree: false,
+    isFree: true,
     quiz: {
       question: "Ooh! Who collects sparkly teeth with magic wings? 🧚✨",
       options: ["The Tooth Fairy! 🧚‍♀️", "Flossy 🦸", "Sugar Monster 👾"],

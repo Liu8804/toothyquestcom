@@ -83,7 +83,7 @@ export const storiesEs: Story[] = [
     questEnding: "¡Bienvenida a la aventura de los frenos, Bracey!",
     illustrationPath: "/stories/bracey-first-day.png",
     emoji: "🦷",
-    isFree: true,
+    isFree: false,
     quiz: {
       question: "¿Qué debe hacer Bracey después de comer dulces pegajosos?",
       options: ["Cepillarse los dientes", "Ignorarlo", "Irse a dormir"],
@@ -120,7 +120,7 @@ export const storiesEs: Story[] = [
     questEnding: "¡Sé valiente como el pequeño diente!",
     illustrationPath: "/stories/brave-little-tooth.png",
     emoji: "🦷",
-    isFree: false,
+    isFree: true,
     quiz: {
       question: "¿Cuál diente fue valiente en esta misión?",
       options: ["Diente delantero", "Diente trasero", "Lengua"],
@@ -138,7 +138,7 @@ export const storiesEs: Story[] = [
     questEnding: "¡Mantén tus dientes limpios para el Hada de los Dientes!",
     illustrationPath: "/stories/tooth-fairy.png",
     emoji: "🧚",
-    isFree: false,
+    isFree: true,
     quiz: {
       question: "¿Quién ayudó a Toothy a recolectar dientes brillantes?",
       options: ["Hada de los Dientes", "Flossy", "Monstruo de Azúcar"],
