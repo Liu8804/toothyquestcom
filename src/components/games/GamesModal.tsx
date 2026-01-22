@@ -389,66 +389,168 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                 )}
               </AnimatePresence>
 
-              {/* Game Result Screen */}
+              {/* Game Result Screen - Enhanced Victory Celebration */}
               {gameResult && selectedGame && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="h-full flex flex-col items-center justify-center text-center p-6"
+                  className="h-full flex flex-col items-center justify-center text-center p-6 relative overflow-hidden"
                 >
+                  {/* Victory Background Effects */}
+                  {gameResult.won && (
+                    <>
+                      {/* Floating sparkles */}
+                      {Array.from({ length: 20 }).map((_, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ 
+                            opacity: 0, 
+                            x: Math.random() * 400 - 200,
+                            y: Math.random() * 400 - 200,
+                            scale: 0
+                          }}
+                          animate={{ 
+                            opacity: [0, 1, 0],
+                            scale: [0, 1, 0],
+                            rotate: [0, 180, 360]
+                          }}
+                          transition={{ 
+                            duration: 2,
+                            delay: i * 0.1,
+                            repeat: Infinity,
+                            repeatDelay: 1
+                          }}
+                          className="absolute text-2xl pointer-events-none"
+                          style={{
+                            left: `${20 + Math.random() * 60}%`,
+                            top: `${20 + Math.random() * 60}%`,
+                          }}
+                        >
+                          {["✨", "⭐", "🌟", "💫", "🎉", "🦷"][i % 6]}
+                        </motion.div>
+                      ))}
+                      
+                      {/* Pulsing glow ring */}
+                      <motion.div
+                        animate={{ 
+                          scale: [1, 1.5, 1],
+                          opacity: [0.3, 0, 0.3]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="absolute w-64 h-64 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 blur-3xl"
+                      />
+                    </>
+                  )}
+
+                  {/* Main trophy/emoji with enhanced animation */}
                   <motion.div
-                    animate={{ 
-                      rotate: gameResult.won ? [0, -10, 10, -10, 0] : 0,
-                      scale: gameResult.won ? [1, 1.2, 1] : 1 
-                    }}
-                    transition={{ duration: 0.5 }}
-                    className="text-8xl mb-6"
+                    animate={gameResult.won ? { 
+                      rotate: [0, -15, 15, -10, 10, 0],
+                      scale: [1, 1.3, 1.1, 1.2, 1],
+                      y: [0, -20, 0, -10, 0]
+                    } : { scale: 1 }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                    className="text-8xl mb-6 relative z-10"
                   >
-                    {gameResult.won ? "🎉" : "😅"}
+                    {gameResult.won ? "🏆" : "😅"}
                   </motion.div>
                   
-                  <h3 className="font-display text-2xl font-bold text-foreground mb-2">
-                    {gameResult.won ? selectedGame.winMessage : selectedGame.loseMessage}
-                  </h3>
+                  {/* Victory message with typewriter effect */}
+                  <motion.h3 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="font-display text-3xl font-bold text-foreground mb-2 relative z-10"
+                  >
+                    {gameResult.won ? "🎉 YOU WON! 🎉" : selectedGame.loseMessage}
+                  </motion.h3>
+
+                  {gameResult.won && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      className="text-lg text-muted-foreground mb-4"
+                    >
+                      {selectedGame.winMessage}
+                    </motion.p>
+                  )}
                   
                   {gameResult.won && (
                     <>
-                      <div className="flex gap-1 mb-4">
+                      {/* Stars with bounce animation */}
+                      <div className="flex gap-2 mb-4 relative z-10">
                         {Array.from({ length: 3 }).map((_, i) => (
                           <motion.div
                             key={i}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: i * 0.2 }}
+                            initial={{ opacity: 0, y: 50, rotate: -180 }}
+                            animate={{ opacity: 1, y: 0, rotate: 0 }}
+                            transition={{ 
+                              delay: 0.6 + i * 0.2,
+                              type: "spring",
+                              stiffness: 200,
+                              damping: 10
+                            }}
                           >
-                            <Star
-                              className={`w-8 h-8 ${
-                                i < gameResult.stars
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-muted"
-                              }`}
-                            />
+                            <motion.div
+                              animate={i < gameResult.stars ? {
+                                scale: [1, 1.3, 1],
+                                rotate: [0, 10, -10, 0]
+                              } : {}}
+                              transition={{ delay: 1 + i * 0.2, duration: 0.5 }}
+                            >
+                              <Star
+                                className={`w-12 h-12 ${
+                                  i < gameResult.stars
+                                    ? "text-yellow-400 fill-yellow-400 drop-shadow-lg"
+                                    : "text-muted"
+                                }`}
+                              />
+                            </motion.div>
                           </motion.div>
                         ))}
                       </div>
-                      <p className="text-muted-foreground mb-2">
-                        {globalGameText.starsEarned}
-                      </p>
-                      <div className="flex items-center gap-2 text-primary font-bold">
-                        <Trophy className="w-5 h-5" />
-                        {selectedGame.badgeName}
-                      </div>
+                      
+                      {/* Stars earned text */}
+                      <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.2 }}
+                        className="text-muted-foreground mb-2"
+                      >
+                        {gameResult.stars} {gameResult.stars === 1 ? "Star" : "Stars"} Earned!
+                      </motion.p>
+                      
+                      {/* Badge earned with special animation */}
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 1.4, type: "spring" }}
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full"
+                      >
+                        <Trophy className="w-5 h-5 text-primary" />
+                        <span className="font-bold text-primary">{selectedGame.badgeName}</span>
+                      </motion.div>
                     </>
                   )}
                   
-                  <div className="flex gap-4 mt-8">
+                  {/* Action buttons */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: gameResult.won ? 1.6 : 0.5 }}
+                    className="flex gap-4 mt-8 relative z-10"
+                  >
                     <Button variant="outline" onClick={handleBackToGames}>
                       Back to Games
                     </Button>
-                    <Button onClick={handlePlayAgain}>
+                    <Button 
+                      onClick={handlePlayAgain}
+                      className={gameResult.won ? "bg-gradient-to-r from-primary to-secondary" : ""}
+                    >
                       Play Again
                     </Button>
-                  </div>
+                  </motion.div>
                 </motion.div>
               )}
 
