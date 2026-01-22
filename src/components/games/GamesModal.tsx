@@ -25,6 +25,14 @@ import PlaqueDetectiveGame from "./PlaqueDetectiveGame";
 import FlossSequenceGame from "./FlossSequenceGame";
 import SuperSmileMakerGame from "./SuperSmileMakerGame";
 import ComingSoonGame from "./ComingSoonGame";
+import SugarRushMazeGame from "./SugarRushMazeGame";
+import BracesBuilderGame from "./BracesBuilderGame";
+import ToothPuzzleAdventureGame from "./ToothPuzzleAdventureGame";
+import BuildYourSmileProGame from "./BuildYourSmileProGame";
+import CavityMazeGame from "./CavityMazeGame";
+import EnamelMatchGame from "./EnamelMatchGame";
+import SmileSelfieStudioGame from "./SmileSelfieStudioGame";
+import CandyVsToothArtGame from "./CandyVsToothArtGame";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import PurchaseModal from "@/components/PurchaseModal";
@@ -234,6 +242,22 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         return <FlossSequenceGame {...gameProps} />;
       case "super_smile_maker":
         return <SuperSmileMakerGame {...gameProps} />;
+      case "sugar_rush_maze":
+        return <SugarRushMazeGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "braces_builder":
+        return <BracesBuilderGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "tooth_puzzle_adventure":
+        return <ToothPuzzleAdventureGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "build_your_smile_pro":
+        return <BuildYourSmileProGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "cavity_maze":
+        return <CavityMazeGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "enamel_match":
+        return <EnamelMatchGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "smile_selfie_studio":
+        return <SmileSelfieStudioGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+      case "candy_vs_tooth_art":
+        return <CandyVsToothArtGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
       default:
         return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
     }
