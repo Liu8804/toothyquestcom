@@ -59,32 +59,74 @@ export const AfterAppointmentCelebration = ({
   };
 
   const handleDownloadCertificate = () => {
-    // Create certificate content
-    const certificateContent = `
-ToothyQuest Certificate of Bravery
+    // Create beautiful printable certificate
+    const certificateHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ToothyQuest Certificate of Bravery</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Fredoka', sans-serif;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; background: #f0f9ff; padding: 20px;
+    }
+    .certificate {
+      width: 800px; height: 600px; background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #fbbf24 100%);
+      border: 8px solid #f59e0b; border-radius: 24px; padding: 40px;
+      text-align: center; position: relative; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    }
+    .certificate::before {
+      content: ''; position: absolute; inset: 12px;
+      border: 4px dashed #92400e; border-radius: 16px; pointer-events: none;
+    }
+    .title { font-size: 32px; font-weight: 700; color: #78350f; margin-bottom: 8px; }
+    .tooth-emoji { font-size: 48px; margin-bottom: 16px; }
+    .certifies { font-size: 18px; color: #92400e; margin-top: 32px; }
+    .child-name { 
+      font-size: 48px; font-weight: 700; color: #b45309; margin: 16px 0;
+      text-shadow: 2px 2px 0 #fde68a;
+    }
+    .message { font-size: 20px; color: #78350f; margin: 24px 0; line-height: 1.6; }
+    .footer { margin-top: 40px; font-size: 18px; color: #92400e; }
+    .signature { font-style: italic; margin-top: 8px; }
+    .decorations { font-size: 32px; margin-top: 24px; letter-spacing: 16px; }
+    .date { font-size: 14px; color: #a16207; margin-top: 16px; }
+    @media print { 
+      body { background: white; } 
+      .certificate { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="certificate">
+    <div class="tooth-emoji">🦷</div>
+    <h1 class="title">ToothyQuest Certificate of Bravery</h1>
+    <p class="certifies">This certifies that</p>
+    <p class="child-name">${childName}</p>
+    <p class="message">bravely visited the dentist and protected their smile!</p>
+    <div class="decorations">🌟 🦷 ✨ 🏆 ⭐</div>
+    <div class="footer">
+      <p>Keep smiling!</p>
+      <p class="signature">— Your friends at ToothyQuest</p>
+    </div>
+    <p class="date">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+  </div>
+  <script>window.print();</script>
+</body>
+</html>`;
 
-This certifies that
-
-✨ ${childName} ✨
-
-is an official DENTAL CASTLE HERO!
-
-They visited the dentist and protected their smile!
-
-Date: ${new Date().toLocaleDateString()}
-
-🦷 🏰 ⭐ 🦁 🎉
-    `.trim();
-
-    const blob = new Blob([certificateContent], { type: 'text/plain' });
+    const blob = new Blob([certificateHTML], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${childName}_bravery_certificate.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    const printWindow = window.open(url, '_blank');
+    if (printWindow) {
+      printWindow.onload = () => {
+        URL.revokeObjectURL(url);
+      };
+    }
     playSound(SOUND_PROMPTS.purchaseSuccess);
   };
 
