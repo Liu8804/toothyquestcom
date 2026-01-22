@@ -9,6 +9,8 @@ import FlossHeroGame from "./FlossHeroGame";
 import SugarBugChaseGame from "./SugarBugChaseGame";
 import BuildASmileGame from "./BuildASmileGame";
 import QuestMatchGame from "./QuestMatchGame";
+import ToothFairyRunGame from "./ToothFairyRunGame";
+import HealthyFoodSortGame from "./HealthyFoodSortGame";
 import ComingSoonGame from "./ComingSoonGame";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
@@ -177,7 +179,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     };
 
     // Implemented games
-    const implementedGames = ["plaque_patrol", "tooth_defender", "floss_hero", "sugar_bug_chase", "build_a_smile", "quest_match"];
+    const implementedGames = ["plaque_patrol", "tooth_defender", "floss_hero", "sugar_bug_chase", "build_a_smile", "quest_match", "tooth_fairy_run", "healthy_food_sort"];
     
     if (!implementedGames.includes(selectedGame.id)) {
       return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
@@ -196,6 +198,10 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         return <BuildASmileGame {...gameProps} />;
       case "quest_match":
         return <QuestMatchGame {...gameProps} />;
+      case "tooth_fairy_run":
+        return <ToothFairyRunGame {...gameProps} />;
+      case "healthy_food_sort":
+        return <HealthyFoodSortGame {...gameProps} />;
       default:
         return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
     }
