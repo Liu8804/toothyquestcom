@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Heart, Shield, Copyright, BookOpen, Music, Users } from "lucide-react";
+import { ArrowLeft, Heart, Shield, Copyright, BookOpen, Music, Users, HelpCircle } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { useTranslation } from "react-i18next";
 
 const About = () => {
@@ -110,6 +116,68 @@ const About = () => {
                 <p>{t('aboutPage.safety.p1', 'ToothyQuest is designed with children and families in mind. The app follows privacy and safety standards appropriate for children\'s educational apps and does not sell personal data.')}</p>
                 <p>{t('aboutPage.safety.p2', 'Parental involvement is encouraged.')}</p>
               </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="bg-card rounded-2xl p-8 shadow-card">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                  <HelpCircle className="w-5 h-5 text-primary" />
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground">
+                  {t('aboutPage.faq.title', 'Frequently Asked Questions')}
+                </h2>
+              </div>
+              <Accordion type="single" collapsible className="w-full space-y-2">
+                <AccordionItem value="item-1" className="border rounded-xl px-4">
+                  <AccordionTrigger className="text-left font-medium">
+                    {t('aboutPage.faq.q1.question', 'What age group is ToothyQuest designed for?')}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {t('aboutPage.faq.q1.answer', 'ToothyQuest is designed for children ages 3-10, with content adapted to be engaging and educational for different age levels within that range.')}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2" className="border rounded-xl px-4">
+                  <AccordionTrigger className="text-left font-medium">
+                    {t('aboutPage.faq.q2.question', 'Is ToothyQuest free to use?')}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {t('aboutPage.faq.q2.answer', 'ToothyQuest offers free preview content so you can explore the app. Full access to all stories, games, and features requires a premium subscription.')}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3" className="border rounded-xl px-4">
+                  <AccordionTrigger className="text-left font-medium">
+                    {t('aboutPage.faq.q3.question', 'How does ToothyQuest protect my child\'s privacy?')}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {t('aboutPage.faq.q3.answer', 'We take privacy seriously. ToothyQuest does not sell personal data, follows child-safe privacy standards, and gives parents full control over their child\'s account and data.')}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-4" className="border rounded-xl px-4">
+                  <AccordionTrigger className="text-left font-medium">
+                    {t('aboutPage.faq.q4.question', 'Can I use ToothyQuest on multiple devices?')}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {t('aboutPage.faq.q4.answer', 'Yes! Your ToothyQuest account works across all your devices. Simply log in with your account to access your progress and premium content anywhere.')}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-5" className="border rounded-xl px-4">
+                  <AccordionTrigger className="text-left font-medium">
+                    {t('aboutPage.faq.q5.question', 'Is the content created by dental professionals?')}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {t('aboutPage.faq.q5.answer', 'Our content is developed with dental education best practices in mind. However, ToothyQuest is designed to complement, not replace, guidance from your child\'s dentist.')}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-6" className="border rounded-xl px-4">
+                  <AccordionTrigger className="text-left font-medium">
+                    {t('aboutPage.faq.q6.question', 'How can I cancel my subscription?')}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {t('aboutPage.faq.q6.answer', 'You can manage or cancel your subscription at any time from your account settings. If you need help, contact us at hello@toothyquest.com.')}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </section>
 
             {/* Contact Section */}

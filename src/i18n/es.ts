@@ -410,6 +410,33 @@ export const es = {
       title: "Contáctanos",
       p1: "Si tienes alguna pregunta sobre ToothyQuest, nuestro contenido o cualquier otra cosa, contáctanos en",
     },
+    faq: {
+      title: "Preguntas Frecuentes",
+      q1: {
+        question: "¿Para qué grupo de edad está diseñado ToothyQuest?",
+        answer: "ToothyQuest está diseñado para niños de 3 a 10 años, con contenido adaptado para ser atractivo y educativo para diferentes niveles de edad dentro de ese rango.",
+      },
+      q2: {
+        question: "¿ToothyQuest es gratis?",
+        answer: "ToothyQuest ofrece contenido de vista previa gratuito para que puedas explorar la aplicación. El acceso completo a todas las historias, juegos y funciones requiere una suscripción premium.",
+      },
+      q3: {
+        question: "¿Cómo protege ToothyQuest la privacidad de mi hijo?",
+        answer: "Nos tomamos la privacidad en serio. ToothyQuest no vende datos personales, sigue estándares de privacidad seguros para niños y da a los padres control total sobre la cuenta y los datos de su hijo.",
+      },
+      q4: {
+        question: "¿Puedo usar ToothyQuest en varios dispositivos?",
+        answer: "¡Sí! Tu cuenta de ToothyQuest funciona en todos tus dispositivos. Simplemente inicia sesión con tu cuenta para acceder a tu progreso y contenido premium en cualquier lugar.",
+      },
+      q5: {
+        question: "¿El contenido es creado por profesionales dentales?",
+        answer: "Nuestro contenido se desarrolla teniendo en cuenta las mejores prácticas de educación dental. Sin embargo, ToothyQuest está diseñado para complementar, no reemplazar, la orientación del dentista de tu hijo.",
+      },
+      q6: {
+        question: "¿Cómo puedo cancelar mi suscripción?",
+        answer: "Puedes administrar o cancelar tu suscripción en cualquier momento desde la configuración de tu cuenta. Si necesitas ayuda, contáctanos en hello@toothyquest.com.",
+      },
+    },
   },
 
   // Página de Contacto
