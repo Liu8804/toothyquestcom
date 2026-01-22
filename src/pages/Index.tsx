@@ -27,6 +27,7 @@ import SparkMeter from "@/components/rewards/SparkMeter";
 import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
 import ReferralProgram from "@/components/ReferralProgram";
 import AdminDiagnosticsPanel from "@/components/admin/AdminDiagnosticsPanel";
+import WorldSelector from "@/components/worlds/WorldSelector";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
@@ -178,6 +179,7 @@ const Index = () => {
         </div>
 
         <HeroSection />
+        <WorldSelector />
         <AboutSection />
         <FeaturesSection />
         <AdventuresSection />

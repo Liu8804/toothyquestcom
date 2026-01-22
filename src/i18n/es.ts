@@ -31,6 +31,8 @@ export const es = {
     dashboard: "Panel",
     parentLogin: "Acceso Padres",
     signOut: "Cerrar Sesión",
+    worlds: "Mundos",
+    about: "Acerca de",
   },
 
   // Sección Hero
