@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getVoiceSettings } from "@/components/VoiceSettingsModal";
-import { getBaseVoice, getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
+import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 import { supabase } from "@/integrations/supabase/client";
+import { 
+  stopAllMedia, 
+  setVoicePlaying, 
+  registerVoiceAudio 
+} from "./useAudioManager";
 
 interface UseStoryNarrationReturn {
   isPlaying: boolean;
@@ -18,7 +23,7 @@ type NarrationMode = "none" | "audio" | "speech";
 
 const createSilenceWavBlob = (durationMs = 250, sampleRate = 8000) => {
   const numSamples = Math.max(1, Math.floor((sampleRate * durationMs) / 1000));
-  const dataSize = numSamples * 2; // 16-bit PCM
+  const dataSize = numSamples * 2;
   const buffer = new ArrayBuffer(44 + dataSize);
   const view = new DataView(buffer);
 
@@ -26,25 +31,19 @@ const createSilenceWavBlob = (durationMs = 250, sampleRate = 8000) => {
     for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
   };
 
-  // RIFF header
   writeString(0, "RIFF");
   view.setUint32(4, 36 + dataSize, true);
   writeString(8, "WAVE");
-
-  // fmt chunk
   writeString(12, "fmt ");
-  view.setUint32(16, 16, true); // PCM
-  view.setUint16(20, 1, true); // format = PCM
-  view.setUint16(22, 1, true); // channels = 1
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
   view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * 2, true); // byte rate
-  view.setUint16(32, 2, true); // block align
-  view.setUint16(34, 16, true); // bits per sample
-
-  // data chunk
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
   writeString(36, "data");
   view.setUint32(40, dataSize, true);
-  // samples are already 0 (silence)
 
   return new Blob([buffer], { type: "audio/wav" });
 };
@@ -87,6 +86,9 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
   }, []);
 
   const stop = useCallback(() => {
+    // Use centralized stop for proper coordination
+    stopAllMedia();
+    
     if (modeRef.current === "speech") {
       cleanupSpeech();
     }
@@ -95,6 +97,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     setIsPlaying(false);
     setIsPaused(false);
     setIsLoading(false);
+    setVoicePlaying(false);
   }, [cleanupAudio, cleanupSpeech]);
 
   useEffect(() => {
@@ -107,6 +110,8 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
       return;
     }
 
+    // Stop all media first for clean transition
+    stopAllMedia();
     cleanupAudio();
     cleanupSpeech();
     modeRef.current = "speech";
@@ -117,14 +122,12 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
 
     const voiceSettings = getVoiceSettings();
     
-    // Wait for voices to load if needed
     const speakNow = () => {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = voiceSettings.speed;
       utterance.pitch = voiceSettings.pitch;
       utterance.volume = 1;
       
-      // Try to find a good voice
       const voices = window.speechSynthesis.getVoices();
       const englishVoice = voices.find(v => v.lang.startsWith('en') && v.localService) 
         || voices.find(v => v.lang.startsWith('en'))
@@ -134,45 +137,39 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
       }
 
       utterance.onstart = () => {
-        console.log("Browser speech started");
         setIsPlaying(true);
         setIsPaused(false);
+        setVoicePlaying(true);
       };
       utterance.onend = () => {
-        console.log("Browser speech ended");
         setIsPlaying(false);
         setIsPaused(false);
+        setVoicePlaying(false);
       };
       utterance.onerror = (event) => {
         console.error("Browser speech error:", event.error);
         setIsPlaying(false);
         setIsPaused(false);
+        setVoicePlaying(false);
         if (event.error !== "interrupted" && event.error !== "canceled") {
           setError("Sorry, there was an error playing the story.");
         }
       };
 
       utteranceRef.current = utterance;
-      window.speechSynthesis.cancel();
       
-      // Set playing immediately since speak() is synchronous start
       setIsPlaying(true);
+      setVoicePlaying(true);
       window.speechSynthesis.speak(utterance);
-      console.log("Browser speech speak() called");
     };
 
-    // Voices may not be loaded yet on some browsers
     const voices = window.speechSynthesis.getVoices();
     if (voices.length === 0) {
-      console.log("Waiting for voices to load...");
       window.speechSynthesis.onvoiceschanged = () => {
-        console.log("Voices loaded, speaking now");
         speakNow();
       };
-      // Fallback if onvoiceschanged doesn't fire
       setTimeout(() => {
         if (!utteranceRef.current) {
-          console.log("Fallback: speaking without voice selection");
           speakNow();
         }
       }, 100);
@@ -183,35 +180,34 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
 
   const play = useCallback(
     (text: string, mood: VoiceMood = "neutral") => {
+      // Stop ALL media first (centralized coordination)
       stop();
       setError(null);
 
-      // Get user's voice preference
       const voiceSettings = getVoiceSettings();
 
-      // If user prefers browser voice, use it directly
       if (voiceSettings.provider === "browser") {
         playWithBrowserSpeech(text);
         return;
       }
 
-      // Otherwise use ElevenLabs with consistent Toothy voice
       setIsLoading(true);
       modeRef.current = "audio";
 
-      // Create the audio element immediately on the user click.
       const audio = new Audio();
       audioRef.current = audio;
 
       audio.onended = () => {
         setIsPlaying(false);
         setIsPaused(false);
+        setVoicePlaying(false);
       };
 
       audio.onerror = () => {
         setIsLoading(false);
         setIsPlaying(false);
         setIsPaused(false);
+        setVoicePlaying(false);
         setError("Sorry, there was an error playing the story.");
       };
 
@@ -227,11 +223,9 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
         // ignore
       }
 
-      // Get the consistent Toothy voice with mood variation
       const voiceConfig = getVoiceForMood(mood);
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (!session?.access_token) {
-          console.log("ElevenLabs TTS requires authentication, falling back to browser speech");
           setIsLoading(false);
           playWithBrowserSpeech(text);
           return;
@@ -265,7 +259,6 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
               // ignore
             }
 
-            // Stop unlock loop
             if (audioRef.current) {
               audioRef.current.pause();
               audioRef.current.loop = false;
@@ -276,7 +269,6 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
               unlockUrlRef.current = null;
             }
 
-            // If provider blocked (401/402/429 etc), fall back so narration still works.
             if ([401, 402, 429, 403].includes(response.status)) {
               setError(serverMessage);
               playWithBrowserSpeech(text);
@@ -294,7 +286,6 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
 
           if (!audioRef.current) return;
 
-          // Replace unlock audio with real narration
           if (unlockUrlRef.current) {
             URL.revokeObjectURL(unlockUrlRef.current);
             unlockUrlRef.current = null;
@@ -305,6 +296,9 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
           audioRef.current.volume = 1;
           audioRef.current.currentTime = 0;
           audioRef.current.src = audioUrl;
+          
+          // Register with centralized manager
+          registerVoiceAudio(audioRef.current);
 
           setIsLoading(false);
 
@@ -312,12 +306,14 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
             () => {
               setIsPlaying(true);
               setIsPaused(false);
+              setVoicePlaying(true);
             },
             (playErr) => {
               console.error("Narration playback blocked:", playErr);
               setIsPlaying(false);
               setIsPaused(false);
-              setError("Audio playback was blocked. Tap Listen again, or allow audio playback.");
+              setVoicePlaying(false);
+              setError("Audio playback was blocked. Tap Listen again.");
               playWithBrowserSpeech(text);
             }
           );
@@ -325,6 +321,7 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
         .catch((err) => {
           console.error("ElevenLabs TTS error:", err);
           setIsLoading(false);
+          setVoicePlaying(false);
           setError("Failed to generate narration. Please try again.");
         });
       });
