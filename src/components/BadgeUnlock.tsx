@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 import MascotWithExpression from "./MascotWithExpression";
 
 interface Badge {
@@ -52,7 +52,7 @@ const BadgeUnlock = ({ isOpen, badge, onClose }: BadgeUnlockProps) => {
             className="mb-4"
           >
             <img
-              src={toothyLogo}
+              src={toothyMascot}
               alt="ToothyQuest"
               className="w-12 h-12 rounded-full mx-auto shadow-card border-2 border-primary"
             />
