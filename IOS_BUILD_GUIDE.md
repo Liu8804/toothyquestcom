@@ -55,7 +55,7 @@ npx cap open ios
 1. Select the **App** target in Xcode
 2. Go to **Signing & Capabilities** tab
 3. Select your **Team** (Apple Developer account)
-4. Bundle ID: `app.lovable.ade06b52b0914f31abbee61bf97ff696`
+4. Bundle ID: `com.toothyquest.app`
 
 ### App Icons
 1. Open **Assets.xcassets** → **AppIcon**

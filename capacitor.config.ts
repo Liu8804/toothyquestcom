@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.ade06b52b0914f31abbee61bf97ff696',
+  appId: 'com.toothyquest.app',
   appName: 'ToothyQuest',
   webDir: 'dist',
   server: {
