@@ -36,6 +36,26 @@ const getGlobalAudioContext = (): AudioContext => {
 };
 
 /**
+ * Public accessor for the shared AudioContext.
+ * (Used by game music + SFX so we don't create/ leak contexts.)
+ */
+export const getAudioContext = (): AudioContext => getGlobalAudioContext();
+
+/**
+ * Attempt to resume the shared AudioContext (must be called from a user gesture on iOS).
+ */
+export const unlockAudioContext = (): void => {
+  try {
+    const ctx = getGlobalAudioContext();
+    if (ctx.state === "suspended") {
+      void ctx.resume();
+    }
+  } catch {
+    // ignore
+  }
+};
+
+/**
  * Stop all currently playing speech synthesis
  */
 export const stopAllSpeech = (): void => {
@@ -123,31 +143,47 @@ export const playSynthTone = (
   type: OscillatorType,
   startFreq?: number
 ): void => {
+  const run = () => {
+    try {
+      const ctx = getGlobalAudioContext();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.type = type;
+      oscillator.frequency.setValueAtTime(startFreq || frequency, ctx.currentTime);
+
+      if (startFreq) {
+        oscillator.frequency.exponentialRampToValueAtTime(frequency, ctx.currentTime + duration);
+      }
+
+      // Use user volume settings + ducking when voice is playing
+      const volume = getSynthVolume();
+      gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+
+      oscillator.start(ctx.currentTime);
+      oscillator.stop(ctx.currentTime + duration);
+    } catch (error) {
+      console.error("Error playing synth tone:", error);
+    }
+  };
+
   try {
     const ctx = getGlobalAudioContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(startFreq || frequency, ctx.currentTime);
-    
-    if (startFreq) {
-      oscillator.frequency.exponentialRampToValueAtTime(frequency, ctx.currentTime + duration);
+    if (ctx.state === "suspended") {
+      ctx.resume().then(run).catch(() => {
+        // If resume fails (no user gesture), just skip.
+      });
+      return;
     }
-
-    // Use user volume settings + ducking when voice is playing
-    const volume = getSynthVolume();
-    gainNode.gain.setValueAtTime(volume, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
-
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    oscillator.start(ctx.currentTime);
-    oscillator.stop(ctx.currentTime + duration);
-  } catch (error) {
-    console.error("Error playing synth tone:", error);
+  } catch {
+    // fallthrough to run()
   }
+
+  run();
 };
 
 /**

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { forwardRef } from "react";
 import { Lock, Play } from "lucide-react";
 import { Game, globalGameText } from "@/data/games";
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,10 @@ interface GameCardProps {
   lockReason?: string;
 }
 
-const GameCard = ({ game, onClick, delay = 0, lockReason }: GameCardProps) => {
+const GameCard = forwardRef<HTMLDivElement, GameCardProps>(({ game, onClick, delay = 0, lockReason }, ref) => {
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.3 }}
@@ -60,6 +62,8 @@ const GameCard = ({ game, onClick, delay = 0, lockReason }: GameCardProps) => {
       </div>
     </motion.div>
   );
-};
+});
+
+GameCard.displayName = "GameCard";
 
 export default GameCard;

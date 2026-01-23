@@ -34,11 +34,15 @@ import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
+import { useAudioUnlock } from "@/hooks/useAudioUnlock";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2 } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
+import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 
 const Index = () => {
+  useAudioUnlock();
+
   const { user, loading } = useAuth();
   const { isPurchased } = usePurchase();
   const { selectedChild } = useQuestProgress();
@@ -252,6 +256,9 @@ const Index = () => {
 
         {/* Admin-only diagnostics (no sensitive data) */}
         <AdminDiagnosticsPanel />
+
+        {/* Owner diagnostics (for your test accounts) */}
+        <OwnerDiagnosticsPanel />
         
         {/* Volume Control Panel */}
         <VolumeControlPanel 
