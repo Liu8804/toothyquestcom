@@ -2,19 +2,20 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import { getAudioContext, playSynthTone, isVoiceActive, unlockAudioContext } from "./useAudioManager";
 import { getEffectiveVolume } from "@/components/VolumeControlPanel";
 
-// Simple pre-loaded sound effects - shorter durations for less chaos
+// Simple pre-loaded sound effects
+// IMPORTANT: iOS Safari drops tones < 80ms, so keep duration >= 0.12s.
 const GAME_SOUNDS = {
-  tap: { frequency: 800, duration: 0.05, type: "sine" as OscillatorType },
-  success: { frequency: 523, duration: 0.1, type: "sine" as OscillatorType },
-  win: { frequency: 659, duration: 0.12, type: "sine" as OscillatorType },
-  lose: { frequency: 200, duration: 0.15, type: "sawtooth" as OscillatorType },
-  star: { frequency: 1047, duration: 0.08, type: "sine" as OscillatorType },
-  achievement: { frequency: 880, duration: 0.15, type: "triangle" as OscillatorType },
-  locked: { frequency: 150, duration: 0.12, type: "square" as OscillatorType },
-  unlock: { frequency: 1200, duration: 0.08, type: "sine" as OscillatorType },
-  bounce: { frequency: 600, duration: 0.04, type: "sine" as OscillatorType },
-  pop: { frequency: 900, duration: 0.03, type: "sine" as OscillatorType },
-  collect: { frequency: 1100, duration: 0.06, type: "triangle" as OscillatorType },
+  tap: { frequency: 800, duration: 0.12, type: "sine" as OscillatorType },
+  success: { frequency: 523, duration: 0.18, type: "sine" as OscillatorType },
+  win: { frequency: 659, duration: 0.22, type: "sine" as OscillatorType },
+  lose: { frequency: 200, duration: 0.25, type: "sawtooth" as OscillatorType },
+  star: { frequency: 1047, duration: 0.15, type: "sine" as OscillatorType },
+  achievement: { frequency: 880, duration: 0.25, type: "triangle" as OscillatorType },
+  locked: { frequency: 150, duration: 0.18, type: "square" as OscillatorType },
+  unlock: { frequency: 1200, duration: 0.15, type: "sine" as OscillatorType },
+  bounce: { frequency: 600, duration: 0.12, type: "sine" as OscillatorType },
+  pop: { frequency: 900, duration: 0.12, type: "sine" as OscillatorType },
+  collect: { frequency: 1100, duration: 0.15, type: "triangle" as OscillatorType },
 };
 
 type SoundName = keyof typeof GAME_SOUNDS;
@@ -135,24 +136,27 @@ export const useGameSounds = () => {
       const musicVolume = getEffectiveVolume("music");
       if (musicVolume > 0) {
         const freq = notes[musicIndexRef.current % notes.length];
-        // Play very soft background note
+        // iOS: longer note, louder initial gain, gentle ramp
         try {
           if (ctx.state === "suspended") return;
 
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-          
+
           osc.type = "sine";
           osc.frequency.setValueAtTime(freq, ctx.currentTime);
-          
-          gain.gain.setValueAtTime(musicVolume * 0.15, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-          
+
+          const startGain = Math.min(1, musicVolume * 0.45); // audible on iOS
+          gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(startGain, ctx.currentTime + 0.01);
+          gain.gain.setValueAtTime(startGain, ctx.currentTime + 0.28);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.38);
+
           osc.connect(gain);
           gain.connect(ctx.destination);
-          
+
           osc.start(ctx.currentTime);
-          osc.stop(ctx.currentTime + 0.3);
+          osc.stop(ctx.currentTime + 0.42);
         } catch (e) {
           console.error("Music note error:", e);
         }

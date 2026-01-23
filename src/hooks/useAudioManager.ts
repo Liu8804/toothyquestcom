@@ -135,12 +135,13 @@ export const isVoiceActive = (): boolean => {
 };
 
 /**
- * Get current synth volume (ducked when voice is playing)
+ * Get current synth volume (ducked when voice is playing).
+ * iOS Safari needs louder signals and less aggressive ramp-down.
  */
 export const getSynthVolume = (): number => {
   const userVolume = getEffectiveVolume("sfx");
-  // Make game SFX more audible by default (still ducks when voice is active)
-  return audioState.isVoicePlaying ? userVolume * 0.25 : userVolume * 0.85;
+  // Boost for mobile audibility (clamped to [0,1]).
+  return Math.min(1, audioState.isVoicePlaying ? userVolume * 0.35 : userVolume * 1.2);
 };
 
 /**
@@ -193,14 +194,17 @@ export const playSynthTone = (
 
       // Use user volume settings + ducking when voice is playing
       const volume = getSynthVolume();
-      gainNode.gain.setValueAtTime(volume, ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+      // iOS Safari: avoid instant 0-gain start; ramp up briefly, sustain, then decay.
+      gainNode.gain.setValueAtTime(0.0001, ctx.currentTime); // avoid click
+      gainNode.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.005);
+      gainNode.gain.setValueAtTime(volume, ctx.currentTime + duration * 0.7);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
 
       oscillator.connect(gainNode);
       gainNode.connect(ctx.destination);
 
       oscillator.start(ctx.currentTime);
-      oscillator.stop(ctx.currentTime + duration);
+      oscillator.stop(ctx.currentTime + duration + 0.02); // small tail to avoid iOS cutoff
     } catch (error) {
       console.error("Error playing synth tone:", error);
     }
