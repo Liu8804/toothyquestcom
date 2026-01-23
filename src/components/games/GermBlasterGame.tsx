@@ -98,7 +98,7 @@ const GermBlasterGame = ({ game, onComplete }: GermBlasterGameProps) => {
     const cfg = DIFFICULTY_CONFIG[selectedDifficulty];
     setTimeLeft(cfg.timeLimit);
     setGameStarted(true);
-    startBackgroundMusic("excited");
+    startBackgroundMusic("excited"); // Start background music when game begins
     spawnGerm();
   };
 

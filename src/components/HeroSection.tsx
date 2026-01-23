@@ -6,7 +6,7 @@ import FloatingBubbles from "@/components/FloatingBubbles";
 import StarRating from "@/components/StarRating";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ParentInfoPopup from "@/components/ParentInfoPopup";
-import toothyQuestLogo from "@/assets/toothyquest-logo.jpeg";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 
 export const HeroSection = () => {
   const { t } = useTranslation();
@@ -29,9 +29,9 @@ export const HeroSection = () => {
         >
           <div className="flex items-center gap-2">
             <img 
-              src={toothyQuestLogo} 
+              src={toothyMascot} 
               alt="ToothyQuest Logo" 
-              className="h-12 w-auto object-contain"
+              className="h-12 w-auto object-contain rounded-full"
             />
           </div>
           <div className="hidden md:flex items-center gap-6">
@@ -143,9 +143,9 @@ export const HeroSection = () => {
           >
           <div className="relative flex flex-col items-center">
               <motion.img
-                src={toothyQuestLogo}
-                alt="ToothyQuest - Friendly Tooth Character"
-                className="w-72 md:w-96 lg:w-[28rem] h-auto drop-shadow-2xl"
+                src={toothyMascot}
+                alt="Toothy - Your Friendly Dental Buddy"
+                className="w-72 md:w-96 lg:w-[28rem] h-auto drop-shadow-2xl rounded-3xl"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />

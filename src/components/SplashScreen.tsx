@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import toothyQuestLogo from "@/assets/toothyquest-logo.jpeg";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -74,8 +74,8 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             }}
           >
             <motion.img
-              src={toothyQuestLogo}
-              alt="ToothyQuest"
+              src={toothyMascot}
+              alt="Toothy - Your Friendly Dental Buddy"
               className="w-48 md:w-64 lg:w-80 h-auto drop-shadow-2xl rounded-3xl"
               animate={{ 
                 y: [0, -8, 0],

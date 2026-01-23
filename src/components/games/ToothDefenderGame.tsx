@@ -35,7 +35,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [totalCaught, setTotalCaught] = useState(0);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
 
   const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
 
@@ -110,7 +110,13 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
     setDifficulty(diff);
     setLives(DIFFICULTY_SETTINGS[diff].lives || 3);
     setGameStarted(true);
+    startBackgroundMusic("excited"); // Start exciting background music
   };
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   if (!difficulty) {
     return (
