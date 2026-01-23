@@ -28,13 +28,14 @@ import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
 import ReferralProgram from "@/components/ReferralProgram";
 import AdminDiagnosticsPanel from "@/components/admin/AdminDiagnosticsPanel";
 import WorldSelector from "@/components/worlds/WorldSelector";
+import VolumeControlPanel from "@/components/VolumeControlPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic } from "lucide-react";
+import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2 } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 
 const Index = () => {
@@ -56,6 +57,7 @@ const Index = () => {
   const [showDentalChat, setShowDentalChat] = useState(false);
   const [showDailyBonus, setShowDailyBonus] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
+  const [showVolumeControl, setShowVolumeControl] = useState(false);
 
   const openVoiceQuiz = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -122,61 +124,79 @@ const Index = () => {
           />
         )}
 
-        {/* Auth button, language switcher and streak tracker in top right */}
-        <div className="fixed top-2 left-2 right-2 md:left-auto md:right-4 md:top-4 z-40 flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
-          {/* Referral Program Button */}
-          {user && <ReferralProgram />}
-          {/* Sparkle Meter (Mini version for header) */}
+        {/* Auth button, language switcher and streak tracker - floating nav */}
+        <div className="fixed top-3 right-3 z-40 flex items-center gap-1.5 sm:gap-2 bg-card/90 backdrop-blur-md rounded-full px-2 py-1.5 shadow-lg border border-border/50">
+          {/* Volume Control */}
+          <Button
+            onClick={() => setShowVolumeControl(true)}
+            variant="ghost"
+            size="icon"
+            className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
+          >
+            <Volume2 className="w-4 h-4" />
+          </Button>
+
+          {/* Sparkle Points */}
           {user && selectedChild && (
             <Button
               onClick={() => setShowRewards(true)}
-              variant="outline"
-              className="rounded-full gap-2 bg-gradient-to-r from-star/20 to-accent/20 border-star/30 hover:border-star/50"
+              variant="ghost"
+              size="sm"
+              className="rounded-full gap-1 px-2"
             >
               <Trophy className="w-4 h-4 text-star" />
-              <span className="font-bold text-foreground">{totalPoints}</span>
-              <span className="hidden sm:inline text-muted-foreground text-xs">pts</span>
+              <span className="font-bold text-foreground text-sm">{totalPoints}</span>
             </Button>
           )}
 
           {/* Quick Voice access */}
           <Button
             onClick={openVoiceQuiz}
-            variant="outline"
-            className="rounded-full gap-2 bg-card/80 backdrop-blur-sm shadow-card"
+            variant="ghost"
+            size="icon"
+            className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
           >
             <Mic className="w-4 h-4" />
-            <span className="hidden sm:inline">Voice</span>
           </Button>
 
           <LanguageSwitcher />
           <StreakTracker />
+          
           {!loading && (
             <>
               {user ? (
                 <Button
                   onClick={() => setShowDashboard(true)}
-                  className="rounded-full gap-2 shadow-card relative"
+                  size="sm"
+                  className="rounded-full gap-1.5 px-3 relative"
                 >
                   {isPurchased && (
                     <PremiumBadge variant="small" className="absolute -top-1 -right-1" />
                   )}
                   <LayoutDashboard className="w-4 h-4" />
-                  <span className="hidden sm:inline">Dashboard</span>
+                  <span className="hidden sm:inline text-sm">Dashboard</span>
                 </Button>
               ) : (
                 <Button
                   onClick={() => setShowAuth(true)}
                   variant="outline"
-                  className="rounded-full gap-2 bg-card/80 backdrop-blur-sm shadow-card"
+                  size="sm"
+                  className="rounded-full gap-1.5 px-3"
                 >
                   <LogIn className="w-4 h-4" />
-                  <span className="hidden sm:inline">Parent Login</span>
+                  <span className="hidden sm:inline text-sm">Login</span>
                 </Button>
               )}
             </>
           )}
         </div>
+
+        {/* Referral Program - separate from nav */}
+        {user && (
+          <div className="fixed top-3 left-3 z-40">
+            <ReferralProgram />
+          </div>
+        )}
 
         <HeroSection />
         <WorldSelector />
@@ -232,6 +252,12 @@ const Index = () => {
 
         {/* Admin-only diagnostics (no sensitive data) */}
         <AdminDiagnosticsPanel />
+        
+        {/* Volume Control Panel */}
+        <VolumeControlPanel 
+          isOpen={showVolumeControl} 
+          onClose={() => setShowVolumeControl(false)} 
+        />
       </main>
     </>
   );

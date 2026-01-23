@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
-import toothyMascot from "@/assets/toothy-mascot.png";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";

@@ -1,4 +1,5 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
+import { getEffectiveVolume } from "@/components/VolumeControlPanel";
 
 /**
  * Centralized Audio Manager
@@ -8,8 +9,8 @@ import { useCallback, useRef } from "react";
  * 2. Ducking (lowering volume) of sound effects when voice is playing
  * 3. Queueing voice playback to prevent multiple voices at once
  * 4. Managing audio element lifecycle
+ * 5. Respecting user volume settings
  */
-
 
 interface AudioState {
   isVoicePlaying: boolean;
@@ -21,7 +22,7 @@ interface AudioState {
 const audioState: AudioState = {
   isVoicePlaying: false,
   currentAudio: null,
-  synthVolume: 0.3,
+  synthVolume: 0.15, // Lowered default SFX volume
 };
 
 // Global audio context for synth sounds
@@ -68,8 +69,8 @@ export const stopAllMedia = (): void => {
  */
 export const setVoicePlaying = (playing: boolean): void => {
   audioState.isVoicePlaying = playing;
-  // When voice starts, duck synth sounds; restore when voice stops
-  audioState.synthVolume = playing ? 0.1 : 0.3;
+  // When voice starts, duck synth sounds even more; restore when voice stops
+  audioState.synthVolume = playing ? 0.05 : 0.15;
 };
 
 /**
@@ -83,7 +84,8 @@ export const isVoiceActive = (): boolean => {
  * Get current synth volume (ducked when voice is playing)
  */
 export const getSynthVolume = (): number => {
-  return audioState.synthVolume;
+  const userVolume = getEffectiveVolume("sfx");
+  return audioState.isVoicePlaying ? userVolume * 0.3 : userVolume * 0.5;
 };
 
 /**
@@ -96,18 +98,18 @@ export const registerVoiceAudio = (audio: HTMLAudioElement): void => {
   
   audioState.currentAudio = audio;
   audioState.isVoicePlaying = true;
-  audioState.synthVolume = 0.1; // Duck synth sounds
+  audioState.synthVolume = 0.05; // Duck synth sounds
   
   // Reset state when audio ends
   audio.addEventListener("ended", () => {
     audioState.isVoicePlaying = false;
-    audioState.synthVolume = 0.3;
+    audioState.synthVolume = 0.15;
     audioState.currentAudio = null;
   }, { once: true });
   
   audio.addEventListener("error", () => {
     audioState.isVoicePlaying = false;
-    audioState.synthVolume = 0.3;
+    audioState.synthVolume = 0.15;
     audioState.currentAudio = null;
   }, { once: true });
 };
@@ -133,8 +135,8 @@ export const playSynthTone = (
       oscillator.frequency.exponentialRampToValueAtTime(frequency, ctx.currentTime + duration);
     }
 
-    // Use ducked volume when voice is playing
-    const volume = audioState.isVoicePlaying ? 0.08 : audioState.synthVolume;
+    // Use user volume settings + ducking when voice is playing
+    const volume = getSynthVolume();
     gainNode.gain.setValueAtTime(volume, ctx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
 
@@ -176,6 +178,7 @@ export const useAudioManager = () => {
     audioUrlRef.current = url;
 
     const audio = new Audio(url);
+    audio.volume = getEffectiveVolume("voice");
     audioRef.current = audio;
     
     // Register with global manager
@@ -198,58 +201,11 @@ export const useAudioManager = () => {
     }
   }, [cleanup]);
 
-  const playBrowserSpeech = useCallback((text: string, options?: {
-    rate?: number;
-    pitch?: number;
-    onEnd?: () => void;
-  }): void => {
-    // Stop everything first
-    stopAllMedia();
-
-    if (!("speechSynthesis" in window)) {
-      console.warn("Speech synthesis not available");
-      options?.onEnd?.();
-      return;
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = options?.rate ?? 1;
-    utterance.pitch = options?.pitch ?? 1;
-    utterance.volume = 1;
-
-    // Find a good voice
-    const voices = window.speechSynthesis.getVoices();
-    const englishVoice = voices.find(v => v.lang.startsWith("en") && v.localService)
-      || voices.find(v => v.lang.startsWith("en"))
-      || voices[0];
-    if (englishVoice) {
-      utterance.voice = englishVoice;
-    }
-
-    utterance.onstart = () => {
-      setVoicePlaying(true);
-    };
-
-    utterance.onend = () => {
-      setVoicePlaying(false);
-      options?.onEnd?.();
-    };
-
-    utterance.onerror = (event) => {
-      if (event.error !== "interrupted" && event.error !== "canceled") {
-        console.error("Speech error:", event.error);
-      }
-      setVoicePlaying(false);
-      options?.onEnd?.();
-    };
-
-    setVoicePlaying(true);
-    window.speechSynthesis.speak(utterance);
-  }, []);
+  // Note: Browser speech removed - only use ElevenLabs AI voice
+  // This eliminates the "man voice" issue
 
   return {
     playVoiceAudio,
-    playBrowserSpeech,
     stopAll: stopAllMedia,
     cleanup,
     isVoiceActive,
