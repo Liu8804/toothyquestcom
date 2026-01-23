@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, Shield, FileText, Info, Mail } from "lucide-react";
+import { Heart, Shield, FileText, Info, Mail, Smartphone, ClipboardList } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import ToothyMascot from "@/components/ToothyMascot";
@@ -69,6 +69,20 @@ export const FooterSection = () => {
               >
                 <FileText className="w-3 h-3" />
                 {t("footer.links.terms")}
+              </Link>
+              <Link 
+                to="/app-privacy" 
+                className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <Smartphone className="w-3 h-3" />
+                App Privacy
+              </Link>
+              <Link 
+                to="/app-store-checklist" 
+                className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <ClipboardList className="w-3 h-3" />
+                Export Checklist
               </Link>
             </div>
             <p className="text-xs text-muted-foreground mt-4">

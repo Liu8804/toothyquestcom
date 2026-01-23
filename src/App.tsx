@@ -15,6 +15,8 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCanceled from "./pages/PaymentCanceled";
 import Install from "./pages/Install";
 import Redeem from "./pages/Redeem";
+import AppPrivacy from "./pages/AppPrivacy";
+import AppStoreChecklist from "./pages/AppStoreChecklist";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
               <Route path="/payment-canceled" element={<PaymentCanceled />} />
               <Route path="/install" element={<Install />} />
               <Route path="/redeem" element={<Redeem />} />
+              <Route path="/app-privacy" element={<AppPrivacy />} />
+              <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
