@@ -123,7 +123,7 @@ const Index = () => {
         )}
 
         {/* Auth button, language switcher and streak tracker in top right */}
-        <div className="fixed top-4 right-4 z-40 flex items-center gap-2">
+        <div className="fixed top-2 left-2 right-2 md:left-auto md:right-4 md:top-4 z-40 flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
           {/* Referral Program Button */}
           {user && <ReferralProgram />}
           {/* Sparkle Meter (Mini version for header) */}
