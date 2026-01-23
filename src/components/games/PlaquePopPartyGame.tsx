@@ -31,7 +31,7 @@ const PlaquePopPartyGame = ({ game, onComplete }: PlaquePopPartyGameProps) => {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(45);
   const [gameStarted, setGameStarted] = useState(false);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -108,7 +108,13 @@ const PlaquePopPartyGame = ({ game, onComplete }: PlaquePopPartyGameProps) => {
     setTimeLeft(cfg.timeLimit);
     setGameStarted(true);
     spawnBubble();
+    startBackgroundMusic("happy"); // Start fun background music
   };
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   if (!difficulty) {
     return <DifficultySelector game={game} onSelectDifficulty={startGame} />;

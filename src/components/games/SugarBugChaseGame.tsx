@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
+import { useGameSounds } from "@/hooks/useGameSounds";
 import DifficultySelector, { Difficulty, DifficultySettings } from "./DifficultySelector";
 
 interface SugarBugChaseGameProps {
@@ -30,6 +31,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [timeLeft, setTimeLeft] = useState(45);
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
 
   const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
 
@@ -79,6 +81,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   const tapBug = (bugId: number) => {
     setBugs(prev => prev.filter(b => b.id !== bugId));
     setScore(prev => prev + 1);
+    playSound("tap");
   };
 
   const handleBugEscape = (bugId: number) => {
@@ -90,7 +93,13 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
     setDifficulty(diff);
     setTimeLeft(DIFFICULTY_SETTINGS[diff].timeLimit);
     setGameStarted(true);
+    startBackgroundMusic("excited"); // Start chase music
   };
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   if (!difficulty) {
     return (

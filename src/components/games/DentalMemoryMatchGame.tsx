@@ -34,7 +34,7 @@ const DentalMemoryMatchGame = ({ game, onComplete }: DentalMemoryMatchGameProps)
   const [moves, setMoves] = useState(0);
   const [matchedPairs, setMatchedPairs] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -104,7 +104,13 @@ const DentalMemoryMatchGame = ({ game, onComplete }: DentalMemoryMatchGameProps)
     setDifficulty(selectedDifficulty);
     initializeCards(DIFFICULTY_CONFIG[selectedDifficulty].pairs);
     setGameStarted(true);
+    startBackgroundMusic("calm"); // Start calm memory game music
   };
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   if (!difficulty) {
     return <DifficultySelector game={game} onSelectDifficulty={startGame} />;
