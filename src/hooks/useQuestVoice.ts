@@ -2,13 +2,20 @@ import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getVoiceSettings } from "@/components/VoiceSettingsModal";
-import { getBaseVoice, getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
+import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
+import { 
+  stopAllMedia, 
+  setVoicePlaying, 
+  registerVoiceAudio 
+} from "./useAudioManager";
 
 /**
  * Quest voice hook for short narration lines (intro, ending, celebrations).
  * Uses ONE consistent voice (Lily) with mood variations for emotional context.
  * - Uses Premium AI voice (ElevenLabs) when selected AND the user is signed in
  * - Falls back to browser speech synthesis otherwise
+ * 
+ * AUDIO COORDINATION: Uses centralized audio manager to prevent overlapping
  */
 export const useQuestVoice = () => {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
@@ -32,11 +39,11 @@ export const useQuestVoice = () => {
   }, []);
 
   const stop = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
+    // Use centralized stop to ensure everything stops
+    stopAllMedia();
     utteranceRef.current = null;
     isSpeakingRef.current = false;
+    setVoicePlaying(false);
     cleanupAudio();
   }, [cleanupAudio]);
 
@@ -108,7 +115,7 @@ export const useQuestVoice = () => {
 
   const speak = useCallback(
     (text: string, mood: VoiceMood = "neutral", onEnd?: () => void) => {
-      // Stop any current voice
+      // Stop ALL media first (centralized coordination)
       stop();
 
       const settings = getVoiceSettings();
@@ -158,7 +165,6 @@ export const useQuestVoice = () => {
           );
 
           if (!response.ok) {
-            // If AI fails, keep the app responsive.
             speakWithBrowserSpeech(text, onEnd);
             return;
           }
@@ -169,13 +175,18 @@ export const useQuestVoice = () => {
 
           const audio = new Audio(url);
           audioRef.current = audio;
+          
+          // Register with centralized manager for proper coordination
+          registerVoiceAudio(audio);
 
           audio.onended = () => {
+            setVoicePlaying(false);
             cleanupAudio();
             onEnd?.();
           };
 
           audio.onerror = () => {
+            setVoicePlaying(false);
             cleanupAudio();
             speakWithBrowserSpeech(text, onEnd);
           };

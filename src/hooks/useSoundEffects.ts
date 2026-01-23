@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isVoiceActive } from "./useAudioManager";
 
 interface UseSoundEffectsReturn {
   playSound: (prompt: string, duration?: number) => Promise<void>;
@@ -31,9 +32,11 @@ export const useSoundEffects = (): UseSoundEffectsReturn => {
     return false;
   });
   const audioCache = useRef<Map<string, string>>(new Map());
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const playSound = useCallback(async (prompt: string, duration = 3) => {
-    if (isMuted) return;
+    // Don't play sound effects if voice is active (audio ducking)
+    if (isMuted || isVoiceActive()) return;
 
     // Check cache first
     const cacheKey = `${prompt}-${duration}`;
@@ -78,8 +81,20 @@ export const useSoundEffects = (): UseSoundEffectsReturn => {
       setIsLoading(false);
     }
 
+    // Stop any currently playing sound effect
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
+    }
+
     const audio = new Audio(audioUrl);
-    audio.volume = 0.5;
+    audio.volume = isVoiceActive() ? 0.15 : 0.4; // Duck if voice is playing
+    currentAudioRef.current = audio;
+    
+    audio.onended = () => {
+      currentAudioRef.current = null;
+    };
+    
     await audio.play().catch(console.error);
   }, [isMuted]);
 
