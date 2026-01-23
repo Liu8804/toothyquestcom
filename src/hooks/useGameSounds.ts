@@ -37,6 +37,7 @@ export const useGameSounds = () => {
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const musicIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const musicIndexRef = useRef(0);
+  const warnRef = useRef({ sfxZero: false, musicZero: false, ctxSuspended: false });
 
   // Stop music on unmount
   useEffect(() => {
@@ -52,6 +53,17 @@ export const useGameSounds = () => {
 
     // Ensure audio is unlocked on mobile before attempting playback
     unlockAudioContext();
+
+    const sfxVolume = getEffectiveVolume("sfx");
+    const ctx = getAudioContext();
+    if (!warnRef.current.sfxZero && sfxVolume === 0) {
+      warnRef.current.sfxZero = true;
+      console.warn("[GameAudio] SFX volume is 0. Open Sound Settings and raise Master/SFX.");
+    }
+    if (!warnRef.current.ctxSuspended && ctx.state === "suspended") {
+      warnRef.current.ctxSuspended = true;
+      console.warn("[GameAudio] AudioContext is still suspended (iOS requires a tap + device not muted). Try tapping again and ensure iPhone Silent Mode is OFF.");
+    }
     
     const sound = GAME_SOUNDS[name];
     if (sound) {
@@ -98,6 +110,12 @@ export const useGameSounds = () => {
     if (isMuted || isMusicPlaying) return;
 
     unlockAudioContext();
+
+    const musicVolumeNow = getEffectiveVolume("music");
+    if (!warnRef.current.musicZero && musicVolumeNow === 0) {
+      warnRef.current.musicZero = true;
+      console.warn("[GameAudio] Music volume is 0. Open Sound Settings and raise Master/Music.");
+    }
     
     setIsMusicPlaying(true);
     musicIndexRef.current = 0;
@@ -105,6 +123,11 @@ export const useGameSounds = () => {
     const notes = MUSIC_PATTERNS[pattern];
     
     const ctx = getAudioContext();
+
+    if (!warnRef.current.ctxSuspended && ctx.state === "suspended") {
+      warnRef.current.ctxSuspended = true;
+      console.warn("[GameAudio] AudioContext is suspended, background music won't play yet. Tap again and ensure iPhone Silent Mode is OFF.");
+    }
 
     musicIntervalRef.current = setInterval(() => {
       if (isVoiceActive()) return; // Don't play music over voice
