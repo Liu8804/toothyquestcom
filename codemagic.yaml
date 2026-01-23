@@ -1,0 +1,135 @@
+workflows:
+  ios-workflow:
+    name: iOS Build & Screenshots
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.toothyquest.app
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      node: 18
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Install npm dependencies
+        script: npm install
+        
+      - name: Build web app
+        script: npm run build
+        
+      - name: Add iOS platform
+        script: npx cap add ios || true
+        
+      - name: Sync Capacitor
+        script: npx cap sync ios
+        
+      - name: Install CocoaPods dependencies
+        script: |
+          cd ios/App
+          pod install
+          
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+          
+      - name: Build iOS app
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - ios/App/App/Assets.xcassets/**
+      
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+
+  screenshot-workflow:
+    name: Capture App Store Screenshots
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    
+    environment:
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+      node: 18
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Install dependencies
+        script: npm install
+        
+      - name: Build web app
+        script: npm run build
+        
+      - name: Sync Capacitor
+        script: |
+          npx cap add ios || true
+          npx cap sync ios
+          
+      - name: Install CocoaPods
+        script: |
+          cd ios/App
+          pod install
+          
+      - name: Capture iPhone Screenshots
+        script: |
+          # Boot iPhone 15 Pro Max simulator
+          xcrun simctl boot "iPhone 15 Pro Max" || true
+          
+          # Build and install app
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -destination 'platform=iOS Simulator,name=iPhone 15 Pro Max' \
+            -derivedDataPath build/ios \
+            build
+          
+          # Install app on simulator
+          xcrun simctl install booted build/ios/Build/Products/Debug-iphonesimulator/App.app
+          
+          # Launch app
+          xcrun simctl launch booted com.toothyquest.app
+          
+          # Wait for app to load
+          sleep 5
+          
+          # Capture screenshots
+          mkdir -p screenshots/iphone
+          xcrun simctl io booted screenshot screenshots/iphone/home.png
+          
+      - name: Capture iPad Screenshots
+        script: |
+          # Shutdown iPhone, boot iPad
+          xcrun simctl shutdown all || true
+          xcrun simctl boot "iPad Pro (12.9-inch) (6th generation)" || true
+          
+          # Build for iPad
+          xcodebuild -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation)' \
+            -derivedDataPath build/ios \
+            build
+          
+          # Install and launch
+          xcrun simctl install booted build/ios/Build/Products/Debug-iphonesimulator/App.app
+          xcrun simctl launch booted com.toothyquest.app
+          
+          sleep 5
+          
+          # Capture screenshots
+          mkdir -p screenshots/ipad
+          xcrun simctl io booted screenshot screenshots/ipad/home.png
+
+    artifacts:
+      - screenshots/**/*.png
