@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "app-icon.png", "splash-screen.png", "toothyquest-logo.jpeg"],
+      includeAssets: ["favicon.ico", "app-icon.png", "splash-screen.png", "splash-ios-portrait.png", "toothyquest-logo.jpeg", "ios-icons/icon-1024.png"],
       manifest: {
         name: "ToothyQuest - Make Brushing Fun!",
         short_name: "ToothyQuest",
@@ -36,44 +36,8 @@ export default defineConfig(({ mode }) => ({
         prefer_related_applications: false,
         icons: [
           {
-            src: "/app-icon.png",
-            sizes: "72x72",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/app-icon.png",
-            sizes: "96x96",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/app-icon.png",
-            sizes: "128x128",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/app-icon.png",
-            sizes: "144x144",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/app-icon.png",
-            sizes: "152x152",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/app-icon.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/app-icon.png",
-            sizes: "384x384",
+            src: "/ios-icons/icon-1024.png",
+            sizes: "1024x1024",
             type: "image/png",
             purpose: "any",
           },
@@ -89,8 +53,63 @@ export default defineConfig(({ mode }) => ({
             type: "image/png",
             purpose: "maskable",
           },
+          {
+            src: "/app-icon.png",
+            sizes: "384x384",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "180x180",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "152x152",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "144x144",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "128x128",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "96x96",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/app-icon.png",
+            sizes: "72x72",
+            type: "image/png",
+            purpose: "any",
+          },
         ],
         screenshots: [
+          {
+            src: "/splash-ios-portrait.png",
+            sizes: "1284x1920",
+            type: "image/png",
+            form_factor: "narrow",
+            label: "ToothyQuest Splash Screen",
+          },
           {
             src: "/splash-screen.png",
             sizes: "1280x720",
