@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, Trophy, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 import MascotWithExpression from "./MascotWithExpression";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect } from "react";
@@ -145,7 +145,7 @@ const QuestCompleteCelebration = ({
           className="absolute top-4 right-4"
         >
           <img
-            src={toothyLogo}
+            src={toothyMascot}
             alt="ToothyQuest"
             className="w-14 h-14 rounded-full shadow-float border-3 border-white"
           />

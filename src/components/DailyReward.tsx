@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Gift, X, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 import MascotWithExpression from "./MascotWithExpression";
 
 const DAILY_REWARDS = [
@@ -112,7 +112,7 @@ const DailyReward = () => {
               className="mb-4"
             >
               <img
-                src={toothyLogo}
+                src={toothyMascot}
                 alt="ToothyQuest"
                 className="w-16 h-16 rounded-full mx-auto shadow-float border-3 border-white"
               />
