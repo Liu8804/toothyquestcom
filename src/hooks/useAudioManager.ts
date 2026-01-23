@@ -47,9 +47,33 @@ export const getAudioContext = (): AudioContext => getGlobalAudioContext();
 export const unlockAudioContext = (): void => {
   try {
     const ctx = getGlobalAudioContext();
+
+    const prime = () => {
+      // Prime WebAudio with a near-silent, ultra-short oscillator.
+      // This is a common iOS Safari requirement to fully unlock audio output.
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        gain.gain.value = 0.0001;
+        osc.frequency.value = 440;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const t0 = ctx.currentTime;
+        osc.start(t0);
+        osc.stop(t0 + 0.01);
+      } catch {
+        // ignore
+      }
+    };
+
     if (ctx.state === "suspended") {
-      void ctx.resume();
+      void ctx.resume().then(prime).catch(() => {
+        // ignore
+      });
+      return;
     }
+
+    prime();
   } catch {
     // ignore
   }
@@ -97,6 +121,16 @@ export const setVoicePlaying = (playing: boolean): void => {
  * Check if voice is currently playing
  */
 export const isVoiceActive = (): boolean => {
+  // Self-heal: if something went wrong and we never received an "ended" event,
+  // don't permanently block SFX/music.
+  if (audioState.isVoicePlaying) {
+    const a = audioState.currentAudio;
+    if (!a || a.ended || a.paused) {
+      audioState.isVoicePlaying = false;
+      audioState.synthVolume = 0.15;
+      audioState.currentAudio = null;
+    }
+  }
   return audioState.isVoicePlaying;
 };
 
@@ -105,7 +139,8 @@ export const isVoiceActive = (): boolean => {
  */
 export const getSynthVolume = (): number => {
   const userVolume = getEffectiveVolume("sfx");
-  return audioState.isVoicePlaying ? userVolume * 0.3 : userVolume * 0.5;
+  // Make game SFX more audible by default (still ducks when voice is active)
+  return audioState.isVoicePlaying ? userVolume * 0.25 : userVolume * 0.85;
 };
 
 /**
