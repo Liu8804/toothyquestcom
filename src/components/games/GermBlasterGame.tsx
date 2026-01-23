@@ -33,7 +33,7 @@ const GermBlasterGame = ({ game, onComplete }: GermBlasterGameProps) => {
   const [timeLeft, setTimeLeft] = useState(50);
   const [gameStarted, setGameStarted] = useState(false);
   const [blasts, setBlasts] = useState<{ id: number; x: number; y: number }[]>([]);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -98,8 +98,14 @@ const GermBlasterGame = ({ game, onComplete }: GermBlasterGameProps) => {
     const cfg = DIFFICULTY_CONFIG[selectedDifficulty];
     setTimeLeft(cfg.timeLimit);
     setGameStarted(true);
+    startBackgroundMusic("excited");
     spawnGerm();
   };
+
+  // Cleanup music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   if (!difficulty) {
     return <DifficultySelector game={game} onSelectDifficulty={startGame} />;

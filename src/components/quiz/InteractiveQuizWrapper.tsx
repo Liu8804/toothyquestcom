@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import { CheckCircle2, XCircle, Sparkles, HelpCircle, ChevronRight, Star, Zap } from "lucide-react";
+import { CheckCircle2, XCircle, Sparkles, HelpCircle, ChevronRight, Star, Zap, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 import { QuizCharacterAnimated, getCharacterForStory, CHARACTERS, CHARACTER_DIALOGUES, type CharacterMood, type CharacterId } from "./QuizCharacters";
+import QuizCertificate from "./QuizCertificate";
+import ConfettiCelebration from "@/components/ConfettiCelebration";
 
 interface InteractiveQuizWrapperProps {
   quiz: StoryQuiz;
@@ -13,6 +15,7 @@ interface InteractiveQuizWrapperProps {
   onComplete: () => void;
   isCompleted: boolean;
   storyId?: string; // Used to determine which character appears
+  childName?: string;
 }
 
 // Helper to get character-specific random message
@@ -31,6 +34,7 @@ export const InteractiveQuizWrapper = ({
   onComplete,
   isCompleted,
   storyId = "",
+  childName = "Champion",
 }: InteractiveQuizWrapperProps) => {
   // Determine which character to use based on story theme
   const characterId = getCharacterForStory(storyId);
@@ -45,8 +49,11 @@ export const InteractiveQuizWrapper = ({
   const [characterMood, setCharacterMood] = useState<CharacterMood>("waving");
   const [characterMessage, setCharacterMessage] = useState("");
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showCertificate, setShowCertificate] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [streak, setStreak] = useState(0);
   const [showStreakBonus, setShowStreakBonus] = useState(false);
+  const [starsEarned, setStarsEarned] = useState(3);
 
   const {
     playCorrectSound,
@@ -113,25 +120,29 @@ export const InteractiveQuizWrapper = ({
             setCharacterMessage(getRandomMessage("nextQuestion", characterId));
             playSparkleEffect();
           } else {
-            // Final celebration!
+            // Final celebration with confetti and certificate!
             setShowCelebration(true);
+            setShowConfetti(true);
             setCharacterMood("dancing");
             setCharacterMessage(getRandomMessage("celebrate", characterId));
             playCelebrationSound();
             setTimeout(() => {
               setShowCelebration(false);
-              onComplete();
+              setShowConfetti(false);
+              setShowCertificate(true);
             }, 2500);
           }
         } else {
           setQuiz2Completed(true);
           setShowCelebration(true);
+          setShowConfetti(true);
           setCharacterMood("dancing");
           setCharacterMessage(getRandomMessage("celebrate", characterId));
           playCelebrationSound();
           setTimeout(() => {
             setShowCelebration(false);
-            onComplete();
+            setShowConfetti(false);
+            setShowCertificate(true);
           }, 2500);
         }
       }, 2000);
@@ -177,41 +188,59 @@ export const InteractiveQuizWrapper = ({
     );
   }
 
+  const handleCertificateClose = () => {
+    setShowCertificate(false);
+    onComplete();
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20 relative overflow-hidden"
-    >
-      {/* Celebration Overlay */}
-      <AnimatePresence>
-        {showCelebration && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-30 flex items-center justify-center bg-gradient-to-br from-accent/50 to-primary/50 backdrop-blur-sm"
-          >
-            <motion.div className="flex flex-col items-center gap-4">
-              <QuizCharacterAnimated characterId={characterId} mood="dancing" size="lg" showSpeechBubble={false} />
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", delay: 0.2 }}
-                className="text-center"
-              >
-                <motion.span
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ repeat: Infinity, duration: 0.5 }}
-                  className="text-3xl font-display font-bold text-white drop-shadow-lg"
+    <>
+      {/* Confetti Celebration */}
+      <ConfettiCelebration isActive={showConfetti} />
+      
+      {/* Quiz Certificate */}
+      <QuizCertificate
+        isOpen={showCertificate}
+        onClose={handleCertificateClose}
+        childName={childName}
+        quizTitle={quiz.question.substring(0, 50) + "..."}
+        starsEarned={starsEarned}
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20 relative overflow-hidden"
+      >
+        {/* Celebration Overlay */}
+        <AnimatePresence>
+          {showCelebration && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 z-30 flex items-center justify-center bg-gradient-to-br from-accent/50 to-primary/50 backdrop-blur-sm"
+            >
+              <motion.div className="flex flex-col items-center gap-4">
+                <QuizCharacterAnimated characterId={characterId} mood="dancing" size="lg" showSpeechBubble={false} enableVoice={false} />
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", delay: 0.2 }}
+                  className="text-center"
                 >
-                  🎉 SUPER STAR! 🎉
-                </motion.span>
+                  <motion.span
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ repeat: Infinity, duration: 0.5 }}
+                    className="text-3xl font-display font-bold text-white drop-shadow-lg"
+                  >
+                    🎉 {t("games.victory") || "SUPER STAR!"} 🎉
+                  </motion.span>
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
 
       {/* Streak Bonus Popup */}
       <AnimatePresence>
@@ -475,6 +504,7 @@ export const InteractiveQuizWrapper = ({
         </AnimatePresence>
       </div>
     </motion.div>
+    </>
   );
 };
 

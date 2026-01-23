@@ -8,19 +8,17 @@ import {
   setVoicePlaying, 
   registerVoiceAudio 
 } from "./useAudioManager";
+import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 
 /**
  * Quest voice hook for short narration lines (intro, ending, celebrations).
- * Uses ONE consistent voice (Lily) with mood variations for emotional context.
- * - Uses Premium AI voice (ElevenLabs) when selected AND the user is signed in
- * - Falls back to browser speech synthesis otherwise
+ * Uses ONE consistent voice (Toothy) with mood variations for emotional context.
+ * - Uses Premium AI voice (ElevenLabs) ONLY when the user is signed in
+ * - NO browser speech fallback (eliminates male voice issue)
  * 
  * AUDIO COORDINATION: Uses centralized audio manager to prevent overlapping
  */
 export const useQuestVoice = () => {
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const isSpeakingRef = useRef(false);
-
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
 
@@ -41,88 +39,28 @@ export const useQuestVoice = () => {
   const stop = useCallback(() => {
     // Use centralized stop to ensure everything stops
     stopAllMedia();
-    utteranceRef.current = null;
-    isSpeakingRef.current = false;
     setVoicePlaying(false);
     cleanupAudio();
   }, [cleanupAudio]);
-
-  const speakWithBrowserSpeech = useCallback(
-    (text: string, onEnd?: () => void) => {
-      if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
-        console.warn("Speech synthesis not available");
-        onEnd?.();
-        return;
-      }
-
-      const voiceSettings = getVoiceSettings();
-
-      const speakNow = () => {
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = voiceSettings.speed;
-        utterance.pitch = voiceSettings.pitch;
-        utterance.volume = 1;
-
-        const voices = window.speechSynthesis.getVoices();
-        const englishVoice =
-          voices.find((v) => v.lang.startsWith("en") && v.localService) ||
-          voices.find((v) => v.lang.startsWith("en")) ||
-          voices[0];
-
-        if (englishVoice) utterance.voice = englishVoice;
-
-        utterance.onstart = () => {
-          isSpeakingRef.current = true;
-        };
-
-        utterance.onend = () => {
-          isSpeakingRef.current = false;
-          onEnd?.();
-        };
-
-        utterance.onerror = (event) => {
-          console.error("Quest voice error:", event.error);
-          isSpeakingRef.current = false;
-          if (event.error !== "interrupted" && event.error !== "canceled") {
-            onEnd?.();
-          }
-        };
-
-        utteranceRef.current = utterance;
-        isSpeakingRef.current = true;
-        window.speechSynthesis.speak(utterance);
-      };
-
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0) {
-        const handleVoicesChanged = () => {
-          window.speechSynthesis.onvoiceschanged = null;
-          speakNow();
-        };
-        window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
-        setTimeout(() => {
-          if (!isSpeakingRef.current) {
-            window.speechSynthesis.onvoiceschanged = null;
-            speakNow();
-          }
-        }, 150);
-      } else {
-        speakNow();
-      }
-    },
-    []
-  );
 
   const speak = useCallback(
     (text: string, mood: VoiceMood = "neutral", onEnd?: () => void) => {
       // Stop ALL media first (centralized coordination)
       stop();
 
+      // Check if voice is enabled in settings
+      const volumeSettings = getVolumeSettings();
+      if (!volumeSettings.voiceEnabled) {
+        onEnd?.();
+        return;
+      }
+
       const settings = getVoiceSettings();
       const wantsAiVoice = settings.provider === "elevenlabs";
 
       if (!wantsAiVoice) {
-        speakWithBrowserSpeech(text, onEnd);
+        // User doesn't want AI voice - just skip (no browser speech)
+        onEnd?.();
         return;
       }
 
@@ -133,9 +71,9 @@ export const useQuestVoice = () => {
           if (!session?.access_token) {
             if (!hasShownAuthToastRef.current) {
               hasShownAuthToastRef.current = true;
-              toast.info("AI voice needs sign-in — using browser voice for now.");
+              toast.info("AI voice needs sign-in to work.");
             }
-            speakWithBrowserSpeech(text, onEnd);
+            onEnd?.();
             return;
           }
 
@@ -165,7 +103,7 @@ export const useQuestVoice = () => {
           );
 
           if (!response.ok) {
-            speakWithBrowserSpeech(text, onEnd);
+            onEnd?.();
             return;
           }
 
@@ -174,6 +112,7 @@ export const useQuestVoice = () => {
           audioUrlRef.current = url;
 
           const audio = new Audio(url);
+          audio.volume = getEffectiveVolume("voice");
           audioRef.current = audio;
           
           // Register with centralized manager for proper coordination
@@ -188,16 +127,16 @@ export const useQuestVoice = () => {
           audio.onerror = () => {
             setVoicePlaying(false);
             cleanupAudio();
-            speakWithBrowserSpeech(text, onEnd);
+            onEnd?.();
           };
 
           await audio.play();
         } catch {
-          speakWithBrowserSpeech(text, onEnd);
+          onEnd?.();
         }
       })();
     },
-    [cleanupAudio, speakWithBrowserSpeech, stop]
+    [cleanupAudio, stop]
   );
 
   const speakIntro = useCallback((intro: string) => {
@@ -206,7 +145,7 @@ export const useQuestVoice = () => {
 
   const speakQuestComplete = useCallback(
     (questTitle: string, xpEarned: number) => {
-      const message = `Yay! Quest Complete! ${questTitle}. You earned ${xpEarned} experience points. Tooth-tastic job!`;
+      const message = `Yay! Quest Complete! You earned ${xpEarned} experience points!`;
       speak(message, "excited");
     },
     [speak]
@@ -214,7 +153,7 @@ export const useQuestVoice = () => {
 
   const speakBadgeEarned = useCallback(
     (badgeName: string) => {
-      const message = `Wow! You earned a new badge: ${badgeName}! You're amazing!`;
+      const message = `Wow! You earned a new badge: ${badgeName}!`;
       speak(message, "excited");
     },
     [speak]

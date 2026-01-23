@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import toothyMascot from "@/assets/toothy-mascot.png";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 import toothyLogo from "@/assets/toothyquest-logo.jpeg";
 
 export type MascotExpression = "happy" | "excited" | "cheering" | "winking" | "celebrating";
@@ -78,7 +78,7 @@ const MascotWithExpression = ({
         <motion.img
           src={toothyMascot}
           alt="Toothy mascot"
-          className="w-full h-full object-contain drop-shadow-lg"
+          className="w-full h-full object-contain drop-shadow-lg rounded-full"
           whileHover={{ scale: 1.1 }}
         />
         

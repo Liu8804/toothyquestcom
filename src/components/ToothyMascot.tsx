@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import toothyMascot from "@/assets/toothy-mascot.png";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 
 export type MascotMood = "idle" | "happy" | "excited" | "cheering" | "waving";
 
@@ -70,7 +70,7 @@ export const ToothyMascot = ({
         <motion.img
           src={toothyMascot}
           alt="Toothy - Your friendly dental buddy"
-          className="w-full h-full object-contain drop-shadow-lg"
+          className="w-full h-full object-contain drop-shadow-lg rounded-full"
           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
           transition={{ duration: 0.3 }}
         />

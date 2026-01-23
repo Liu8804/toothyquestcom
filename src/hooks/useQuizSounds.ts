@@ -7,37 +7,36 @@ import {
   isVoiceActive, 
   playSynthTone 
 } from "./useAudioManager";
+import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 
-// Quiz sound effect phrases for ElevenLabs TTS
+// Quiz sound effect phrases for ElevenLabs TTS - SHORT phrases only
 const SOUND_PHRASES = {
   correct: [
-    "Yay! Amazing!",
-    "Woohoo! You got it!",
-    "Hooray! Super smart!",
+    "Yay!",
+    "Woohoo!",
+    "Amazing!",
   ],
   incorrect: [
-    "Oopsie! Try again!",
-    "Almost! One more try!",
+    "Oops!",
+    "Try again!",
   ],
   celebration: [
-    "You're a superstar!",
-    "Amazing job!",
-    "Woohoo! You did it!",
+    "You did it!",
+    "Superstar!",
   ],
   giggle: [
     "Hee hee!",
-    "Tee hee!",
   ],
 };
 
-// Web Audio synthesized sounds - quieter and shorter for less chaos
+// Web Audio synthesized sounds - quieter and shorter
 const SYNTH_SOUNDS = {
-  sparkle: { notes: [1047, 1319], duration: 0.08, type: "sine" as OscillatorType },
-  success: { notes: [523, 784], duration: 0.1, type: "triangle" as OscillatorType },
-  error: { notes: [311], duration: 0.12, type: "sawtooth" as OscillatorType },
-  fanfare: { notes: [523, 784, 1047], duration: 0.12, type: "sine" as OscillatorType },
-  pop: { notes: [800], duration: 0.04, type: "sine" as OscillatorType },
-  whoosh: { notes: [400], duration: 0.08, type: "sine" as OscillatorType },
+  sparkle: { notes: [1047, 1319], duration: 0.06, type: "sine" as OscillatorType },
+  success: { notes: [523, 784], duration: 0.08, type: "triangle" as OscillatorType },
+  error: { notes: [311], duration: 0.1, type: "sawtooth" as OscillatorType },
+  fanfare: { notes: [523, 784, 1047], duration: 0.1, type: "sine" as OscillatorType },
+  pop: { notes: [800], duration: 0.03, type: "sine" as OscillatorType },
+  whoosh: { notes: [400], duration: 0.06, type: "sine" as OscillatorType },
 };
 
 type SynthSoundName = keyof typeof SYNTH_SOUNDS;
@@ -63,13 +62,17 @@ export const useQuizSounds = () => {
     sound.notes.forEach((freq, i) => {
       setTimeout(() => {
         playSynthTone(freq, sound.duration, sound.type);
-      }, i * 60);
+      }, i * 50);
     });
   }, [isMuted]);
 
-  // Play voice sound effect via ElevenLabs (stops all other audio first)
+  // Play voice sound effect via ElevenLabs ONLY (no browser speech fallback)
   const playVoiceSound = useCallback(async (name: VoiceSoundName) => {
     if (isMuted || isVoiceActive()) return;
+    
+    // Check if voice is enabled in settings
+    const volumeSettings = getVolumeSettings();
+    if (!volumeSettings.voiceEnabled) return;
 
     const phrases = SOUND_PHRASES[name];
     const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
@@ -82,25 +85,9 @@ export const useQuizSounds = () => {
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) {
-        // Fallback to browser speech
-        if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(randomPhrase);
-          utterance.rate = 1.1;
-          utterance.pitch = 1.2;
-          utterance.volume = 1;
-          utterance.onend = () => {
-            setIsPlayingVoice(false);
-            setVoicePlaying(false);
-          };
-          utterance.onerror = () => {
-            setIsPlayingVoice(false);
-            setVoicePlaying(false);
-          };
-          window.speechSynthesis.speak(utterance);
-        } else {
-          setIsPlayingVoice(false);
-          setVoicePlaying(false);
-        }
+        // No session - just skip voice (no browser speech fallback)
+        setIsPlayingVoice(false);
+        setVoicePlaying(false);
         return;
       }
 
@@ -141,7 +128,7 @@ export const useQuizSounds = () => {
 
       const audio = new Audio(url);
       audioElementRef.current = audio;
-      audio.volume = 1;
+      audio.volume = getEffectiveVolume("voice");
       
       audio.onended = () => {
         setIsPlayingVoice(false);
@@ -162,27 +149,22 @@ export const useQuizSounds = () => {
     }
   }, [isMuted]);
 
-  // Convenience methods - play synth FIRST, then voice with small delay
+  // Convenience methods - play synth only, voice is optional
   const playCorrectSound = useCallback(() => {
     playSynthSound("sparkle");
-    // Small delay before voice so synth completes first
-    setTimeout(() => playVoiceSound("correct"), 150);
-  }, [playSynthSound, playVoiceSound]);
+  }, [playSynthSound]);
 
   const playIncorrectSound = useCallback(() => {
     playSynthSound("error");
-    setTimeout(() => playVoiceSound("incorrect"), 150);
-  }, [playSynthSound, playVoiceSound]);
+  }, [playSynthSound]);
 
   const playCelebrationSound = useCallback(() => {
     playSynthSound("fanfare");
-    setTimeout(() => playVoiceSound("celebration"), 200);
-  }, [playSynthSound, playVoiceSound]);
+  }, [playSynthSound]);
 
   const playGiggleSound = useCallback(() => {
     playSynthSound("pop");
-    setTimeout(() => playVoiceSound("giggle"), 100);
-  }, [playSynthSound, playVoiceSound]);
+  }, [playSynthSound]);
 
   const playSparkleEffect = useCallback(() => {
     playSynthSound("sparkle");

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import toothyMascot from "@/assets/toothy-mascot.png";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 // Character types for different story themes
