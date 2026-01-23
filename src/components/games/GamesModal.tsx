@@ -98,6 +98,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     playWinFanfare, 
     playLoseSound, 
     playAchievementUnlock,
+    startBackgroundMusic,
+    stopBackgroundMusic,
     isMuted, 
     toggleMute 
   } = useGameSounds();
@@ -187,9 +189,17 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       return;
     }
     playSound("tap");
+    // Start background music immediately from the user's click (mobile-friendly)
+    startBackgroundMusic("happy");
     setSelectedGame(game);
     fetchLeaderboard(game.id);
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      stopBackgroundMusic();
+    }
+  }, [isOpen, stopBackgroundMusic]);
 
   const renderGame = () => {
     if (!selectedGame) return null;

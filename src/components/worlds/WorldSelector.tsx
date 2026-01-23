@@ -10,6 +10,8 @@ import { WORLDS, World, Phase, getPhaseProgress, isPhaseCompleted } from "@/data
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useStories } from "@/hooks/useStories";
 import { usePurchase } from "@/hooks/usePurchase";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
+import { useEntitlementStatus } from "@/hooks/useEntitlementStatus";
 import StoryViewer from "@/components/StoryViewer";
 import PurchaseModal from "@/components/PurchaseModal";
 import { cn } from "@/lib/utils";
@@ -23,6 +25,10 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
   const { questProgress, selectedChild } = useQuestProgress();
   const stories = useStories();
   const { isPurchased } = usePurchase();
+  const { isAdmin } = useAdminStatus();
+  const { hasEntitlement } = useEntitlementStatus();
+
+  const isUnlocked = isPurchased || isAdmin || hasEntitlement;
 
   const [selectedWorld, setSelectedWorld] = useState<World | null>(null);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
@@ -75,7 +81,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
     if (!story) return;
 
     // Check if locked (not free and not purchased)
-    if (!story.isFree && !isPurchased) {
+    if (!story.isFree && !isUnlocked) {
       setShowPurchaseModal(true);
       return;
     }
@@ -95,7 +101,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
         {phaseStories.map((story, index) => {
           if (!story) return null;
           const isCompleted = completedQuestIds.includes(story.id);
-          const isLocked = !story.isFree && !isPurchased;
+          const isLocked = !story.isFree && !isUnlocked;
 
           return (
             <motion.button
@@ -205,7 +211,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                     description={isSpanish ? world.descriptionEs : world.description}
                     emoji={world.emoji}
                     color={world.color}
-                    isLocked={world.isLocked}
+                    isLocked={world.isLocked && !isUnlocked}
                     progress={getWorldProgress(world)}
                     onClick={() => setSelectedWorld(world)}
                   />

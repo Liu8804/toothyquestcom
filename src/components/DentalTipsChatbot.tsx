@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 
 interface Message {
   role: "user" | "assistant";
@@ -192,7 +192,7 @@ export const DentalTipsChatbot = ({ isOpen, onClose, childName }: DentalTipsChat
         <DialogHeader className="p-4 pb-2 border-b border-blue-200 dark:border-blue-800">
           <DialogTitle className="flex items-center gap-3 text-xl font-display">
             <img 
-              src={toothyLogo} 
+              src={toothyMascot} 
               alt="Toothy" 
               className="w-10 h-10 rounded-full border-2 border-primary shadow-sm"
             />

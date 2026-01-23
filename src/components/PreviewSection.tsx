@@ -1,12 +1,17 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import dentalOffice from "@/assets/friendly-dental-office.png";
+import DentalOfficeTour from "@/components/DentalOfficeTour";
 
 export const PreviewSection = () => {
+  const [isTourOpen, setIsTourOpen] = useState(false);
+
   return (
-    <section id="games" className="py-20 bg-background overflow-hidden">
-      <div className="container mx-auto px-4">
+    <>
+      <section id="games" className="py-20 bg-background overflow-hidden">
+        <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* Image */}
           <motion.div
@@ -85,13 +90,16 @@ export const PreviewSection = () => {
               ))}
             </ul>
 
-            <Button variant="coral" size="lg">
+            <Button variant="coral" size="lg" onClick={() => setIsTourOpen(true)}>
               Explore the Office Tour!
             </Button>
           </motion.div>
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+
+      <DentalOfficeTour isOpen={isTourOpen} onClose={() => setIsTourOpen(false)} />
+    </>
   );
 };
 

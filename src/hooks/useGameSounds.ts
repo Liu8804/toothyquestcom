@@ -1,5 +1,5 @@
 import { useCallback, useState, useRef, useEffect } from "react";
-import { playSynthTone, isVoiceActive, getSynthVolume } from "./useAudioManager";
+import { getAudioContext, playSynthTone, isVoiceActive, unlockAudioContext } from "./useAudioManager";
 import { getEffectiveVolume } from "@/components/VolumeControlPanel";
 
 // Simple pre-loaded sound effects - shorter durations for less chaos
@@ -49,6 +49,9 @@ export const useGameSounds = () => {
 
   const playSound = useCallback((name: SoundName) => {
     if (isMuted) return;
+
+    // Ensure audio is unlocked on mobile before attempting playback
+    unlockAudioContext();
     
     const sound = GAME_SOUNDS[name];
     if (sound) {
@@ -58,6 +61,8 @@ export const useGameSounds = () => {
 
   const playWinFanfare = useCallback(() => {
     if (isMuted || isVoiceActive()) return;
+
+    unlockAudioContext();
 
     // Play ascending notes for win celebration - shorter and cleaner
     const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
@@ -70,11 +75,14 @@ export const useGameSounds = () => {
 
   const playLoseSound = useCallback(() => {
     if (isMuted || isVoiceActive()) return;
+    unlockAudioContext();
     playSynthTone(200, 0.15, "sawtooth", 400);
   }, [isMuted]);
 
   const playAchievementUnlock = useCallback(() => {
     if (isMuted || isVoiceActive()) return;
+
+    unlockAudioContext();
 
     // Special sparkly sound for achievements - fewer notes
     const notes = [880, 1319, 1760]; // A5, E6, A6
@@ -88,12 +96,16 @@ export const useGameSounds = () => {
   // Background music for games
   const startBackgroundMusic = useCallback((pattern: keyof typeof MUSIC_PATTERNS = "happy") => {
     if (isMuted || isMusicPlaying) return;
+
+    unlockAudioContext();
     
     setIsMusicPlaying(true);
     musicIndexRef.current = 0;
     
     const notes = MUSIC_PATTERNS[pattern];
     
+    const ctx = getAudioContext();
+
     musicIntervalRef.current = setInterval(() => {
       if (isVoiceActive()) return; // Don't play music over voice
       
@@ -102,7 +114,8 @@ export const useGameSounds = () => {
         const freq = notes[musicIndexRef.current % notes.length];
         // Play very soft background note
         try {
-          const ctx = new AudioContext();
+          if (ctx.state === "suspended") return;
+
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
           
@@ -115,7 +128,7 @@ export const useGameSounds = () => {
           osc.connect(gain);
           gain.connect(ctx.destination);
           
-          osc.start();
+          osc.start(ctx.currentTime);
           osc.stop(ctx.currentTime + 0.3);
         } catch (e) {
           console.error("Music note error:", e);
