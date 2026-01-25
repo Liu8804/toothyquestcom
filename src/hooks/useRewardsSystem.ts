@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { useStreak } from "./useStreak";
 import {
   LEVELS,
   ACHIEVEMENT_BADGES,
@@ -22,11 +23,9 @@ interface RewardsState {
   currentLevel: Level;
   nextLevel: Level | null;
   progressToNextLevel: number;
-  streak: number;
   unlockedBadges: string[];
   unlockedPets: string[];
   questsCompleted: number;
-  lastActiveDate: string;
   dailyBonusClaimed: boolean;
 }
 
@@ -43,24 +42,30 @@ interface QuestCompletionResult {
   streakBonus: number;
 }
 
+// Use ISO date for timezone-safe comparisons
+const getISODateString = (): string => {
+  return new Date().toISOString().split('T')[0];
+};
+
 export const useRewardsSystem = (childId?: string) => {
   const { user } = useAuth();
+  // Use the consolidated streak hook - single source of truth
+  const { currentStreak, longestStreak, hasCompletedToday } = useStreak();
+  
   const [state, setState] = useState<RewardsState>({
     totalPoints: 0,
     currentLevel: LEVELS[0],
     nextLevel: LEVELS[1],
     progressToNextLevel: 0,
-    streak: 0,
     unlockedBadges: [],
     unlockedPets: ['toothy'], // Everyone starts with Toothy
     questsCompleted: 0,
-    lastActiveDate: '',
     dailyBonusClaimed: false,
   });
   const [loading, setLoading] = useState(true);
   const [questCategories, setQuestCategories] = useState<Record<string, number>>({});
 
-  // Load rewards data from localStorage and Supabase
+  // Load rewards data from Supabase
   const loadRewardsData = useCallback(async () => {
     if (!childId) return;
     
@@ -86,20 +91,11 @@ export const useRewardsSystem = (childId?: string) => {
       });
       setQuestCategories(categories);
 
-      // Load local rewards data (streak, pets, badges, etc.)
+      // Load cached badges/pets from localStorage (for offline)
       const localData = JSON.parse(localStorage.getItem(`rewards_${childId}`) || '{}');
-      const today = new Date().toDateString();
-      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      const today = getISODateString();
 
-      // Calculate streak
-      let streak = localData.streak || 0;
-      if (localData.lastActiveDate === yesterday) {
-        streak += 1;
-      } else if (localData.lastActiveDate !== today) {
-        streak = 1;
-      }
-
-      // Check daily bonus
+      // Check daily bonus - only claimable AFTER task completion
       const dailyBonusClaimed = localData.lastDailyBonus === today;
 
       // Calculate level
@@ -115,7 +111,7 @@ export const useRewardsSystem = (childId?: string) => {
       if (currentLevel.level >= 3) unlockedPets.push('minty');
       if (currentLevel.level >= 4) unlockedPets.push('goldie');
 
-      // Check for unlocked badges
+      // Check for unlocked badges using streak from consolidated hook
       const unlockedBadges: string[] = [];
       ACHIEVEMENT_BADGES.forEach(badge => {
         let unlocked = false;
@@ -130,7 +126,8 @@ export const useRewardsSystem = (childId?: string) => {
             unlocked = totalPoints >= badge.requirement.count;
             break;
           case 'streak':
-            unlocked = streak >= badge.requirement.count;
+            // Use streak from consolidated hook
+            unlocked = currentStreak >= badge.requirement.count;
             break;
         }
         if (unlocked) unlockedBadges.push(badge.id);
@@ -141,19 +138,15 @@ export const useRewardsSystem = (childId?: string) => {
         currentLevel,
         nextLevel,
         progressToNextLevel,
-        streak,
         unlockedBadges,
         unlockedPets,
         questsCompleted,
-        lastActiveDate: today,
         dailyBonusClaimed,
       });
 
-      // Save updated streak data
+      // Save updated data to localStorage for offline
       localStorage.setItem(`rewards_${childId}`, JSON.stringify({
         ...localData,
-        streak,
-        lastActiveDate: today,
         unlockedBadges,
         unlockedPets,
       }));
@@ -163,17 +156,23 @@ export const useRewardsSystem = (childId?: string) => {
     }
     
     setLoading(false);
-  }, [childId]);
+  }, [childId, currentStreak]);
 
   useEffect(() => {
     loadRewardsData();
   }, [loadRewardsData]);
 
-  // Claim daily bonus
+  // Claim daily bonus - only allowed AFTER task completion
   const claimDailyBonus = useCallback(async (): Promise<number> => {
     if (!childId || state.dailyBonusClaimed) return 0;
+    
+    // Check if daily task was completed
+    if (!hasCompletedToday()) {
+      console.log("Cannot claim daily bonus - task not completed");
+      return 0;
+    }
 
-    const today = new Date().toDateString();
+    const today = getISODateString();
     const localData = JSON.parse(localStorage.getItem(`rewards_${childId}`) || '{}');
     
     localStorage.setItem(`rewards_${childId}`, JSON.stringify({
@@ -188,7 +187,7 @@ export const useRewardsSystem = (childId?: string) => {
     }));
 
     return BONUS_REWARDS.dailyOpen;
-  }, [childId, state.dailyBonusClaimed]);
+  }, [childId, state.dailyBonusClaimed, hasCompletedToday]);
 
   // Complete a quest with full rewards calculation
   const completeQuestWithRewards = useCallback(async (
@@ -212,21 +211,10 @@ export const useRewardsSystem = (childId?: string) => {
     const basePoints = questConfig.basePoints;
     const bonusPoints = correctAnswers * BONUS_REWARDS.correctAnswer;
     
-    // Streak bonus
-    const today = new Date().toDateString();
-    const localData = JSON.parse(localStorage.getItem(`rewards_${childId}`) || '{}');
-    const yesterday = new Date(Date.now() - 86400000).toDateString();
-    
-    let newStreak = state.streak;
+    // Streak bonus - use consolidated streak
     let streakBonus = 0;
-    
-    if (localData.lastQuestDate === yesterday) {
-      newStreak += 1;
-      if (newStreak >= 3 && newStreak % 3 === 0) {
-        streakBonus = BONUS_REWARDS.streakBonus;
-      }
-    } else if (localData.lastQuestDate !== today) {
-      newStreak = 1;
+    if (currentStreak >= 3 && currentStreak % 3 === 0) {
+      streakBonus = BONUS_REWARDS.streakBonus;
     }
 
     const totalEarned = basePoints + bonusPoints + streakBonus;
@@ -261,7 +249,7 @@ export const useRewardsSystem = (childId?: string) => {
           unlocked = newTotalPoints >= badge.requirement.count;
           break;
         case 'streak':
-          unlocked = newStreak >= badge.requirement.count;
+          unlocked = currentStreak >= badge.requirement.count;
           break;
       }
       if (unlocked) newBadges.push(badge);
@@ -309,11 +297,9 @@ export const useRewardsSystem = (childId?: string) => {
     }
 
     // Update local storage
+    const localData = JSON.parse(localStorage.getItem(`rewards_${childId}`) || '{}');
     localStorage.setItem(`rewards_${childId}`, JSON.stringify({
       ...localData,
-      streak: newStreak,
-      lastQuestDate: today,
-      lastActiveDate: today,
       unlockedBadges: [...state.unlockedBadges, ...newBadges.map(b => b.id)],
       unlockedPets: [...state.unlockedPets, ...newPets.map(p => p.id)],
     }));
@@ -325,7 +311,6 @@ export const useRewardsSystem = (childId?: string) => {
       currentLevel: newLevel,
       nextLevel: getNextLevel(newTotalPoints),
       progressToNextLevel: getProgressToNextLevel(newTotalPoints),
-      streak: newStreak,
       questsCompleted: newQuestsCompleted,
       unlockedBadges: [...prev.unlockedBadges, ...newBadges.map(b => b.id)],
       unlockedPets: [...prev.unlockedPets, ...newPets.map(p => p.id)],
@@ -345,7 +330,7 @@ export const useRewardsSystem = (childId?: string) => {
       chestItem,
       streakBonus,
     };
-  }, [childId, state, questCategories]);
+  }, [childId, state, questCategories, currentStreak]);
 
   // Get all available badges with unlock status
   const getAllBadges = useCallback(() => {
@@ -365,6 +350,9 @@ export const useRewardsSystem = (childId?: string) => {
 
   return {
     ...state,
+    // Expose streak from consolidated hook
+    streak: currentStreak,
+    longestStreak,
     loading,
     claimDailyBonus,
     completeQuestWithRewards,
