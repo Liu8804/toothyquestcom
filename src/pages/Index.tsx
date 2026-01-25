@@ -21,6 +21,7 @@ import SplashScreen from "@/components/SplashScreen";
 import FreePreviewBanner from "@/components/FreePreviewBanner";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
 import FloatingToothPets from "@/components/FloatingToothPets";
+import DailyTaskModal from "@/components/DailyTaskModal";
 import DailyBonusModal from "@/components/DailyBonusModal";
 import RewardsPanel from "@/components/rewards/RewardsPanel";
 import SparkMeter from "@/components/rewards/SparkMeter";
@@ -35,6 +36,7 @@ import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useAudioUnlock } from "@/hooks/useAudioUnlock";
+import { useDailyTask } from "@/hooks/useDailyTask";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2 } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
@@ -54,11 +56,15 @@ const Index = () => {
     claimDailyBonus 
   } = useRewardsSystem(selectedChild?.id);
   
+  // Use the consolidated daily task hook
+  const { hasCompletedToday: taskCompleted } = useDailyTask(selectedChild?.id);
+  
   const [showAuth, setShowAuth] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showMotivation, setShowMotivation] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [showDentalChat, setShowDentalChat] = useState(false);
+  const [showDailyTask, setShowDailyTask] = useState(false);
   const [showDailyBonus, setShowDailyBonus] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
@@ -84,29 +90,54 @@ const Index = () => {
     sessionStorage.setItem('splashShown', 'true');
   }, []);
 
-  // Show daily bonus after splash if not claimed
+  // STEP 3: Auto-start daily task after splash (if user is logged in with a child)
   useEffect(() => {
-    if (!showSplash && user && selectedChild && !dailyBonusClaimed) {
+    if (!showSplash && user && selectedChild && !taskCompleted) {
+      // Show daily task modal immediately after splash
       const timer = setTimeout(() => {
-        setShowDailyBonus(true);
-      }, 1500);
+        setShowDailyTask(true);
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [showSplash, user, selectedChild, dailyBonusClaimed]);
+  }, [showSplash, user, selectedChild, taskCompleted]);
 
-  // Show motivational popup after 30 seconds on the page
+  // Show daily bonus ONLY after task completion
   useEffect(() => {
-    if (showSplash) return;
+    if (!showSplash && !showDailyTask && user && selectedChild && taskCompleted && !dailyBonusClaimed) {
+      const timer = setTimeout(() => {
+        setShowDailyBonus(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSplash, showDailyTask, user, selectedChild, taskCompleted, dailyBonusClaimed]);
+
+  // Handle daily task completion
+  const handleTaskComplete = useCallback((xpEarned: number) => {
+    console.log(`Daily task completed! +${xpEarned} XP`);
+    // Close task modal
+    setShowDailyTask(false);
+    // Show daily bonus after a short delay
+    if (!dailyBonusClaimed) {
+      setTimeout(() => {
+        setShowDailyBonus(true);
+      }, 1000);
+    }
+  }, [dailyBonusClaimed]);
+
+  // Show motivational popup after 30 seconds on the page (only if task completed)
+  useEffect(() => {
+    if (showSplash || showDailyTask) return;
     
     const timer = setTimeout(() => {
-      const hasSeenToday = localStorage.getItem('motivationShownDate') === new Date().toDateString();
-      if (!hasSeenToday) {
+      const today = new Date().toISOString().split('T')[0];
+      const hasSeenToday = localStorage.getItem('motivationShownDate') === today;
+      if (!hasSeenToday && taskCompleted) {
         setShowMotivation(true);
-        localStorage.setItem('motivationShownDate', new Date().toDateString());
+        localStorage.setItem('motivationShownDate', today);
       }
     }, 30000);
     return () => clearTimeout(timer);
-  }, [showSplash]);
+  }, [showSplash, showDailyTask, taskCompleted]);
 
   return (
     <>
@@ -220,7 +251,16 @@ const Index = () => {
         <MotivationalPopup isOpen={showMotivation} onClose={() => setShowMotivation(false)} />
         <FloatingUnlockCTA />
         
-        {/* Daily Bonus Modal */}
+        {/* Daily Task Modal - shows first after splash */}
+        <DailyTaskModal
+          isOpen={showDailyTask}
+          onClose={() => setShowDailyTask(false)}
+          onTaskComplete={handleTaskComplete}
+          childId={selectedChild?.id}
+          childName={selectedChild?.name}
+        />
+        
+        {/* Daily Bonus Modal - only shows AFTER task completion */}
         <DailyBonusModal
           isOpen={showDailyBonus}
           onClose={() => setShowDailyBonus(false)}
