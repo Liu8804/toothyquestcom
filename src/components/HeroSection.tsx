@@ -1,197 +1,139 @@
 import { motion } from "framer-motion";
-import { Play, Sparkles, Heart } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FloatingBubbles from "@/components/FloatingBubbles";
-import StarRating from "@/components/StarRating";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
-import ParentInfoPopup from "@/components/ParentInfoPopup";
 import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
 
 export const HeroSection = () => {
-  const { t } = useTranslation();
-  
+  const handleStartQuest = () => {
+    // Scroll to adventures section or trigger daily task
+    const adventuresSection = document.getElementById('adventures');
+    if (adventuresSection) {
+      adventuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="relative min-h-screen gradient-sky overflow-hidden">
+    <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
       <FloatingBubbles />
       
-      {/* Decorative shapes */}
-      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-candy/30 blur-xl" />
-      <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-mint/30 blur-xl" />
-      <div className="absolute bottom-40 left-1/4 w-24 h-24 rounded-full bg-accent/30 blur-xl" />
+      {/* Decorative floating elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {["🦷", "✨", "⭐", "🌟", "💫", "🎮", "🏆"].map((emoji, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-2xl md:text-3xl"
+            style={{
+              left: `${10 + (i * 12)}%`,
+              top: `${15 + (i % 3) * 25}%`,
+            }}
+            animate={{
+              y: [0, -15, 0],
+              rotate: [0, 10, -10, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 3 + (i * 0.5),
+              repeat: Infinity,
+              delay: i * 0.3,
+            }}
+          >
+            {emoji}
+          </motion.div>
+        ))}
+      </div>
 
-      <div className="container mx-auto px-4 pt-8 pb-16 relative z-10">
-        {/* Header */}
-        <motion.nav
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-12"
-        >
-          <div className="flex items-center gap-2">
-            <img 
-              src={toothyMascot} 
-              alt="ToothyQuest Logo" 
-              className="h-12 w-auto object-contain rounded-full"
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+          
+          {/* Mascot - Kid-friendly and prominent */}
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="relative mb-6"
+          >
+            <motion.img
+              src={toothyMascot}
+              alt="Toothy - Your Friendly Dental Buddy"
+              className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-full shadow-2xl border-4 border-white"
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
             />
-          </div>
-          <div className="hidden md:flex items-center gap-6">
-            <a href="#worlds" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              {t('nav.worlds', 'Worlds')}
-            </a>
-            <a href="#adventures" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              {t('nav.adventures')}
-            </a>
-            <a href="#games" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              {t('nav.games')}
-            </a>
-            <a href="/about" className="text-foreground/80 hover:text-primary font-semibold transition-colors">
-              {t('nav.about', 'About')}
-            </a>
-          </div>
-          <div className="flex items-center gap-2">
-            <ParentInfoPopup />
-            <LanguageSwitcher />
-          </div>
-        </motion.nav>
-
-        {/* Hero Content */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 pt-8">
-          {/* Left Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex-1 text-center lg:text-left"
-          >
+            {/* Sparkle badge */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-accent/20 px-4 py-2 rounded-full mb-6"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: "spring" }}
+              className="absolute -top-2 -right-2 bg-accent rounded-full p-2 shadow-lg"
             >
-              <Sparkles className="w-4 h-4 text-accent" />
-              <span className="text-sm font-bold text-accent-foreground">
-                {t('hero.badge')}
-              </span>
+              <Sparkles className="w-5 h-5 text-accent-foreground" />
             </motion.div>
-
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-              {t('hero.title')}{" "}
-              <span className="text-gradient-hero">{t('hero.titleHighlight')}</span> {t('hero.titleEnd')}
-            </h1>
-
-            <p className="text-xl md:text-2xl text-foreground font-semibold mb-4 max-w-xl mx-auto lg:mx-0">
-              {t('hero.description')}
-            </p>
-            
-            {/* Trust badges - More visible */}
-            <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-8">
-              <span className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-200 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
-                ✅ Kid-Safe
-              </span>
-              <span className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
-                🚫 No Ads
-              </span>
-              <span className="inline-flex items-center gap-2 bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-200 px-4 py-2 rounded-full text-sm font-bold shadow-sm">
-                💪 Reduces Dental Fear
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-              <Button 
-                variant="hero" 
-                size="xl"
-                onClick={() => {
-                  const adventuresSection = document.getElementById('adventures');
-                  if (adventuresSection) {
-                    adventuresSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-              >
-                <Play className="w-6 h-6" />
-                {t('common.startAdventure')}
-              </Button>
-              <Button 
-                variant="outline" 
-                size="xl"
-                onClick={() => {
-                  const gamesSection = document.getElementById('games');
-                  if (gamesSection) {
-                    gamesSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-              >
-                <Heart className="w-6 h-6" />
-                {t('common.meetToothy')}
-              </Button>
-            </div>
-
-            <div className="flex items-center gap-4 justify-center lg:justify-start">
-              <StarRating count={5} size="md" />
-              <span className="text-sm text-muted-foreground font-medium">
-                {t('hero.lovedBy')}
-              </span>
-            </div>
           </motion.div>
 
-          {/* Right Content - Main Logo */}
+          {/* Clear Value Proposition */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex-1 flex justify-center relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-6"
           >
-          <div className="relative flex flex-col items-center">
-              <motion.img
-                src={toothyMascot}
-                alt="Toothy - Your Friendly Dental Buddy"
-                className="w-72 md:w-96 lg:w-[28rem] h-auto drop-shadow-2xl rounded-3xl"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              />
-              
-              {/* Greeting text under logo */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className="mt-6 text-center"
-              >
-                <p className="font-display text-xl md:text-2xl font-bold text-foreground">
-                  {t('hero.toothyGreeting')}
-                  <span className="text-primary"> {t('hero.readyForAdventure')}</span> 🌟
-                </p>
-              </motion.div>
-              
-              {/* Floating badges */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, type: "spring" }}
-                className="absolute -top-4 -right-4 bg-card rounded-2xl p-3 shadow-float"
-              >
-                <span className="text-2xl">🎮</span>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1, type: "spring" }}
-                className="absolute -bottom-4 -left-4 bg-card rounded-2xl p-3 shadow-float"
-              >
-                <span className="text-2xl">📚</span>
-              </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.2, type: "spring" }}
-                className="absolute top-1/2 -right-8 bg-card rounded-2xl p-3 shadow-float"
-              >
-                <span className="text-2xl">⭐</span>
-              </motion.div>
-            </div>
+            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 leading-tight">
+              Turn brushing & flossing into a{" "}
+              <span className="text-gradient-hero">fun daily game</span>{" "}
+              for kids
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-lg mx-auto">
+              ToothyQuest helps kids build healthy dental habits through fun quests and rewards.
+            </p>
           </motion.div>
+
+          {/* Trust indicators - minimal and subtle */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex items-center gap-3 mb-8"
+          >
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+              ✅ Kid-Safe
+            </span>
+            <span className="text-muted-foreground/50">•</span>
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+              🚫 No Ads
+            </span>
+            <span className="text-muted-foreground/50">•</span>
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+              Ages 3-9
+            </span>
+          </motion.div>
+
+          {/* Single Primary CTA - Most visible element */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+          >
+            <Button
+              variant="hero"
+              size="xl"
+              onClick={handleStartQuest}
+              className="text-xl md:text-2xl px-10 md:px-14 py-6 md:py-8 shadow-2xl hover:shadow-3xl"
+            >
+              <span className="text-2xl mr-2">🎮</span>
+              Start Today's Quest
+            </Button>
+          </motion.div>
+
+          {/* Subtle helper text */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.9 }}
+            className="mt-6 text-sm text-muted-foreground"
+          >
+            No sign-up required • Start playing instantly
+          </motion.p>
         </div>
       </div>
 
