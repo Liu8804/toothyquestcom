@@ -44,7 +44,12 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   const [moves, setMoves] = useState(0);
   const [matchedPairs, setMatchedPairs] = useState(0);
   const [totalPairs, setTotalPairs] = useState(6);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -126,6 +131,7 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   const startGame = (selectedDifficulty: Difficulty) => {
     setDifficulty(selectedDifficulty);
     setGameStarted(true);
+    startBackgroundMusic("puzzle");
   };
 
   if (!difficulty) {

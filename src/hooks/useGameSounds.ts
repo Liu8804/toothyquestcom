@@ -16,16 +16,27 @@ const GAME_SOUNDS = {
   bounce: { frequency: 600, duration: 0.12, type: "sine" as OscillatorType },
   pop: { frequency: 900, duration: 0.12, type: "sine" as OscillatorType },
   collect: { frequency: 1100, duration: 0.15, type: "triangle" as OscillatorType },
+  correct: { frequency: 660, duration: 0.15, type: "sine" as OscillatorType },
+  progress: { frequency: 550, duration: 0.12, type: "triangle" as OscillatorType },
+  complete: { frequency: 784, duration: 0.2, type: "sine" as OscillatorType },
 };
 
 type SoundName = keyof typeof GAME_SOUNDS;
 
-// Background music pattern notes (simple ascending happy tune)
+// Soft, calm, loop-friendly background music patterns
+// Lower frequencies and gentle progressions for kid-friendly ambiance
 const MUSIC_PATTERNS = {
-  happy: [523, 587, 659, 698, 784, 698, 659, 587], // C D E F G F E D
-  excited: [784, 880, 988, 1047, 988, 880, 784, 698],
-  calm: [392, 440, 494, 523, 494, 440, 392, 349],
+  happy: [392, 440, 494, 523, 494, 440, 392, 349], // G A B C B A G F - gentle ascending
+  excited: [523, 587, 659, 587, 523, 494, 523, 587], // C D E D C B C D - playful
+  calm: [262, 294, 330, 294, 262, 247, 262, 294], // Lower octave, very soft
+  adventure: [330, 392, 440, 494, 440, 392, 330, 294], // E G A B A G E D
+  puzzle: [349, 392, 440, 392, 349, 330, 349, 392], // F G A G F E F G - thoughtful
 };
+
+export type MusicPattern = keyof typeof MUSIC_PATTERNS;
+
+// Global flag to track if any game music is playing
+let globalMusicPlaying = false;
 
 export const useGameSounds = () => {
   const [isMuted, setIsMuted] = useState(() => {
@@ -58,19 +69,23 @@ export const useGameSounds = () => {
   const musicIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const musicIndexRef = useRef(0);
   const warnRef = useRef({ sfxZero: false, musicZero: false, ctxSuspended: false });
+  const isUnmountedRef = useRef(false);
 
-  // Stop music on unmount
+  // Cleanup on unmount - ensure music stops
   useEffect(() => {
+    isUnmountedRef.current = false;
     return () => {
+      isUnmountedRef.current = true;
       if (musicIntervalRef.current) {
         clearInterval(musicIntervalRef.current);
+        musicIntervalRef.current = null;
       }
+      globalMusicPlaying = false;
     };
   }, []);
 
   const playSound = useCallback((name: SoundName) => {
     if (isMuted) {
-      console.log("[GameSounds] Muted, skipping sound:", name);
       return;
     }
 
@@ -97,7 +112,7 @@ export const useGameSounds = () => {
     }
 
     // Get effective volume - ensure minimum audible level
-    const finalVolume = Math.max(sfxVolume, 0.1);
+    const finalVolume = Math.max(sfxVolume, 0.15);
 
     // Force resume context and play sound
     const playTone = () => {
@@ -108,10 +123,10 @@ export const useGameSounds = () => {
         osc.type = sound.type;
         osc.frequency.setValueAtTime(sound.frequency, ctx.currentTime);
 
-        // Ensure audible volume
+        // Ensure audible volume with quick attack
         gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(finalVolume, ctx.currentTime + 0.01);
-        gain.gain.setValueAtTime(finalVolume, ctx.currentTime + sound.duration * 0.7);
+        gain.gain.linearRampToValueAtTime(finalVolume, ctx.currentTime + 0.015);
+        gain.gain.setValueAtTime(finalVolume, ctx.currentTime + sound.duration * 0.6);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + sound.duration);
 
         osc.connect(gain);
@@ -138,19 +153,20 @@ export const useGameSounds = () => {
 
     unlockAudioContext();
 
-    // Play ascending notes for win celebration - shorter and cleaner
+    // Play ascending notes for win celebration - short and cheerful
     const notes = [523, 659, 784, 1047]; // C5, E5, G5, C6
     notes.forEach((freq, i) => {
       setTimeout(() => {
-        playSynthTone(freq, 0.1, "sine");
-      }, i * 80);
+        playSynthTone(freq, 0.12, "sine");
+      }, i * 100);
     });
   }, [isMuted]);
 
   const playLoseSound = useCallback(() => {
     if (isMuted || isVoiceActive()) return;
     unlockAudioContext();
-    playSynthTone(200, 0.15, "sawtooth", 400);
+    // Soft, non-harsh "try again" sound - just a gentle descending tone
+    playSynthTone(330, 0.15, "sine", 220);
   }, [isMuted]);
 
   const playAchievementUnlock = useCallback(() => {
@@ -158,18 +174,18 @@ export const useGameSounds = () => {
 
     unlockAudioContext();
 
-    // Special sparkly sound for achievements - fewer notes
+    // Special sparkly sound for achievements
     const notes = [880, 1319, 1760]; // A5, E6, A6
     notes.forEach((freq, i) => {
       setTimeout(() => {
         playSynthTone(freq, 0.12, "triangle");
-      }, i * 70);
+      }, i * 80);
     });
   }, [isMuted]);
 
-  // Background music for games
-  const startBackgroundMusic = useCallback((pattern: keyof typeof MUSIC_PATTERNS = "happy") => {
-    if (isMuted || isMusicPlaying) return;
+  // Soft, calm background music for games
+  const startBackgroundMusic = useCallback((pattern: MusicPattern = "calm") => {
+    if (isMuted || isMusicPlaying || globalMusicPlaying) return;
 
     unlockAudioContext();
 
@@ -180,6 +196,7 @@ export const useGameSounds = () => {
     }
     
     setIsMusicPlaying(true);
+    globalMusicPlaying = true;
     musicIndexRef.current = 0;
     
     const notes = MUSIC_PATTERNS[pattern];
@@ -188,43 +205,53 @@ export const useGameSounds = () => {
 
     if (!warnRef.current.ctxSuspended && ctx.state === "suspended") {
       warnRef.current.ctxSuspended = true;
-      console.warn("[GameAudio] AudioContext is suspended, background music won't play yet. Tap again and ensure iPhone Silent Mode is OFF.");
+      console.warn("[GameAudio] AudioContext is suspended, background music won't play yet.");
     }
 
+    // Softer, slower tempo for calm background music
     musicIntervalRef.current = setInterval(() => {
+      if (isUnmountedRef.current) {
+        if (musicIntervalRef.current) {
+          clearInterval(musicIntervalRef.current);
+          musicIntervalRef.current = null;
+        }
+        return;
+      }
+      
       if (isVoiceActive()) return; // Don't play music over voice
       
       const musicVolume = getEffectiveVolume("music");
       if (musicVolume > 0) {
         const freq = notes[musicIndexRef.current % notes.length];
-        // iOS: longer note, louder initial gain, gentle ramp
         try {
           if (ctx.state === "suspended") return;
 
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
 
+          // Use sine for softest sound
           osc.type = "sine";
           osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
-          const startGain = Math.min(1, musicVolume * 0.45); // audible on iOS
+          // Very gentle volume - background ambiance
+          const startGain = Math.min(0.25, musicVolume * 0.3);
           gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(startGain, ctx.currentTime + 0.01);
-          gain.gain.setValueAtTime(startGain, ctx.currentTime + 0.28);
-          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.38);
+          gain.gain.linearRampToValueAtTime(startGain, ctx.currentTime + 0.02);
+          gain.gain.setValueAtTime(startGain, ctx.currentTime + 0.35);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
 
           osc.connect(gain);
           gain.connect(ctx.destination);
 
           osc.start(ctx.currentTime);
-          osc.stop(ctx.currentTime + 0.42);
+          osc.stop(ctx.currentTime + 0.55);
         } catch (e) {
           console.error("Music note error:", e);
         }
       }
       
       musicIndexRef.current++;
-    }, 400);
+    }, 500); // Slower tempo for calmer feel
   }, [isMuted, isMusicPlaying]);
 
   const stopBackgroundMusic = useCallback(() => {
@@ -233,6 +260,7 @@ export const useGameSounds = () => {
       musicIntervalRef.current = null;
     }
     setIsMusicPlaying(false);
+    globalMusicPlaying = false;
     musicIndexRef.current = 0;
   }, []);
 

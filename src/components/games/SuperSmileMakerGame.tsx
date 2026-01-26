@@ -43,7 +43,12 @@ const SuperSmileMakerGame = ({ game, onComplete }: SuperSmileMakerGameProps) => 
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameStarted, setGameStarted] = useState(false);
   const [smileShine, setSmileShine] = useState(0);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -114,6 +119,7 @@ const SuperSmileMakerGame = ({ game, onComplete }: SuperSmileMakerGameProps) => 
     setTimeLeft(cfg.timeLimit);
     setActiveSteps(hygieneSteps.slice(0, cfg.steps));
     setGameStarted(true);
+    startBackgroundMusic("calm");
   };
 
   if (!difficulty) {

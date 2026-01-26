@@ -31,7 +31,12 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [gameStarted, setGameStarted] = useState(false);
   const [totalBugs, setTotalBugs] = useState(10);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -93,6 +98,7 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
     setTimeLeft(cfg.timeLimit);
     setTotalBugs(cfg.winCondition);
     setGameStarted(true);
+    startBackgroundMusic("excited");
     spawnBug();
   };
 

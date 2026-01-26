@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import DifficultySelector, { Difficulty } from './DifficultySelector';
 import { useTranslation } from 'react-i18next';
+import { useGameSounds } from '@/hooks/useGameSounds';
 
 interface BuildYourSmileProGameProps {
   onComplete: (score: number) => void;
@@ -47,6 +48,7 @@ const TOOLS: Tool[] = [
 
 export const BuildYourSmileProGame: React.FC<BuildYourSmileProGameProps> = ({ onComplete, onClose }) => {
   const { t } = useTranslation();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic, playWinFanfare } = useGameSounds();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [problems, setProblems] = useState<ToothProblem[]>([]);
   const [fixedProblems, setFixedProblems] = useState<Set<string>>(new Set());
@@ -55,6 +57,11 @@ export const BuildYourSmileProGame: React.FC<BuildYourSmileProGameProps> = ({ on
   const [mistakes, setMistakes] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [showResult, setShowResult] = useState<{ correct: boolean; message: string } | null>(null);
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const startGame = useCallback((diff: Difficulty) => {
     const problemCount = diff === 'easy' ? 3 : diff === 'medium' ? 4 : 6;
@@ -67,7 +74,8 @@ export const BuildYourSmileProGame: React.FC<BuildYourSmileProGameProps> = ({ on
     setCompleted(false);
     setShowResult(null);
     setDifficulty(diff);
-  }, []);
+    startBackgroundMusic("calm");
+  }, [startBackgroundMusic]);
 
   const handleProblemClick = useCallback((problemId: string) => {
     if (!selectedTool || fixedProblems.has(problemId)) return;
@@ -81,10 +89,13 @@ export const BuildYourSmileProGame: React.FC<BuildYourSmileProGameProps> = ({ on
       setFixedProblems(prev => new Set([...prev, problemId]));
       setScore(s => s + 25);
       setShowResult({ correct: true, message: `✅ ${tool.name} fixed the ${problem.name}!` });
+      playSound("correct");
 
       if (fixedProblems.size + 1 === problems.length) {
         const mistakePenalty = mistakes * 5;
         const finalScore = score + 25 - mistakePenalty + (difficulty === 'hard' ? 30 : difficulty === 'medium' ? 20 : 10);
+        stopBackgroundMusic();
+        playWinFanfare();
         setTimeout(() => {
           setScore(finalScore);
           setCompleted(true);
@@ -93,11 +104,12 @@ export const BuildYourSmileProGame: React.FC<BuildYourSmileProGameProps> = ({ on
     } else {
       setMistakes(m => m + 1);
       setShowResult({ correct: false, message: `❌ ${tool.name} can't fix ${problem.name}!` });
+      playSound("progress"); // Gentle feedback, not harsh
     }
 
     setSelectedTool(null);
     setTimeout(() => setShowResult(null), 1500);
-  }, [selectedTool, fixedProblems, problems, score, mistakes, difficulty]);
+  }, [selectedTool, fixedProblems, problems, score, mistakes, difficulty, playSound, playWinFanfare, stopBackgroundMusic]);
 
   if (!difficulty) {
     return (

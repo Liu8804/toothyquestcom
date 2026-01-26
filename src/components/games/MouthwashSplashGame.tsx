@@ -30,7 +30,12 @@ const MouthwashSplashGame = ({ game, onComplete }: MouthwashSplashGameProps) => 
   const [timeLeft, setTimeLeft] = useState(45);
   const [gameStarted, setGameStarted] = useState(false);
   const [splashes, setSplashes] = useState<{ id: number; x: number; y: number }[]>([]);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
   const cleanedCount = germs.filter(g => g.cleaned).length;
@@ -110,6 +115,7 @@ const MouthwashSplashGame = ({ game, onComplete }: MouthwashSplashGameProps) => 
     setTimeLeft(cfg.timeLimit);
     initializeGerms(cfg.germCount);
     setGameStarted(true);
+    startBackgroundMusic("happy");
   };
 
   if (!difficulty) {

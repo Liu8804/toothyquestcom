@@ -58,7 +58,12 @@ const HealthyFoodSortGame = ({ game, onComplete }: HealthyFoodSortGameProps) => 
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [dragPosition, setDragPosition] = useState({ x: 0, y: 0 });
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : DIFFICULTY_SETTINGS.easy;
   const currentFood = foods[currentIndex];
@@ -101,10 +106,10 @@ const HealthyFoodSortGame = ({ game, onComplete }: HealthyFoodSortGameProps) => 
     
     if (isCorrect) {
       setScore(s => s + 1);
-      playSound("success");
+      playSound("correct");
       setFeedback("correct");
     } else {
-      playSound("lose");
+      playSound("progress"); // Gentle "try again" sound, not harsh
       setFeedback("wrong");
     }
 
@@ -141,6 +146,7 @@ const HealthyFoodSortGame = ({ game, onComplete }: HealthyFoodSortGameProps) => 
   const startGame = (selectedDifficulty: Difficulty) => {
     setDifficulty(selectedDifficulty);
     setGameStarted(true);
+    startBackgroundMusic("happy");
   };
 
   if (!difficulty) {

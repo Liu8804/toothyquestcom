@@ -49,7 +49,12 @@ const ToothFairyTreasureGame = ({ game, onComplete }: ToothFairyTreasureGameProp
   const [treasureFound, setTreasureFound] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameStarted, setGameStarted] = useState(false);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic, playWinFanfare } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -113,12 +118,13 @@ const ToothFairyTreasureGame = ({ game, onComplete }: ToothFairyTreasureGameProp
     const chest = chests.find(c => c.id === selectedChest);
 
     if (isCorrect) {
-      playSound("success");
+      playSound("correct");
       setChests(prev => prev.map(c => 
         c.id === selectedChest ? { ...c, isOpen: true } : c
       ));
       if (chest?.hasTreasure) {
         setTreasureFound(prev => prev + 1);
+        playWinFanfare();
       }
     } else {
       playSound("lose");
@@ -134,6 +140,7 @@ const ToothFairyTreasureGame = ({ game, onComplete }: ToothFairyTreasureGameProp
     setTimeLeft(cfg.timeLimit);
     initializeChests(cfg.chestCount, cfg.treasureCount);
     setGameStarted(true);
+    startBackgroundMusic("adventure");
   };
 
   if (!difficulty) {

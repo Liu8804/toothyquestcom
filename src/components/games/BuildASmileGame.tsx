@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Game } from "@/data/games";
 import { Button } from "@/components/ui/button";
@@ -38,8 +38,13 @@ const DIFFICULTY_CONFIG = {
 };
 
 const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
-  const { playSound, playWinFanfare } = useGameSounds();
+  const { playSound, playWinFanfare, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
   const [gameStarted, setGameStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [selectedTeeth, setSelectedTeeth] = useState<string | null>(null);
@@ -89,7 +94,7 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
       if (isWin) {
         playWinFanfare();
       } else {
-        playSound("lose");
+        playSound("progress"); // Gentle feedback
       }
       
       onComplete(isWin, stars);
@@ -99,6 +104,7 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
   const startGame = (selectedDifficulty: Difficulty) => {
     setDifficulty(selectedDifficulty);
     setGameStarted(true);
+    startBackgroundMusic("happy");
   };
 
   if (!difficulty) {

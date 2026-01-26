@@ -53,7 +53,7 @@ const PlaquePopPartyGame = ({ game, onComplete }: PlaquePopPartyGameProps) => {
     
     // Play celebration sound every 5 pops
     if ((score + 1) % 5 === 0) {
-      setTimeout(() => playSound("star"), 100);
+      setTimeout(() => playSound("correct"), 100);
     }
   };
 

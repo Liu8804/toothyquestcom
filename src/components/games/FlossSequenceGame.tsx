@@ -43,7 +43,12 @@ const FlossSequenceGame = ({ game, onComplete }: FlossSequenceGameProps) => {
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameStarted, setGameStarted] = useState(false);
   const [mistakes, setMistakes] = useState(0);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -83,7 +88,7 @@ const FlossSequenceGame = ({ game, onComplete }: FlossSequenceGameProps) => {
     const expectedOrder = placedSteps.length;
     
     if (step.order === expectedOrder) {
-      playSound("success");
+      playSound("correct");
       setPlacedSteps(prev => [...prev, step]);
       
       if (placedSteps.length + 1 === steps.length) {
@@ -91,7 +96,7 @@ const FlossSequenceGame = ({ game, onComplete }: FlossSequenceGameProps) => {
         setTimeout(() => onComplete(true, stars), 500);
       }
     } else {
-      playSound("lose");
+      playSound("progress"); // Gentle feedback, not harsh
       setMistakes(prev => prev + 1);
     }
   };
@@ -102,6 +107,7 @@ const FlossSequenceGame = ({ game, onComplete }: FlossSequenceGameProps) => {
     setTimeLeft(cfg.timeLimit);
     initializeSteps(cfg.stepCount);
     setGameStarted(true);
+    startBackgroundMusic("calm");
   };
 
   if (!difficulty) {
