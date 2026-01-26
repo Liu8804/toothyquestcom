@@ -1,7 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { forwardRef, useCallback } from "react";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+
+// Import the new mascot assets
+import mascotFullPose from "@/assets/mascot-full-pose.png";
+import mascotCelebrating from "@/assets/mascot-celebrating.png";
+import mascotBrushing from "@/assets/mascot-brushing.png";
+import mascotIcon from "@/assets/mascot-icon.png";
 
 export type MascotPoseType = "full" | "icon" | "badge" | "celebrating" | "brushing";
 
@@ -28,6 +33,23 @@ const sizeMap = {
   lg: { class: "w-32 h-32", px: 128 },   // 128x128 - app icon
   xl: { class: "w-40 h-40", px: 160 },   // 160x160 - large
   "2xl": { class: "w-52 h-52", px: 208 }, // 208x208 - hero section
+};
+
+// Get the correct image asset for each pose
+const getPoseImage = (pose: MascotPoseType) => {
+  switch (pose) {
+    case "full":
+      return mascotFullPose;
+    case "celebrating":
+      return mascotCelebrating;
+    case "brushing":
+      return mascotBrushing;
+    case "icon":
+    case "badge":
+      return mascotIcon;
+    default:
+      return mascotFullPose;
+  }
 };
 
 // Animation configs for each pose as specified:
@@ -107,35 +129,13 @@ const MascotPose = forwardRef<HTMLDivElement, MascotPoseProps>(({
           ease: "easeInOut",
         }}
       >
-        {/* Main mascot image - using toothy-mascot-new.jpeg */}
+        {/* Main mascot image - using correct pose asset */}
         <img 
-          src={toothyMascot} 
+          src={getPoseImage(pose)} 
           alt={`Toothy mascot - ${pose} pose`}
-          className="w-full h-full object-contain drop-shadow-lg rounded-full"
+          className="w-full h-full object-contain drop-shadow-lg"
           style={{ imageRendering: "auto" }}
         />
-
-        {/* Pose indicator for brushing */}
-        {pose === "brushing" && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -bottom-1 -right-1 text-lg bg-background rounded-full p-0.5 shadow-md"
-          >
-            🪥
-          </motion.div>
-        )}
-
-        {/* Celebrating indicator */}
-        {pose === "celebrating" && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -top-1 -right-1 text-lg"
-          >
-            🎉
-          </motion.div>
-        )}
 
         {/* Sparkles effect for celebrating and when enabled */}
         <AnimatePresence>
@@ -169,35 +169,6 @@ const MascotPose = forwardRef<HTMLDivElement, MascotPoseProps>(({
             </>
           )}
         </AnimatePresence>
-
-        {/* Confetti for celebrating pose */}
-        {pose === "celebrating" && (
-          <>
-            {[...Array(4)].map((_, i) => (
-              <motion.span
-                key={`confetti-${i}`}
-                className="absolute pointer-events-none text-sm"
-                style={{
-                  top: `${-10 + Math.random() * 20}%`,
-                  left: `${15 + i * 20}%`,
-                }}
-                animate={{
-                  y: [0, 80],
-                  x: [0, (Math.random() - 0.5) * 20],
-                  rotate: [0, 360],
-                  opacity: [1, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  delay: i * 0.25,
-                }}
-              >
-                {["🎊", "🎉", "✨", "⭐"][i]}
-              </motion.span>
-            ))}
-          </>
-        )}
       </motion.div>
     </motion.div>
   );

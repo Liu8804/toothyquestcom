@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import DifficultySelector, { Difficulty } from './DifficultySelector';
 import { useTranslation } from 'react-i18next';
+import { useGameSounds } from '@/hooks/useGameSounds';
 
 interface EnamelMatchGameProps {
   onComplete: (score: number) => void;
@@ -32,6 +33,7 @@ const MATCH_ITEMS = [
 
 export const EnamelMatchGame: React.FC<EnamelMatchGameProps> = ({ onComplete, onClose }) => {
   const { t } = useTranslation();
+  const { playSound, playWinFanfare, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -65,7 +67,13 @@ export const EnamelMatchGame: React.FC<EnamelMatchGameProps> = ({ onComplete, on
     setGameOver(false);
     setIsChecking(false);
     setDifficulty(diff);
-  }, []);
+    startBackgroundMusic("calm");
+  }, [startBackgroundMusic]);
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   useEffect(() => {
     if (!difficulty || gameOver) return;
@@ -89,6 +97,7 @@ export const EnamelMatchGame: React.FC<EnamelMatchGameProps> = ({ onComplete, on
     const card = cards.find(c => c.id === cardId);
     if (!card || card.isMatched || card.isFlipped || flippedCards.length >= 2) return;
 
+    playSound("tap");
     const newFlipped = [...flippedCards, cardId];
     setFlippedCards(newFlipped);
     setCards(prev => prev.map(c => c.id === cardId ? { ...c, isFlipped: true } : c));
@@ -101,6 +110,7 @@ export const EnamelMatchGame: React.FC<EnamelMatchGameProps> = ({ onComplete, on
       const card2 = cards.find(c => c.id === second)!;
 
       if (card1.pattern === card2.pattern) {
+        playSound("success");
         setTimeout(() => {
           setCards(prev => prev.map(c => 
             c.id === first || c.id === second 
@@ -117,6 +127,8 @@ export const EnamelMatchGame: React.FC<EnamelMatchGameProps> = ({ onComplete, on
             const moveBonus = Math.max(0, 30 - moves) * 2;
             setScore(s => s + timeBonus + moveBonus);
             setGameOver(true);
+            stopBackgroundMusic();
+            playWinFanfare();
           }
         }, 600);
       } else {
@@ -131,7 +143,7 @@ export const EnamelMatchGame: React.FC<EnamelMatchGameProps> = ({ onComplete, on
         }, 1000);
       }
     }
-  }, [cards, flippedCards, gameOver, moves, timeLeft, isChecking]);
+  }, [cards, flippedCards, gameOver, moves, timeLeft, isChecking, playSound, playWinFanfare, stopBackgroundMusic]);
 
   if (!difficulty) {
     return (
