@@ -620,15 +620,13 @@ const StoryViewer = ({
       />
       
       {/* Braces Quest Reward Popup */}
-      <AnimatePresence>
-        {showBracesReward && (
-          <BracesQuestReward
-            questId={story.id}
-            isOpen={showBracesReward}
-            onClose={() => setShowBracesReward(false)}
-          />
-        )}
-      </AnimatePresence>
+      {showBracesReward && (
+        <BracesQuestReward
+          questId={story.id}
+          isOpen={showBracesReward}
+          onClose={() => setShowBracesReward(false)}
+        />
+      )}
     </AnimatePresence>
     </>
   );
