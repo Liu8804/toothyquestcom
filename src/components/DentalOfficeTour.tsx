@@ -3,6 +3,7 @@ import { useState } from "react";
 import { X, ChevronLeft, ChevronRight, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 
 interface DentalEquipment {
   id: string;
@@ -179,13 +180,13 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-sm p-4 border-b shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <motion.span
-                className="text-3xl"
+              <motion.img
+                src={toothyMascot}
+                alt="Toothy mascot"
+                className="w-10 h-10 object-contain"
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
-              >
-                🦷
-              </motion.span>
+              />
               <div>
                 <h2 className="font-display text-xl font-bold text-foreground">Explore the Dental Office!</h2>
                 <p className="text-xs text-muted-foreground">Tap on things to learn about them!</p>

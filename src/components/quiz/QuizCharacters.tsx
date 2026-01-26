@@ -288,6 +288,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   bracey: {
     name: "Bracey",
     emoji: "🎀",
+    imageSrc: toothyMascot,
     color: "from-pink-100 to-purple-100",
     gradientFrom: "from-pink-100",
     gradientTo: "to-purple-50",
