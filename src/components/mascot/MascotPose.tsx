@@ -2,13 +2,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { forwardRef, useCallback } from "react";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 
-// Import the new mascot assets
-import mascotFullPose from "@/assets/mascot-full-pose.png";
-import mascotCelebrating from "@/assets/mascot-celebrating.png";
-import mascotBrushing from "@/assets/mascot-brushing.png";
-import mascotIcon from "@/assets/mascot-icon.png";
+// Import the new sticker-style mascot assets
+import mascotWaving from "@/assets/mascot-sticker-waving.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating.png";
+import mascotPointing from "@/assets/mascot-sticker-pointing.png";
+import mascotBrushing from "@/assets/mascot-sticker-brushing.png";
+import mascotSquare from "@/assets/mascot-sticker-square.png";
 
-export type MascotPoseType = "full" | "icon" | "badge" | "celebrating" | "brushing";
+export type MascotPoseType = "full" | "icon" | "badge" | "celebrating" | "brushing" | "waving" | "pointing";
 
 interface MascotPoseProps {
   pose: MascotPoseType;
@@ -21,61 +22,65 @@ interface MascotPoseProps {
   onHover?: () => void;
 }
 
-// Size configurations matching the specified requirements:
-// - badge/small_ui: 32-64px
-// - icon/app_icon: 64-128px  
-// - full/full_pose: scaled from 1024px
-// - celebrating/brushing: scaled from 512px
+// Size configurations
 const sizeMap = {
-  xs: { class: "w-8 h-8", px: 32 },      // 32x32 - small_ui badge
-  sm: { class: "w-12 h-12", px: 48 },    // 48x48 - small UI  
-  md: { class: "w-24 h-24", px: 96 },    // 96x96 - medium
-  lg: { class: "w-32 h-32", px: 128 },   // 128x128 - app icon
-  xl: { class: "w-40 h-40", px: 160 },   // 160x160 - large
-  "2xl": { class: "w-52 h-52", px: 208 }, // 208x208 - hero section
+  xs: { class: "w-8 h-8", px: 32 },
+  sm: { class: "w-12 h-12", px: 48 },
+  md: { class: "w-24 h-24", px: 96 },
+  lg: { class: "w-32 h-32", px: 128 },
+  xl: { class: "w-40 h-40", px: 160 },
+  "2xl": { class: "w-52 h-52", px: 208 },
 };
 
-// Get the correct image asset for each pose
+// Get the correct sticker image asset for each pose
 const getPoseImage = (pose: MascotPoseType) => {
   switch (pose) {
     case "full":
-      return mascotFullPose;
+    case "waving":
+      return mascotWaving;
     case "celebrating":
       return mascotCelebrating;
     case "brushing":
       return mascotBrushing;
+    case "pointing":
+      return mascotPointing;
     case "icon":
     case "badge":
-      return mascotIcon;
+      return mascotSquare;
     default:
-      return mascotFullPose;
+      return mascotWaving;
   }
 };
 
-// Animation configs for each pose as specified:
-// - full: wave/bounce animation
-// - celebrating: 3-5 frames jumping, arms raised
-// - brushing: 1-2 frame animation or static
+// Animation configs for each pose
 const poseAnimations = {
   full: {
-    idle: { y: [0, -8, 0] }, // Slight wave/bounce
+    idle: { y: [0, -8, 0] },
     hover: { scale: 1.1, rotate: [0, -5, 5, 0] },
+  },
+  waving: {
+    idle: { y: [0, -8, 0], rotate: [0, -3, 3, 0] },
+    hover: { scale: 1.1 },
   },
   icon: {
     idle: {},
     hover: { scale: 1.05 },
   },
   badge: {
-    idle: { scale: [1, 1.05, 1] }, // Tiny sparkle effect
+    idle: { scale: [1, 1.05, 1] },
     hover: { scale: 1.15 },
   },
   celebrating: {
-    idle: { y: [0, -15, 0], rotate: [0, 5, -5, 0] }, // Jumping animation
+    idle: { y: [0, -15, 0], rotate: [0, 5, -5, 0] },
     hover: { scale: 1.1 },
   },
   brushing: {
-    idle: { x: [-2, 2, -2] }, // Brushing motion
+    idle: { x: [-2, 2, -2] },
     hover: { scale: 1.05 },
+  },
+  pointing: {
+    idle: { y: [0, -5, 0] },
+    hover: { scale: 1.1, x: 5 },
   },
 };
 

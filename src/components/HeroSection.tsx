@@ -10,6 +10,8 @@ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
+import mascotWaving from "@/assets/mascot-sticker-waving.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating.png";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
@@ -119,6 +121,20 @@ export const HeroSection = () => {
       <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
         <FloatingBubbles />
         
+        {/* ToothyQuest Logo - Top left corner, smaller */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="absolute top-4 left-4 z-20"
+        >
+          <img
+            src={toothyQuestLogo}
+            alt="ToothyQuest"
+            className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
+          />
+        </motion.div>
+        
         {/* Decorative floating elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {["🦷", "✨", "⭐", "🌟", "💫", "🎮", "🏆"].map((emoji, i) => (
@@ -148,7 +164,7 @@ export const HeroSection = () => {
         <div className="container mx-auto px-4 py-8 relative z-10">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
-            {/* ToothyQuest Logo - Kid-friendly and prominent with animations */}
+            {/* Main Mascot - Kid-friendly sticker character */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -156,8 +172,8 @@ export const HeroSection = () => {
               className="relative mb-6"
             >
               <motion.img
-                src={toothyQuestLogo}
-                alt="ToothyQuest - Friendly tooth character with yellow cap"
+                src={mascotMood === "cheering" ? mascotCelebrating : mascotWaving}
+                alt="Toothy - Your friendly dental buddy"
                 className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain drop-shadow-xl cursor-pointer"
                 animate={
                   mascotMood === "cheering" 
