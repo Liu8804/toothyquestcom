@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface FlossHeroGameProps {
   game: Game;
@@ -24,8 +27,12 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
   const [flossedGaps, setFlossedGaps] = useState<number[]>([]);
   const [isFlossing, setIsFlossing] = useState(false);
   const [flossProgress, setFlossProgress] = useState(0);
+  const [showMascotReaction, setShowMascotReaction] = useState(false);
+  const [sparklePositions, setSparklePositions] = useState<{ id: number; gapIndex: number }[]>([]);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
   const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+  const { playSparkle, playCheer, playCelebrate, playQuestComplete } = useMascotSounds();
+  const { haptic, success } = useHapticFeedback();
 
   const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
   const totalGaps = settings?.totalGaps || 5;
@@ -36,6 +43,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
     setCurrentGap(gapIndex);
     setIsFlossing(true);
     setFlossProgress(0);
+    haptic("light");
 
     progressRef.current = setInterval(() => {
       setFlossProgress(prev => {
@@ -44,10 +52,27 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           setFlossedGaps(g => [...g, gapIndex]);
           setIsFlossing(false);
           playSound("success");
+          playSparkle();
+          haptic("medium");
+          
+          // Add sparkle effect at this gap
+          const sparkleId = Date.now();
+          setSparklePositions(prev => [...prev, { id: sparkleId, gapIndex }]);
+          setTimeout(() => {
+            setSparklePositions(prev => prev.filter(s => s.id !== sparkleId));
+          }, 1000);
+          
+          // Show mascot thumbs-up reaction
+          setShowMascotReaction(true);
+          playCheer();
+          setTimeout(() => setShowMascotReaction(false), 1200);
           
           if (flossedGaps.length + 1 >= totalGaps) {
+            success();
+            playCelebrate();
+            playQuestComplete();
             const stars = difficulty === "hard" ? 3 : difficulty === "medium" ? 3 : 2;
-            setTimeout(() => onComplete(true, stars), 500);
+            setTimeout(() => onComplete(true, stars), 800);
           }
           return 0;
         }
@@ -173,6 +198,57 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           🧵
         </motion.div>
       )}
+
+      {/* Mascot thumbs-up reaction */}
+      <AnimatePresence>
+        {showMascotReaction && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0, y: -20 }}
+            transition={{ type: "spring", duration: 0.4 }}
+            className="absolute bottom-8 right-8 flex flex-col items-center"
+          >
+            <motion.div
+              animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 0.5, repeat: 2 }}
+            >
+              <img
+                src={mascotCelebrating}
+                alt="Great job!"
+                className="w-16 h-16 object-contain"
+              />
+            </motion.div>
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="text-2xl mt-1"
+            >
+              👍
+            </motion.span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating sparkle effects */}
+      <AnimatePresence>
+        {sparklePositions.map((sparkle) => (
+          <motion.div
+            key={sparkle.id}
+            initial={{ opacity: 1, scale: 0, y: 0 }}
+            animate={{ opacity: 0, scale: 2, y: -50 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8 }}
+            className="absolute pointer-events-none text-3xl"
+            style={{
+              left: `${20 + sparkle.gapIndex * 10}%`,
+              top: "40%",
+            }}
+          >
+            ✨
+          </motion.div>
+        ))}
+      </AnimatePresence>
     </div>
   );
 };

@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface InteractiveBrushingQuestProps {
   onComplete: () => void;
@@ -28,14 +29,31 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
   const [cleanedTeeth, setCleanedTeeth] = useState<number[]>([]);
   const [showReward, setShowReward] = useState(false);
   const [mascotReaction, setMascotReaction] = useState<"idle" | "cheering" | "dancing">("idle");
+  const [xpPopups, setXpPopups] = useState<{ id: number; x: number; y: number }[]>([]);
   const { haptic, success } = useHapticFeedback();
+  const { playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain } = useMascotSounds();
 
-  const handleToothTap = useCallback((toothId: number) => {
+  const handleToothTap = useCallback((toothId: number, event: React.MouseEvent | React.TouchEvent) => {
     if (cleanedTeeth.includes(toothId)) return;
 
+    // Get tap position for XP popup
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top;
+
     haptic("light");
+    playToothClean(); // Sound on each tooth clean
+    
+    // Add XP popup at tap location
+    const popupId = Date.now();
+    setXpPopups(prev => [...prev, { id: popupId, x, y }]);
+    setTimeout(() => {
+      setXpPopups(prev => prev.filter(p => p.id !== popupId));
+    }, 1000);
+
     setCleanedTeeth(prev => [...prev, toothId]);
     setMascotReaction("cheering");
+    playCheer(); // Mascot cheer sound
 
     // Reset mascot after animation
     setTimeout(() => setMascotReaction("idle"), 800);
@@ -44,11 +62,14 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
     if (cleanedTeeth.length + 1 >= TEETH.length) {
       success();
       setMascotReaction("dancing");
+      playCelebrate();
       setTimeout(() => {
+        playQuestComplete();
+        playXpGain();
         setShowReward(true);
       }, 500);
     }
-  }, [cleanedTeeth, haptic, success]);
+  }, [cleanedTeeth, haptic, success, playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain]);
 
   const handleCollectReward = () => {
     onComplete();
@@ -106,7 +127,7 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                   top: `${tooth.y}%`,
                   transform: "translate(-50%, -50%)",
                 }}
-                onClick={() => handleToothTap(tooth.id)}
+                onClick={(e) => handleToothTap(tooth.id, e)}
                 whileTap={{ scale: 0.9 }}
                 animate={isCleaned ? { scale: [1, 1.2, 1] } : {}}
               >
@@ -149,6 +170,23 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
               );
             })}
           </AnimatePresence>
+
+          {/* Floating XP popups on tap */}
+          <AnimatePresence>
+            {xpPopups.map((popup) => (
+              <motion.div
+                key={popup.id}
+                initial={{ opacity: 1, y: 0, scale: 0 }}
+                animate={{ opacity: 0, y: -40, scale: 1.5 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className="fixed pointer-events-none z-50 font-bold text-star"
+                style={{ left: popup.x, top: popup.y }}
+              >
+                +2 ⭐
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Mascot */}
@@ -168,9 +206,9 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
             className="relative"
           >
             <img
-              src={toothyMascot}
+              src={mascotCelebrating}
               alt="Toothy"
-              className="w-16 h-16 rounded-full shadow-card border-2 border-white object-cover"
+              className="w-20 h-20 shadow-card object-contain"
             />
             {mascotReaction !== "idle" && (
               <motion.span
@@ -215,9 +253,9 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                   transition={{ duration: 1, repeat: Infinity }}
                 >
                   <img
-                    src={toothyMascot}
+                    src={mascotCelebrating}
                     alt="Toothy celebrating"
-                    className="w-24 h-24 rounded-full mx-auto shadow-float border-4 border-white object-cover"
+                    className="w-28 h-28 mx-auto shadow-float object-contain"
                   />
                 </motion.div>
                 
