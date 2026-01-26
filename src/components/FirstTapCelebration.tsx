@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 interface FirstTapCelebrationProps {
   isActive: boolean;
@@ -9,9 +10,19 @@ interface FirstTapCelebrationProps {
 
 const FirstTapCelebration = ({ isActive, onComplete }: FirstTapCelebrationProps) => {
   const [confettiPieces, setConfettiPieces] = useState<Array<{ id: number; x: number; color: string }>>([]);
+  const { playFirstTap, playConfetti, playXpGain } = useMascotSounds();
 
   useEffect(() => {
     if (isActive) {
+      // Play celebration sounds
+      playFirstTap();
+      
+      // Play confetti sound after a short delay
+      setTimeout(() => playConfetti(), 300);
+      
+      // Play XP gain sound
+      setTimeout(() => playXpGain(), 500);
+      
       // Generate confetti pieces
       const pieces = Array.from({ length: 30 }, (_, i) => ({
         id: i,
@@ -29,7 +40,7 @@ const FirstTapCelebration = ({ isActive, onComplete }: FirstTapCelebrationProps)
 
       return () => clearTimeout(timer);
     }
-  }, [isActive, onComplete]);
+  }, [isActive, onComplete, playFirstTap, playConfetti, playXpGain]);
 
   if (!isActive) return null;
 

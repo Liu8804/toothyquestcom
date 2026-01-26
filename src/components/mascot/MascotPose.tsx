@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { forwardRef } from "react";
+import { forwardRef, useCallback } from "react";
+import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 export type MascotPoseType = "full" | "icon" | "badge" | "celebrating" | "brushing";
 
@@ -9,7 +11,9 @@ interface MascotPoseProps {
   animate?: boolean;
   className?: string;
   showSparkles?: boolean;
+  enableSound?: boolean;
   onClick?: () => void;
+  onHover?: () => void;
 }
 
 const sizeMap = {
@@ -51,25 +55,38 @@ const MascotPose = forwardRef<HTMLDivElement, MascotPoseProps>(({
   animate = true,
   className = "",
   showSparkles = false,
+  enableSound = true,
   onClick,
+  onHover,
 }, ref) => {
   const sizeClass = sizeMap[size];
   const animation = poseAnimations[pose];
+  const { playWave, playCheer, playHappy } = useMascotSounds();
 
-  // Emoji representations for different poses (fallback to emoji since we're using the reference image)
-  const poseEmoji: Record<MascotPoseType, string> = {
-    full: "🦷",
-    icon: "🦷",
-    badge: "🦷",
-    celebrating: "🎉",
-    brushing: "🪥",
-  };
+  const handleClick = useCallback(() => {
+    if (enableSound) {
+      if (pose === "celebrating") {
+        playCheer();
+      } else {
+        playHappy();
+      }
+    }
+    onClick?.();
+  }, [enableSound, pose, playCheer, playHappy, onClick]);
+
+  const handleHover = useCallback(() => {
+    if (enableSound) {
+      playWave();
+    }
+    onHover?.();
+  }, [enableSound, playWave, onHover]);
 
   return (
     <motion.div
       ref={ref}
       className={`relative inline-flex items-center justify-center ${className}`}
-      onClick={onClick}
+      onClick={handleClick}
+      onHoverStart={handleHover}
       whileHover={animation.hover}
       transition={{ duration: 0.3 }}
     >
@@ -82,10 +99,10 @@ const MascotPose = forwardRef<HTMLDivElement, MascotPoseProps>(({
           ease: "easeInOut",
         }}
       >
-        {/* Main mascot image with emoji overlay for different poses */}
+        {/* Main mascot image - using the actual Toothy mascot */}
         <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center border-4 border-white shadow-float overflow-hidden">
           <img 
-            src="/toothyquest-logo.jpeg" 
+            src={toothyMascot} 
             alt="Toothy mascot"
             className="w-full h-full object-cover"
           />
