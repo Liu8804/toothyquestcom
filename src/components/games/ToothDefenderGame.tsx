@@ -35,7 +35,7 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [totalCaught, setTotalCaught] = useState(0);
-  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic, playWinFanfare, playLoseSound } = useGameSounds();
 
   const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
 
@@ -89,20 +89,21 @@ const ToothDefenderGame = ({ game, onComplete }: ToothDefenderGameProps) => {
 
   useEffect(() => {
     if (settings && totalCaught >= settings.winCondition) {
+      playWinFanfare();
       const stars = difficulty === "hard" ? 3 : difficulty === "medium" ? 3 : 2;
       onComplete(true, stars);
     }
-  }, [totalCaught, onComplete, settings, difficulty]);
+  }, [totalCaught, onComplete, settings, difficulty, playWinFanfare]);
 
   const handleItemTap = (item: FallingItem) => {
     setItems(prev => prev.filter(i => i.id !== item.id));
     if (item.isHealthy) {
       setScore(prev => prev + 10);
       setTotalCaught(prev => prev + 1);
-      playSound("success");
+      playSound("correct");
     } else {
       setLives(prev => prev - 1);
-      playSound("lose");
+      playSound("progress"); // Gentle feedback instead of harsh lose sound
     }
   };
 
