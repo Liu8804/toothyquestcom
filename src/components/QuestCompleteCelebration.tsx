@@ -1,11 +1,21 @@
 import { motion } from "framer-motion";
 import { Sparkles, Trophy, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
-import MascotWithExpression from "./MascotWithExpression";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
+
+// Personalized celebration messages
+const CELEBRATION_MESSAGES = [
+  "You're a superstar! 🌟",
+  "Amazing job, champ! 🏆",
+  "Wow! You did it! 🎉",
+  "Your smile is shining! ✨",
+  "Keep up the great work! 💪",
+  "You make brushing look easy! 😄",
+  "Toothy is SO proud of you! 🦷",
+];
 
 interface Badge {
   name: string;
@@ -137,17 +147,19 @@ const QuestCompleteCelebration = ({
           ))}
         </div>
 
-        {/* Logo in corner */}
+        {/* Celebrating Mascot in corner */}
         <motion.div
           initial={{ opacity: 0, scale: 0, rotate: -20 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ delay: 0.3, type: "spring" }}
           className="absolute top-4 right-4"
         >
-          <img
-            src={toothyMascot}
-            alt="ToothyQuest"
-            className="w-14 h-14 rounded-full shadow-float border-3 border-white"
+          <motion.img
+            src={mascotCelebrating}
+            alt="Toothy celebrating"
+            className="w-16 h-16 object-contain drop-shadow-lg"
+            animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 1, repeat: Infinity }}
           />
         </motion.div>
 
@@ -222,19 +234,22 @@ const QuestCompleteCelebration = ({
           </motion.div>
         )}
 
-        {/* Mascot */}
+        {/* Mascot with personalized message */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="mb-6"
+          className="mb-6 relative"
         >
-          <MascotWithExpression 
-            expression="celebrating" 
-            size="md"
-            showSpeechBubble
-            message="You did it! Amazing job!"
-          />
+          <motion.div
+            className="bg-white/20 backdrop-blur-sm rounded-2xl p-3 max-w-[200px] mx-auto"
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <p className="text-white text-sm font-medium text-center">
+              {CELEBRATION_MESSAGES[Math.floor(Math.random() * CELEBRATION_MESSAGES.length)]}
+            </p>
+          </motion.div>
         </motion.div>
 
         <Button

@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, Sparkles, Trophy, Flame, Gift, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { AchievementBadge, ToothPet } from "@/data/rewardsConfig";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface QuestRewardSummaryProps {
   isOpen: boolean;
@@ -80,12 +81,20 @@ const QuestRewardSummary = ({
                 <X className="w-4 h-4" />
               </button>
 
+              {/* Celebrating Mascot */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: "spring" }}
+                className="mb-2"
               >
-                <Trophy className="w-12 h-12 text-white mx-auto mb-2" />
+                <motion.img
+                  src={mascotCelebrating}
+                  alt="Toothy celebrating"
+                  className="w-16 h-16 mx-auto drop-shadow-lg"
+                  animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
               </motion.div>
               <h2 className="font-display text-2xl font-bold text-white">Quest Complete!</h2>
               <p className="text-white/80 text-sm mt-1">{questTitle}</p>

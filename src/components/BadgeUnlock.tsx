@@ -1,8 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
-import MascotWithExpression from "./MascotWithExpression";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface Badge {
   name: string;
@@ -44,17 +43,19 @@ const BadgeUnlock = ({ isOpen, badge, onClose }: BadgeUnlockProps) => {
             <X className="w-4 h-4" />
           </button>
 
-          {/* Logo */}
+          {/* Mascot Celebration */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="mb-4"
           >
-            <img
-              src={toothyMascot}
-              alt="ToothyQuest"
-              className="w-12 h-12 rounded-full mx-auto shadow-card border-2 border-primary"
+            <motion.img
+              src={mascotCelebrating}
+              alt="Toothy celebrating"
+              className="w-16 h-16 mx-auto drop-shadow-lg"
+              animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 1, repeat: Infinity }}
             />
           </motion.div>
 
@@ -115,19 +116,27 @@ const BadgeUnlock = ({ isOpen, badge, onClose }: BadgeUnlockProps) => {
             <p className="text-muted-foreground mb-6">{badge.description}</p>
           </motion.div>
 
-          {/* Mascot */}
+          {/* Mascot with speech bubble */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.7 }}
             className="mb-6"
           >
-            <MascotWithExpression 
-              expression="cheering" 
-              size="md"
-              showSpeechBubble
-              message="You earned it!"
-            />
+            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-3 max-w-[200px] mx-auto border border-primary/20">
+              <div className="flex items-center gap-2">
+                <motion.img
+                  src={mascotCelebrating}
+                  alt="Toothy"
+                  className="w-10 h-10 object-contain"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
+                <p className="text-foreground font-medium text-sm">
+                  You earned it! 🎉
+                </p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Continue button */}

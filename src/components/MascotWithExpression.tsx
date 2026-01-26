@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 export type MascotExpression = "happy" | "excited" | "cheering" | "winking" | "celebrating";
 
@@ -50,6 +51,14 @@ const MascotWithExpression = ({
     }
   };
 
+  // Use celebrating pose for excited/cheering/celebrating expressions
+  const getMascotImage = () => {
+    if (expression === "celebrating" || expression === "cheering" || expression === "excited") {
+      return mascotCelebrating;
+    }
+    return mascotWaving;
+  };
+
   return (
     <div className={`relative inline-flex flex-col items-center ${className}`}>
       {/* Speech bubble */}
@@ -75,9 +84,9 @@ const MascotWithExpression = ({
         }}
       >
         <motion.img
-          src={toothyMascot}
+          src={getMascotImage()}
           alt="Toothy mascot"
-          className="w-full h-full object-contain drop-shadow-lg rounded-full"
+          className="w-full h-full object-contain drop-shadow-lg"
           whileHover={{ scale: 1.1 }}
         />
         
@@ -131,9 +140,9 @@ const MascotWithExpression = ({
           className="mt-2"
         >
           <img
-            src={toothyMascot}
+            src={mascotWaving}
             alt="ToothyQuest"
-            className="w-12 h-12 rounded-full shadow-card border-2 border-primary"
+            className="w-12 h-12 object-contain drop-shadow-md"
           />
         </motion.div>
       )}

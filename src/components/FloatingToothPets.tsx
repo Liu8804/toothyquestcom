@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import { TOOTH_PETS, type ToothPet } from "@/data/rewardsConfig";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
 interface FloatingToothPetsProps {
   unlockedPets: string[];
@@ -136,9 +137,20 @@ const FloatingToothPets = forwardRef<HTMLDivElement, FloatingToothPetsProps>(({
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="relative"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-card to-muted rounded-full flex items-center justify-center shadow-float border-2 border-primary/30">
-              <span className="text-3xl">{activePet.emoji}</span>
-            </div>
+            {/* Use mascot image for Toothy, emoji for other pets */}
+            {activePet.id === "toothy" ? (
+              <div className="w-16 h-16 rounded-full overflow-hidden shadow-float border-2 border-primary/30 bg-gradient-to-br from-card to-muted">
+                <img 
+                  src={mascotWaving} 
+                  alt="Toothy mascot"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="w-16 h-16 bg-gradient-to-br from-card to-muted rounded-full flex items-center justify-center shadow-float border-2 border-primary/30">
+                <span className="text-3xl">{activePet.emoji}</span>
+              </div>
+            )}
             
             {/* Name tag */}
             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-2 py-0.5 rounded-full text-xs font-bold whitespace-nowrap">
