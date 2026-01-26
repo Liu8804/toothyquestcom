@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Crown, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,11 +9,11 @@ interface PremiumBadgeProps {
   showText?: boolean;
 }
 
-const PremiumBadge = ({ 
+const PremiumBadge = forwardRef<HTMLDivElement, PremiumBadgeProps>(({ 
   variant = "small", 
   className,
   showText = false 
-}: PremiumBadgeProps) => {
+}, ref) => {
   const sizes = {
     small: "w-5 h-5",
     medium: "w-6 h-6", 
@@ -27,10 +28,11 @@ const PremiumBadge = ({
 
   return (
     <motion.div
+      ref={ref}
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       className={cn(
-        "inline-flex items-center gap-1.5",
+        "inline-flex items-center gap-1.5 relative",
         className
       )}
     >
@@ -68,6 +70,8 @@ const PremiumBadge = ({
       </motion.div>
     </motion.div>
   );
-};
+});
+
+PremiumBadge.displayName = "PremiumBadge";
 
 export default PremiumBadge;

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { useStickerRewards } from "./useStickerRewards";
 import { 
   completeQuestSchema, 
   addChildSchema
@@ -36,6 +37,7 @@ interface EarnedBadge {
 
 export const useQuestProgress = (childId?: string) => {
   const { user } = useAuth();
+  const { awardQuestSticker, awardFirstQuestSticker, getStickerInfo } = useStickerRewards();
   const [children, setChildren] = useState<Child[]>([]);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [questProgress, setQuestProgress] = useState<QuestProgress[]>([]);
@@ -111,13 +113,13 @@ export const useQuestProgress = (childId?: string) => {
   // Complete a quest with input validation
   const completeQuest = useCallback(async (questId: string, xpEarned = 10) => {
     const currentChildId = childId || selectedChild?.id;
-    if (!currentChildId) return { success: false, newBadges: [] };
+    if (!currentChildId) return { success: false, newBadges: [], newSticker: null };
 
     // Validate input
     const validation = completeQuestSchema.safeParse({ questId, xpEarned });
     if (!validation.success) {
       console.error("Validation error:", validation.error.errors[0]?.message);
-      return { success: false, newBadges: [] };
+      return { success: false, newBadges: [], newSticker: null };
     }
 
     const { questId: validQuestId, xpEarned: validXp } = validation.data;
@@ -133,11 +135,23 @@ export const useQuestProgress = (childId?: string) => {
 
     if (error) {
       console.error("Error completing quest:", error);
-      return { success: false, newBadges: [] };
+      return { success: false, newBadges: [], newSticker: null };
     }
 
     // Refresh progress
     await fetchProgress();
+
+    // Award sticker for quest completion
+    const isFirstQuest = questProgress.length === 0;
+    let newStickerId: string | null = null;
+    
+    if (isFirstQuest) {
+      newStickerId = awardFirstQuestSticker();
+    } else {
+      newStickerId = awardQuestSticker(validQuestId);
+    }
+    
+    const newSticker = newStickerId ? getStickerInfo(newStickerId) : null;
 
     // Check for new badges
     const newQuestCount = questProgress.length + 1;
@@ -167,8 +181,8 @@ export const useQuestProgress = (childId?: string) => {
 
     await fetchEarnedBadges();
 
-    return { success: true, newBadges };
-  }, [childId, selectedChild, questProgress, totalXp, allBadges, earnedBadges, fetchProgress, fetchEarnedBadges]);
+    return { success: true, newBadges, newSticker };
+  }, [childId, selectedChild, questProgress, totalXp, allBadges, earnedBadges, fetchProgress, fetchEarnedBadges, awardQuestSticker, awardFirstQuestSticker, getStickerInfo]);
 
   // Add a child with input validation
   const addChild = useCallback(async (name: string, avatarEmoji: string, birthYear?: number) => {

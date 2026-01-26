@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { useStickerRewards } from "./useStickerRewards";
 
 interface StreakData {
   currentStreak: number;
@@ -53,6 +54,7 @@ const setCachedStreak = (data: CachedStreak): void => {
 
 export const useStreak = () => {
   const { user } = useAuth();
+  const { awardStreakSticker, getStickerInfo } = useStickerRewards();
   const [streakData, setStreakData] = useState<StreakData>({
     currentStreak: 0,
     longestStreak: 0,
@@ -131,9 +133,10 @@ export const useStreak = () => {
     newStreak: number;
     isNewDay: boolean;
     streakMaintained: boolean;
+    newSticker: { emoji: string; name: string } | null;
   }> => {
     if (!user) {
-      return { newStreak: 0, isNewDay: false, streakMaintained: false };
+      return { newStreak: 0, isNewDay: false, streakMaintained: false, newSticker: null };
     }
 
     const today = getISODateString();
@@ -145,6 +148,7 @@ export const useStreak = () => {
         newStreak: streakData.currentStreak,
         isNewDay: false,
         streakMaintained: true,
+        newSticker: null,
       };
     }
 
@@ -213,7 +217,11 @@ export const useStreak = () => {
         loading: false,
       });
 
-      return { newStreak, isNewDay: true, streakMaintained };
+      // Award streak sticker if milestone reached
+      const streakStickerId = awardStreakSticker(newStreak);
+      const newSticker = streakStickerId ? getStickerInfo(streakStickerId) : null;
+
+      return { newStreak, isNewDay: true, streakMaintained, newSticker };
     } catch (err) {
       console.error("Network error updating streak:", err);
       // Store locally for sync when online
@@ -233,9 +241,13 @@ export const useStreak = () => {
         loading: false,
       });
 
-      return { newStreak, isNewDay: true, streakMaintained };
+      // Award streak sticker if milestone reached
+      const streakStickerId = awardStreakSticker(newStreak);
+      const newSticker = streakStickerId ? getStickerInfo(streakStickerId) : null;
+
+      return { newStreak, isNewDay: true, streakMaintained, newSticker };
     }
-  }, [user, streakData]);
+  }, [user, streakData, awardStreakSticker, getStickerInfo]);
 
   // Sync pending offline changes when online
   const syncPendingStreak = useCallback(async () => {
