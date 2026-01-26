@@ -6,10 +6,10 @@ import FloatingBubbles from "@/components/FloatingBubbles";
 import FirstTapCelebration from "@/components/FirstTapCelebration";
 import SwipeHint from "@/components/SwipeHint";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
-import MascotPose from "@/components/mascot/MascotPose";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
+import toothyQuestLogo from "@/assets/toothyquest-logo.png";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
@@ -148,25 +148,37 @@ export const HeroSection = () => {
         <div className="container mx-auto px-4 py-8 relative z-10">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
-            {/* Mascot - Kid-friendly and prominent with animations */}
+            {/* ToothyQuest Logo - Kid-friendly and prominent with animations */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="relative mb-6"
             >
-              <MascotPose
-                pose={mascotMood === "cheering" ? "celebrating" : "full"}
-                size="2xl"
-                animate={true}
-                showSparkles={mascotMood === "cheering"}
-                enableSound={false} // We handle sounds manually for more control
+              <motion.img
+                src={toothyQuestLogo}
+                alt="ToothyQuest - Friendly tooth character with yellow cap"
+                className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain drop-shadow-xl cursor-pointer"
+                animate={
+                  mascotMood === "cheering" 
+                    ? { y: [0, -15, 0], scale: [1, 1.1, 1] } 
+                    : mascotMood === "waving"
+                    ? { rotate: [0, -5, 5, 0] }
+                    : { y: [0, -8, 0] }
+                }
+                transition={{
+                  duration: mascotMood === "cheering" ? 0.5 : 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 onClick={() => {
                   trackMascotInteraction("tap");
                   setMascotMood("cheering");
                   playCheer();
                   setTimeout(() => setMascotMood("idle"), 2000);
                 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               />
               
               {/* Mood indicator */}
@@ -183,15 +195,37 @@ export const HeroSection = () => {
                 )}
               </AnimatePresence>
 
-              {/* Sparkle badge */}
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5, type: "spring" }}
-                className="absolute -top-2 -right-2 bg-accent rounded-full p-2 shadow-lg"
-              >
-                <Sparkles className="w-5 h-5 text-accent-foreground" />
-              </motion.div>
+              {/* Sparkle effect when cheering */}
+              <AnimatePresence>
+                {mascotMood === "cheering" && (
+                  <>
+                    {[...Array(6)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        className="absolute pointer-events-none text-xl"
+                        style={{
+                          top: `${10 + Math.random() * 80}%`,
+                          left: `${10 + Math.random() * 80}%`,
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{
+                          opacity: [0, 1, 0],
+                          scale: [0.5, 1.2, 0.5],
+                          y: [-5, -20],
+                        }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          delay: i * 0.2,
+                        }}
+                      >
+                        {i % 2 === 0 ? "✨" : "⭐"}
+                      </motion.span>
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
             </motion.div>
 
             {/* Clear Value Proposition */}
