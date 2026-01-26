@@ -3,6 +3,7 @@ import { Star, Sparkles, Trophy, Zap, Gift, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import type { Level } from "@/data/rewardsConfig";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface LevelUpModalProps {
   isOpen: boolean;
@@ -78,21 +79,45 @@ const LevelUpModal = ({ isOpen, onClose, newLevel }: LevelUpModalProps) => {
                 ))}
               </div>
 
-              {/* Level icon */}
+              {/* Celebrating Mascot */}
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.2, type: "spring", duration: 0.8 }}
-                className="relative mx-auto mb-4 w-24 h-24 flex items-center justify-center"
+                className="relative mx-auto mb-4"
               >
-                <motion.div
-                  animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="absolute inset-0 bg-white/20 rounded-full"
+                <motion.img
+                  src={mascotCelebrating}
+                  alt="Toothy celebrating"
+                  className="w-28 h-28 object-contain drop-shadow-lg"
+                  animate={{ 
+                    y: [0, -10, 0],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ duration: 1, repeat: Infinity }}
                 />
-                <div className="relative p-5 bg-white rounded-full shadow-float">
-                  <LevelIcon className="w-10 h-10 text-primary" />
-                </div>
+                {/* Sparkles around mascot */}
+                {[...Array(4)].map((_, i) => (
+                  <motion.span
+                    key={i}
+                    className="absolute text-lg pointer-events-none"
+                    style={{
+                      top: `${10 + i * 20}%`,
+                      left: i % 2 === 0 ? "-10%" : "85%",
+                    }}
+                    animate={{
+                      scale: [0.8, 1.2, 0.8],
+                      opacity: [0.5, 1, 0.5],
+                    }}
+                    transition={{
+                      duration: 1,
+                      delay: i * 0.2,
+                      repeat: Infinity,
+                    }}
+                  >
+                    ✨
+                  </motion.span>
+                ))}
                 <motion.div
                   animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 export type MascotMood = "idle" | "happy" | "excited" | "cheering" | "waving";
 
@@ -43,6 +44,13 @@ export const ToothyMascot = ({
   showTip = false,
   tipMessage = "Keep brushing!",
 }: ToothyMascotProps) => {
+  // Choose mascot pose based on mood
+  const getMascotImage = () => {
+    if (mood === "cheering" || mood === "excited") {
+      return mascotCelebrating;
+    }
+    return mascotWaving;
+  };
   return (
     <div className={`relative inline-block ${className}`}>
       {/* Speech bubble tip */}
@@ -68,9 +76,9 @@ export const ToothyMascot = ({
         }}
       >
         <motion.img
-          src={toothyMascot}
+          src={getMascotImage()}
           alt="Toothy - Your friendly dental buddy"
-          className="w-full h-full object-contain drop-shadow-lg rounded-full"
+          className="w-full h-full object-contain drop-shadow-lg"
           whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
           transition={{ duration: 0.3 }}
         />

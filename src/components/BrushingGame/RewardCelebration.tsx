@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, Trophy, Sparkles, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
-import MascotWithExpression from "@/components/MascotWithExpression";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useAIEncouragement } from "@/hooks/useAIEncouragement";
 import { useEffect, useState } from "react";
@@ -89,17 +88,19 @@ export const RewardCelebration = ({
         />
       ))}
 
-      {/* Logo badge */}
+      {/* Celebrating Mascot badge */}
       <motion.div
         initial={{ opacity: 0, scale: 0, y: -20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ delay: 0.2, type: "spring" }}
         className="mb-4"
       >
-        <img
-          src={toothyLogo}
-          alt="ToothyQuest"
-          className="w-16 h-16 rounded-full mx-auto shadow-float border-3 border-primary"
+        <motion.img
+          src={mascotCelebrating}
+          alt="Toothy celebrating"
+          className="w-20 h-20 mx-auto drop-shadow-lg"
+          animate={{ y: [0, -8, 0], rotate: [0, 5, -5, 0] }}
+          transition={{ duration: 1.2, repeat: Infinity }}
         />
       </motion.div>
       
@@ -184,19 +185,27 @@ export const RewardCelebration = ({
         <Sparkles className="w-5 h-5" />
       </motion.div>
 
-      {/* Mascot celebration */}
+      {/* Mascot speech bubble with personalized message */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1.1 }}
-        className="mb-6"
+        className="mb-6 relative"
       >
-        <MascotWithExpression 
-          expression="cheering" 
-          size="md"
-          showSpeechBubble
-          message="Fantastic brushing!"
-        />
+        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-4 max-w-[250px] mx-auto border border-primary/20">
+          <div className="flex items-center gap-3">
+            <motion.img
+              src={mascotCelebrating}
+              alt="Toothy"
+              className="w-12 h-12 object-contain"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
+            <p className="text-foreground font-medium text-sm text-left">
+              Fantastic brushing! Your teeth are sparkling! ✨
+            </p>
+          </div>
+        </div>
       </motion.div>
       
       {/* Action buttons */}

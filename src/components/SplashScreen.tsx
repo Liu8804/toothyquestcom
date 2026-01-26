@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -74,11 +74,12 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
             }}
           >
             <motion.img
-              src={toothyMascot}
+              src={mascotWaving}
               alt="Toothy - Your Friendly Dental Buddy"
-              className="w-48 md:w-64 lg:w-80 h-auto drop-shadow-2xl rounded-3xl"
+              className="w-52 md:w-64 lg:w-80 h-auto drop-shadow-2xl"
               animate={{ 
-                y: [0, -8, 0],
+                y: [0, -10, 0],
+                rotate: [0, -3, 3, 0],
               }}
               transition={{ 
                 duration: 2, 

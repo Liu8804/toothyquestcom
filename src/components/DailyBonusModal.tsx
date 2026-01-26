@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Gift, X, Sparkles, Star, Coins, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BONUS_REWARDS } from "@/data/rewardsConfig";
-import MascotWithExpression from "./MascotWithExpression";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
 interface DailyBonusModalProps {
   isOpen: boolean;
@@ -118,11 +119,19 @@ const DailyBonusModal = ({ isOpen, onClose, onClaim, streak, childName }: DailyB
             {phase === "gift" && (
               <>
                 <motion.div
-                  animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+                  animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
-                  className="inline-block mb-4"
+                  className="inline-block mb-4 relative"
                 >
                   <Gift className="w-24 h-24 text-white drop-shadow-lg" />
+                  {/* Waving mascot next to gift */}
+                  <motion.img
+                    src={mascotWaving}
+                    alt="Toothy waving"
+                    className="absolute -right-12 -bottom-2 w-14 h-14 object-contain"
+                    animate={{ rotate: [0, -5, 5, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
                 </motion.div>
 
                 <motion.h2
@@ -199,7 +208,13 @@ const DailyBonusModal = ({ isOpen, onClose, onClaim, streak, childName }: DailyB
                   transition={{ type: "spring", duration: 0.6 }}
                   className="mb-4"
                 >
-                  <MascotWithExpression expression="celebrating" size="lg" />
+                  <motion.img
+                    src={mascotCelebrating}
+                    alt="Toothy celebrating"
+                    className="w-24 h-24 mx-auto drop-shadow-lg"
+                    animate={{ y: [0, -10, 0], rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
                 </motion.div>
 
                 <motion.h2

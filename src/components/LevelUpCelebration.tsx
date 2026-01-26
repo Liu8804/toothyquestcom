@@ -1,8 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Sparkles, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
-import MascotWithExpression from "./MascotWithExpression";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface LevelUpCelebrationProps {
   isOpen: boolean;
@@ -68,16 +67,19 @@ const LevelUpCelebration = ({ isOpen, newLevel, onClose }: LevelUpCelebrationPro
           {/* Main card */}
           <div className="relative bg-gradient-to-br from-star via-accent to-primary rounded-3xl shadow-float p-8 text-center">
             {/* Logo in corner */}
+            {/* Mascot in corner */}
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5 }}
               className="absolute top-4 right-4"
             >
-              <img
-                src={toothyLogo}
-                alt="ToothyQuest"
-                className="w-12 h-12 rounded-full shadow-card border-2 border-white"
+              <motion.img
+                src={mascotCelebrating}
+                alt="Toothy celebrating"
+                className="w-14 h-14 object-contain drop-shadow-lg"
+                animate={{ y: [0, -3, 0], rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 1, repeat: Infinity }}
               />
             </motion.div>
 
@@ -120,19 +122,27 @@ const LevelUpCelebration = ({ isOpen, newLevel, onClose }: LevelUpCelebrationPro
               </div>
             </motion.div>
 
-            {/* Mascot */}
+            {/* Mascot with message */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
               className="mb-6"
             >
-              <MascotWithExpression 
-                expression="celebrating" 
-                size="lg"
-                showSpeechBubble
-                message="You're amazing! Keep going!"
-              />
+              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-4 max-w-[250px] mx-auto border border-primary/20">
+                <div className="flex items-center gap-3">
+                  <motion.img
+                    src={mascotCelebrating}
+                    alt="Toothy celebrating"
+                    className="w-14 h-14 object-contain"
+                    animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                  <p className="text-foreground font-medium text-sm text-left">
+                    You're amazing! Keep going! 🌟
+                  </p>
+                </div>
+              </div>
             </motion.div>
 
             {/* Stars decoration */}
