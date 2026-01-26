@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Game } from "@/data/games";
 import { Button } from "@/components/ui/button";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface BuildASmileGameProps {
   game: Game;
@@ -37,6 +38,7 @@ const DIFFICULTY_CONFIG = {
 };
 
 const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
+  const { playSound, playWinFanfare } = useGameSounds();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [step, setStep] = useState(0);
@@ -49,21 +51,25 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
 
   const handleTeethSelect = (id: string) => {
     setSelectedTeeth(id);
+    playSound("tap");
   };
 
   const handleGumsSelect = (id: string) => {
     setSelectedGums(id);
+    playSound("tap");
   };
 
   const handleHabitToggle = (id: string) => {
     setSelectedHabits(prev => 
       prev.includes(id) ? prev.filter(h => h !== id) : [...prev, id]
     );
+    playSound("tap");
   };
 
   const nextStep = () => {
     if (step < maxSteps - 1) {
       setStep(step + 1);
+      playSound("success");
     } else {
       // Calculate score
       const teethChoice = teethOptions.find(t => t.id === selectedTeeth);
@@ -79,6 +85,12 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
       
       const isWin = correctChoices >= maxSteps;
       const stars = correctChoices >= maxSteps ? 3 : correctChoices >= maxSteps - 1 ? 2 : 1;
+      
+      if (isWin) {
+        playWinFanfare();
+      } else {
+        playSound("lose");
+      }
       
       onComplete(isWin, stars);
     }

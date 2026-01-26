@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import DifficultySelector, { Difficulty } from './DifficultySelector';
 import { useTranslation } from 'react-i18next';
+import { useGameSounds } from '@/hooks/useGameSounds';
 
 interface SugarRushMazeGameProps {
   onComplete: (score: number) => void;
@@ -51,6 +52,7 @@ const generateSugarMonsters = (maze: number[][], count: number): Position[] => {
 
 export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete, onClose }) => {
   const { t } = useTranslation();
+  const { playSound, playWinFanfare } = useGameSounds();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [playerPos, setPlayerPos] = useState<Position>({ x: 0, y: 0 });
   const [maze, setMaze] = useState<number[][]>([]);
@@ -87,8 +89,10 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
 
     setPlayerPos({ x: newX, y: newY });
     setMoves(m => m + 1);
+    playSound("tap");
 
     if (monsters.some(m => m.x === newX && m.y === newY)) {
+      playSound("lose");
       setLives(l => {
         const newLives = l - 1;
         if (newLives <= 0) {
@@ -106,8 +110,9 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
       const finalScore = baseScore + moveBonus + lifeBonus;
       setScore(finalScore);
       setWon(true);
+      playWinFanfare();
     }
-  }, [playerPos, maze, monsters, gameOver, won, lives, moves, difficulty]);
+  }, [playerPos, maze, monsters, gameOver, won, lives, moves, difficulty, playSound, playWinFanfare]);
 
   // Keyboard controls
   useEffect(() => {

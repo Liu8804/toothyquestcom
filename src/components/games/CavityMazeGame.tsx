@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import DifficultySelector, { Difficulty } from './DifficultySelector';
 import { useTranslation } from 'react-i18next';
+import { useGameSounds } from '@/hooks/useGameSounds';
 
 interface CavityMazeGameProps {
   onComplete: (score: number) => void;
@@ -30,6 +31,7 @@ const generateCavities = (count: number): Position[] => {
 
 export const CavityMazeGame: React.FC<CavityMazeGameProps> = ({ onComplete, onClose }) => {
   const { t } = useTranslation();
+  const { playSound, playWinFanfare, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [brushPos, setBrushPos] = useState<Position>({ x: 0, y: 0 });
   const [cavities, setCavities] = useState<Position[]>([]);
@@ -49,7 +51,13 @@ export const CavityMazeGame: React.FC<CavityMazeGameProps> = ({ onComplete, onCl
     setScore(0);
     setGameOver(false);
     setDifficulty(diff);
-  }, []);
+    startBackgroundMusic("happy");
+  }, [startBackgroundMusic]);
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   useEffect(() => {
     if (!difficulty || gameOver) return;
@@ -74,21 +82,25 @@ export const CavityMazeGame: React.FC<CavityMazeGameProps> = ({ onComplete, onCl
     const newY = Math.max(0, Math.min(GRID_SIZE - 1, brushPos.y + dy));
 
     setBrushPos({ x: newX, y: newY });
+    playSound("tap");
 
     // Check if we're on a cavity
     const key = posKey({ x: newX, y: newY });
     if (cavities.some(c => c.x === newX && c.y === newY) && !cleanedCavities.has(key)) {
       setCleanedCavities(prev => new Set([...prev, key]));
       setScore(s => s + 15);
+      playSound("success");
 
       // Check if all cavities are cleaned
       if (cleanedCavities.size + 1 === cavities.length) {
         const timeBonus = timeLeft * 3;
         setScore(s => s + timeBonus);
         setGameOver(true);
+        stopBackgroundMusic();
+        playWinFanfare();
       }
     }
-  }, [brushPos, cavities, cleanedCavities, gameOver, timeLeft]);
+  }, [brushPos, cavities, cleanedCavities, gameOver, timeLeft, playSound, playWinFanfare, stopBackgroundMusic]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -25,7 +25,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
   const [isFlossing, setIsFlossing] = useState(false);
   const [flossProgress, setFlossProgress] = useState(0);
   const progressRef = useRef<NodeJS.Timeout | null>(null);
-  const { startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
 
   const settings = difficulty ? DIFFICULTY_SETTINGS[difficulty] : null;
   const totalGaps = settings?.totalGaps || 5;
@@ -43,6 +43,7 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           if (progressRef.current) clearInterval(progressRef.current);
           setFlossedGaps(g => [...g, gapIndex]);
           setIsFlossing(false);
+          playSound("success");
           
           if (flossedGaps.length + 1 >= totalGaps) {
             const stars = difficulty === "hard" ? 3 : difficulty === "medium" ? 3 : 2;
