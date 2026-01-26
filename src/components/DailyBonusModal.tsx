@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BONUS_REWARDS } from "@/data/rewardsConfig";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import { usePositiveSounds } from "@/hooks/usePositiveSounds";
 
 interface DailyBonusModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ const DailyBonusModal = ({ isOpen, onClose, onClaim, streak, childName }: DailyB
   const [phase, setPhase] = useState<"gift" | "opening" | "reward">("gift");
   const [pointsEarned, setPointsEarned] = useState(0);
   const [gift, setGift] = useState(DAILY_GIFTS[0]);
+  const { playRewardUnlocked, playStreakAchieved } = usePositiveSounds();
 
   useEffect(() => {
     if (isOpen) {
@@ -44,6 +46,14 @@ const DailyBonusModal = ({ isOpen, onClose, onClaim, streak, childName }: DailyB
     const points = await onClaim();
     setPointsEarned(points);
     setPhase("reward");
+    
+    // Play reward sound
+    playRewardUnlocked();
+    
+    // Play streak sound if streak >= 3
+    if (streak >= 3) {
+      setTimeout(() => playStreakAchieved(), 500);
+    }
     
     // Auto close after showing reward
     setTimeout(() => {

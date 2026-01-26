@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import mascotMain from "@/assets/mascot-sticker-main-v2.png";
+import mascotBraces from "@/assets/mascot-sticker-braces.png";
 
 export type BraceyMood = "happy" | "excited" | "encouraging" | "celebrating" | "thinking" | "winking";
 
@@ -140,39 +140,14 @@ const BraceyMascot = ({
           ease: "easeInOut",
         }}
       >
-        {/* Main logo/face with braces overlay */}
+        {/* Main logo/face with braces */}
         <div className="relative w-full h-full">
           <motion.img
-            src={mascotMain}
-            alt="Bracey mascot"
+            src={mascotBraces}
+            alt="Bracey mascot with braces"
             className="w-full h-full object-contain drop-shadow-lg"
             whileHover={{ scale: 1.1 }}
           />
-          
-          {/* Braces overlay - metal brackets and wire */}
-          <div className="absolute inset-0 pointer-events-none">
-            {/* Wire across the smile */}
-            <motion.div
-              className="absolute bottom-[30%] left-[15%] right-[15%] h-0.5 bg-gradient-to-r from-gray-400 via-gray-300 to-gray-400 rounded-full"
-              animate={{ opacity: [0.8, 1, 0.8] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            
-            {/* Brackets */}
-            {[0.2, 0.35, 0.5, 0.65, 0.8].map((pos, i) => (
-              <motion.div
-                key={i}
-                className="absolute bottom-[28%] w-2 h-2.5 bg-gradient-to-b from-gray-300 to-gray-400 rounded-sm border border-gray-500"
-                style={{ left: `${pos * 100}%`, transform: "translateX(-50%)" }}
-                animate={
-                  mood === "celebrating"
-                    ? { backgroundColor: ["#9CA3AF", "#EC4899", "#8B5CF6", "#3B82F6", "#10B981"][i % 5] }
-                    : {}
-                }
-                transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
-              />
-            ))}
-          </div>
 
           {/* Pink bow/accessory for Bracey */}
           <motion.div

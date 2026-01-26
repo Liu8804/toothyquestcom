@@ -1,7 +1,9 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import { usePositiveSounds } from "@/hooks/usePositiveSounds";
 
 interface Badge {
   name: string;
@@ -16,6 +18,15 @@ interface BadgeUnlockProps {
 }
 
 const BadgeUnlock = ({ isOpen, badge, onClose }: BadgeUnlockProps) => {
+  const { playRewardUnlocked } = usePositiveSounds();
+
+  // Play reward sound when badge is shown
+  useEffect(() => {
+    if (isOpen && badge) {
+      playRewardUnlocked();
+    }
+  }, [isOpen, badge, playRewardUnlocked]);
+
   if (!isOpen || !badge) return null;
 
   return (

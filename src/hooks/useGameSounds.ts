@@ -30,7 +30,10 @@ const MUSIC_PATTERNS = {
 export const useGameSounds = () => {
   const [isMuted, setIsMuted] = useState(() => {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("gameSoundsMuted") === "true";
+      // Default to NOT muted - games should have sound by default
+      const storedValue = localStorage.getItem("gameSoundsMuted");
+      // Only mute if explicitly set to "true"
+      return storedValue === "true";
     }
     return false;
   });
@@ -40,7 +43,8 @@ export const useGameSounds = () => {
     if (typeof window === "undefined") return;
     const sync = () => {
       try {
-        setIsMuted(localStorage.getItem("gameSoundsMuted") === "true");
+        const storedValue = localStorage.getItem("gameSoundsMuted");
+        setIsMuted(storedValue === "true");
       } catch {
         // ignore
       }
@@ -65,7 +69,10 @@ export const useGameSounds = () => {
   }, []);
 
   const playSound = useCallback((name: SoundName) => {
-    if (isMuted) return;
+    if (isMuted) {
+      console.log("[GameSounds] Muted, skipping sound:", name);
+      return;
+    }
 
     // Ensure audio is unlocked on mobile before attempting playback
     unlockAudioContext();
@@ -80,22 +87,49 @@ export const useGameSounds = () => {
     }
     if (!warnRef.current.ctxSuspended && ctx.state === "suspended") {
       warnRef.current.ctxSuspended = true;
-      console.warn("[GameAudio] AudioContext is suspended. Tap again to enable audio.");
+      console.warn("[GameAudio] AudioContext is suspended. User interaction needed to enable audio.");
     }
     
-    // Force resume context and play sound
     const sound = GAME_SOUNDS[name];
-    if (sound) {
-      if (ctx.state === "suspended") {
-        ctx.resume().then(() => {
-          playSynthTone(sound.frequency, sound.duration, sound.type);
-        }).catch(() => {
-          // Still try to play anyway
-          playSynthTone(sound.frequency, sound.duration, sound.type);
-        });
-      } else {
-        playSynthTone(sound.frequency, sound.duration, sound.type);
+    if (!sound) {
+      console.warn("[GameSounds] Unknown sound:", name);
+      return;
+    }
+
+    // Get effective volume - ensure minimum audible level
+    const finalVolume = Math.max(sfxVolume, 0.1);
+
+    // Force resume context and play sound
+    const playTone = () => {
+      try {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = sound.type;
+        osc.frequency.setValueAtTime(sound.frequency, ctx.currentTime);
+
+        // Ensure audible volume
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(finalVolume, ctx.currentTime + 0.01);
+        gain.gain.setValueAtTime(finalVolume, ctx.currentTime + sound.duration * 0.7);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + sound.duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + sound.duration + 0.02);
+      } catch (e) {
+        console.error("[GameSounds] Error playing sound:", e);
       }
+    };
+
+    if (ctx.state === "suspended") {
+      ctx.resume().then(playTone).catch((e) => {
+        console.warn("[GameSounds] Could not resume AudioContext:", e);
+      });
+    } else {
+      playTone();
     }
   }, [isMuted]);
 
