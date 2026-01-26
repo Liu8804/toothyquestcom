@@ -14,7 +14,7 @@ const CELEBRATION_MESSAGES = [
   "Your smile is shining! ✨",
   "Keep up the great work! 💪",
   "You make brushing look easy! 😄",
-  "Toothy is SO proud of you! 🦷",
+  "Toothy is SO proud of you! ⭐",
 ];
 
 interface Badge {

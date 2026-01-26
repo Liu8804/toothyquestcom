@@ -159,7 +159,7 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                   <div className="relative">
                     {/* Toothbrush body */}
                     <div className="w-48 h-12 bg-gradient-to-r from-primary to-bubble rounded-full shadow-lg flex items-center justify-center">
-                      <span className="text-2xl">🪥</span>
+                      <img src={mascotWaving} alt="Toothy brush" className="w-8 h-8 object-contain" />
                     </div>
                     {/* Toothpaste on brush (when applied) */}
                     {toothpasteApplied && (
@@ -221,9 +221,9 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                     transition={{ y: { duration: 1.5, repeat: Infinity } }}
                     className="absolute left-1/2 bottom-8 -translate-x-1/2 cursor-grab active:cursor-grabbing"
                   >
-                    <div className="bg-gradient-to-r from-mint via-white to-mint rounded-2xl p-3 shadow-float">
-                      <span className="text-4xl block">🧴</span>
-                    </div>
+                  <div className="bg-gradient-to-r from-mint via-white to-mint rounded-2xl p-3 shadow-float flex flex-col items-center">
+                    <div className="w-12 h-16 bg-gradient-to-b from-mint to-primary rounded-lg shadow-md" />
+                  </div>
                     <p className="text-center text-xs text-muted-foreground mt-2 font-medium">
                       Drag me! ☝️
                     </p>
