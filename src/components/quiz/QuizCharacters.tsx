@@ -320,8 +320,9 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
     personality: "mischievous",
   },
   sparkle: {
-    name: "Sparkle",
+    name: "Sparkle Star",
     emoji: "✨",
+    imageSrc: toothyMascot,
     color: "from-amber-100 to-yellow-100",
     gradientFrom: "from-amber-100",
     gradientTo: "to-yellow-50",
