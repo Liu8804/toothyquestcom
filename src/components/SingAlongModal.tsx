@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Music, 
@@ -32,7 +32,7 @@ const musicPrompts: Record<string, string> = {
   "quest-complete": "Celebratory fanfare, triumphant children's music, achievement unlocked, confetti and stars, brass and bells"
 };
 
-const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
+const SingAlongModal = forwardRef<HTMLDivElement, SingAlongModalProps>(({ isOpen, onClose }, ref) => {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoadingVocals, setIsLoadingVocals] = useState(false);
@@ -229,7 +229,7 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-b from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-purple-200 dark:border-purple-800">
+      <DialogContent ref={ref} className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-b from-purple-50 to-pink-50 dark:from-purple-950 dark:to-pink-950 border-purple-200 dark:border-purple-800">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3 text-2xl font-display">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
@@ -385,6 +385,8 @@ const SingAlongModal = ({ isOpen, onClose }: SingAlongModalProps) => {
       </DialogContent>
     </Dialog>
   );
-};
+});
+
+SingAlongModal.displayName = "SingAlongModal";
 
 export default SingAlongModal;
