@@ -55,19 +55,28 @@ const MouthwashSplashGame = ({ game, onComplete }: MouthwashSplashGameProps) => 
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
+    // Play splash sound
+    playSound("bounce");
+    
     setSplashes(prev => [...prev, { id: Date.now(), x, y }]);
     setTimeout(() => {
       setSplashes(prev => prev.slice(1));
     }, 500);
 
+    let hitCount = 0;
     setGerms(prev => prev.map(germ => {
       const distance = Math.sqrt(Math.pow(germ.x - x, 2) + Math.pow(germ.y - y, 2));
       if (distance < config.splashRadius && !germ.cleaned) {
-        playSound("success");
+        hitCount++;
         return { ...germ, cleaned: true };
       }
       return germ;
     }));
+    
+    // Play success sound if we hit germs
+    if (hitCount > 0) {
+      playSound("success");
+    }
   };
 
   useEffect(() => {

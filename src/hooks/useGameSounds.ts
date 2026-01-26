@@ -57,18 +57,30 @@ export const useGameSounds = () => {
 
     const sfxVolume = getEffectiveVolume("sfx");
     const ctx = getAudioContext();
+    
+    // Log once for debugging
     if (!warnRef.current.sfxZero && sfxVolume === 0) {
       warnRef.current.sfxZero = true;
       console.warn("[GameAudio] SFX volume is 0. Open Sound Settings and raise Master/SFX.");
     }
     if (!warnRef.current.ctxSuspended && ctx.state === "suspended") {
       warnRef.current.ctxSuspended = true;
-      console.warn("[GameAudio] AudioContext is still suspended (iOS requires a tap + device not muted). Try tapping again and ensure iPhone Silent Mode is OFF.");
+      console.warn("[GameAudio] AudioContext is suspended. Tap again to enable audio.");
     }
     
+    // Force resume context and play sound
     const sound = GAME_SOUNDS[name];
     if (sound) {
-      playSynthTone(sound.frequency, sound.duration, sound.type);
+      if (ctx.state === "suspended") {
+        ctx.resume().then(() => {
+          playSynthTone(sound.frequency, sound.duration, sound.type);
+        }).catch(() => {
+          // Still try to play anyway
+          playSynthTone(sound.frequency, sound.duration, sound.type);
+        });
+      } else {
+        playSynthTone(sound.frequency, sound.duration, sound.type);
+      }
     }
   }, [isMuted]);
 

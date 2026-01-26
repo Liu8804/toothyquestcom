@@ -49,7 +49,12 @@ const PlaquePopPartyGame = ({ game, onComplete }: PlaquePopPartyGameProps) => {
   const popBubble = (bubbleId: number) => {
     setBubbles(prev => prev.filter(b => b.id !== bubbleId));
     setScore(prev => prev + 1);
-    playSound("tap");
+    playSound("pop");
+    
+    // Play celebration sound every 5 pops
+    if ((score + 1) % 5 === 0) {
+      setTimeout(() => playSound("star"), 100);
+    }
   };
 
   useEffect(() => {
