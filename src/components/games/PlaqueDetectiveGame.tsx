@@ -31,7 +31,7 @@ const PlaqueDetectiveGame = ({ game, onComplete }: PlaqueDetectiveGameProps) => 
   const [timeLeft, setTimeLeft] = useState(45);
   const [gameStarted, setGameStarted] = useState(false);
   const [showHint, setShowHint] = useState(false);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic, playWinFanfare } = useGameSounds();
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
   const foundCount = plaques.filter(p => p.found).length;
@@ -56,8 +56,13 @@ const PlaqueDetectiveGame = ({ game, onComplete }: PlaqueDetectiveGameProps) => 
     setPlaques(prev => prev.map(p => 
       p.id === plaqueId ? { ...p, found: true } : p
     ));
-    playSound("success");
+    playSound("correct");
   };
+
+  // Cleanup music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   useEffect(() => {
     if (!gameStarted || !difficulty) return;
@@ -91,10 +96,11 @@ const PlaqueDetectiveGame = ({ game, onComplete }: PlaqueDetectiveGameProps) => 
 
   useEffect(() => {
     if (foundCount >= config.plaqueCount && gameStarted) {
+      playWinFanfare();
       const stars = timeLeft > 25 ? 3 : timeLeft > 15 ? 2 : 1;
       onComplete(true, stars);
     }
-  }, [foundCount, config.plaqueCount, timeLeft, onComplete, gameStarted]);
+  }, [foundCount, config.plaqueCount, timeLeft, onComplete, gameStarted, playWinFanfare]);
 
   const startGame = (selectedDifficulty: Difficulty) => {
     setDifficulty(selectedDifficulty);
@@ -102,6 +108,7 @@ const PlaqueDetectiveGame = ({ game, onComplete }: PlaqueDetectiveGameProps) => 
     setTimeLeft(cfg.timeLimit);
     initializePlaques(cfg.plaqueCount);
     setGameStarted(true);
+    startBackgroundMusic("puzzle"); // Start calm puzzle music
   };
 
   if (!difficulty) {
