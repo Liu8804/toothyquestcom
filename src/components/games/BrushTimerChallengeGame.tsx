@@ -7,6 +7,7 @@ import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 
 interface BrushTimerChallengeGameProps {
   game: Game;
@@ -218,11 +219,11 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
 
         <div className="mt-6 text-center relative">
           <motion.div 
-            className="text-6xl mb-2"
-            animate={isBrushing ? { rotate: [-5, 5, -5] } : {}}
-            transition={{ duration: 0.2, repeat: Infinity }}
+            className="w-20 h-20 mx-auto mb-2"
+            animate={isBrushing ? { rotate: [-5, 5, -5] } : { y: [0, -5, 0] }}
+            transition={{ duration: isBrushing ? 0.2 : 2, repeat: Infinity }}
           >
-            🦷
+            <img src={mascotMain} alt="Toothy" className="w-full h-full object-contain" />
           </motion.div>
           <p className="text-sm text-muted-foreground">Keep brushing to clean all zones!</p>
           

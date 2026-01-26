@@ -56,7 +56,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   delay: i * 0.2,
                 }}
               >
-                {["✨", "🦷", "⭐", "🌟", "💫"][i % 5]}
+                {["✨", "⭐", "🌟", "💫", "🎉"][i % 5]}
               </motion.div>
             ))}
           </div>

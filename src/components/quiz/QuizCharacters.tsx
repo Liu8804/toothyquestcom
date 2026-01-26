@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 // Character types for different story themes
@@ -275,7 +275,7 @@ export const CHARACTER_DIALOGUES: Record<CharacterId, {
 export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   toothy: {
     name: "Toothy",
-    emoji: "🦷",
+    emoji: "✨",
     color: "from-bubble/80 to-primary/20",
     gradientFrom: "from-blue-100",
     gradientTo: "to-cyan-50",

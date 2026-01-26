@@ -14,7 +14,7 @@ interface DailyBonusModalProps {
 }
 
 const DAILY_GIFTS = [
-  { emoji: "🦷", name: "Sparkly Tooth", color: "from-primary to-bubble" },
+  { emoji: "✨", name: "Sparkly Star", color: "from-primary to-bubble" },
   { emoji: "⭐", name: "Golden Star", color: "from-star to-accent" },
   { emoji: "🌟", name: "Magic Sparkle", color: "from-secondary to-candy" },
   { emoji: "🎀", name: "Pink Ribbon", color: "from-secondary to-primary" },

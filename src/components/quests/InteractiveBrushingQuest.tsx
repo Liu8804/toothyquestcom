@@ -140,7 +140,7 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                     <Sparkles className="w-4 h-4" />
                   </motion.div>
                 ) : (
-                  <span className="text-xs">🦷</span>
+                  <span className="text-xs">✨</span>
                 )}
               </motion.button>
             );

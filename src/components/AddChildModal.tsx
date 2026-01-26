@@ -7,7 +7,7 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { Plus, X } from "lucide-react";
 import { addChildSchema } from "@/lib/validation";
 
-const AVATAR_OPTIONS = ["🦷", "😁", "🌟", "🦸", "🧚", "🦋", "🐻", "🐰", "🦊", "🐱"];
+const AVATAR_OPTIONS = ["😁", "🌟", "🦸", "🧚", "🦋", "🐻", "🐰", "🦊", "🐱", "✨"];
 
 interface AddChildModalProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ interface AddChildModalProps {
 
 const AddChildModal = ({ isOpen, onClose }: AddChildModalProps) => {
   const [name, setName] = useState("");
-  const [avatarEmoji, setAvatarEmoji] = useState("🦷");
+  const [avatarEmoji, setAvatarEmoji] = useState("😁");
   const [birthYear, setBirthYear] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
