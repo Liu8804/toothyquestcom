@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, Music, Mic, Settings } from "lucide-react";
+import { Volume2, VolumeX, Music, Mic, Settings, Sparkles } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { isPositiveSoundsEnabled, setPositiveSoundsEnabled } from "@/hooks/usePositiveSounds";
 
 interface VolumeSettings {
   masterVolume: number;
@@ -63,6 +64,7 @@ interface VolumeControlPanelProps {
 
 const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
   const [settings, setSettings] = useState<VolumeSettings>(getVolumeSettings);
+  const [positiveSoundsOn, setPositiveSoundsOn] = useState(false);
 
   const clearMuteFlags = () => {
     if (typeof window === "undefined") return;
@@ -81,8 +83,14 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
   useEffect(() => {
     if (isOpen) {
       setSettings(getVolumeSettings());
+      setPositiveSoundsOn(isPositiveSoundsEnabled());
     }
   }, [isOpen]);
+
+  const handlePositiveSoundsToggle = (enabled: boolean) => {
+    setPositiveSoundsEnabled(enabled);
+    setPositiveSoundsOn(enabled);
+  };
 
   const updateSetting = <K extends keyof VolumeSettings>(key: K, value: VolumeSettings[K]) => {
     const updated = setVolumeSettings({ [key]: value });
@@ -198,6 +206,21 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                 <Switch
                   checked={settings.voiceEnabled}
                   onCheckedChange={(v) => updateSetting("voiceEnabled", v)}
+                />
+              </div>
+
+              {/* Positive Sounds Toggle */}
+              <div className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+                <Label className="flex items-center gap-2 text-foreground cursor-pointer">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  <span>
+                    Celebration Sounds
+                    <span className="block text-xs text-muted-foreground">Quest & reward sounds</span>
+                  </span>
+                </Label>
+                <Switch
+                  checked={positiveSoundsOn}
+                  onCheckedChange={handlePositiveSoundsToggle}
                 />
               </div>
             </div>

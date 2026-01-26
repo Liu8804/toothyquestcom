@@ -5,6 +5,7 @@ import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect, useState } from "react";
 import { isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
+import { usePositiveSounds } from "@/hooks/usePositiveSounds";
 
 // Personalized celebration messages
 const CELEBRATION_MESSAGES = [
@@ -50,17 +51,23 @@ const QuestCompleteCelebration = ({
   onClose,
 }: QuestCompleteCelebrationProps) => {
   const { speakQuestComplete, speakBadgeEarned, stop } = useQuestVoice();
+  const { playQuestComplete, playRewardUnlocked } = usePositiveSounds();
   const bracesConfig = questId ? getBracesQuestConfig(questId) : null;
   const isBraces = questId ? isBracesQuest(questId) : false;
 
-  // Speak celebration when opened
+  // Play sounds and speak celebration when opened
   useEffect(() => {
     if (isOpen) {
+      // Play positive sound effect
+      playQuestComplete();
+      
+      // Speak celebration
       speakQuestComplete(questTitle, xpEarned);
       
-      // Speak badge names after a delay
+      // Speak badge names and play reward sounds after a delay
       if (newBadges.length > 0) {
         const timeout = setTimeout(() => {
+          playRewardUnlocked();
           newBadges.forEach((badge, index) => {
             setTimeout(() => speakBadgeEarned(badge.name), index * 1500);
           });
@@ -70,7 +77,7 @@ const QuestCompleteCelebration = ({
     }
     
     return () => stop();
-  }, [isOpen, questTitle, xpEarned, newBadges, speakQuestComplete, speakBadgeEarned, stop]);
+  }, [isOpen, questTitle, xpEarned, newBadges, speakQuestComplete, speakBadgeEarned, stop, playQuestComplete, playRewardUnlocked]);
 
   if (!isOpen) return null;
 

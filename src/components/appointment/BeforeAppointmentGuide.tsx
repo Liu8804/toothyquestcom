@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PRE_APPOINTMENT_AFFIRMATIONS, DENTAL_TOOL_CHARACTERS } from "@/data/dentalAdventureSeries";
 import { useTranslation } from "react-i18next";
+import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 
 interface BeforeAppointmentGuideProps {
   isOpen: boolean;
@@ -152,7 +153,13 @@ export const BeforeAppointmentGuide = ({ isOpen, onClose }: BeforeAppointmentGui
                 </h3>
 
                 <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-6 mb-4">
-                  <span className="text-6xl block mb-4">🦸‍♂️</span>
+                  <motion.img
+                    src={mascotMain}
+                    alt="Toothy - the dental helper"
+                    className="w-20 h-20 mx-auto mb-4 object-contain drop-shadow-lg"
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
                   <p className="text-foreground font-medium">
                     {isSpanish
                       ? "El dentista es un héroe dental que mantiene tu sonrisa saludable y fuerte."
