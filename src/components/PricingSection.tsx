@@ -215,7 +215,7 @@ export const PricingSection = () => {
           className="mt-16 text-center max-w-3xl mx-auto"
         >
           <h3 className="font-display text-2xl font-bold text-foreground mb-6">
-            Why ToothyQuest is Worth It 🦷
+            Why ToothyQuest is Worth It ✨
           </h3>
           <div className="grid sm:grid-cols-2 gap-4 text-left">
             <div className="p-4 rounded-xl bg-muted/50">

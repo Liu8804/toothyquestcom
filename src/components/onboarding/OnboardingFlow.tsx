@@ -14,7 +14,7 @@ interface OnboardingFlowProps {
 const steps = [
   {
     id: 1,
-    title: "Welcome to ToothyQuest! 🦷",
+    title: "Welcome to ToothyQuest! ✨",
     description: "I'm Toothy, your dental buddy! Let's make brushing fun together!",
     emoji: "👋",
     mascotPose: "full" as const,

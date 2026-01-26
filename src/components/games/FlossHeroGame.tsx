@@ -7,6 +7,7 @@ import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 
 interface FlossHeroGameProps {
   game: Game;
@@ -137,11 +138,11 @@ const FlossHeroGame = ({ game, onComplete }: FlossHeroGameProps) => {
           <div key={i} className="flex items-end select-none">
             {/* Tooth */}
             <motion.div
-              className="text-5xl md:text-6xl select-none"
+              className="w-12 h-12 md:w-14 md:h-14 select-none"
               animate={{ y: [0, -5, 0] }}
               transition={{ repeat: Infinity, duration: 2, delay: i * 0.2 }}
             >
-              🦷
+              <img src={mascotMain} alt="Tooth" className="w-full h-full object-contain" />
             </motion.div>
             
             {/* Gap between teeth */}

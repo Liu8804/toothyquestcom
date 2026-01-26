@@ -177,7 +177,7 @@ export const QUEST_CATEGORIES: Record<string, string> = {
 
 // Tooth Pets (unlockable companions)
 export const TOOTH_PETS: ToothPet[] = [
-  { id: "toothy", name: "Toothy", emoji: "🦷", description: "Your first tooth friend!", unlockCondition: "Start playing", rarity: 'common' },
+  { id: "toothy", name: "Toothy", emoji: "✨", description: "Your first tooth friend!", unlockCondition: "Start playing", rarity: 'common' },
   { id: "brushy", name: "Brushy", emoji: "🪥", description: "A helpful toothbrush pal", unlockCondition: "Complete 5 quests", rarity: 'common' },
   { id: "flossy", name: "Flossy", emoji: "🧵", description: "Gets into tight spots", unlockCondition: "Complete 10 quests", rarity: 'rare' },
   { id: "sparkle", name: "Sparkle", emoji: "✨", description: "Makes everything shine", unlockCondition: "Reach Level 2", rarity: 'rare' },

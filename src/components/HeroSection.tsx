@@ -137,7 +137,7 @@ export const HeroSection = () => {
         
         {/* Decorative floating elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {["🦷", "✨", "⭐", "🌟", "💫", "🎮", "🏆"].map((emoji, i) => (
+          {["✨", "⭐", "🌟", "💫", "🎮", "🏆", "🎉"].map((emoji, i) => (
             <motion.div
               key={i}
               className="absolute text-2xl md:text-3xl"

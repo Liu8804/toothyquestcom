@@ -44,7 +44,7 @@ const PaymentCanceled = () => {
           </p>
 
           <p className="text-gray-500 mb-8 text-sm">
-            🦷 Toothy is waiting for you to join the dental adventure!
+            ✨ Toothy is waiting for you to join the dental adventure!
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">

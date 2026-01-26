@@ -16,7 +16,7 @@ export const FeaturesSection = () => {
 
   const features = [
     {
-      icon: "🦷",
+      icon: "🎮",
       titleKey: "features.funQuests.title",
       descriptionKey: "features.funQuests.description",
     },
