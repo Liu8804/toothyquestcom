@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Check, Trophy, Download, PartyPopper, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { POST_APPOINTMENT_STEPS } from "@/data/dentalAdventureSeries";
 import { useTranslation } from "react-i18next";
 import { useSoundEffects, SOUND_PROMPTS } from "@/hooks/useSoundEffects";
@@ -133,6 +134,9 @@ export const AfterAppointmentCelebration = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg p-0 overflow-hidden bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50">
+        <VisuallyHidden>
+          <DialogTitle>After Appointment Celebration</DialogTitle>
+        </VisuallyHidden>
         {/* Confetti */}
         <AnimatePresence>
           {showCelebration && confetti.map(({ id, x, delay }) => (

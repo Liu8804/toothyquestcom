@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Sparkles, Volume2, VolumeX, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { PRE_APPOINTMENT_AFFIRMATIONS, DENTAL_TOOL_CHARACTERS } from "@/data/dentalAdventureSeries";
 import { useTranslation } from "react-i18next";
 
@@ -57,6 +58,9 @@ export const BeforeAppointmentGuide = ({ isOpen, onClose }: BeforeAppointmentGui
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-lg p-0 overflow-hidden bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100">
+        <VisuallyHidden>
+          <DialogTitle>Before Your Appointment Guide</DialogTitle>
+        </VisuallyHidden>
         {/* Header */}
         <div className="relative p-6 pb-4 bg-gradient-to-r from-sky-400 to-blue-500 text-white">
           <Button

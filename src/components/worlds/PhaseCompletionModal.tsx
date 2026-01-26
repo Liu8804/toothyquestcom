@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Award, Sparkles, Star, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { cn } from "@/lib/utils";
 
@@ -94,6 +95,9 @@ export const PhaseCompletionModal = ({
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md p-0 overflow-hidden border-0 bg-transparent shadow-none">
+        <VisuallyHidden>
+          <DialogTitle>{phaseName} Complete</DialogTitle>
+        </VisuallyHidden>
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

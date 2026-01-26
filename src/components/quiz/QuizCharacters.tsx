@@ -300,6 +300,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "captain-floss": {
     name: "Captain Floss",
     emoji: "🦸",
+    imageSrc: toothyMascot,
     color: "from-yellow-100 to-orange-100",
     gradientFrom: "from-yellow-100",
     gradientTo: "to-amber-50",
@@ -311,6 +312,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "sugar-bug": {
     name: "Sugar Bug",
     emoji: "👾",
+    imageSrc: toothyMascot,
     color: "from-purple-200 to-pink-200",
     gradientFrom: "from-purple-200",
     gradientTo: "to-pink-100",
@@ -335,6 +337,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "molar-mike": {
     name: "Molar Mike",
     emoji: "💪",
+    imageSrc: toothyMascot,
     color: "from-green-100 to-emerald-100",
     gradientFrom: "from-green-100",
     gradientTo: "to-emerald-50",

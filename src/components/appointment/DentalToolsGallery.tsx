@@ -2,7 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DENTAL_TOOL_CHARACTERS } from "@/data/dentalAdventureSeries";
 import { useTranslation } from "react-i18next";
 
@@ -31,6 +32,9 @@ export const DentalToolsGallery = ({ isOpen, onClose }: DentalToolsGalleryProps)
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0 overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>Dental Tools Gallery</DialogTitle>
+        </VisuallyHidden>
         <AnimatePresence mode="wait">
           <motion.div
             key={tool.id}

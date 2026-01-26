@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { X, ChevronLeft, ChevronRight, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 
 interface DentalEquipment {
@@ -176,6 +177,9 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-4xl w-[95vw] h-[85vh] p-0 overflow-hidden bg-gradient-to-b from-sky-100 to-blue-200">
+        <VisuallyHidden>
+          <DialogTitle>Explore the Dental Office</DialogTitle>
+        </VisuallyHidden>
         {/* Header */}
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-sm p-4 border-b shadow-sm">
           <div className="flex items-center justify-between">
