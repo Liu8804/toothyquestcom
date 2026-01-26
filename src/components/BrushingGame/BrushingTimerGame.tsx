@@ -6,11 +6,13 @@ import ProgressRing from "./ProgressRing";
 import ToothbrushCharacter from "./ToothbrushCharacter";
 import MouthGrid from "./MouthGrid";
 import RewardCelebration from "./RewardCelebration";
+import InteractiveBubbles from "./InteractiveBubbles";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 interface BrushingTimerGameProps {
   isOpen: boolean;
@@ -33,12 +35,14 @@ const encouragements = [
 export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) => {
   const { selectedChild } = useQuestProgress();
   const { incrementProgress } = useDailyChallenges(selectedChild?.id);
+  const { playBrushStart, playQuestComplete, playXpGain } = useMascotSounds();
   
   const [phase, setPhase] = useState<GamePhase>("ready");
   const [timeRemaining, setTimeRemaining] = useState(TOTAL_TIME);
   const [countdown, setCountdown] = useState(3);
   const [encouragement, setEncouragement] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [bubblesPoppedCount, setBubblesPoppedCount] = useState(0);
   const [challengeNotification, setChallengeNotification] = useState<{
     show: boolean;
     title: string;
@@ -62,7 +66,9 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
   const handleStart = useCallback(() => {
     setPhase("countdown");
     setCountdown(3);
-  }, []);
+    setBubblesPoppedCount(0);
+    playBrushStart();
+  }, [playBrushStart]);
 
   const handlePause = useCallback(() => {
     setPhase("paused");
@@ -77,6 +83,11 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
     setTimeRemaining(TOTAL_TIME);
     setCountdown(3);
     setEncouragement("");
+    setBubblesPoppedCount(0);
+  }, []);
+
+  const handleBubblePop = useCallback(() => {
+    setBubblesPoppedCount((prev) => prev + 1);
   }, []);
 
   // Countdown effect
@@ -101,6 +112,8 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
     } else {
       setPhase("completed");
       setShowConfetti(true);
+      playQuestComplete();
+      playXpGain();
       setTimeout(() => setShowConfetti(false), 3000);
       
       // Track daily challenge progress for brushing
@@ -117,7 +130,7 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
         }
       })();
     }
-  }, [phase, timeRemaining, incrementProgress]);
+  }, [phase, timeRemaining, incrementProgress, playQuestComplete, playXpGain]);
 
   // Show encouragement at quadrant transitions
   useEffect(() => {
@@ -227,7 +240,7 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
 
                 {/* Game area */}
                 {(phase === "playing" || phase === "paused") && (
-                  <div className="flex items-center justify-center gap-8">
+                  <div className="relative flex items-center justify-center gap-8">
                     <ToothbrushCharacter
                       isActive={phase === "playing"}
                       currentQuadrant={currentQuadrant}
@@ -236,6 +249,23 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
                       currentQuadrant={currentQuadrant}
                       completedQuadrants={completedQuadrants}
                     />
+                    
+                    {/* Interactive bubbles for engagement */}
+                    <InteractiveBubbles 
+                      isActive={phase === "playing"} 
+                      onBubblePop={handleBubblePop}
+                    />
+                    
+                    {/* Bubbles popped counter */}
+                    {bubblesPoppedCount > 0 && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute -top-2 right-0 bg-star text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg"
+                      >
+                        ⭐ {bubblesPoppedCount}
+                      </motion.div>
+                    )}
                   </div>
                 )}
 

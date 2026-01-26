@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 interface BrushTimerChallengeGameProps {
   game: Game;
@@ -38,7 +41,11 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
   });
   const [isBrushing, setIsBrushing] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120);
+  const [showMascotCheer, setShowMascotCheer] = useState(false);
+  const [sparkleZone, setSparkleZone] = useState<BrushZone | null>(null);
   const { playSound } = useGameSounds();
+  const { playToothClean, playCheer, playCelebrate, playQuestComplete } = useMascotSounds();
+  const { haptic, success } = useHapticFeedback();
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
   const completedZones = Object.values(zoneProgress).filter(p => p >= 100).length;
@@ -69,6 +76,17 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
         const newProgress = Math.min(prev[currentZone] + 5, 100);
         if (newProgress === 100 && prev[currentZone] < 100) {
           playSound("success");
+          playToothClean();
+          haptic("medium");
+          
+          // Show mascot cheer and sparkle
+          setShowMascotCheer(true);
+          setSparkleZone(currentZone);
+          playCheer();
+          setTimeout(() => {
+            setShowMascotCheer(false);
+            setSparkleZone(null);
+          }, 1000);
         }
         return { ...prev, [currentZone]: newProgress };
       });
@@ -79,16 +97,20 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
 
   useEffect(() => {
     if (completedZones >= config.zonesRequired && gameStarted) {
+      success();
+      playCelebrate();
+      playQuestComplete();
       const stars = timeLeft > config.totalTime * 0.5 ? 3 : timeLeft > config.totalTime * 0.25 ? 2 : 1;
       onComplete(true, stars);
     }
-  }, [completedZones, config.zonesRequired, config.totalTime, timeLeft, onComplete, gameStarted]);
+  }, [completedZones, config.zonesRequired, config.totalTime, timeLeft, onComplete, gameStarted, success, playCelebrate, playQuestComplete]);
 
   const handleZonePress = (zone: BrushZone) => {
     if (zoneProgress[zone] >= 100) return;
     setCurrentZone(zone);
     setIsBrushing(true);
     playSound("tap");
+    haptic("light");
   };
 
   const handleZoneRelease = () => {
@@ -148,8 +170,39 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
                   : 'bg-card text-foreground'
               }`}
             >
-              <span className="text-3xl">{zone.emoji}</span>
+              <motion.span 
+                className="text-3xl"
+                animate={currentZone === zone.id && isBrushing ? { scale: [1, 1.2, 1] } : {}}
+                transition={{ duration: 0.3, repeat: Infinity }}
+              >
+                {zone.emoji}
+              </motion.span>
               <p className="text-sm font-medium mt-2">{zone.label}</p>
+              
+              {/* Sparkle effect when zone completed */}
+              <AnimatePresence>
+                {sparkleZone === zone.id && (
+                  <>
+                    {[...Array(6)].map((_, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
+                        animate={{
+                          opacity: 0,
+                          scale: 1,
+                          x: Math.cos((i * 60 * Math.PI) / 180) * 40,
+                          y: Math.sin((i * 60 * Math.PI) / 180) * 40,
+                        }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="absolute top-1/2 left-1/2 text-xl pointer-events-none"
+                      >
+                        ✨
+                      </motion.span>
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
               
               {/* Progress bar */}
               <div className="absolute bottom-0 left-0 right-0 h-2 bg-muted rounded-b-2xl overflow-hidden">
@@ -163,9 +216,45 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
           ))}
         </div>
 
-        <div className="mt-6 text-center">
-          <div className="text-6xl mb-2">🦷</div>
+        <div className="mt-6 text-center relative">
+          <motion.div 
+            className="text-6xl mb-2"
+            animate={isBrushing ? { rotate: [-5, 5, -5] } : {}}
+            transition={{ duration: 0.2, repeat: Infinity }}
+          >
+            🦷
+          </motion.div>
           <p className="text-sm text-muted-foreground">Keep brushing to clean all zones!</p>
+          
+          {/* Mascot cheer reaction */}
+          <AnimatePresence>
+            {showMascotCheer && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0 }}
+                className="absolute -right-4 top-0"
+              >
+                <motion.div
+                  animate={{ y: [0, -8, 0], rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <img
+                    src={mascotCelebrating}
+                    alt="Great job!"
+                    className="w-14 h-14 object-contain"
+                  />
+                </motion.div>
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [0, 1.2, 1] }}
+                  className="absolute -top-2 -right-2 text-lg"
+                >
+                  🎉
+                </motion.span>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </div>

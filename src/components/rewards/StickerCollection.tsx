@@ -90,6 +90,8 @@ const StickerCollection = ({ isOpen, onClose, unlockedStickerIds = [] }: Sticker
       trackStickerTap(sticker.id);
       setSelectedSticker(sticker);
       playSparkle();
+      // Add confetti burst for extra delight
+      setTimeout(() => playStickerUnlock(), 200);
     }
   };
 
@@ -147,22 +149,34 @@ const StickerCollection = ({ isOpen, onClose, unlockedStickerIds = [] }: Sticker
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 }}
                 whileTap={{ scale: 0.9 }}
+                whileHover={sticker.unlocked ? { scale: 1.1, rotate: [0, 5, -5, 0] } : {}}
                 onClick={() => handleStickerTap(sticker)}
                 className={`aspect-square rounded-2xl flex flex-col items-center justify-center p-2 transition-all ${
                   sticker.unlocked
-                    ? "bg-gradient-to-br from-accent/30 to-secondary/30 hover:shadow-card"
+                    ? "bg-gradient-to-br from-accent/30 to-secondary/30 hover:shadow-card hover:shadow-star/20"
                     : "bg-muted/50"
                 }`}
               >
                 {sticker.unlocked ? (
                   <>
-                    <span className="text-3xl">{sticker.emoji}</span>
+                    <motion.span 
+                      className="text-3xl"
+                      animate={{ scale: [1, 1.1, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      {sticker.emoji}
+                    </motion.span>
                     <span className="text-[10px] text-muted-foreground mt-1 truncate w-full text-center">
                       {sticker.name}
                     </span>
                   </>
                 ) : (
-                  <Lock className="w-6 h-6 text-muted-foreground/50" />
+                  <motion.div
+                    animate={{ opacity: [0.3, 0.6, 0.3] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <Lock className="w-6 h-6 text-muted-foreground/50" />
+                  </motion.div>
                 )}
               </motion.button>
             ))}
@@ -189,11 +203,32 @@ const StickerCollection = ({ isOpen, onClose, unlockedStickerIds = [] }: Sticker
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 180 }}
                 transition={{ type: "spring" }}
-                className="bg-card rounded-3xl p-8 text-center shadow-float"
+                className="bg-card rounded-3xl p-8 text-center shadow-float relative overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
+                {/* Sparkle background */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {[...Array(8)].map((_, i) => (
+                    <motion.span
+                      key={i}
+                      className="absolute text-xl"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ 
+                        opacity: [0, 1, 0], 
+                        scale: [0.5, 1, 0.5],
+                        x: Math.cos((i * 45 * Math.PI) / 180) * 60,
+                        y: Math.sin((i * 45 * Math.PI) / 180) * 60,
+                      }}
+                      transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                      style={{ left: "50%", top: "50%" }}
+                    >
+                      ✨
+                    </motion.span>
+                  ))}
+                </div>
+                
                 <motion.span
-                  className="text-8xl block mb-4"
+                  className="text-8xl block mb-4 relative z-10"
                   animate={{ 
                     scale: [1, 1.2, 1],
                     rotate: [0, 10, -10, 0],
