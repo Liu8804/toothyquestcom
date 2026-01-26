@@ -45,7 +45,12 @@ const ToothTriviaGame = ({ game, onComplete }: ToothTriviaGameProps) => {
   const [showResult, setShowResult] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [gameStarted, setGameStarted] = useState(false);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic, playWinFanfare } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -74,9 +79,10 @@ const ToothTriviaGame = ({ game, onComplete }: ToothTriviaGameProps) => {
     const isCorrect = answerIndex === questions[currentQuestionIndex].correctIndex;
     if (isCorrect) {
       setScore(prev => prev + 1);
-      playSound("success");
+      playSound("correct");
     } else {
-      playSound("lose");
+      // Gentle "try again" - no harsh sounds
+      playSound("progress");
     }
 
     setTimeout(() => {
@@ -101,6 +107,7 @@ const ToothTriviaGame = ({ game, onComplete }: ToothTriviaGameProps) => {
     setQuestions(shuffled);
     setTimeLeft(cfg.timePerQuestion);
     setGameStarted(true);
+    startBackgroundMusic("puzzle");
   };
 
   if (!difficulty) {

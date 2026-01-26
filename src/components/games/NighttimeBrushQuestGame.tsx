@@ -30,7 +30,12 @@ const NighttimeBrushQuestGame = ({ game, onComplete }: NighttimeBrushQuestGamePr
   const [timeLeft, setTimeLeft] = useState(50);
   const [gameStarted, setGameStarted] = useState(false);
   const [brushPosition, setBrushPosition] = useState({ x: 50, y: 50 });
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
   const cleanedCount = germs.filter(g => g.isAsleep).length;
@@ -98,6 +103,7 @@ const NighttimeBrushQuestGame = ({ game, onComplete }: NighttimeBrushQuestGamePr
     setTimeLeft(cfg.timeLimit);
     initializeGerms(cfg.germCount);
     setGameStarted(true);
+    startBackgroundMusic("calm");
   };
 
   if (!difficulty) {

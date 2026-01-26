@@ -83,13 +83,14 @@ const DentalMemoryMatchGame = ({ game, onComplete }: DentalMemoryMatchGameProps)
       const [first, second] = newFlipped.map(id => cards.find(c => c.id === id)!);
       
       if (first.pairId === second.pairId) {
-        playSound("success");
+        playSound("correct");
         setMatchedPairs(prev => prev + 1);
         setCards(prev => prev.map(c => 
           c.pairId === first.pairId ? { ...c, isMatched: true } : c
         ));
         setFlippedCards([]);
       } else {
+        playSound("progress"); // Gentle "try again" sound
         setTimeout(() => {
           setCards(prev => prev.map(c => 
             newFlipped.includes(c.id) ? { ...c, isFlipped: false } : c

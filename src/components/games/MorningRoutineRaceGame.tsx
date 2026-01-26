@@ -44,7 +44,12 @@ const MorningRoutineRaceGame = ({ game, onComplete }: MorningRoutineRaceGameProp
   const [timeLeft, setTimeLeft] = useState(45);
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
   const [activeSteps, setActiveSteps] = useState<RoutineStep[]>([]);
-  const { playSound } = useGameSounds();
+  const { playSound, startBackgroundMusic, stopBackgroundMusic } = useGameSounds();
+
+  // Stop music on unmount
+  useEffect(() => {
+    return () => stopBackgroundMusic();
+  }, [stopBackgroundMusic]);
 
   const config = difficulty ? DIFFICULTY_CONFIG[difficulty] : DIFFICULTY_CONFIG.medium;
 
@@ -114,6 +119,7 @@ const MorningRoutineRaceGame = ({ game, onComplete }: MorningRoutineRaceGameProp
     setTimeLeft(cfg.timeLimit);
     setActiveSteps(routineSteps.slice(0, cfg.steps));
     setGameStarted(true);
+    startBackgroundMusic("happy");
   };
 
   if (!difficulty) {
