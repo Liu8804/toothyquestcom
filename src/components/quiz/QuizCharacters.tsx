@@ -21,6 +21,7 @@ export type CharacterMood =
 interface CharacterConfig {
   name: string;
   emoji: string;
+  imageSrc?: string;
   color: string;
   gradientFrom: string;
   gradientTo: string;
@@ -276,6 +277,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   toothy: {
     name: "Toothy",
     emoji: "✨",
+    imageSrc: toothyMascot,
     color: "from-bubble/80 to-primary/20",
     gradientFrom: "from-blue-100",
     gradientTo: "to-cyan-50",
@@ -687,18 +689,33 @@ export const QuizCharacterAnimated = ({
             className={`w-full h-full rounded-full ${character.shadowColor} shadow-xl overflow-hidden border-4 ${character.borderColor}`}
             whileHover={{ scale: 1.1 }}
           >
-            {/* Character face using emoji and gradient */}
-            <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${character.gradientFrom} ${character.gradientTo}`}>
-              <motion.span 
-                className="text-4xl"
-                animate={character.isVillain && mood === "mischievous" ? { 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 10, -10, 0]
-                } : {}}
-                transition={{ duration: 0.5, repeat: Infinity }}
-              >
-                {character.emoji}
-              </motion.span>
+            {/* Character face */}
+            <div
+              className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${character.gradientFrom} ${character.gradientTo}`}
+            >
+              {character.imageSrc ? (
+                <motion.img
+                  src={character.imageSrc}
+                  alt={`${character.name} mascot`}
+                  className="w-full h-full object-contain p-2"
+                  draggable={false}
+                />
+              ) : (
+                <motion.span
+                  className="text-4xl"
+                  animate={
+                    character.isVillain && mood === "mischievous"
+                      ? {
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 10, -10, 0],
+                        }
+                      : {}
+                  }
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                  {character.emoji}
+                </motion.span>
+              )}
             </div>
           </motion.div>
 

@@ -24,6 +24,7 @@ interface StoryViewerProps {
   onClose: () => void;
   onNext: () => void;
   onPrevious: () => void;
+  mascotSide?: "left" | "right";
 }
 
 const StoryViewer = ({
@@ -33,6 +34,7 @@ const StoryViewer = ({
   onClose,
   onNext,
   onPrevious,
+  mascotSide = "right",
 }: StoryViewerProps) => {
   const { isPlaying, isLoading, isPaused, error, play, pause, resume, stop } = useStoryNarration();
   const { user } = useAuth();
@@ -289,6 +291,14 @@ const StoryViewer = ({
             {/* Title and Audio Controls */}
             <div className="flex items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
+                {mascotSide === "left" && (
+                  <img
+                    src={mascotWaving}
+                    alt="Toothy"
+                    className="w-10 h-10 object-contain drop-shadow-sm shrink-0"
+                    draggable={false}
+                  />
+                )}
                 <span className="text-4xl">{story.emoji}</span>
                 <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground">
                   {story.title}
@@ -297,6 +307,14 @@ const StoryViewer = ({
               
               {/* Audio controls */}
               <div className="flex items-center gap-2">
+                {mascotSide === "right" && (
+                  <img
+                    src={mascotWaving}
+                    alt="Toothy"
+                    className="w-10 h-10 object-contain drop-shadow-sm shrink-0"
+                    draggable={false}
+                  />
+                )}
                 {/* Voice settings button */}
                 <Button
                   onClick={() => setShowVoiceSettings(true)}
