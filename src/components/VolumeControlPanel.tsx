@@ -23,7 +23,12 @@ const defaultSettings: VolumeSettings = {
 export const getVolumeSettings = (): VolumeSettings => {
   if (typeof window === "undefined") return defaultSettings;
   const saved = localStorage.getItem("toothyquest-volume");
-  return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
+  if (!saved) return defaultSettings;
+  try {
+    return { ...defaultSettings, ...JSON.parse(saved) };
+  } catch {
+    return defaultSettings;
+  }
 };
 
 export const setVolumeSettings = (settings: Partial<VolumeSettings>) => {
@@ -59,6 +64,20 @@ interface VolumeControlPanelProps {
 const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
   const [settings, setSettings] = useState<VolumeSettings>(getVolumeSettings);
 
+  const clearMuteFlags = () => {
+    if (typeof window === "undefined") return;
+    try {
+      // Unblock audio if any legacy mute toggles were left on.
+      // (These toggles exist in games/quizzes, but parents typically expect the Sound Settings panel to control everything.)
+      localStorage.setItem("gameSoundsMuted", "false");
+      localStorage.setItem("soundMuted", "false");
+      localStorage.setItem("quizSoundsMuted", "false");
+      window.dispatchEvent(new Event("toothyquest:audio-mute-flags-updated"));
+    } catch {
+      // ignore
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
       setSettings(getVolumeSettings());
@@ -68,6 +87,14 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
   const updateSetting = <K extends keyof VolumeSettings>(key: K, value: VolumeSettings[K]) => {
     const updated = setVolumeSettings({ [key]: value });
     setSettings(updated);
+
+    // If a user is actively adjusting volumes, they very likely want audio ON.
+    // Clear any legacy mute toggles that could otherwise silently block game sounds.
+    if (key === "masterVolume" || key === "sfxVolume" || key === "musicVolume") {
+      if (typeof value === "number" && value > 0) {
+        clearMuteFlags();
+      }
+    }
   };
 
   return (
@@ -181,6 +208,7 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                 onClick={() => {
                   const reset = setVolumeSettings(defaultSettings);
                   setSettings(reset);
+                  clearMuteFlags();
                 }}
                 className="flex-1"
               >

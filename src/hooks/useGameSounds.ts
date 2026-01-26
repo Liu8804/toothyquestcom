@@ -34,6 +34,21 @@ export const useGameSounds = () => {
     }
     return false;
   });
+
+  // Keep mute state in sync when other UI (like Sound Settings) clears legacy mute flags.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sync = () => {
+      try {
+        setIsMuted(localStorage.getItem("gameSoundsMuted") === "true");
+      } catch {
+        // ignore
+      }
+    };
+
+    window.addEventListener("toothyquest:audio-mute-flags-updated", sync);
+    return () => window.removeEventListener("toothyquest:audio-mute-flags-updated", sync);
+  }, []);
   
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const musicIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -191,6 +206,7 @@ export const useGameSounds = () => {
     setIsMuted(prev => {
       const newValue = !prev;
       localStorage.setItem("gameSoundsMuted", String(newValue));
+      window.dispatchEvent(new Event("toothyquest:audio-mute-flags-updated"));
       if (newValue) {
         stopBackgroundMusic();
       }
