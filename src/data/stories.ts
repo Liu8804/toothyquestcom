@@ -29,7 +29,7 @@ export interface Story {
 }
 
 // Use logo asset path - will be imported in components
-export const LOGO_PATH = "/toothyquest-logo.jpeg";
+export const LOGO_PATH = "/mascot-icon.png";
 
 export const stories: Story[] = [
   // ===== FREE QUESTS (First 5) =====

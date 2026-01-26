@@ -3,7 +3,7 @@ import { X, Flame, CheckCircle2, Circle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
-import toothyLogo from "@/assets/toothyquest-logo.jpeg";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
 interface DailyChallengesPanelProps {
   isOpen: boolean;
@@ -99,9 +99,9 @@ const DailyChallengesPanel = ({ isOpen, onClose, childId }: DailyChallengesPanel
               ) : challengesWithProgress.length === 0 ? (
                 <div className="text-center py-8">
                   <img
-                    src={toothyLogo}
+                    src={mascotWaving}
                     alt="ToothyQuest"
-                    className="w-16 h-16 mx-auto rounded-full mb-4"
+                    className="w-16 h-16 mx-auto object-contain mb-4"
                   />
                   <p className="text-muted-foreground">
                     No challenges available today. Check back soon!

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 
 export type BraceyMood = "happy" | "excited" | "encouraging" | "celebrating" | "thinking" | "winking";
 
@@ -143,9 +143,9 @@ const BraceyMascot = ({
         {/* Main logo/face with braces overlay */}
         <div className="relative w-full h-full">
           <motion.img
-            src={toothyMascot}
+            src={mascotMain}
             alt="Bracey mascot"
-            className="w-full h-full object-cover rounded-full shadow-lg border-4 border-pink-300"
+            className="w-full h-full object-contain drop-shadow-lg"
             whileHover={{ scale: 1.1 }}
           />
           

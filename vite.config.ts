@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "app-icon.png", "splash-screen.png", "splash-ios-portrait.png", "toothyquest-logo.jpeg", "ios-icons/icon-1024.png"],
+      includeAssets: ["favicon.ico", "app-icon.png", "splash-screen.png", "splash-ios-portrait.png", "mascot-icon.png", "ios-icons/icon-1024.png"],
       manifest: {
         name: "ToothyQuest - Make Brushing Fun!",
         short_name: "ToothyQuest",
