@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
@@ -189,7 +189,7 @@ const StoryViewer = ({
                   className="relative mb-6"
                 >
                   <img
-                    src={toothyMascot}
+                    src={mascotWaving}
                     alt="Toothy"
                     className="w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-lg"
                   />

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 export type CharacterMood = 
@@ -262,7 +263,7 @@ export const QuizCharacter = ({
           animate={getCharacterAnimation()}
         >
           <motion.img
-            src={toothyMascot}
+            src={mood === "celebrating" || mood === "excited" ? mascotCelebrating : mascotWaving}
             alt="Toothy - Your Quiz Buddy"
             className="w-full h-full object-contain drop-shadow-xl"
             whileHover={{ scale: 1.1 }}
