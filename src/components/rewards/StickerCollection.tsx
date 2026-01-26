@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 
 interface Sticker {
   id: string;
@@ -39,6 +41,8 @@ interface StickerCollectionProps {
 
 const StickerCollection = ({ isOpen, onClose, unlockedStickerIds = [] }: StickerCollectionProps) => {
   const { haptic } = useHapticFeedback();
+  const { playStickerTap, playStickerUnlock, playSparkle } = useMascotSounds();
+  const { trackStickerOpen, trackStickerTap, trackStickerUnlock } = useEngagementAnalytics();
   const [stickers, setStickers] = useState<Sticker[]>([]);
   const [selectedSticker, setSelectedSticker] = useState<Sticker | null>(null);
 
@@ -64,6 +68,13 @@ const StickerCollection = ({ isOpen, onClose, unlockedStickerIds = [] }: Sticker
     }
   }, [unlockedStickerIds]);
 
+  // Track when sticker collection is opened
+  useEffect(() => {
+    if (isOpen) {
+      trackStickerOpen();
+    }
+  }, [isOpen, trackStickerOpen]);
+
   // Save to localStorage when stickers change
   useEffect(() => {
     const unlockedIds = stickers.filter(s => s.unlocked).map(s => s.id);
@@ -75,7 +86,10 @@ const StickerCollection = ({ isOpen, onClose, unlockedStickerIds = [] }: Sticker
   const handleStickerTap = (sticker: Sticker) => {
     haptic("light");
     if (sticker.unlocked) {
+      playStickerTap();
+      trackStickerTap(sticker.id);
       setSelectedSticker(sticker);
+      playSparkle();
     }
   };
 

@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, Sparkles, Hand } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import MascotPose from "@/components/mascot/MascotPose";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 
 interface OnboardingFlowProps {
   isOpen: boolean;
@@ -15,42 +17,57 @@ const steps = [
     title: "Welcome to ToothyQuest! 🦷",
     description: "I'm Toothy, your dental buddy! Let's make brushing fun together!",
     emoji: "👋",
-    mascotExpression: "waving",
+    mascotPose: "full" as const,
   },
   {
     id: 2,
     title: "Complete Daily Quests! ⭐",
     description: "Brush your teeth every day and earn sparkle points and rewards!",
     emoji: "🎮",
-    mascotExpression: "excited",
+    mascotPose: "brushing" as const,
   },
   {
     id: 3,
     title: "Let's Start! 🚀",
     description: "Tap the button to begin your first quest and become a brushing champion!",
     emoji: "🏆",
-    mascotExpression: "celebrating",
+    mascotPose: "celebrating" as const,
   },
 ];
 
 const OnboardingFlow = ({ isOpen, onComplete }: OnboardingFlowProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const { playHappy, playExcited, playCelebrate } = useMascotSounds();
+  const { trackOnboardingStep, trackOnboardingComplete } = useEngagementAnalytics();
 
   // Reset step when opening
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(0);
       setIsExiting(false);
+      playHappy();
+      trackOnboardingStep(1, "view");
     }
-  }, [isOpen]);
+  }, [isOpen, playHappy, trackOnboardingStep]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      trackOnboardingStep(currentStep + 1, "complete");
+      trackOnboardingStep(nextStep + 1, "view");
+      
+      // Play appropriate sound for next step
+      if (nextStep === 1) playExcited();
+      if (nextStep === 2) playCelebrate();
     } else {
       // Complete onboarding
       setIsExiting(true);
+      trackOnboardingStep(currentStep + 1, "complete");
+      trackOnboardingComplete();
+      playCelebrate();
+      
       setTimeout(() => {
         // Mark as completed in localStorage
         localStorage.setItem("toothyquest_onboarding_complete", "true");
@@ -60,6 +77,7 @@ const OnboardingFlow = ({ isOpen, onComplete }: OnboardingFlowProps) => {
   };
 
   const handleSkip = () => {
+    trackOnboardingStep(currentStep + 1, "skip");
     localStorage.setItem("toothyquest_onboarding_complete", "true");
     onComplete();
   };
@@ -117,26 +135,22 @@ const OnboardingFlow = ({ isOpen, onComplete }: OnboardingFlowProps) => {
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: "spring", duration: 0.6 }}
-                className="mb-4"
+                className="mb-4 relative"
               >
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="relative inline-block"
+                <MascotPose
+                  pose={step.mascotPose}
+                  size="lg"
+                  animate={true}
+                  showSparkles={step.mascotPose === "celebrating"}
+                  enableSound={false}
+                />
+                <motion.span
+                  className="absolute -top-2 -right-2 text-3xl"
+                  animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 1, repeat: Infinity }}
                 >
-                  <img
-                    src={toothyMascot}
-                    alt="Toothy mascot"
-                    className="w-28 h-28 rounded-full shadow-float border-4 border-white object-cover mx-auto"
-                  />
-                  <motion.span
-                    className="absolute -top-2 -right-2 text-3xl"
-                    animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  >
-                    {step.emoji}
-                  </motion.span>
-                </motion.div>
+                  {step.emoji}
+                </motion.span>
               </motion.div>
 
               {/* Title */}

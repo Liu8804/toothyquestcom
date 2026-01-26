@@ -6,11 +6,22 @@ import FloatingBubbles from "@/components/FloatingBubbles";
 import FirstTapCelebration from "@/components/FirstTapCelebration";
 import SwipeHint from "@/components/SwipeHint";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
+import MascotPose from "@/components/mascot/MascotPose";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
-import toothyMascot from "@/assets/toothy-mascot-new.jpeg";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
+  const { playWave, playCheer, playQuestStart } = useMascotSounds();
+  const { 
+    trackFirstTap, 
+    trackCTAHover, 
+    trackMascotInteraction,
+    trackCelebration,
+    trackSessionStart 
+  } = useEngagementAnalytics();
+  
   const [showCelebration, setShowCelebration] = useState(false);
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [hasCompletedFirstTap, setHasCompletedFirstTap] = useState(false);
@@ -18,10 +29,13 @@ export const HeroSection = () => {
   const [isHoveringCTA, setIsHoveringCTA] = useState(false);
   const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering">("idle");
 
-  // Check if onboarding is complete
+  // Check if onboarding is complete and start session tracking
   useEffect(() => {
     const onboardingComplete = localStorage.getItem("toothyquest_onboarding_complete");
     const firstTapComplete = localStorage.getItem("toothyquest_first_tap");
+    
+    // Track session start
+    trackSessionStart();
     
     if (!onboardingComplete) {
       // Show onboarding after a short delay
@@ -32,24 +46,30 @@ export const HeroSection = () => {
     if (firstTapComplete) {
       setHasCompletedFirstTap(true);
     }
-  }, []);
+  }, [trackSessionStart]);
 
   // Mascot wave animation when hovering CTA
   useEffect(() => {
     if (isHoveringCTA) {
       setMascotMood("waving");
+      playWave();
+      trackMascotInteraction("wave");
     } else {
       setMascotMood("idle");
     }
-  }, [isHoveringCTA]);
+  }, [isHoveringCTA, playWave, trackMascotInteraction]);
 
   const handleStartQuest = useCallback(() => {
     success(); // Haptic feedback
+    playQuestStart(); // Sound effect
     
     if (!hasCompletedFirstTap) {
       // First time tap - show celebration
       setShowCelebration(true);
       setMascotMood("cheering");
+      playCheer();
+      trackFirstTap();
+      trackCelebration("first_tap");
       localStorage.setItem("toothyquest_first_tap", "true");
     } else {
       // Scroll to adventures section
@@ -58,7 +78,12 @@ export const HeroSection = () => {
         adventuresSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, [hasCompletedFirstTap, success]);
+  }, [hasCompletedFirstTap, success, playQuestStart, playCheer, trackFirstTap, trackCelebration]);
+
+  const handleCTAHover = useCallback(() => {
+    setIsHoveringCTA(true);
+    trackCTAHover();
+  }, [trackCTAHover]);
 
   const handleCelebrationComplete = useCallback(() => {
     setShowCelebration(false);
@@ -79,18 +104,6 @@ export const HeroSection = () => {
   const handleOnboardingComplete = useCallback(() => {
     setShowOnboarding(false);
   }, []);
-
-  // Mascot animation based on mood
-  const getMascotAnimation = () => {
-    switch (mascotMood) {
-      case "waving":
-        return { rotate: [0, -10, 10, -10, 0], y: [0, -5, 0] };
-      case "cheering":
-        return { y: [0, -20, 0], scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] };
-      default:
-        return { y: [0, -8, 0] };
-    }
-  };
 
   return (
     <>
@@ -142,66 +155,33 @@ export const HeroSection = () => {
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="relative mb-6"
             >
-              <motion.div
-                animate={getMascotAnimation()}
-                transition={{ 
-                  duration: mascotMood === "cheering" ? 0.5 : 2.5, 
-                  repeat: mascotMood === "cheering" ? 3 : Infinity, 
-                  ease: "easeInOut" 
+              <MascotPose
+                pose={mascotMood === "cheering" ? "celebrating" : "full"}
+                size="2xl"
+                animate={true}
+                showSparkles={mascotMood === "cheering"}
+                enableSound={false} // We handle sounds manually for more control
+                onClick={() => {
+                  trackMascotInteraction("tap");
+                  setMascotMood("cheering");
+                  playCheer();
+                  setTimeout(() => setMascotMood("idle"), 2000);
                 }}
-                className="relative"
-              >
-                <motion.img
-                  src={toothyMascot}
-                  alt="Toothy - Your Friendly Dental Buddy"
-                  className="w-40 h-40 md:w-52 md:h-52 object-cover rounded-full shadow-2xl border-4 border-white"
-                />
-                
-                {/* Mood indicator */}
-                <AnimatePresence>
-                  {mascotMood !== "idle" && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-2 -right-2 text-3xl"
-                    >
-                      {mascotMood === "waving" ? "👋" : "🎉"}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                {/* Sparkles around mascot when cheering */}
-                <AnimatePresence>
-                  {mascotMood === "cheering" && (
-                    <>
-                      {[...Array(6)].map((_, i) => (
-                        <motion.span
-                          key={i}
-                          className="absolute text-xl"
-                          style={{
-                            top: `${20 + Math.random() * 60}%`,
-                            left: `${20 + Math.random() * 60}%`,
-                          }}
-                          initial={{ opacity: 0, scale: 0 }}
-                          animate={{
-                            opacity: [0, 1, 0],
-                            scale: [0, 1, 0],
-                            y: [-5, -20],
-                          }}
-                          exit={{ opacity: 0 }}
-                          transition={{
-                            duration: 0.8,
-                            delay: i * 0.1,
-                          }}
-                        >
-                          ✨
-                        </motion.span>
-                      ))}
-                    </>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+              />
+              
+              {/* Mood indicator */}
+              <AnimatePresence>
+                {mascotMood !== "idle" && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    className="absolute -top-2 -right-2 text-3xl"
+                  >
+                    {mascotMood === "waving" ? "👋" : "🎉"}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Sparkle badge */}
               <motion.div
@@ -269,7 +249,7 @@ export const HeroSection = () => {
                 variant="hero"
                 size="xl"
                 onClick={handleStartQuest}
-                onMouseEnter={() => setIsHoveringCTA(true)}
+                onMouseEnter={handleCTAHover}
                 onMouseLeave={() => setIsHoveringCTA(false)}
                 className="relative text-xl md:text-2xl px-10 md:px-14 py-6 md:py-8 shadow-2xl hover:shadow-3xl"
               >
