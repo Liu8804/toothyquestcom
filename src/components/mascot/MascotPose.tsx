@@ -2,12 +2,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { forwardRef, useCallback } from "react";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 
-// Import the new sticker-style mascot assets
-import mascotWaving from "@/assets/mascot-sticker-waving.png";
-import mascotCelebrating from "@/assets/mascot-sticker-celebrating.png";
-import mascotPointing from "@/assets/mascot-sticker-pointing.png";
-import mascotBrushing from "@/assets/mascot-sticker-brushing.png";
-import mascotSquare from "@/assets/mascot-sticker-square.png";
+// Import the new kid-friendly sticker-style mascot assets (v2)
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import mascotPointing from "@/assets/mascot-sticker-pointing-v2.png";
+import mascotMain from "@/assets/mascot-sticker-main-v2.png";
+import mascotSquare from "@/assets/mascot-sticker-square-v2.png";
 
 export type MascotPoseType = "full" | "icon" | "badge" | "celebrating" | "brushing" | "waving" | "pointing";
 
@@ -36,12 +36,13 @@ const sizeMap = {
 const getPoseImage = (pose: MascotPoseType) => {
   switch (pose) {
     case "full":
+      return mascotMain;
     case "waving":
       return mascotWaving;
     case "celebrating":
       return mascotCelebrating;
     case "brushing":
-      return mascotBrushing;
+      return mascotMain; // Use main pose for brushing (has toothbrush)
     case "pointing":
       return mascotPointing;
     case "icon":
