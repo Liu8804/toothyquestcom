@@ -22,6 +22,7 @@ import FreePreviewBanner from "@/components/FreePreviewBanner";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
 import FloatingToothPets from "@/components/FloatingToothPets";
 import DailyTaskModal from "@/components/DailyTaskModal";
+import StreakRecoveryModal from "@/components/StreakRecoveryModal";
 import DailyBonusModal from "@/components/DailyBonusModal";
 import RewardsPanel from "@/components/rewards/RewardsPanel";
 import SparkMeter from "@/components/rewards/SparkMeter";
@@ -37,6 +38,9 @@ import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useAudioUnlock } from "@/hooks/useAudioUnlock";
 import { useDailyTask } from "@/hooks/useDailyTask";
+import { useStreak } from "@/hooks/useStreak";
+import { useStreakRecovery } from "@/hooks/useStreakRecovery";
+import { useDailyReminder } from "@/hooks/useDailyReminder";
 import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2 } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
@@ -59,6 +63,11 @@ const Index = () => {
   // Use the consolidated daily task hook
   const { hasCompletedToday: taskCompleted } = useDailyTask(selectedChild?.id);
   
+  // Streak and recovery hooks
+  const { currentStreak, lastActivityDate, longestStreak, refetch: refetchStreak } = useStreak();
+  const { canRecover, checkStreakBroken } = useStreakRecovery();
+  const { scheduleReminderCheck } = useDailyReminder();
+  
   const [showAuth, setShowAuth] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showMotivation, setShowMotivation] = useState(false);
@@ -68,6 +77,8 @@ const Index = () => {
   const [showDailyBonus, setShowDailyBonus] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
+  const [showStreakRecovery, setShowStreakRecovery] = useState(false);
+  const [previousStreakValue, setPreviousStreakValue] = useState(0);
 
   const openVoiceQuiz = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -90,39 +101,80 @@ const Index = () => {
     sessionStorage.setItem('splashShown', 'true');
   }, []);
 
+  // Check for broken streak and show recovery option
+  useEffect(() => {
+    if (!showSplash && user && selectedChild && !taskCompleted && lastActivityDate) {
+      const isStreakBroken = checkStreakBroken(lastActivityDate);
+      if (isStreakBroken && canRecover && longestStreak > 0) {
+        // Store the previous streak value before it resets
+        setPreviousStreakValue(longestStreak);
+        // Show recovery modal before daily task
+        const timer = setTimeout(() => {
+          setShowStreakRecovery(true);
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [showSplash, user, selectedChild, taskCompleted, lastActivityDate, checkStreakBroken, canRecover, longestStreak]);
+
   // STEP 3: Auto-start daily task after splash (if user is logged in with a child)
   useEffect(() => {
-    if (!showSplash && user && selectedChild && !taskCompleted) {
+    if (!showSplash && !showStreakRecovery && user && selectedChild && !taskCompleted) {
       // Show daily task modal immediately after splash
       const timer = setTimeout(() => {
         setShowDailyTask(true);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [showSplash, user, selectedChild, taskCompleted]);
+  }, [showSplash, showStreakRecovery, user, selectedChild, taskCompleted]);
 
   // Show daily bonus ONLY after task completion
   useEffect(() => {
-    if (!showSplash && !showDailyTask && user && selectedChild && taskCompleted && !dailyBonusClaimed) {
+    if (!showSplash && !showDailyTask && !showStreakRecovery && user && selectedChild && taskCompleted && !dailyBonusClaimed) {
       const timer = setTimeout(() => {
         setShowDailyBonus(true);
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [showSplash, showDailyTask, user, selectedChild, taskCompleted, dailyBonusClaimed]);
+  }, [showSplash, showDailyTask, showStreakRecovery, user, selectedChild, taskCompleted, dailyBonusClaimed]);
+
+  // Schedule daily reminder checks when app is open
+  useEffect(() => {
+    if (user && selectedChild && !taskCompleted) {
+      return scheduleReminderCheck(taskCompleted, selectedChild.name);
+    }
+  }, [user, selectedChild, taskCompleted, scheduleReminderCheck]);
 
   // Handle daily task completion
   const handleTaskComplete = useCallback((xpEarned: number) => {
     console.log(`Daily task completed! +${xpEarned} XP`);
     // Close task modal
     setShowDailyTask(false);
+    // Refetch streak data
+    refetchStreak();
     // Show daily bonus after a short delay
     if (!dailyBonusClaimed) {
       setTimeout(() => {
         setShowDailyBonus(true);
       }, 1000);
     }
-  }, [dailyBonusClaimed]);
+  }, [dailyBonusClaimed, refetchStreak]);
+
+  // Handle streak recovery completion
+  const handleStreakRecovered = useCallback((newStreak: number) => {
+    console.log(`Streak recovered to ${newStreak} days!`);
+    refetchStreak();
+  }, [refetchStreak]);
+
+  const handleStreakRecoveryClose = useCallback(() => {
+    setShowStreakRecovery(false);
+    // After closing recovery, show daily task
+    if (!taskCompleted) {
+      setTimeout(() => {
+        setShowDailyTask(true);
+      }, 500);
+    }
+  }, [taskCompleted]);
 
   // Show motivational popup after 30 seconds on the page (only if task completed)
   useEffect(() => {
@@ -251,6 +303,16 @@ const Index = () => {
         <MotivationalPopup isOpen={showMotivation} onClose={() => setShowMotivation(false)} />
         <FloatingUnlockCTA />
         
+        {/* Streak Recovery Modal - shows if streak was broken */}
+        <StreakRecoveryModal
+          isOpen={showStreakRecovery}
+          onClose={handleStreakRecoveryClose}
+          onRecovered={handleStreakRecovered}
+          currentStreak={currentStreak}
+          previousStreak={previousStreakValue || longestStreak}
+          childName={selectedChild?.name}
+        />
+
         {/* Daily Task Modal - shows first after splash */}
         <DailyTaskModal
           isOpen={showDailyTask}
@@ -265,7 +327,7 @@ const Index = () => {
           isOpen={showDailyBonus}
           onClose={() => setShowDailyBonus(false)}
           onClaim={claimDailyBonus}
-          streak={streak}
+          streak={currentStreak || streak}
           childName={selectedChild?.name}
         />
         

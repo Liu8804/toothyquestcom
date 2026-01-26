@@ -1,11 +1,12 @@
 import { motion } from "framer-motion";
-import { Bell, BellOff, Clock, Sun, Moon, Flame, X, Check, Mail } from "lucide-react";
+import { Bell, BellOff, Clock, Sun, Moon, Flame, X, Check, Mail, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { useDailyReminder } from "@/hooks/useDailyReminder";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,6 +27,13 @@ const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsProps) =>
     updatePreferences,
     showNotification,
   } = usePushNotifications();
+
+  const {
+    enabled: dailyReminderEnabled,
+    reminderTime: dailyReminderTime,
+    loading: dailyReminderLoading,
+    updateSettings: updateDailyReminder,
+  } = useDailyReminder();
 
   const handleSubscribe = async () => {
     const success = await subscribe();
@@ -229,6 +237,35 @@ const NotificationSettings = ({ isOpen, onClose }: NotificationSettingsProps) =>
                       onCheckedChange={(checked) =>
                         updatePreferences({ evening_reminder: checked })
                       }
+                    />
+                  </div>
+                </div>
+
+                {/* Daily Task Reminder */}
+                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl border-2 border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                    <div>
+                      <p className="font-medium">Daily Brushing Reminder</p>
+                      <p className="text-sm text-muted-foreground">
+                        Get reminded if daily task isn't done
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Input
+                      type="time"
+                      value={dailyReminderTime}
+                      onChange={(e) => updateDailyReminder({ reminderTime: e.target.value })}
+                      className="w-32 rounded-xl"
+                      disabled={!dailyReminderEnabled || dailyReminderLoading}
+                    />
+                    <Switch
+                      checked={dailyReminderEnabled}
+                      onCheckedChange={(checked) =>
+                        updateDailyReminder({ enabled: checked })
+                      }
+                      disabled={dailyReminderLoading}
                     />
                   </div>
                 </div>
