@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
-import YoungerKidsInteractionSection from "@/components/YoungerKidsInteractionSection";
+
 import AdventuresSection from "@/components/AdventuresSection";
 import StoryModeSection from "@/components/StoryModeSection";
 import DentalHelpersWorld from "@/components/DentalHelpersWorld";
@@ -290,7 +290,7 @@ const Index = () => {
         <WorldSelector />
         <AboutSection />
         <FeaturesSection />
-        <YoungerKidsInteractionSection />
+        
         <AdventuresSection />
         <StoryModeSection />
         <DentalHelpersWorld />
