@@ -478,10 +478,13 @@ export type Database = {
       notification_preferences: {
         Row: {
           created_at: string
+          daily_task_reminder: boolean
+          daily_task_reminder_time: string
           email_reminders: boolean
           evening_reminder: boolean
           evening_time: string
           id: string
+          last_reminder_sent_at: string | null
           morning_reminder: boolean
           morning_time: string
           streak_alerts: boolean
@@ -490,10 +493,13 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          daily_task_reminder?: boolean
+          daily_task_reminder_time?: string
           email_reminders?: boolean
           evening_reminder?: boolean
           evening_time?: string
           id?: string
+          last_reminder_sent_at?: string | null
           morning_reminder?: boolean
           morning_time?: string
           streak_alerts?: boolean
@@ -502,10 +508,13 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          daily_task_reminder?: boolean
+          daily_task_reminder_time?: string
           email_reminders?: boolean
           evening_reminder?: boolean
           evening_time?: string
           id?: string
+          last_reminder_sent_at?: string | null
           morning_reminder?: boolean
           morning_time?: string
           streak_alerts?: boolean
@@ -657,6 +666,39 @@ export type Database = {
           reward_type?: string | null
           rewarded_at?: string | null
           status?: string
+        }
+        Relationships: []
+      }
+      streak_recoveries: {
+        Row: {
+          created_at: string
+          id: string
+          parent_confirmed: boolean
+          previous_streak: number
+          recovered_at: string
+          recovered_date: string
+          restored_streak: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parent_confirmed?: boolean
+          previous_streak?: number
+          recovered_at?: string
+          recovered_date: string
+          restored_streak?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parent_confirmed?: boolean
+          previous_streak?: number
+          recovered_at?: string
+          recovered_date?: string
+          restored_streak?: number
+          user_id?: string
         }
         Relationships: []
       }
