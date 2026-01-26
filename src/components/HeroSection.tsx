@@ -10,8 +10,8 @@ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
-import mascotWaving from "@/assets/mascot-sticker-waving.png";
-import mascotCelebrating from "@/assets/mascot-sticker-celebrating.png";
+import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
