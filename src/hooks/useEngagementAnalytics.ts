@@ -24,7 +24,7 @@ export const useEngagementAnalytics = () => {
   }, [trackEvent]);
 
   // Track mascot interactions
-  const trackMascotInteraction = useCallback((interactionType: "wave" | "cheer" | "tap" | "hover") => {
+  const trackMascotInteraction = useCallback((interactionType: "wave" | "cheer" | "tap" | "hover" | "idle_wiggle") => {
     trackEvent("mascot_interaction", { button_name: interactionType });
   }, [trackEvent]);
 
