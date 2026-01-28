@@ -64,6 +64,13 @@ export const useQuestVoice = () => {
         return;
       }
 
+      // CRITICAL: Create Audio element IMMEDIATELY in user gesture context
+      // This ensures browser allows playback after async operations
+      const audio = new Audio();
+      audio.preload = "auto";
+      audio.volume = getEffectiveVolume("voice");
+      audioRef.current = audio;
+
       // Try Premium AI voice with consistent Toothy voice
       (async () => {
         try {
@@ -73,6 +80,7 @@ export const useQuestVoice = () => {
               hasShownAuthToastRef.current = true;
               toast.info("AI voice needs sign-in to work.");
             }
+            cleanupAudio();
             onEnd?.();
             return;
           }
@@ -103,6 +111,7 @@ export const useQuestVoice = () => {
           );
 
           if (!response.ok) {
+            cleanupAudio();
             onEnd?.();
             return;
           }
@@ -111,9 +120,8 @@ export const useQuestVoice = () => {
           const url = URL.createObjectURL(blob);
           audioUrlRef.current = url;
 
-          const audio = new Audio(url);
-          audio.volume = getEffectiveVolume("voice");
-          audioRef.current = audio;
+          // Set source on pre-existing element (created in user gesture context)
+          audio.src = url;
           
           // Register with centralized manager for proper coordination
           registerVoiceAudio(audio);
@@ -132,6 +140,7 @@ export const useQuestVoice = () => {
 
           await audio.play();
         } catch {
+          cleanupAudio();
           onEnd?.();
         }
       })();
