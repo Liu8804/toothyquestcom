@@ -10,6 +10,7 @@ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import { useDailyGreeting } from "@/hooks/useDailyGreeting";
+import { useQuestVoice } from "@/hooks/useQuestVoice";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
 import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
@@ -26,6 +27,7 @@ export const HeroSection = () => {
     trackSessionStart 
   } = useEngagementAnalytics();
   const { greeting, isCompleted, markComplete } = useDailyGreeting();
+  const { speak: speakGreeting } = useQuestVoice();
   
   const [showCelebration, setShowCelebration] = useState(false);
   const [showQuestCelebration, setShowQuestCelebration] = useState(false);
@@ -40,6 +42,9 @@ export const HeroSection = () => {
   // Idle timer for wiggle animation
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isWiggling, setIsWiggling] = useState(false);
+  
+  // Track if greeting has been spoken this session
+  const hasSpokenGreetingRef = useRef(false);
 
   // Check if onboarding is complete and start session tracking
   useEffect(() => {
@@ -58,7 +63,16 @@ export const HeroSection = () => {
     if (firstTapComplete) {
       setHasCompletedFirstTap(true);
     }
-  }, [trackSessionStart]);
+    
+    // Speak greeting after a short delay (only once per session, only if onboarding complete)
+    if (onboardingComplete && !hasSpokenGreetingRef.current && !isCompleted) {
+      hasSpokenGreetingRef.current = true;
+      const voiceTimer = setTimeout(() => {
+        speakGreeting(greeting.message, "curious");
+      }, 1500);
+      return () => clearTimeout(voiceTimer);
+    }
+  }, [trackSessionStart, greeting.message, speakGreeting, isCompleted]);
 
   // Reset idle timer whenever user interacts
   const resetIdleTimer = useCallback(() => {
@@ -71,13 +85,15 @@ export const HeroSection = () => {
     if (!isCompleted) {
       idleTimerRef.current = setTimeout(() => {
         setIsWiggling(true);
+        setMascotMood("wiggle");
         playWave(); // Play a gentle sound to get attention
         trackMascotInteraction("idle_wiggle");
         
-        // Stop wiggling after 2 seconds
+        // Stop wiggling after 3 seconds (extended for better visibility)
         setTimeout(() => {
           setIsWiggling(false);
-        }, 2000);
+          if (!isCompleted) setMascotMood("idle");
+        }, 3000);
       }, 5000); // 5 seconds of inactivity
     }
   }, [isCompleted, playWave, trackMascotInteraction]);
@@ -237,9 +253,41 @@ export const HeroSection = () => {
               className="relative mb-4"
             >
               {/* Dull overlay for "before" state - shows when not completed */}
-              {!isCompleted && (
+              {!isCompleted && !isWiggling && (
                 <div className="absolute inset-0 pointer-events-none z-10 mix-blend-multiply opacity-20 bg-gray-400 rounded-full" />
               )}
+              
+              {/* Enhanced wiggle glow effect - attention grabbing */}
+              <AnimatePresence>
+                {isWiggling && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ 
+                      opacity: [0.4, 0.8, 0.4], 
+                      scale: [1, 1.3, 1],
+                    }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.6, repeat: Infinity }}
+                    className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-primary/50 via-yellow-300/40 to-pink-300/50 blur-3xl"
+                  />
+                )}
+              </AnimatePresence>
+              
+              {/* Secondary pulsing ring during wiggle */}
+              <AnimatePresence>
+                {isWiggling && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ 
+                      opacity: [0, 0.6, 0], 
+                      scale: [0.9, 1.4, 1.6],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 1.2, repeat: Infinity }}
+                    className="absolute inset-0 -z-20 rounded-full border-4 border-primary/40"
+                  />
+                )}
+              </AnimatePresence>
               
               {/* Shiny glow for "after" state */}
               {isCompleted && (
@@ -254,11 +302,15 @@ export const HeroSection = () => {
                 src={isCompleted ? mascotCelebrating : mascotMood === "cheering" ? mascotCelebrating : mascotMood === "waving" ? mascotWaving : mascotMain}
                 alt="Toothy - Your friendly dental buddy"
                 className={`w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain drop-shadow-xl cursor-pointer transition-all duration-300 ${
-                  isCompleted ? "brightness-110 saturate-110" : "brightness-95 saturate-90"
+                  isCompleted ? "brightness-110 saturate-110" : isWiggling ? "brightness-105 saturate-105" : "brightness-95 saturate-90"
                 }`}
                 animate={
                   isWiggling
-                    ? { rotate: [0, -8, 8, -8, 8, -4, 4, 0], scale: [1, 1.05, 1.05, 1.05, 1.05, 1.02, 1.02, 1] }
+                    ? { 
+                        rotate: [0, -12, 12, -12, 12, -8, 8, -4, 4, 0], 
+                        scale: [1, 1.08, 1.06, 1.08, 1.06, 1.04, 1.04, 1.02, 1.02, 1],
+                        y: [0, -5, 5, -5, 5, -3, 3, 0]
+                      }
                     : isCompleted || mascotMood === "cheering"
                     ? { y: [0, -12, 0], scale: [1, 1.08, 1] }
                     : mascotMood === "waving"
@@ -266,8 +318,8 @@ export const HeroSection = () => {
                     : { y: [0, -6, 0], scale: [1, 1.01, 1] }
                 }
                 transition={{
-                  duration: isWiggling ? 0.8 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
-                  repeat: isWiggling ? 0 : Infinity,
+                  duration: isWiggling ? 1.2 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
+                  repeat: isWiggling ? 2 : Infinity,
                   ease: "easeInOut",
                 }}
                 onClick={() => {
@@ -282,6 +334,39 @@ export const HeroSection = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               />
+              
+              {/* Attention-grabbing sparkles during wiggle */}
+              <AnimatePresence>
+                {isWiggling && (
+                  <>
+                    {[...Array(8)].map((_, i) => (
+                      <motion.span
+                        key={`wiggle-sparkle-${i}`}
+                        className="absolute pointer-events-none text-2xl"
+                        style={{
+                          top: `${10 + (i * 12)}%`,
+                          left: i % 2 === 0 ? `${-15 - (i % 3) * 5}%` : `${90 + (i % 3) * 5}%`,
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{
+                          opacity: [0, 1, 1, 0],
+                          scale: [0.3, 1.3, 1, 0.3],
+                          y: [0, -20, -30],
+                          rotate: [0, 180, 360],
+                        }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{
+                          duration: 1,
+                          repeat: 2,
+                          delay: i * 0.1,
+                        }}
+                      >
+                        {i % 3 === 0 ? "✨" : i % 3 === 1 ? "⭐" : "💫"}
+                      </motion.span>
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
               
               {/* Sparkle effects around mascot when completed */}
               <AnimatePresence>
