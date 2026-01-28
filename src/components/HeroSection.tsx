@@ -3,12 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import FirstTapCelebration from "@/components/FirstTapCelebration";
+import ConfettiCelebration from "@/components/ConfettiCelebration";
+import FloatingSparkles from "@/components/FloatingSparkles";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
+import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
@@ -25,10 +28,14 @@ export const HeroSection = () => {
   const { greeting, isCompleted, markComplete } = useDailyGreeting();
   
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showQuestCelebration, setShowQuestCelebration] = useState(false);
   const [hasCompletedFirstTap, setHasCompletedFirstTap] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isHoveringCTA, setIsHoveringCTA] = useState(false);
   const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering">("idle");
+  
+  // Show celebration briefly when quest was just completed this session
+  const [justCompleted, setJustCompleted] = useState(false);
 
   // Check if onboarding is complete and start session tracking
   useEffect(() => {
@@ -118,9 +125,15 @@ export const HeroSection = () => {
       
       {/* First Tap Celebration */}
       <FirstTapCelebration isActive={showCelebration} onComplete={handleCelebrationComplete} />
+      
+      {/* Quest Completion Celebration */}
+      <ConfettiCelebration isActive={showQuestCelebration || justCompleted} duration={3000} particleCount={60} />
 
       <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
         <FloatingBubbles />
+        
+        {/* Floating sparkles when completed */}
+        {isCompleted && <FloatingSparkles count={20} />}
         
         {/* ToothyQuest Logo - Top left corner */}
         <motion.div
@@ -165,23 +178,39 @@ export const HeroSection = () => {
         <div className="container mx-auto px-4 py-8 relative z-10">
           <div className="flex flex-col items-center text-center max-w-xl mx-auto">
             
-            {/* Main Mascot - Large and central */}
+            {/* Main Mascot - Large and central with before/after states */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="relative mb-4"
             >
+              {/* Dull overlay for "before" state - shows when not completed */}
+              {!isCompleted && (
+                <div className="absolute inset-0 pointer-events-none z-10 mix-blend-multiply opacity-20 bg-gray-400 rounded-full" />
+              )}
+              
+              {/* Shiny glow for "after" state */}
+              {isCompleted && (
+                <motion.div
+                  className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-yellow-200/60 via-white/40 to-primary/30 blur-2xl"
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.9, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              )}
+              
               <motion.img
-                src={isCompleted || mascotMood === "cheering" ? mascotCelebrating : mascotWaving}
+                src={isCompleted ? mascotCelebrating : mascotMood === "cheering" ? mascotCelebrating : mascotMood === "waving" ? mascotWaving : mascotMain}
                 alt="Toothy - Your friendly dental buddy"
-                className="w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain drop-shadow-xl cursor-pointer"
+                className={`w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain drop-shadow-xl cursor-pointer transition-all duration-300 ${
+                  isCompleted ? "brightness-110 saturate-110" : "brightness-95 saturate-90"
+                }`}
                 animate={
                   isCompleted || mascotMood === "cheering"
                     ? { y: [0, -12, 0], scale: [1, 1.08, 1] }
                     : mascotMood === "waving"
                     ? { rotate: [0, -8, 8, -8, 0] }
-                    : { y: [0, -10, 0], scale: [1, 1.02, 1] }
+                    : { y: [0, -6, 0], scale: [1, 1.01, 1] }
                 }
                 transition={{
                   duration: mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
@@ -200,6 +229,38 @@ export const HeroSection = () => {
                 whileTap={{ scale: 0.95 }}
               />
               
+              {/* Sparkle effects around mascot when completed */}
+              <AnimatePresence>
+                {isCompleted && (
+                  <>
+                    {[...Array(6)].map((_, i) => (
+                      <motion.span
+                        key={`sparkle-${i}`}
+                        className="absolute pointer-events-none text-2xl"
+                        style={{
+                          top: `${10 + (i * 15)}%`,
+                          left: i % 2 === 0 ? "-10%" : "85%",
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{
+                          opacity: [0, 1, 0],
+                          scale: [0.5, 1.2, 0.5],
+                          y: [-5, -15, -5],
+                        }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: i * 0.3,
+                        }}
+                      >
+                        ✨
+                      </motion.span>
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
+
               {/* Greeting emoji indicator */}
               <motion.div
                 key={greeting.emoji}
@@ -215,9 +276,9 @@ export const HeroSection = () => {
                 </motion.span>
               </motion.div>
 
-              {/* Sparkle effects */}
+              {/* Cheering sparkle effects */}
               <AnimatePresence>
-                {(mascotMood === "cheering" || isCompleted) && (
+                {mascotMood === "cheering" && !isCompleted && (
                   <>
                     {[...Array(8)].map((_, i) => (
                       <motion.span
@@ -246,6 +307,18 @@ export const HeroSection = () => {
                   </>
                 )}
               </AnimatePresence>
+            </motion.div>
+
+            {/* Today's Mission Label */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="mb-2"
+            >
+              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary/10 text-primary font-bold text-sm rounded-full border border-primary/20">
+                🦷 {isCompleted ? "Quest Complete!" : "Today's Brushing Quest"}
+              </span>
             </motion.div>
 
             {/* Speech Bubble with Dynamic Greeting */}
@@ -305,17 +378,29 @@ export const HeroSection = () => {
                   </Button>
                 </>
               ) : (
-                <div className="flex flex-col items-center gap-4">
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="flex flex-col items-center gap-4"
+                >
+                  {/* Shiny trophy with glow */}
                   <motion.div
+                    className="relative"
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="text-6xl"
                   >
-                    🏆
+                    <motion.div
+                      className="absolute inset-0 bg-yellow-300/40 rounded-full blur-xl -z-10"
+                      animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                    <span className="text-6xl">🏆</span>
                   </motion.div>
-                  <p className="text-lg text-muted-foreground font-medium">
+                  
+                  <p className="text-lg text-foreground font-bold">
                     Quest complete! See you tomorrow! 💙
                   </p>
+                  
                   <Button
                     variant="outline"
                     size="lg"
@@ -329,7 +414,7 @@ export const HeroSection = () => {
                   >
                     Explore more games 🎮
                   </Button>
-                </div>
+                </motion.div>
               )}
             </motion.div>
 

@@ -6,15 +6,15 @@ export interface DailyGreeting {
 }
 
 const GREETINGS: DailyGreeting[] = [
-  { message: "Hi! I'm Toothy! Can you help me clean my teeth today?", emoji: "👋" },
-  { message: "Uh oh! Sugar bugs are back! Can you help me?", emoji: "😬" },
-  { message: "Tooth Hero! A brushing quest is ready!", emoji: "🦸" },
-  { message: "Something shiny happens after brushing today!", emoji: "✨" },
+  { message: "I need help brushing today! Let's make me sparkle!", emoji: "✨" },
+  { message: "Help me brush so I can get shiny!", emoji: "🦷" },
+  { message: "Uh oh! Sugar bugs are here! Can you help me?", emoji: "😬" },
   { message: "My teeth need your super powers today!", emoji: "💪" },
+  { message: "Will you help me become sparkly today?", emoji: "🌟" },
 ];
 
 const COMPLETION_MESSAGE: DailyGreeting = {
-  message: "Yay! Toothy is so proud of you! Come back tomorrow for a new quest!",
+  message: "Yay! I'm so shiny now! Come back tomorrow!",
   emoji: "🎉",
 };
 
