@@ -702,6 +702,114 @@ export type Database = {
         }
         Relationships: []
       }
+      tester_accounts: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          day6_reminder_sent: boolean
+          expiry_shown: boolean
+          id: string
+          is_active: boolean
+          note: string | null
+          trial_end_at: string
+          trial_start_at: string
+          updated_at: string
+          user_id: string
+          welcome_shown: boolean
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          day6_reminder_sent?: boolean
+          expiry_shown?: boolean
+          id?: string
+          is_active?: boolean
+          note?: string | null
+          trial_end_at?: string
+          trial_start_at?: string
+          updated_at?: string
+          user_id: string
+          welcome_shown?: boolean
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          day6_reminder_sent?: boolean
+          expiry_shown?: boolean
+          id?: string
+          is_active?: boolean
+          note?: string | null
+          trial_end_at?: string
+          trial_start_at?: string
+          updated_at?: string
+          user_id?: string
+          welcome_shown?: boolean
+        }
+        Relationships: []
+      }
+      tester_activity_summary: {
+        Row: {
+          games_played: number
+          id: string
+          last_activity_at: string | null
+          quests_completed: number
+          total_screens_visited: number
+          total_time_spent_seconds: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          games_played?: number
+          id?: string
+          last_activity_at?: string | null
+          quests_completed?: number
+          total_screens_visited?: number
+          total_time_spent_seconds?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          games_played?: number
+          id?: string
+          last_activity_at?: string | null
+          quests_completed?: number
+          total_screens_visited?: number
+          total_time_spent_seconds?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tester_usage_logs: {
+        Row: {
+          id: string
+          metadata: Json | null
+          screen_name: string
+          session_id: string | null
+          time_spent_seconds: number
+          user_id: string
+          visited_at: string
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          screen_name: string
+          session_id?: string | null
+          time_spent_seconds?: number
+          user_id: string
+          visited_at?: string
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          screen_name?: string
+          session_id?: string | null
+          time_spent_seconds?: number
+          user_id?: string
+          visited_at?: string
+        }
+        Relationships: []
+      }
       unlock_codes: {
         Row: {
           code: string
@@ -862,6 +970,18 @@ export type Database = {
           total_xp: number
         }[]
       }
+      get_tester_info: {
+        Args: { check_user_id?: string }
+        Returns: {
+          days_remaining: number
+          expiry_shown: boolean
+          is_active: boolean
+          is_tester: boolean
+          trial_end_at: string
+          trial_start_at: string
+          welcome_shown: boolean
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -873,6 +993,7 @@ export type Database = {
         Args: { p_endpoint: string; p_user_id: string }
         Returns: boolean
       }
+      is_active_tester: { Args: { check_user_id?: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_safe_analytics_event_data: { Args: { _data: Json }; Returns: boolean }
     }
