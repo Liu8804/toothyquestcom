@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import PromoCodesAdmin from "@/components/admin/PromoCodesAdmin";
 import { TesterAccountsAdmin } from "@/components/admin/TesterAccountsAdmin";
+import { TesterInvitationsAdmin } from "@/components/admin/TesterInvitationsAdmin";
 import { badgeSchema } from "@/lib/validation";
 
 interface BadgeFormData {
@@ -375,7 +376,8 @@ const AdminDashboard = () => {
         </TabsContent>
 
         {/* Testers Tab */}
-        <TabsContent value="testers" className="space-y-4">
+        <TabsContent value="testers" className="space-y-6">
+          <TesterInvitationsAdmin />
           <TesterAccountsAdmin />
         </TabsContent>
 
