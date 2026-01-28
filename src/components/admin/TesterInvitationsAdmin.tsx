@@ -187,7 +187,7 @@ export const TesterInvitationsAdmin = () => {
     return { label: "Active", variant: "default" as const };
   };
 
-  const publicTesterLink = `${window.location.origin}/become-tester`;
+  const publicTesterLink = "https://toothyquest.com/become-tester";
   const [copiedPublicLink, setCopiedPublicLink] = useState(false);
 
   const copyPublicLink = () => {
