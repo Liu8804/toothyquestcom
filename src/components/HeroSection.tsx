@@ -56,10 +56,9 @@ export const HeroSection = () => {
     if (!onboardingComplete) return;
     
     hasSpokenGreetingRef.current = true;
-    // Short delay after interaction to let audio context unlock
-    setTimeout(() => {
-      speakGreeting(greeting.message, "curious");
-    }, 300);
+    // IMPORTANT: Call synchronously from the first user gesture.
+    // Delaying (setTimeout) frequently causes iOS/Safari to block playback.
+    speakGreeting(greeting.message, "curious");
   }, [greeting.message, speakGreeting, isCompleted]);
 
   // Check if onboarding is complete and start session tracking
