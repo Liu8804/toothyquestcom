@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { PurchaseProvider } from "@/hooks/usePurchase";
 import { useAudioUnlock } from "@/hooks/useAudioUnlock";
+import { TesterWelcomeModal } from "@/components/tester/TesterWelcomeModal";
+import { TesterExpiryModal } from "@/components/tester/TesterExpiryModal";
+import { TesterDay6Reminder } from "@/components/tester/TesterDay6Reminder";
 import Index from "./pages/Index";
 import Admin from "./pages/Admin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -36,6 +39,9 @@ const App = () => (
           <AudioUnlocker>
             <Toaster />
             <Sonner />
+            <TesterWelcomeModal />
+            <TesterExpiryModal />
+            <TesterDay6Reminder />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />

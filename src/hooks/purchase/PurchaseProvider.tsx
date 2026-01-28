@@ -9,11 +9,18 @@ import {
   purchaseMessages,
 } from "@/hooks/purchase/constants";
 
+interface TesterInfo {
+  isTester: boolean;
+  isActive: boolean;
+  daysRemaining: number;
+}
+
 interface PurchaseState {
   isPurchased: boolean;
   isLoading: boolean;
   isRestoring: boolean;
   isCheckingPurchase: boolean;
+  testerInfo: TesterInfo | null;
 }
 
 type PurchaseContextValue = {
@@ -22,6 +29,7 @@ type PurchaseContextValue = {
   isRestoring: boolean;
   isCheckingPurchase: boolean;
   lastPurchaseCheckAt: string | null;
+  testerInfo: TesterInfo | null;
   purchase: (onLoadingStart?: () => void, planType?: PlanType) => Promise<boolean>;
   restorePurchase: () => Promise<boolean>;
   isContentLocked: (contentIndex: number, contentType?: "quest" | "game", completedQuestsCount?: number) => boolean;
@@ -38,6 +46,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
     isLoading: false,
     isRestoring: false,
     isCheckingPurchase: true,
+    testerInfo: null,
   });
   const [lastPurchaseCheckAt, setLastPurchaseCheckAt] = useState<string | null>(null);
 
@@ -46,7 +55,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
     if (!user?.id || !session?.access_token) {
       const localPurchase =
         localStorage.getItem(`toothyquest_purchased_${user?.id || "anonymous"}`) === "true";
-      setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false }));
+      setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false, testerInfo: null }));
       setLastPurchaseCheckAt(new Date().toISOString());
       return;
     }
@@ -58,7 +67,25 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
       const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin");
       if (!adminError && isAdmin === true) {
         localStorage.setItem(`toothyquest_purchased_${user.id}`, "true");
-        setPurchaseState((prev) => ({ ...prev, isPurchased: true, isCheckingPurchase: false }));
+        setPurchaseState((prev) => ({ ...prev, isPurchased: true, isCheckingPurchase: false, testerInfo: null }));
+        setLastPurchaseCheckAt(new Date().toISOString());
+        return;
+      }
+
+      // Check if user is an active tester (7-day trial)
+      const { data: testerData } = await supabase.rpc("get_tester_info");
+      if (testerData && testerData.length > 0 && testerData[0].is_active) {
+        const tester = testerData[0];
+        setPurchaseState((prev) => ({
+          ...prev,
+          isPurchased: true, // Grant full access during trial
+          isCheckingPurchase: false,
+          testerInfo: {
+            isTester: true,
+            isActive: tester.is_active,
+            daysRemaining: tester.days_remaining,
+          },
+        }));
         setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
@@ -72,7 +99,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
 
       if (entitlement) {
         localStorage.setItem(`toothyquest_purchased_${user.id}`, "true");
-        setPurchaseState((prev) => ({ ...prev, isPurchased: true, isCheckingPurchase: false }));
+        setPurchaseState((prev) => ({ ...prev, isPurchased: true, isCheckingPurchase: false, testerInfo: null }));
         setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
@@ -86,7 +113,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
 
       if (error) {
         const localPurchase = localStorage.getItem(`toothyquest_purchased_${user.id}`) === "true";
-        setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false }));
+        setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false, testerInfo: null }));
         setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
@@ -96,12 +123,12 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
         localStorage.setItem(`toothyquest_purchased_${user.id}`, "true");
       }
 
-      setPurchaseState((prev) => ({ ...prev, isPurchased: purchased, isCheckingPurchase: false }));
+      setPurchaseState((prev) => ({ ...prev, isPurchased: purchased, isCheckingPurchase: false, testerInfo: null }));
       setLastPurchaseCheckAt(new Date().toISOString());
     } catch {
       const localPurchase =
         localStorage.getItem(`toothyquest_purchased_${user?.id || "anonymous"}`) === "true";
-      setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false }));
+      setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false, testerInfo: null }));
       setLastPurchaseCheckAt(new Date().toISOString());
     }
   }, [user?.id, session?.access_token]);
@@ -113,7 +140,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
     } else {
       const localPurchase =
         localStorage.getItem(`toothyquest_purchased_${user?.id || "anonymous"}`) === "true";
-      setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false }));
+      setPurchaseState((prev) => ({ ...prev, isPurchased: localPurchase, isCheckingPurchase: false, testerInfo: null }));
       setLastPurchaseCheckAt(new Date().toISOString());
     }
   }, [user, session?.access_token, checkPurchaseStatus]);
@@ -217,6 +244,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
       isRestoring: purchaseState.isRestoring,
       isCheckingPurchase: purchaseState.isCheckingPurchase,
       lastPurchaseCheckAt,
+      testerInfo: purchaseState.testerInfo,
       purchase,
       restorePurchase,
       isContentLocked,
@@ -228,6 +256,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
       purchaseState.isLoading,
       purchaseState.isRestoring,
       purchaseState.isCheckingPurchase,
+      purchaseState.testerInfo,
       lastPurchaseCheckAt,
       purchase,
       restorePurchase,
