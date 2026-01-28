@@ -35,3 +35,6 @@ verify_jwt = false
 
 [functions.redeem-tester-invite]
 verify_jwt = false
+
+[functions.activate-public-tester]
+verify_jwt = false
