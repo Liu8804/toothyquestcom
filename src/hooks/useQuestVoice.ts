@@ -6,7 +6,9 @@ import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 import { 
   stopAllMedia, 
   setVoicePlaying, 
-  registerVoiceAudio 
+  registerVoiceAudio,
+  getAudioContext,
+  unlockAudioContext,
 } from "./useAudioManager";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 
@@ -22,9 +24,31 @@ export const useQuestVoice = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
 
+  // WebAudio fallback (reliable on iOS/Safari once the AudioContext is unlocked)
+  const webSourceRef = useRef<AudioBufferSourceNode | null>(null);
+  const webGainRef = useRef<GainNode | null>(null);
+
   const hasShownAuthToastRef = useRef(false);
 
   const cleanupAudio = useCallback(() => {
+    // Stop WebAudio fallback if active
+    if (webSourceRef.current) {
+      try {
+        webSourceRef.current.stop();
+      } catch {
+        // ignore
+      }
+      webSourceRef.current = null;
+    }
+    if (webGainRef.current) {
+      try {
+        webGainRef.current.disconnect();
+      } catch {
+        // ignore
+      }
+      webGainRef.current = null;
+    }
+
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = "";
@@ -43,14 +67,110 @@ export const useQuestVoice = () => {
     cleanupAudio();
   }, [cleanupAudio]);
 
+  const decodeAudioBuffer = useCallback((ctx: AudioContext, buffer: ArrayBuffer) => {
+    return new Promise<AudioBuffer>((resolve, reject) => {
+      try {
+        // Safari supports callback style more reliably than Promise style
+        ctx.decodeAudioData(
+          buffer,
+          (decoded) => resolve(decoded),
+          (err) => reject(err)
+        );
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }, []);
+
+  const playWithWebAudioFallback = useCallback(
+    async (blob: Blob, onEnd?: () => void) => {
+      try {
+        // Best-effort unlock/resume (must be called from a user gesture at least once on iOS)
+        unlockAudioContext();
+
+        const ctx = getAudioContext();
+        if (ctx.state === "suspended") {
+          try {
+            await ctx.resume();
+          } catch {
+            // ignore
+          }
+        }
+
+        const effectiveVolume = getEffectiveVolume("voice");
+        if (effectiveVolume <= 0.001) {
+          toast.info("Toothy's voice is muted in Sound Settings.");
+          onEnd?.();
+          return;
+        }
+
+        const arrayBuffer = await blob.arrayBuffer();
+        const audioBuffer = await decodeAudioBuffer(ctx, arrayBuffer);
+
+        // Stop any previous fallback source
+        if (webSourceRef.current) {
+          try {
+            webSourceRef.current.stop();
+          } catch {
+            // ignore
+          }
+          webSourceRef.current = null;
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = audioBuffer;
+
+        const gain = ctx.createGain();
+        gain.gain.value = effectiveVolume;
+
+        source.connect(gain);
+        gain.connect(ctx.destination);
+
+        webSourceRef.current = source;
+        webGainRef.current = gain;
+
+        setVoicePlaying(true);
+
+        source.onended = () => {
+          setVoicePlaying(false);
+          webSourceRef.current = null;
+          try {
+            gain.disconnect();
+          } catch {
+            // ignore
+          }
+          webGainRef.current = null;
+          onEnd?.();
+        };
+
+        source.start(0);
+      } catch (err) {
+        console.error("WebAudio fallback playback failed:", err);
+        setVoicePlaying(false);
+        onEnd?.();
+      }
+    },
+    [decodeAudioBuffer]
+  );
+
   const speak = useCallback(
     (text: string, mood: VoiceMood = "neutral", onEnd?: () => void) => {
       // Stop ALL media first (centralized coordination)
       stop();
 
+      // Best-effort: unlock audio immediately in the user gesture stack (important on iOS)
+      unlockAudioContext();
+
       // Check if voice is enabled in settings
       const volumeSettings = getVolumeSettings();
       if (!volumeSettings.voiceEnabled) {
+        onEnd?.();
+        return;
+      }
+
+      // If master is effectively muted, don't waste an AI call.
+      if (getEffectiveVolume("voice") <= 0.001) {
+        toast.info("Toothy's voice is muted in Sound Settings.");
         onEnd?.();
         return;
       }
@@ -122,9 +242,6 @@ export const useQuestVoice = () => {
 
           // Set source on pre-existing element (created in user gesture context)
           audio.src = url;
-          
-          // Register with centralized manager for proper coordination
-          registerVoiceAudio(audio);
 
           audio.onended = () => {
             setVoicePlaying(false);
@@ -138,14 +255,23 @@ export const useQuestVoice = () => {
             onEnd?.();
           };
 
-          await audio.play();
+          try {
+            await audio.play();
+            // Register with centralized manager only once we know playback started.
+            registerVoiceAudio(audio);
+          } catch (err) {
+            // Common on iOS/Safari: HTMLAudio playback blocked after async work.
+            console.warn("HTMLAudio voice playback blocked; falling back to WebAudio.", err);
+            cleanupAudio();
+            await playWithWebAudioFallback(blob, onEnd);
+          }
         } catch {
           cleanupAudio();
           onEnd?.();
         }
       })();
     },
-    [cleanupAudio, stop]
+    [cleanupAudio, playWithWebAudioFallback, stop]
   );
 
   const speakIntro = useCallback((intro: string) => {
