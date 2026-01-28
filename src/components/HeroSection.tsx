@@ -1,14 +1,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import FirstTapCelebration from "@/components/FirstTapCelebration";
-import SwipeHint from "@/components/SwipeHint";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
+import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
@@ -23,9 +22,9 @@ export const HeroSection = () => {
     trackCelebration,
     trackSessionStart 
   } = useEngagementAnalytics();
+  const { greeting, isCompleted, markComplete } = useDailyGreeting();
   
   const [showCelebration, setShowCelebration] = useState(false);
-  const [showSwipeHint, setShowSwipeHint] = useState(false);
   const [hasCompletedFirstTap, setHasCompletedFirstTap] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isHoveringCTA, setIsHoveringCTA] = useState(false);
@@ -52,14 +51,21 @@ export const HeroSection = () => {
 
   // Mascot wave animation when hovering CTA
   useEffect(() => {
-    if (isHoveringCTA) {
+    if (isHoveringCTA && !isCompleted) {
       setMascotMood("waving");
       playWave();
       trackMascotInteraction("wave");
-    } else {
+    } else if (!isCompleted) {
       setMascotMood("idle");
     }
-  }, [isHoveringCTA, playWave, trackMascotInteraction]);
+  }, [isHoveringCTA, isCompleted, playWave, trackMascotInteraction]);
+
+  // Set cheering mood when quest is completed
+  useEffect(() => {
+    if (isCompleted) {
+      setMascotMood("cheering");
+    }
+  }, [isCompleted]);
 
   const handleStartQuest = useCallback(() => {
     success(); // Haptic feedback
@@ -74,7 +80,7 @@ export const HeroSection = () => {
       trackCelebration("first_tap");
       localStorage.setItem("toothyquest_first_tap", "true");
     } else {
-      // Scroll to adventures section
+      // Scroll to adventures section to start the quest
       const adventuresSection = document.getElementById('adventures');
       if (adventuresSection) {
         adventuresSection.scrollIntoView({ behavior: 'smooth' });
@@ -90,17 +96,15 @@ export const HeroSection = () => {
   const handleCelebrationComplete = useCallback(() => {
     setShowCelebration(false);
     setHasCompletedFirstTap(true);
-    setShowSwipeHint(true);
     setMascotMood("idle");
     
-    // Hide swipe hint after a few seconds and scroll
+    // Scroll to adventures section
     setTimeout(() => {
-      setShowSwipeHint(false);
       const adventuresSection = document.getElementById('adventures');
       if (adventuresSection) {
         adventuresSection.scrollIntoView({ behavior: 'smooth' });
       }
-    }, 3000);
+    }, 500);
   }, []);
 
   const handleOnboardingComplete = useCallback(() => {
@@ -114,14 +118,11 @@ export const HeroSection = () => {
       
       {/* First Tap Celebration */}
       <FirstTapCelebration isActive={showCelebration} onComplete={handleCelebrationComplete} />
-      
-      {/* Swipe Hint */}
-      <SwipeHint isVisible={showSwipeHint} />
 
       <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
         <FloatingBubbles />
         
-        {/* ToothyQuest Logo - Top left corner, smaller */}
+        {/* ToothyQuest Logo - Top left corner */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -135,15 +136,15 @@ export const HeroSection = () => {
           />
         </motion.div>
         
-        {/* Decorative floating elements */}
+        {/* Decorative floating elements - reduced for cleaner look */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {["✨", "⭐", "🌟", "💫", "🎮", "🏆", "🎉"].map((emoji, i) => (
+          {["✨", "⭐", "🌟", "💫"].map((emoji, i) => (
             <motion.div
               key={i}
               className="absolute text-2xl md:text-3xl"
               style={{
-                left: `${10 + (i * 12)}%`,
-                top: `${15 + (i % 3) * 25}%`,
+                left: `${15 + (i * 20)}%`,
+                top: `${10 + (i % 2) * 15}%`,
               }}
               animate={{
                 y: [0, -15, 0],
@@ -162,28 +163,28 @@ export const HeroSection = () => {
         </div>
 
         <div className="container mx-auto px-4 py-8 relative z-10">
-          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+          <div className="flex flex-col items-center text-center max-w-xl mx-auto">
             
-            {/* Main Mascot - Kid-friendly sticker character */}
+            {/* Main Mascot - Large and central */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="relative mb-6"
+              className="relative mb-4"
             >
               <motion.img
-                src={mascotMood === "cheering" ? mascotCelebrating : mascotWaving}
+                src={isCompleted || mascotMood === "cheering" ? mascotCelebrating : mascotWaving}
                 alt="Toothy - Your friendly dental buddy"
-                className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-contain drop-shadow-xl cursor-pointer"
+                className="w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain drop-shadow-xl cursor-pointer"
                 animate={
-                  mascotMood === "cheering" 
-                    ? { y: [0, -15, 0], scale: [1, 1.1, 1] } 
+                  isCompleted || mascotMood === "cheering"
+                    ? { y: [0, -12, 0], scale: [1, 1.08, 1] }
                     : mascotMood === "waving"
-                    ? { rotate: [0, -5, 5, 0] }
-                    : { y: [0, -8, 0] }
+                    ? { rotate: [0, -8, 8, -8, 0] }
+                    : { y: [0, -10, 0], scale: [1, 1.02, 1] }
                 }
                 transition={{
-                  duration: mascotMood === "cheering" ? 0.5 : 2,
+                  duration: mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
@@ -191,49 +192,52 @@ export const HeroSection = () => {
                   trackMascotInteraction("tap");
                   setMascotMood("cheering");
                   playCheer();
-                  setTimeout(() => setMascotMood("idle"), 2000);
+                  setTimeout(() => {
+                    if (!isCompleted) setMascotMood("idle");
+                  }, 2000);
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               />
               
-              {/* Mood indicator */}
-              <AnimatePresence>
-                {mascotMood !== "idle" && (
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="absolute -top-2 -right-2 text-3xl"
-                  >
-                    {mascotMood === "waving" ? "👋" : "🎉"}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Greeting emoji indicator */}
+              <motion.div
+                key={greeting.emoji}
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                className="absolute -top-2 -right-2 text-4xl"
+              >
+                <motion.span
+                  animate={{ scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  {greeting.emoji}
+                </motion.span>
+              </motion.div>
 
-              {/* Sparkle effect when cheering */}
+              {/* Sparkle effects */}
               <AnimatePresence>
-                {mascotMood === "cheering" && (
+                {(mascotMood === "cheering" || isCompleted) && (
                   <>
-                    {[...Array(6)].map((_, i) => (
+                    {[...Array(8)].map((_, i) => (
                       <motion.span
                         key={i}
                         className="absolute pointer-events-none text-xl"
                         style={{
-                          top: `${10 + Math.random() * 80}%`,
-                          left: `${10 + Math.random() * 80}%`,
+                          top: `${5 + Math.random() * 90}%`,
+                          left: `${5 + Math.random() * 90}%`,
                         }}
                         initial={{ opacity: 0, scale: 0 }}
                         animate={{
                           opacity: [0, 1, 0],
                           scale: [0.5, 1.2, 0.5],
-                          y: [-5, -20],
+                          y: [-5, -25],
                         }}
                         exit={{ opacity: 0, scale: 0 }}
                         transition={{
                           duration: 1.5,
                           repeat: Infinity,
-                          delay: i * 0.2,
+                          delay: i * 0.15,
                         }}
                       >
                         {i % 2 === 0 ? "✨" : "⭐"}
@@ -244,92 +248,112 @@ export const HeroSection = () => {
               </AnimatePresence>
             </motion.div>
 
-            {/* Clear Value Proposition */}
+            {/* Speech Bubble with Dynamic Greeting */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mb-6"
+              key={greeting.message}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+              className="relative mb-8 px-6 py-4 bg-card rounded-3xl shadow-lg border-2 border-primary/20 max-w-md"
             >
-              <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 leading-tight">
-                Turn brushing & flossing into a{" "}
-                <span className="text-gradient-hero">fun daily game</span>{" "}
-                for kids
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-lg mx-auto">
-                ToothyQuest helps kids build healthy dental habits through fun quests and rewards.
+              {/* Speech bubble pointer */}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-12 border-l-transparent border-r-transparent border-b-card" />
+              <p className="text-xl md:text-2xl font-bold text-foreground leading-relaxed">
+                {greeting.message}
               </p>
             </motion.div>
 
-            {/* Trust indicators - minimal and subtle */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="flex items-center gap-3 mb-8"
-            >
-              <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                ✅ Kid-Safe
-              </span>
-              <span className="text-muted-foreground/50">•</span>
-              <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                🚫 No Ads
-              </span>
-              <span className="text-muted-foreground/50">•</span>
-              <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                Ages 3-9
-              </span>
-            </motion.div>
-
-            {/* Single Primary CTA - Most visible element with pulse animation */}
+            {/* Primary CTA - HELP TOOTHY or Completed State */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
               className="relative"
             >
-              {/* Pulsing glow behind button */}
-              <motion.div
-                className="absolute inset-0 gradient-hero rounded-3xl blur-xl opacity-50"
-                animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-              
-              <Button
-                variant="hero"
-                size="xl"
-                onClick={handleStartQuest}
-                onMouseEnter={handleCTAHover}
-                onMouseLeave={() => setIsHoveringCTA(false)}
-                className="relative text-xl md:text-2xl px-10 md:px-14 py-6 md:py-8 shadow-2xl hover:shadow-3xl"
-              >
-                <motion.span 
-                  className="text-2xl mr-2"
-                  animate={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  🎮
-                </motion.span>
-                Start Today's Quest
-                <motion.span
-                  className="ml-2"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  ✨
-                </motion.span>
-              </Button>
+              {!isCompleted ? (
+                <>
+                  {/* Pulsing glow behind button */}
+                  <motion.div
+                    className="absolute inset-0 gradient-hero rounded-3xl blur-xl opacity-50"
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  />
+                  
+                  <Button
+                    variant="hero"
+                    size="xl"
+                    onClick={handleStartQuest}
+                    onMouseEnter={handleCTAHover}
+                    onMouseLeave={() => setIsHoveringCTA(false)}
+                    className="relative text-2xl md:text-3xl px-12 md:px-16 py-7 md:py-8 shadow-2xl hover:shadow-3xl font-extrabold"
+                  >
+                    <motion.span 
+                      className="text-3xl mr-3"
+                      animate={{ rotate: [0, -15, 15, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      🦷
+                    </motion.span>
+                    HELP TOOTHY
+                    <motion.span
+                      className="ml-3 text-3xl"
+                      animate={{ scale: [1, 1.3, 1] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                    >
+                      ✨
+                    </motion.span>
+                  </Button>
+                </>
+              ) : (
+                <div className="flex flex-col items-center gap-4">
+                  <motion.div
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="text-6xl"
+                  >
+                    🏆
+                  </motion.div>
+                  <p className="text-lg text-muted-foreground font-medium">
+                    Quest complete! See you tomorrow! 💙
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => {
+                      const adventuresSection = document.getElementById('adventures');
+                      if (adventuresSection) {
+                        adventuresSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="mt-2"
+                  >
+                    Explore more games 🎮
+                  </Button>
+                </div>
+              )}
             </motion.div>
 
-            {/* Subtle helper text */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              className="mt-6 text-sm text-muted-foreground"
-            >
-              No sign-up required • Start playing instantly
-            </motion.p>
+            {/* Trust indicators - minimal */}
+            {!isCompleted && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="flex items-center gap-3 mt-8"
+              >
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                  ✅ Kid-Safe
+                </span>
+                <span className="text-muted-foreground/50">•</span>
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                  🚫 No Ads
+                </span>
+                <span className="text-muted-foreground/50">•</span>
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                  Ages 3-7
+                </span>
+              </motion.div>
+            )}
           </div>
         </div>
 
