@@ -780,6 +780,45 @@ export type Database = {
         }
         Relationships: []
       }
+      tester_invitations: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          email: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          max_uses: number
+          note: string | null
+          uses_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number
+          note?: string | null
+          uses_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          max_uses?: number
+          note?: string | null
+          uses_count?: number
+        }
+        Relationships: []
+      }
       tester_usage_logs: {
         Row: {
           id: string
@@ -935,6 +974,7 @@ export type Database = {
         Returns: boolean
       }
       generate_referral_code: { Args: never; Returns: string }
+      generate_tester_invite_code: { Args: never; Returns: string }
       get_admin_audit_logs: {
         Args: never
         Returns: {
