@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FloatingBubbles from "@/components/FloatingBubbles";
@@ -17,7 +17,7 @@ import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
-  const { playWave, playCheer, playQuestStart } = useMascotSounds();
+  const { playWave, playCheer, playQuestStart, playQuestComplete } = useMascotSounds();
   const { 
     trackFirstTap, 
     trackCTAHover, 
@@ -32,10 +32,14 @@ export const HeroSection = () => {
   const [hasCompletedFirstTap, setHasCompletedFirstTap] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isHoveringCTA, setIsHoveringCTA] = useState(false);
-  const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering">("idle");
+  const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering" | "wiggle">("idle");
   
   // Show celebration briefly when quest was just completed this session
   const [justCompleted, setJustCompleted] = useState(false);
+  
+  // Idle timer for wiggle animation
+  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isWiggling, setIsWiggling] = useState(false);
 
   // Check if onboarding is complete and start session tracking
   useEffect(() => {
@@ -56,16 +60,63 @@ export const HeroSection = () => {
     }
   }, [trackSessionStart]);
 
+  // Reset idle timer whenever user interacts
+  const resetIdleTimer = useCallback(() => {
+    if (idleTimerRef.current) {
+      clearTimeout(idleTimerRef.current);
+    }
+    setIsWiggling(false);
+    
+    // Only set wiggle timer if quest is not completed
+    if (!isCompleted) {
+      idleTimerRef.current = setTimeout(() => {
+        setIsWiggling(true);
+        playWave(); // Play a gentle sound to get attention
+        trackMascotInteraction("idle_wiggle");
+        
+        // Stop wiggling after 2 seconds
+        setTimeout(() => {
+          setIsWiggling(false);
+        }, 2000);
+      }, 5000); // 5 seconds of inactivity
+    }
+  }, [isCompleted, playWave, trackMascotInteraction]);
+
+  // Start idle timer on mount and reset on any interaction
+  useEffect(() => {
+    resetIdleTimer();
+    
+    // Add global interaction listeners
+    const handleInteraction = () => resetIdleTimer();
+    window.addEventListener("click", handleInteraction);
+    window.addEventListener("touchstart", handleInteraction);
+    
+    return () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current);
+      }
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("touchstart", handleInteraction);
+    };
+  }, [resetIdleTimer]);
+
+  // Play completion sound when quest is completed
+  useEffect(() => {
+    if (isCompleted && justCompleted) {
+      playQuestComplete();
+    }
+  }, [isCompleted, justCompleted, playQuestComplete]);
+
   // Mascot wave animation when hovering CTA
   useEffect(() => {
     if (isHoveringCTA && !isCompleted) {
       setMascotMood("waving");
       playWave();
       trackMascotInteraction("wave");
-    } else if (!isCompleted) {
+    } else if (!isCompleted && !isWiggling) {
       setMascotMood("idle");
     }
-  }, [isHoveringCTA, isCompleted, playWave, trackMascotInteraction]);
+  }, [isHoveringCTA, isCompleted, isWiggling, playWave, trackMascotInteraction]);
 
   // Set cheering mood when quest is completed
   useEffect(() => {
@@ -206,21 +257,24 @@ export const HeroSection = () => {
                   isCompleted ? "brightness-110 saturate-110" : "brightness-95 saturate-90"
                 }`}
                 animate={
-                  isCompleted || mascotMood === "cheering"
+                  isWiggling
+                    ? { rotate: [0, -8, 8, -8, 8, -4, 4, 0], scale: [1, 1.05, 1.05, 1.05, 1.05, 1.02, 1.02, 1] }
+                    : isCompleted || mascotMood === "cheering"
                     ? { y: [0, -12, 0], scale: [1, 1.08, 1] }
                     : mascotMood === "waving"
                     ? { rotate: [0, -8, 8, -8, 0] }
                     : { y: [0, -6, 0], scale: [1, 1.01, 1] }
                 }
                 transition={{
-                  duration: mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
-                  repeat: Infinity,
+                  duration: isWiggling ? 0.8 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
+                  repeat: isWiggling ? 0 : Infinity,
                   ease: "easeInOut",
                 }}
                 onClick={() => {
                   trackMascotInteraction("tap");
                   setMascotMood("cheering");
                   playCheer();
+                  resetIdleTimer();
                   setTimeout(() => {
                     if (!isCompleted) setMascotMood("idle");
                   }, 2000);
