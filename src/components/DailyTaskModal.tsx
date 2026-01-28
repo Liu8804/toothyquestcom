@@ -4,6 +4,7 @@ import { Play, CheckCircle, Sparkles, Timer, X, Flame } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDailyTask } from "@/hooks/useDailyTask";
 import { useStreak } from "@/hooks/useStreak";
+import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import BrushingTimerGame from "@/components/BrushingGame/BrushingTimerGame";
 import MascotWithExpression from "@/components/MascotWithExpression";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
@@ -25,6 +26,7 @@ const DailyTaskModal = ({
 }: DailyTaskModalProps) => {
   const { task, isCompleted, loading, completeTask } = useDailyTask(childId);
   const { currentStreak } = useStreak();
+  const { markComplete: markDailyGreetingComplete } = useDailyGreeting();
   const [phase, setPhase] = useState<"intro" | "task" | "complete">("intro");
   const [showBrushingGame, setShowBrushingGame] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -63,13 +65,16 @@ const DailyTaskModal = ({
       setShowConfetti(true);
       setPhase("complete");
       
+      // Mark the daily greeting as complete for the home screen
+      markDailyGreetingComplete();
+      
       // Notify parent
       onTaskComplete(result.xpEarned);
       
       // Hide confetti after animation
       setTimeout(() => setShowConfetti(false), 3000);
     }
-  }, [completeTask, onTaskComplete]);
+  }, [completeTask, onTaskComplete, markDailyGreetingComplete]);
 
   const handleBrushingComplete = useCallback(() => {
     setShowBrushingGame(false);
