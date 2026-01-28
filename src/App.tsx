@@ -20,6 +20,7 @@ import PaymentCanceled from "./pages/PaymentCanceled";
 import Install from "./pages/Install";
 import Redeem from "./pages/Redeem";
 import TesterInvite from "./pages/TesterInvite";
+import BecomeTester from "./pages/BecomeTester";
 import AppPrivacy from "./pages/AppPrivacy";
 import AppStoreChecklist from "./pages/AppStoreChecklist";
 import NotFound from "./pages/NotFound";
@@ -56,6 +57,7 @@ const App = () => (
                 <Route path="/install" element={<Install />} />
                 <Route path="/redeem" element={<Redeem />} />
                 <Route path="/tester-invite" element={<TesterInvite />} />
+                <Route path="/become-tester" element={<BecomeTester />} />
                 <Route path="/app-privacy" element={<AppPrivacy />} />
                 <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

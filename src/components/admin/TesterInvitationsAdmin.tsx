@@ -187,44 +187,101 @@ export const TesterInvitationsAdmin = () => {
     return { label: "Active", variant: "default" as const };
   };
 
+  const publicTesterLink = `${window.location.origin}/become-tester`;
+  const [copiedPublicLink, setCopiedPublicLink] = useState(false);
+
+  const copyPublicLink = () => {
+    navigator.clipboard.writeText(publicTesterLink);
+    setCopiedPublicLink(true);
+    toast.success("Public tester link copied!");
+    setTimeout(() => setCopiedPublicLink(false), 2000);
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Link2 className="w-5 h-5 text-pink-500" />
-              Tester Invitations
-            </CardTitle>
-            <CardDescription>
-              Create and manage invitation links for testers
-            </CardDescription>
-          </div>
+    <div className="space-y-6">
+      {/* Public Tester Link Card */}
+      <Card className="border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Link2 className="w-5 h-5 text-purple-500" />
+            Public Tester Link
+          </CardTitle>
+          <CardDescription>
+            Share this single link with anyone — they'll automatically become a tester on signup
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="flex items-center gap-2">
+            <Input
+              readOnly
+              value={publicTesterLink}
+              className="font-mono text-sm bg-background"
+            />
             <Button
               variant="outline"
-              size="sm"
-              onClick={fetchInvitations}
-              disabled={isLoading}
+              size="icon"
+              onClick={copyPublicLink}
+              className="shrink-0"
             >
-              <RefreshCw className={`w-4 h-4 mr-1 ${isLoading ? "animate-spin" : ""}`} />
-              Refresh
+              {copiedPublicLink ? (
+                <Check className="w-4 h-4 text-green-500" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
             </Button>
-            <Button size="sm" onClick={() => setShowCreateDialog(true)}>
-              <Plus className="w-4 h-4 mr-1" />
-              Create Invite
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => window.open(publicTesterLink, "_blank")}
+              className="shrink-0"
+            >
+              <ExternalLink className="w-4 h-4" />
             </Button>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {invitations.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <Link2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No invitations yet</p>
-            <p className="text-sm">Click "Create Invite" to generate one</p>
+          <p className="text-xs text-muted-foreground mt-2">
+            No manual approval needed — testers get 7 days of full access automatically
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Individual Invite Codes Card */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Link2 className="w-5 h-5 text-pink-500" />
+                Individual Invite Codes
+              </CardTitle>
+              <CardDescription>
+                Create unique codes for tracking specific testers (optional)
+              </CardDescription>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchInvitations}
+                disabled={isLoading}
+              >
+                <RefreshCw className={`w-4 h-4 mr-1 ${isLoading ? "animate-spin" : ""}`} />
+                Refresh
+              </Button>
+              <Button size="sm" onClick={() => setShowCreateDialog(true)}>
+                <Plus className="w-4 h-4 mr-1" />
+                Create Code
+              </Button>
+            </div>
           </div>
-        ) : (
+        </CardHeader>
+        <CardContent>
+          {invitations.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <Link2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>No individual codes yet</p>
+              <p className="text-sm">Use the public link above, or create individual codes for tracking</p>
+            </div>
+          ) : (
           <Table>
             <TableHeader>
               <TableRow>
@@ -313,9 +370,9 @@ export const TesterInvitationsAdmin = () => {
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create Tester Invitation</DialogTitle>
+              <DialogTitle>Create Individual Invite Code</DialogTitle>
               <DialogDescription>
-                Generate a new invitation link for testers
+                Generate a unique code for tracking a specific tester
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
@@ -377,12 +434,13 @@ export const TesterInvitationsAdmin = () => {
                 Cancel
               </Button>
               <Button onClick={handleCreateInvitation} disabled={isCreating}>
-                {isCreating ? "Creating..." : "Create Invitation"}
+                {isCreating ? "Creating..." : "Create Code"}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </CardContent>
     </Card>
+    </div>
   );
 };
