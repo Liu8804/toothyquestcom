@@ -45,6 +45,22 @@ export const HeroSection = () => {
   
   // Track if greeting has been spoken this session
   const hasSpokenGreetingRef = useRef(false);
+  
+  // Track if user has interacted (needed for audio unlock)
+  const hasInteractedRef = useRef(false);
+
+  // Speak greeting after first user interaction (respects browser autoplay policy)
+  const speakGreetingOnce = useCallback(() => {
+    if (hasSpokenGreetingRef.current || isCompleted) return;
+    const onboardingComplete = localStorage.getItem("toothyquest_onboarding_complete");
+    if (!onboardingComplete) return;
+    
+    hasSpokenGreetingRef.current = true;
+    // Short delay after interaction to let audio context unlock
+    setTimeout(() => {
+      speakGreeting(greeting.message, "curious");
+    }, 300);
+  }, [greeting.message, speakGreeting, isCompleted]);
 
   // Check if onboarding is complete and start session tracking
   useEffect(() => {
@@ -63,16 +79,24 @@ export const HeroSection = () => {
     if (firstTapComplete) {
       setHasCompletedFirstTap(true);
     }
+  }, [trackSessionStart]);
+  
+  // Listen for first user interaction to trigger greeting voice
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (hasInteractedRef.current) return;
+      hasInteractedRef.current = true;
+      speakGreetingOnce();
+    };
     
-    // Speak greeting after a short delay (only once per session, only if onboarding complete)
-    if (onboardingComplete && !hasSpokenGreetingRef.current && !isCompleted) {
-      hasSpokenGreetingRef.current = true;
-      const voiceTimer = setTimeout(() => {
-        speakGreeting(greeting.message, "curious");
-      }, 1500);
-      return () => clearTimeout(voiceTimer);
-    }
-  }, [trackSessionStart, greeting.message, speakGreeting, isCompleted]);
+    window.addEventListener("click", handleFirstInteraction, { once: true });
+    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
+    
+    return () => {
+      window.removeEventListener("click", handleFirstInteraction);
+      window.removeEventListener("touchstart", handleFirstInteraction);
+    };
+  }, [speakGreetingOnce]);
 
   // Reset idle timer whenever user interacts
   const resetIdleTimer = useCallback(() => {
