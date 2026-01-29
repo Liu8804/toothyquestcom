@@ -353,29 +353,28 @@ export const HeroSection = () => {
           <img
             src={toothyQuestLogo}
             alt="ToothyQuest"
-            className="w-16 h-16 md:w-20 md:h-20 object-contain drop-shadow-lg"
+            className="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-lg"
           />
         </motion.div>
         
-        {/* Decorative floating elements - reduced for cleaner look */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {["✨", "⭐", "🌟", "💫"].map((emoji, i) => (
+        {/* Minimal decorative sparkles - only on desktop */}
+        <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none opacity-60">
+          {["✨", "⭐"].map((emoji, i) => (
             <motion.div
               key={i}
-              className="absolute text-2xl md:text-3xl"
+              className="absolute text-xl"
               style={{
-                left: `${15 + (i * 20)}%`,
-                top: `${10 + (i % 2) * 15}%`,
+                left: i === 0 ? "8%" : "92%",
+                top: "20%",
               }}
               animate={{
-                y: [0, -15, 0],
-                rotate: [0, 10, -10, 0],
-                scale: [1, 1.1, 1],
+                y: [0, -10, 0],
+                opacity: [0.5, 0.8, 0.5],
               }}
               transition={{
-                duration: 3 + (i * 0.5),
+                duration: 3,
                 repeat: Infinity,
-                delay: i * 0.3,
+                delay: i * 0.5,
               }}
             >
               {emoji}
@@ -383,19 +382,66 @@ export const HeroSection = () => {
           ))}
         </div>
 
-        <div className="container mx-auto px-4 py-8 relative z-10">
-          <div className="flex flex-col items-center text-center max-w-xl mx-auto">
+        <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
+          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
-            {/* Main Mascot - Large and central with before/after states */}
+            {/* HEADLINE - Clear value proposition */}
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-2 md:mb-3 leading-tight"
+            >
+              Turn tooth brushing into a{" "}
+              <span className="text-primary">fun daily game</span>
+            </motion.h1>
+            
+            {/* SUBHEADLINE - Supporting benefit */}
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-base sm:text-lg md:text-xl text-muted-foreground mb-4 md:mb-6 max-w-lg px-2"
+            >
+              Daily brushing quests, a friendly mascot, and rewards that help kids ages 3–9 build healthy habits.
+            </motion.p>
+            
+            {/* Main Mascot - Before/After visual transformation */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="relative mb-4"
             >
-              {/* Dull overlay for "before" state - shows when not completed */}
-              {!isCompleted && !isWiggling && (
-                <div className="absolute inset-0 pointer-events-none z-10 mix-blend-multiply opacity-20 bg-gray-400 rounded-full" />
+              {/* Before state label */}
+              {!isCompleted && !isWiggling && !isIntroWaving && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="absolute -left-16 top-1/2 -translate-y-1/2 hidden md:block"
+                >
+                  <span className="text-xs font-bold text-muted-foreground/70 bg-muted/50 px-2 py-1 rounded-full">
+                    Before 😕
+                  </span>
+                </motion.div>
+              )}
+              
+              {/* After state label - shows when completed */}
+              {isCompleted && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="absolute -right-16 top-1/2 -translate-y-1/2 hidden md:block"
+                >
+                  <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded-full">
+                    After ✨
+                  </span>
+                </motion.div>
+              )}
+              
+              {/* Dull "needs help" state - visible before quest */}
+              {!isCompleted && !isWiggling && !isIntroWaving && (
+                <div className="absolute inset-0 pointer-events-none z-10 mix-blend-multiply opacity-25 bg-gray-400 rounded-full" />
               )}
               
               {/* Enhanced wiggle glow effect - attention grabbing */}
@@ -430,20 +476,20 @@ export const HeroSection = () => {
                 )}
               </AnimatePresence>
               
-              {/* Shiny glow for "after" state */}
+              {/* Shiny glow for "after" state - bright and radiant */}
               {isCompleted && (
                 <motion.div
-                  className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-yellow-200/60 via-white/40 to-primary/30 blur-2xl"
-                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0.9, 0.6] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-yellow-200/70 via-white/50 to-primary/40 blur-3xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
                 />
               )}
               
               <motion.img
                 src={isCompleted ? mascotCelebrating : (isIntroWaving || mascotMood === "waving") ? mascotWaving : mascotMood === "cheering" ? mascotCelebrating : mascotMain}
                 alt="Toothy - Your friendly dental buddy"
-                className={`w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain drop-shadow-xl cursor-pointer transition-all duration-300 ${
-                  isCompleted ? "brightness-110 saturate-110" : isWiggling ? "brightness-105 saturate-105" : "brightness-95 saturate-90"
+                className={`w-40 h-40 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain drop-shadow-xl cursor-pointer transition-all duration-300 ${
+                  isCompleted ? "brightness-115 saturate-125 drop-shadow-2xl" : isWiggling ? "brightness-105 saturate-105" : "brightness-90 saturate-80 grayscale-[0.15]"
                 }`}
                 initial={isIntroWaving ? { opacity: 0, scale: 0.5, y: 50 } : undefined}
                 animate={
@@ -641,58 +687,42 @@ export const HeroSection = () => {
               </AnimatePresence>
             </motion.div>
 
-            {/* Today's Mission Label */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mb-2"
-            >
-              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary/10 text-primary font-bold text-sm rounded-full border border-primary/20">
-                🦷 {isCompleted ? "Quest Complete! 🎉" : "Today's Brushing Quest"}
-              </span>
-            </motion.div>
-
-            {/* Tap-to-Hear button (iOS-safe audio trigger) – only before quest is done */}
+            {/* Compact speech bubble - only when not completed */}
             {!isCompleted && (
               <motion.div
+                key={greeting.message}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.25 }}
-                className="mb-3"
+                transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+                className="relative mb-4 px-4 py-2 bg-card/90 rounded-2xl shadow-md border border-primary/20 max-w-sm"
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="rounded-full gap-1.5 bg-card shadow-card px-4 text-sm font-medium"
-                  onClick={() => {
-                    // Best-effort unlock within user gesture
-                    unlockAudioContext();
-                    speakGreeting(greeting.message, "curious");
-                    resetIdleTimer();
-                  }}
-                >
-                  🔊 Tap to Hear Toothy
-                </Button>
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-b-8 border-l-transparent border-r-transparent border-b-card/90" />
+                <p className="text-base md:text-lg font-semibold text-foreground flex items-center justify-center gap-2">
+                  <span>Help me sparkle today!</span>
+                  <motion.span 
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    ✨
+                  </motion.span>
+                </p>
+              </motion.div>
+            )}
+            
+            {/* Completed state badge */}
+            {isCompleted && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-4"
+              >
+                <span className="inline-flex items-center gap-2 px-5 py-2 bg-green-100 text-green-700 font-bold text-lg rounded-full border-2 border-green-300 shadow-md">
+                  ✅ Quest Complete! 🎉
+                </span>
               </motion.div>
             )}
 
-            {/* Speech Bubble with Dynamic Greeting */}
-            <motion.div
-              key={greeting.message}
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-              className="relative mb-8 px-6 py-4 bg-card rounded-3xl shadow-lg border-2 border-primary/20 max-w-md"
-            >
-              {/* Speech bubble pointer */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-12 border-l-transparent border-r-transparent border-b-card" />
-              <p className="text-xl md:text-2xl font-bold text-foreground leading-relaxed">
-                {greeting.message}
-              </p>
-            </motion.div>
-
-            {/* Primary CTA - HELP TOOTHY or Completed State */}
+            {/* PRIMARY CTA - Large, prominent, single action */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -701,11 +731,14 @@ export const HeroSection = () => {
             >
               {!isCompleted ? (
                 <>
-                  {/* Pulsing glow behind button */}
+                  {/* Large pulsing glow for maximum visibility */}
                   <motion.div
-                    className="absolute inset-0 gradient-hero rounded-3xl blur-xl opacity-50"
-                    animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0.6, 0.4] }}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 gradient-hero rounded-3xl blur-2xl"
+                    animate={{ 
+                      scale: [1, 1.2, 1], 
+                      opacity: [0.5, 0.7, 0.5] 
+                    }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
                   />
                   
                   <Button
@@ -714,18 +747,18 @@ export const HeroSection = () => {
                     onClick={handleStartQuest}
                     onMouseEnter={handleCTAHover}
                     onMouseLeave={() => setIsHoveringCTA(false)}
-                    className="relative text-2xl md:text-3xl px-12 md:px-16 py-7 md:py-8 shadow-2xl hover:shadow-3xl font-extrabold"
+                    className="relative text-xl sm:text-2xl md:text-3xl px-8 sm:px-12 md:px-16 py-6 sm:py-7 md:py-8 shadow-2xl hover:shadow-3xl font-extrabold tracking-tight"
                   >
                     <motion.span 
-                      className="text-3xl mr-3"
+                      className="text-2xl sm:text-3xl mr-2 sm:mr-3"
                       animate={{ rotate: [0, -15, 15, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
                       🦷
                     </motion.span>
-                    HELP TOOTHY
+                    Start Today's Brushing Quest
                     <motion.span
-                      className="ml-3 text-3xl"
+                      className="ml-2 sm:ml-3 text-2xl sm:text-3xl"
                       animate={{ scale: [1, 1.3, 1] }}
                       transition={{ duration: 1, repeat: Infinity }}
                     >
@@ -754,7 +787,7 @@ export const HeroSection = () => {
                   </motion.div>
                   
                   <p className="text-lg text-foreground font-bold">
-                    Yay! I'm so shiny now! 🎉 Come back tomorrow!
+                    Toothy is sparkling! 🎉 Come back tomorrow!
                   </p>
                   
                   <Button
@@ -774,24 +807,41 @@ export const HeroSection = () => {
               )}
             </motion.div>
 
-            {/* Trust indicators - minimal */}
+            {/* Tap to hear - subtle secondary action */}
+            {!isCompleted && (
+              <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                onClick={() => {
+                  unlockAudioContext();
+                  speakGreeting(greeting.message, "curious");
+                  resetIdleTimer();
+                }}
+                className="mt-4 text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5"
+              >
+                🔊 Tap to hear Toothy speak
+              </motion.button>
+            )}
+
+            {/* Trust indicators - compact, below CTA */}
             {!isCompleted && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="flex items-center gap-3 mt-8"
+                className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-6 text-xs sm:text-sm"
               >
-                <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                <span className="font-medium text-muted-foreground flex items-center gap-1">
                   ✅ Kid-Safe
                 </span>
-                <span className="text-muted-foreground/50">•</span>
-                <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+                <span className="text-muted-foreground/30 hidden sm:block">•</span>
+                <span className="font-medium text-muted-foreground flex items-center gap-1">
                   🚫 No Ads
                 </span>
-                <span className="text-muted-foreground/50">•</span>
-                <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-                  Ages 3-7
+                <span className="text-muted-foreground/30 hidden sm:block">•</span>
+                <span className="font-medium text-muted-foreground flex items-center gap-1">
+                  ⭐ Ages 3-9
                 </span>
               </motion.div>
             )}
