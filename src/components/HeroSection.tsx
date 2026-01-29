@@ -514,9 +514,33 @@ export const HeroSection = () => {
               className="mb-2"
             >
               <span className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-primary/10 text-primary font-bold text-sm rounded-full border border-primary/20">
-                🦷 {isCompleted ? "Quest Complete!" : "Today's Brushing Quest"}
+                🦷 {isCompleted ? "Quest Complete! 🎉" : "Today's Brushing Quest"}
               </span>
             </motion.div>
+
+            {/* Tap-to-Hear button (iOS-safe audio trigger) – only before quest is done */}
+            {!isCompleted && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.25 }}
+                className="mb-3"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="rounded-full gap-1.5 bg-card shadow-card px-4 text-sm font-medium"
+                  onClick={() => {
+                    // Best-effort unlock within user gesture
+                    unlockAudioContext();
+                    speakGreeting(greeting.message, "curious");
+                    resetIdleTimer();
+                  }}
+                >
+                  🔊 Tap to Hear Toothy
+                </Button>
+              </motion.div>
+            )}
 
             {/* Speech Bubble with Dynamic Greeting */}
             <motion.div
@@ -595,7 +619,7 @@ export const HeroSection = () => {
                   </motion.div>
                   
                   <p className="text-lg text-foreground font-bold">
-                    Quest complete! See you tomorrow! 💙
+                    Yay! I'm so shiny now! 🎉 Come back tomorrow!
                   </p>
                   
                   <Button
