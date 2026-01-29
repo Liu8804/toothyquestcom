@@ -213,8 +213,8 @@ const Index = () => {
           />
         )}
 
-        {/* Auth button, language switcher and streak tracker - floating nav - positioned to avoid blocking content */}
-        <div className="fixed top-16 md:top-3 right-2 md:right-3 z-40 flex items-center gap-1 sm:gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-2 py-1 shadow-lg border border-border/50 scale-90 md:scale-100">
+        {/* Auth button, language switcher and streak tracker - floating nav - moved down on mobile to avoid blocking content */}
+        <div className="fixed top-[280px] md:top-3 right-2 md:right-3 z-40 flex items-center gap-1 sm:gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-2 py-1 shadow-lg border border-border/50 scale-90 md:scale-100">
           {/* Volume Control */}
           <Button
             onClick={() => setShowVolumeControl(true)}
