@@ -11,6 +11,7 @@ import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
+import { unlockAudioContext } from "@/hooks/useAudioManager";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
 import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
@@ -83,17 +84,42 @@ export const HeroSection = () => {
   // Listen for first user interaction to trigger greeting voice
   useEffect(() => {
     const handleFirstInteraction = () => {
-      if (hasInteractedRef.current) return;
-      hasInteractedRef.current = true;
+      // IMPORTANT:
+      // We intentionally do NOT use `{ once: true }` here.
+      // If the very first tap happens during onboarding, the greeting can't be spoken yet
+      // (because onboarding isn't complete), and we still need a later user gesture to
+      // trigger the greeting.
+
+      if (!hasInteractedRef.current) {
+        hasInteractedRef.current = true;
+        // Best-effort unlock as early as possible.
+        unlockAudioContext();
+      }
+
       speakGreetingOnce();
+
+      // Once the greeting has actually been spoken, we can remove listeners.
+      if (hasSpokenGreetingRef.current) {
+        window.removeEventListener("pointerdown", handleFirstInteraction, true);
+        window.removeEventListener("touchstart", handleFirstInteraction, true);
+        window.removeEventListener("keydown", handleFirstInteraction, true);
+      }
     };
-    
-    window.addEventListener("click", handleFirstInteraction, { once: true });
-    window.addEventListener("touchstart", handleFirstInteraction, { once: true });
-    
+
+    window.addEventListener("pointerdown", handleFirstInteraction, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("touchstart", handleFirstInteraction, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("keydown", handleFirstInteraction, { capture: true });
+
     return () => {
-      window.removeEventListener("click", handleFirstInteraction);
-      window.removeEventListener("touchstart", handleFirstInteraction);
+      window.removeEventListener("pointerdown", handleFirstInteraction, true);
+      window.removeEventListener("touchstart", handleFirstInteraction, true);
+      window.removeEventListener("keydown", handleFirstInteraction, true);
     };
   }, [speakGreetingOnce]);
 
@@ -109,7 +135,10 @@ export const HeroSection = () => {
       idleTimerRef.current = setTimeout(() => {
         setIsWiggling(true);
         setMascotMood("wiggle");
-        playWave(); // Play a gentle sound to get attention
+        // Only play sounds after the user has interacted once (prevents autoplay blocks on iOS).
+        if (hasInteractedRef.current) {
+          playWave();
+        }
         trackMascotInteraction("idle_wiggle");
         
         // Stop wiggling after 3 seconds (extended for better visibility)
@@ -206,7 +235,13 @@ export const HeroSection = () => {
 
   const handleOnboardingComplete = useCallback(() => {
     setShowOnboarding(false);
+    // If the first tap happened during onboarding, re-attempt the greeting now
+    // (this is still a user gesture: the onboarding "Done" button).
+    hasInteractedRef.current = true;
+    unlockAudioContext();
+    speakGreetingOnce();
   }, []);
+
 
   return (
     <>
