@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -81,6 +81,8 @@ const Index = () => {
   const [showVolumeControl, setShowVolumeControl] = useState(false);
   const [showStreakRecovery, setShowStreakRecovery] = useState(false);
   const [previousStreakValue, setPreviousStreakValue] = useState(0);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const lastScrollY = useRef(0);
 
   const openVoiceQuiz = useCallback(() => {
     if (typeof window === "undefined") return;
@@ -89,6 +91,32 @@ const Index = () => {
 
   // Track page views
   usePageViewTracking();
+
+  // Auto-hide nav bar on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollThreshold = 50; // Minimum scroll to trigger hide/show
+      
+      if (currentScrollY > lastScrollY.current + scrollThreshold) {
+        // Scrolling down - hide nav
+        setIsNavVisible(false);
+      } else if (currentScrollY < lastScrollY.current - scrollThreshold) {
+        // Scrolling up - show nav
+        setIsNavVisible(true);
+      }
+      
+      // Always show when at top
+      if (currentScrollY < 100) {
+        setIsNavVisible(true);
+      }
+      
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Check if we've shown splash today (only show once per session)
   useEffect(() => {
@@ -214,7 +242,11 @@ const Index = () => {
         )}
 
         {/* Auth button, language switcher and streak tracker - floating nav - bottom on mobile, top-right on desktop */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1 sm:gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-2 py-1.5 shadow-lg border border-border/50 scale-90 md:scale-100">
+        <div 
+          className={`fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1 sm:gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-2 py-1.5 shadow-lg border border-border/50 scale-90 md:scale-100 transition-all duration-300 ${
+            isNavVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 md:translate-y-0 md:-translate-y-20 opacity-0 pointer-events-none'
+          }`}
+        >
           {/* Volume Control */}
           <Button
             onClick={() => setShowVolumeControl(true)}
