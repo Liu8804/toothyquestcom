@@ -43,7 +43,8 @@ import { useStreak } from "@/hooks/useStreak";
 import { useStreakRecovery } from "@/hooks/useStreakRecovery";
 import { useDailyReminder } from "@/hooks/useDailyReminder";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2, Sparkles } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 
@@ -265,15 +266,29 @@ const Index = () => {
                   <span className="hidden sm:inline text-sm">Dashboard</span>
                 </Button>
               ) : (
-                <Button
-                  onClick={() => setShowAuth(true)}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-full gap-1.5 px-3"
-                >
-                  <LogIn className="w-4 h-4" />
-                  <span className="hidden sm:inline text-sm">Login</span>
-                </Button>
+                <div className="flex items-center gap-1">
+                  <Button
+                    asChild
+                    variant="secondary"
+                    size="sm"
+                    className="rounded-full gap-1.5 px-3"
+                  >
+                    <Link to="/guest">
+                      <Sparkles className="w-4 h-4" />
+                      <span className="hidden sm:inline text-sm">Guest</span>
+                    </Link>
+                  </Button>
+
+                  <Button
+                    onClick={() => setShowAuth(true)}
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full gap-1.5 px-3"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span className="hidden sm:inline text-sm">Login</span>
+                  </Button>
+                </div>
               )}
             </>
           )}

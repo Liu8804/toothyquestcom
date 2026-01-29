@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { Sparkles, Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { signInSchema, signUpSchema } from "@/lib/validation";
+import { useNavigate } from "react-router-dom";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { signIn, signUp } = useAuth();
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -159,6 +161,23 @@ const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           >
             {loading ? "Loading..." : mode === "signin" ? "Sign In" : "Create Account"}
           </Button>
+
+          <div className="pt-1">
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full rounded-xl font-display font-bold"
+              onClick={() => {
+                onClose();
+                navigate("/guest");
+              }}
+            >
+              Continue as Guest
+            </Button>
+            <p className="mt-2 text-center text-xs text-muted-foreground">
+              You can sign in later to save progress and unlock the premium AI voice.
+            </p>
+          </div>
         </form>
 
         <div className="mt-6 text-center">

@@ -24,6 +24,7 @@ import BecomeTester from "./pages/BecomeTester";
 import AppPrivacy from "./pages/AppPrivacy";
 import AppStoreChecklist from "./pages/AppStoreChecklist";
 import NotFound from "./pages/NotFound";
+import Guest from "./pages/Guest";
 
 // Component that unlocks AudioContext on first user interaction
 const AudioUnlocker = ({ children }: { children: React.ReactNode }) => {
@@ -47,6 +48,7 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/guest" element={<Guest />} />
                 <Route path="/admin" element={<Admin />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
