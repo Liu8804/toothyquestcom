@@ -67,12 +67,11 @@ const OnboardingFlow = ({ isOpen, onComplete }: OnboardingFlowProps) => {
       trackOnboardingStep(currentStep + 1, "complete");
       trackOnboardingComplete();
       playCelebrate();
-      
-      setTimeout(() => {
-        // Mark as completed in localStorage
-        localStorage.setItem("toothyquest_onboarding_complete", "true");
-        onComplete();
-      }, 300);
+
+      // CRITICAL: complete synchronously within the user gesture.
+      // Delaying (setTimeout) can cause iOS/Safari to block audio playback.
+      localStorage.setItem("toothyquest_onboarding_complete", "true");
+      onComplete();
     }
   };
 
