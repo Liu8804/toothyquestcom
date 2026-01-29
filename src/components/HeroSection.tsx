@@ -19,7 +19,7 @@ import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
-  const { playWave, playCheer, playQuestStart, playQuestComplete } = useMascotSounds();
+  const { playWave, playCheer, playQuestStart, playQuestComplete, playIntroHello } = useMascotSounds();
   const { 
     trackFirstTap, 
     trackCTAHover, 
@@ -47,6 +47,10 @@ export const HeroSection = () => {
   // Intro wave animation state
   const [isIntroWaving, setIsIntroWaving] = useState(true);
   const introWaveCompletedRef = useRef(false);
+  
+  // Track when user left the page (for return detection)
+  const lastVisibleTimeRef = useRef<number>(Date.now());
+  const RETURN_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes away triggers re-wave
   
   // Track if greeting has been spoken this session
   const hasSpokenGreetingRef = useRef(false);
@@ -99,12 +103,12 @@ export const HeroSection = () => {
       return;
     }
 
-    // Play wave sound after a short delay (only if user has interacted)
+    // Play intro hello sound after a short delay (only if user has interacted)
     const soundTimer = setTimeout(() => {
       if (hasInteractedRef.current) {
-        playWave();
+        playIntroHello();
       }
-    }, 500);
+    }, 400);
 
     // Transition from waving to idle after 2.5 seconds
     const transitionTimer = setTimeout(() => {
@@ -117,7 +121,48 @@ export const HeroSection = () => {
       clearTimeout(soundTimer);
       clearTimeout(transitionTimer);
     };
-  }, [isCompleted, playWave]);
+  }, [isCompleted, playIntroHello]);
+
+  // Detect when user returns after being away (visibility API)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // User left - record timestamp
+        lastVisibleTimeRef.current = Date.now();
+      } else {
+        // User returned - check how long they were away
+        const timeAway = Date.now() - lastVisibleTimeRef.current;
+        
+        if (timeAway >= RETURN_THRESHOLD_MS && !isCompleted) {
+          const onboardingComplete = localStorage.getItem("toothyquest_onboarding_complete");
+          if (onboardingComplete) {
+            // Trigger intro wave again
+            introWaveCompletedRef.current = false;
+            setIsIntroWaving(true);
+            setMascotMood("waving");
+            
+            // Play intro sound if user has interacted before
+            if (hasInteractedRef.current) {
+              setTimeout(() => playIntroHello(), 400);
+            }
+            
+            // Reset greeting spoken flag so it can speak again
+            hasSpokenGreetingRef.current = false;
+            
+            // Transition back to idle after animation
+            setTimeout(() => {
+              introWaveCompletedRef.current = true;
+              setIsIntroWaving(false);
+              setMascotMood("idle");
+            }, 2500);
+          }
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, [isCompleted, playIntroHello]);
   
   // Listen for first user interaction to trigger greeting voice
   useEffect(() => {

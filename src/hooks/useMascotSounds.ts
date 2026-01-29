@@ -32,6 +32,9 @@ const MASCOT_SOUNDS = {
   // First tap celebration
   firstTap: { notes: [523, 659, 784, 988, 1175, 1319, 1568], durations: [0.06, 0.06, 0.06, 0.06, 0.08, 0.1, 0.2], type: "triangle" as OscillatorType },
   
+  // Intro hello sound - friendly ascending chime for mascot entrance
+  introHello: { notes: [523, 659, 784, 988, 1175], durations: [0.1, 0.1, 0.1, 0.12, 0.18], type: "sine" as OscillatorType },
+  
   // Brush action sounds
   brushStart: { notes: [440, 523, 659], durations: [0.08, 0.08, 0.1], type: "sine" as OscillatorType },
   brushComplete: { notes: [659, 784, 988, 1175, 1319], durations: [0.08, 0.08, 0.08, 0.1, 0.15], type: "triangle" as OscillatorType },
@@ -78,6 +81,7 @@ export const useMascotSounds = () => {
   const playQuestComplete = useCallback(() => playMascotSound("questComplete"), [playMascotSound]);
   const playXpGain = useCallback(() => playMascotSound("xpGain"), [playMascotSound]);
   const playFirstTap = useCallback(() => playMascotSound("firstTap"), [playMascotSound]);
+  const playIntroHello = useCallback(() => playMascotSound("introHello"), [playMascotSound]);
   const playBrushStart = useCallback(() => playMascotSound("brushStart"), [playMascotSound]);
   const playBrushComplete = useCallback(() => playMascotSound("brushComplete"), [playMascotSound]);
   const playToothClean = useCallback(() => playMascotSound("toothClean"), [playMascotSound]);
@@ -98,6 +102,7 @@ export const useMascotSounds = () => {
     playQuestComplete,
     playXpGain,
     playFirstTap,
+    playIntroHello,
     playBrushStart,
     playBrushComplete,
     playToothClean,
