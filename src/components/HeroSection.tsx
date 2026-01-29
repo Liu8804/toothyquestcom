@@ -35,7 +35,7 @@ export const HeroSection = () => {
   const [hasCompletedFirstTap, setHasCompletedFirstTap] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isHoveringCTA, setIsHoveringCTA] = useState(false);
-  const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering" | "wiggle">("idle");
+  const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering" | "wiggle">("waving"); // Start with waving for intro
   
   // Show celebration briefly when quest was just completed this session
   const [justCompleted, setJustCompleted] = useState(false);
@@ -43,6 +43,10 @@ export const HeroSection = () => {
   // Idle timer for wiggle animation
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isWiggling, setIsWiggling] = useState(false);
+  
+  // Intro wave animation state
+  const [isIntroWaving, setIsIntroWaving] = useState(true);
+  const introWaveCompletedRef = useRef(false);
   
   // Track if greeting has been spoken this session
   const hasSpokenGreetingRef = useRef(false);
@@ -80,6 +84,40 @@ export const HeroSection = () => {
       setHasCompletedFirstTap(true);
     }
   }, [trackSessionStart]);
+
+  // Intro wave animation - Toothy waves when first appearing
+  useEffect(() => {
+    if (introWaveCompletedRef.current || isCompleted) {
+      setIsIntroWaving(false);
+      return;
+    }
+    
+    const onboardingComplete = localStorage.getItem("toothyquest_onboarding_complete");
+    if (!onboardingComplete) {
+      // Don't show intro wave during onboarding
+      setIsIntroWaving(false);
+      return;
+    }
+
+    // Play wave sound after a short delay (only if user has interacted)
+    const soundTimer = setTimeout(() => {
+      if (hasInteractedRef.current) {
+        playWave();
+      }
+    }, 500);
+
+    // Transition from waving to idle after 2.5 seconds
+    const transitionTimer = setTimeout(() => {
+      introWaveCompletedRef.current = true;
+      setIsIntroWaving(false);
+      setMascotMood("idle");
+    }, 2500);
+
+    return () => {
+      clearTimeout(soundTimer);
+      clearTimeout(transitionTimer);
+    };
+  }, [isCompleted, playWave]);
   
   // Listen for first user interaction to trigger greeting voice
   useEffect(() => {
@@ -357,13 +395,21 @@ export const HeroSection = () => {
               )}
               
               <motion.img
-                src={isCompleted ? mascotCelebrating : mascotMood === "cheering" ? mascotCelebrating : mascotMood === "waving" ? mascotWaving : mascotMain}
+                src={isCompleted ? mascotCelebrating : (isIntroWaving || mascotMood === "waving") ? mascotWaving : mascotMood === "cheering" ? mascotCelebrating : mascotMain}
                 alt="Toothy - Your friendly dental buddy"
                 className={`w-52 h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 object-contain drop-shadow-xl cursor-pointer transition-all duration-300 ${
                   isCompleted ? "brightness-110 saturate-110" : isWiggling ? "brightness-105 saturate-105" : "brightness-95 saturate-90"
                 }`}
+                initial={isIntroWaving ? { opacity: 0, scale: 0.5, y: 50 } : undefined}
                 animate={
-                  isWiggling
+                  isIntroWaving
+                    ? { 
+                        opacity: 1,
+                        scale: [0.5, 1.1, 1],
+                        y: [50, -10, 0],
+                        rotate: [0, -15, 15, -10, 10, -5, 5, 0],
+                      }
+                    : isWiggling
                     ? { 
                         rotate: [0, -12, 12, -12, 12, -8, 8, -4, 4, 0], 
                         scale: [1, 1.08, 1.06, 1.08, 1.06, 1.04, 1.04, 1.02, 1.02, 1],
@@ -376,9 +422,9 @@ export const HeroSection = () => {
                     : { y: [0, -6, 0], scale: [1, 1.01, 1] }
                 }
                 transition={{
-                  duration: isWiggling ? 1.2 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
-                  repeat: isWiggling ? 2 : Infinity,
-                  ease: "easeInOut",
+                  duration: isIntroWaving ? 2 : isWiggling ? 1.2 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
+                  repeat: isIntroWaving ? 0 : isWiggling ? 2 : Infinity,
+                  ease: "easeOut",
                 }}
                 onClick={() => {
                   trackMascotInteraction("tap");
@@ -420,6 +466,50 @@ export const HeroSection = () => {
                         }}
                       >
                         {i % 3 === 0 ? "✨" : i % 3 === 1 ? "⭐" : "💫"}
+                      </motion.span>
+                    ))}
+                  </>
+                )}
+              </AnimatePresence>
+
+              {/* Intro wave sparkles and "Hi!" text */}
+              <AnimatePresence>
+                {isIntroWaving && (
+                  <>
+                    {/* "Hi!" text bubble */}
+                    <motion.div
+                      className="absolute -top-4 -right-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-lg font-bold shadow-lg"
+                      initial={{ opacity: 0, scale: 0, y: 20 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ delay: 0.5, duration: 0.4, type: "spring" }}
+                    >
+                      Hi! 👋
+                    </motion.div>
+                    
+                    {/* Entrance sparkles */}
+                    {[...Array(10)].map((_, i) => (
+                      <motion.span
+                        key={`intro-sparkle-${i}`}
+                        className="absolute pointer-events-none text-2xl"
+                        style={{
+                          top: `${20 + (i * 8)}%`,
+                          left: i % 2 === 0 ? `${-20 + (i % 4) * 5}%` : `${85 + (i % 4) * 5}%`,
+                        }}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{
+                          opacity: [0, 1, 1, 0],
+                          scale: [0.2, 1.5, 1, 0.2],
+                          y: [20, -30, -50],
+                          rotate: [0, 180, 360],
+                        }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{
+                          duration: 1.5,
+                          delay: 0.3 + i * 0.1,
+                        }}
+                      >
+                        {i % 4 === 0 ? "✨" : i % 4 === 1 ? "⭐" : i % 4 === 2 ? "🌟" : "💫"}
                       </motion.span>
                     ))}
                   </>
