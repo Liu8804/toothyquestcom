@@ -82,6 +82,8 @@ const Index = () => {
   const [showStreakRecovery, setShowStreakRecovery] = useState(false);
   const [previousStreakValue, setPreviousStreakValue] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
+  const [showNavBounce, setShowNavBounce] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
   const lastScrollY = useRef(0);
 
   const openVoiceQuiz = useCallback(() => {
@@ -92,9 +94,31 @@ const Index = () => {
   // Track page views
   usePageViewTracking();
 
-  // Auto-hide nav bar on scroll
+  // First visit bounce animation for nav bar
+  useEffect(() => {
+    const hasSeenNav = sessionStorage.getItem('navBounceShown');
+    if (!hasSeenNav) {
+      setIsFirstVisit(true);
+      // Start bounce animation after splash screen
+      const bounceTimer = setTimeout(() => {
+        setShowNavBounce(true);
+        sessionStorage.setItem('navBounceShown', 'true');
+        // Stop bounce after 3 seconds
+        setTimeout(() => {
+          setShowNavBounce(false);
+          setIsFirstVisit(false);
+        }, 3000);
+      }, 1500);
+      return () => clearTimeout(bounceTimer);
+    }
+  }, []);
+
+  // Auto-hide nav bar on scroll (but not during first visit bounce)
   useEffect(() => {
     const handleScroll = () => {
+      // Don't hide during first visit bounce animation
+      if (isFirstVisit) return;
+      
       const currentScrollY = window.scrollY;
       const scrollThreshold = 50; // Minimum scroll to trigger hide/show
       
@@ -116,7 +140,7 @@ const Index = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isFirstVisit]);
 
   // Check if we've shown splash today (only show once per session)
   useEffect(() => {
@@ -245,7 +269,7 @@ const Index = () => {
         <div 
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1 sm:gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-2 py-1.5 shadow-lg border border-border/50 scale-90 md:scale-100 transition-all duration-300 ${
             isNavVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 md:translate-y-0 md:-translate-y-20 opacity-0 pointer-events-none'
-          }`}
+          } ${showNavBounce ? 'animate-bounce ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
         >
           {/* Volume Control */}
           <Button
