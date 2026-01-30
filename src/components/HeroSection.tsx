@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import FirstTapCelebration from "@/components/FirstTapCelebration";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
@@ -837,28 +838,37 @@ export const HeroSection = () => {
                     </motion.span>
                   </Button>
                   
-                  {/* Secondary sign-up prompt - visible below CTA */}
-                  <motion.p
+                  {/* Secondary sign-up prompt - eye-catching with pulse */}
+                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-4 text-sm text-muted-foreground"
+                    className="mt-5 flex flex-col items-center gap-2"
                   >
-                    New here?{" "}
-                    <button
-                      onClick={() => window.dispatchEvent(new CustomEvent('toothyquest:openAuth'))}
-                      className="font-semibold text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
-                    >
-                      Sign up free
-                    </button>
-                    {" "}or{" "}
-                    <a
-                      href="/guest"
-                      className="font-semibold text-secondary hover:text-secondary/80 underline underline-offset-2 transition-colors"
-                    >
-                      try as guest
-                    </a>
-                  </motion.p>
+                    <span className="text-sm text-muted-foreground">New here?</span>
+                    <div className="flex items-center gap-3">
+                      <motion.button
+                        onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
+                        className="relative inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 hover:bg-primary/20 border-2 border-primary rounded-full font-bold text-primary transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <motion.span
+                          className="absolute inset-0 rounded-full bg-primary/20"
+                          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0, 0.5] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                        <span className="relative">✨ Sign up free</span>
+                      </motion.button>
+                      <span className="text-muted-foreground/60">or</span>
+                      <a
+                        href="/guest"
+                        className="font-semibold text-secondary hover:text-secondary/80 underline underline-offset-2 transition-colors"
+                      >
+                        try as guest
+                      </a>
+                    </div>
+                  </motion.div>
                 </>
               ) : (
                 <motion.div 
@@ -941,6 +951,28 @@ export const HeroSection = () => {
             )}
           </div>
         </div>
+
+        {/* Scroll down indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 cursor-pointer z-20"
+          onClick={() => {
+            const aboutSection = document.getElementById('about');
+            if (aboutSection) {
+              aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+        >
+          <span className="text-xs text-muted-foreground/70 font-medium">Scroll to explore</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-6 h-6 text-muted-foreground/50" />
+          </motion.div>
+        </motion.div>
 
         {/* Wave decoration */}
         <div className="absolute bottom-0 left-0 right-0">
