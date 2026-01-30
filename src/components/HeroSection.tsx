@@ -485,50 +485,121 @@ export const HeroSection = () => {
                 />
               )}
               
-              <motion.img
-                src={isCompleted ? mascotCelebrating : (isIntroWaving || mascotMood === "waving") ? mascotWaving : mascotMood === "cheering" ? mascotCelebrating : mascotMain}
-                alt="Toothy - Your friendly dental buddy"
-                className={`w-40 h-40 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain drop-shadow-xl cursor-pointer transition-all duration-300 ${
-                  isCompleted ? "brightness-115 saturate-125 drop-shadow-2xl" : isWiggling ? "brightness-105 saturate-105" : "brightness-90 saturate-80 grayscale-[0.15]"
-                }`}
-                initial={isIntroWaving ? { opacity: 0, scale: 0.5, y: 50 } : undefined}
-                animate={
-                  isIntroWaving
-                    ? { 
-                        opacity: 1,
-                        scale: [0.5, 1.1, 1],
-                        y: [50, -10, 0],
-                        rotate: [0, -15, 15, -10, 10, -5, 5, 0],
-                      }
-                    : isWiggling
-                    ? { 
-                        rotate: [0, -12, 12, -12, 12, -8, 8, -4, 4, 0], 
-                        scale: [1, 1.08, 1.06, 1.08, 1.06, 1.04, 1.04, 1.02, 1.02, 1],
-                        y: [0, -5, 5, -5, 5, -3, 3, 0]
-                      }
-                    : isCompleted || mascotMood === "cheering"
-                    ? { y: [0, -12, 0], scale: [1, 1.08, 1] }
-                    : mascotMood === "waving"
-                    ? { rotate: [0, -8, 8, -8, 0] }
-                    : { y: [0, -6, 0], scale: [1, 1.01, 1] }
-                }
-                transition={{
-                  duration: isIntroWaving ? 2 : isWiggling ? 1.2 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
-                  repeat: isIntroWaving ? 0 : isWiggling ? 2 : Infinity,
-                  ease: "easeOut",
-                }}
-                onClick={() => {
-                  trackMascotInteraction("tap");
-                  setMascotMood("cheering");
-                  playCheer();
-                  resetIdleTimer();
-                  setTimeout(() => {
-                    if (!isCompleted) setMascotMood("idle");
-                  }, 2000);
-                }}
+              {/* 3D Container with perspective */}
+              <motion.div
+                className="relative"
+                style={{ perspective: "800px", transformStyle: "preserve-3d" }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-              />
+              >
+                {/* 3D Shadow layer - creates depth illusion */}
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-2xl"
+                  style={{
+                    transform: "translateZ(-40px) translateY(20px) scale(0.9)",
+                    transformStyle: "preserve-3d",
+                  }}
+                  animate={{
+                    opacity: isCompleted ? [0.6, 0.8, 0.6] : isWiggling ? [0.4, 0.6, 0.4] : [0.3, 0.4, 0.3],
+                    scale: isCompleted ? [0.85, 0.95, 0.85] : [0.9, 0.92, 0.9],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+                
+                {/* Secondary depth shadow */}
+                <div
+                  className="absolute inset-4 rounded-full opacity-40"
+                  style={{
+                    background: "radial-gradient(ellipse at 50% 120%, hsl(var(--primary) / 0.3) 0%, transparent 70%)",
+                    transform: "translateZ(-20px) translateY(30px) scaleX(1.1) scaleY(0.3)",
+                    filter: "blur(12px)",
+                  }}
+                />
+                
+                {/* Main mascot with 3D transforms */}
+                <motion.img
+                  src={isCompleted ? mascotCelebrating : (isIntroWaving || mascotMood === "waving") ? mascotWaving : mascotMood === "cheering" ? mascotCelebrating : mascotMain}
+                  alt="Toothy - Your friendly dental buddy"
+                  className={`w-40 h-40 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain cursor-pointer transition-all duration-300 ${
+                    isCompleted 
+                      ? "brightness-115 saturate-125" 
+                      : isWiggling 
+                        ? "brightness-105 saturate-105" 
+                        : "brightness-90 saturate-80 grayscale-[0.15]"
+                  }`}
+                  style={{
+                    transformStyle: "preserve-3d",
+                    filter: isCompleted 
+                      ? "drop-shadow(0 20px 25px rgba(0,0,0,0.25)) drop-shadow(0 10px 10px rgba(0,0,0,0.2)) drop-shadow(0 4px 6px rgba(0,0,0,0.15))"
+                      : "drop-shadow(0 15px 20px rgba(0,0,0,0.2)) drop-shadow(0 8px 8px rgba(0,0,0,0.15)) drop-shadow(0 3px 4px rgba(0,0,0,0.1))",
+                  }}
+                  initial={isIntroWaving ? { opacity: 0, scale: 0.5, y: 50, rotateX: 30 } : undefined}
+                  animate={
+                    isIntroWaving
+                      ? { 
+                          opacity: 1,
+                          scale: [0.5, 1.1, 1],
+                          y: [50, -10, 0],
+                          rotateX: [30, -5, 0],
+                          rotateY: [0, -15, 15, -10, 10, -5, 5, 0],
+                          rotateZ: [0, -15, 15, -10, 10, -5, 5, 0],
+                        }
+                      : isWiggling
+                      ? { 
+                          rotateZ: [0, -12, 12, -12, 12, -8, 8, -4, 4, 0], 
+                          rotateY: [0, -8, 8, -8, 8, -4, 4, 0],
+                          scale: [1, 1.08, 1.06, 1.08, 1.06, 1.04, 1.04, 1.02, 1.02, 1],
+                          y: [0, -5, 5, -5, 5, -3, 3, 0],
+                          rotateX: [0, 5, -5, 5, -5, 3, -3, 0],
+                        }
+                      : isCompleted || mascotMood === "cheering"
+                      ? { 
+                          y: [0, -12, 0], 
+                          scale: [1, 1.08, 1], 
+                          rotateY: [0, 5, -5, 0],
+                          rotateX: [0, -3, 3, 0],
+                        }
+                      : mascotMood === "waving"
+                      ? { 
+                          rotateZ: [0, -8, 8, -8, 0],
+                          rotateY: [0, 3, -3, 0],
+                        }
+                      : { 
+                          y: [0, -6, 0], 
+                          scale: [1, 1.01, 1],
+                          rotateY: [0, 2, -2, 0],
+                          rotateX: [0, 1, -1, 0],
+                        }
+                  }
+                  transition={{
+                    duration: isIntroWaving ? 2 : isWiggling ? 1.2 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
+                    repeat: isIntroWaving ? 0 : isWiggling ? 2 : Infinity,
+                    ease: "easeOut",
+                  }}
+                  onClick={() => {
+                    trackMascotInteraction("tap");
+                    setMascotMood("cheering");
+                    playCheer();
+                    resetIdleTimer();
+                    setTimeout(() => {
+                      if (!isCompleted) setMascotMood("idle");
+                    }, 2000);
+                  }}
+                />
+                
+                {/* Highlight/shine effect for 3D appearance */}
+                <motion.div
+                  className="absolute top-2 left-1/4 w-1/4 h-1/4 rounded-full pointer-events-none"
+                  style={{
+                    background: "radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)",
+                    transform: "translateZ(10px)",
+                  }}
+                  animate={{
+                    opacity: isCompleted ? [0.6, 0.9, 0.6] : [0.3, 0.5, 0.3],
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              </motion.div>
               
               {/* Attention-grabbing sparkles during wiggle */}
               <AnimatePresence>
