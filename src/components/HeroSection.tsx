@@ -836,6 +836,29 @@ export const HeroSection = () => {
                       ✨
                     </motion.span>
                   </Button>
+                  
+                  {/* Secondary sign-up prompt - visible below CTA */}
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                    className="mt-4 text-sm text-muted-foreground"
+                  >
+                    New here?{" "}
+                    <button
+                      onClick={() => window.dispatchEvent(new CustomEvent('toothyquest:openAuth'))}
+                      className="font-semibold text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
+                    >
+                      Sign up free
+                    </button>
+                    {" "}or{" "}
+                    <a
+                      href="/guest"
+                      className="font-semibold text-secondary hover:text-secondary/80 underline underline-offset-2 transition-colors"
+                    >
+                      try as guest
+                    </a>
+                  </motion.p>
                 </>
               ) : (
                 <motion.div 
