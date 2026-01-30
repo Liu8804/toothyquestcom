@@ -94,6 +94,13 @@ const Index = () => {
   // Track page views
   usePageViewTracking();
 
+  // Listen for auth modal open event from HeroSection
+  useEffect(() => {
+    const handleOpenAuth = () => setShowAuth(true);
+    window.addEventListener('toothyquest:openAuth', handleOpenAuth);
+    return () => window.removeEventListener('toothyquest:openAuth', handleOpenAuth);
+  }, []);
+
   // First visit bounce animation for nav bar
   useEffect(() => {
     const hasSeenNav = sessionStorage.getItem('navBounceShown');
