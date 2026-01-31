@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown, Lock, Unlock, Sparkles } from "lucide-react";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
+import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import { games, Game, globalGameText, allGames, gameCategories, GameCategory } from "@/data/games";
 import GameCard from "./GameCard";
 import PlaquePatrolGame from "./PlaquePatrolGame";
@@ -66,6 +68,9 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     title: string;
     xp: number;
   } | null>(null);
+  
+  // Mascot emotion context for reactive feedback
+  const { triggerLetsPlay, triggerSuccess, triggerWow, triggerError } = useMascotEmotionContext();
   
   const { user, session } = useAuth();
   const { isPurchased, isContentLocked, isCheckingPurchase, lastPurchaseCheckAt } = usePurchase();
@@ -145,6 +150,12 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     if (won) {
       playWinFanfare();
       setShowConfetti(true);
+      // Trigger success/wow mascot emotion for wins
+      if (stars >= 3) {
+        triggerWow();
+      } else {
+        triggerSuccess();
+      }
       setTimeout(() => setShowConfetti(false), 3000);
       
       // Save score if user is authenticated and has a child selected
@@ -169,6 +180,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       }
     } else {
       playLoseSound();
+      // Trigger oops mascot emotion for losses
+      triggerError();
     }
   };
 
@@ -189,6 +202,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       return;
     }
     playSound("tap");
+    // Trigger letsPlay mascot emotion when starting a game
+    triggerLetsPlay();
     // Start background music immediately from the user's click (mobile-friendly)
     startBackgroundMusic("happy");
     setSelectedGame(game);
@@ -316,16 +331,19 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                   Back
                 </Button>
               ) : (
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🎮</span>
-                  <h2 className="font-display text-xl font-bold text-foreground">
-                    Fun Games
-                  </h2>
-                  {user && childId && (
-                    <span className="ml-2 px-2 py-1 bg-yellow-100 dark:bg-yellow-900/30 rounded-full text-sm">
-                      ⭐ {getTotalStars()} stars
-                    </span>
-                  )}
+                <div className="flex items-center gap-3">
+                  {/* Mascot emotion in header */}
+                  <MascotEmotionState emotion="letsPlay" size="sm" />
+                  <div>
+                    <h2 className="font-display text-xl font-bold text-foreground">
+                      Fun Games
+                    </h2>
+                    {user && childId && (
+                      <span className="text-xs px-2 py-0.5 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
+                        ⭐ {getTotalStars()} stars
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
               <div className="flex items-center gap-2">
@@ -452,18 +470,13 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                     </>
                   )}
 
-                  {/* Main trophy/emoji with enhanced animation */}
-                  <motion.div
-                    animate={gameResult.won ? { 
-                      rotate: [0, -15, 15, -10, 10, 0],
-                      scale: [1, 1.3, 1.1, 1.2, 1],
-                      y: [0, -20, 0, -10, 0]
-                    } : { scale: 1 }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                    className="text-8xl mb-6 relative z-10"
-                  >
-                    {gameResult.won ? "🏆" : "😅"}
-                  </motion.div>
+                  {/* Mascot emotion state for game result */}
+                  <div className="relative z-10 mb-4">
+                    <MascotEmotionState 
+                      emotion={gameResult.won ? (gameResult.stars >= 3 ? "wow" : "greatJob") : "oops"} 
+                      size="lg" 
+                    />
+                  </div>
                   
                   {/* Victory message with typewriter effect */}
                   <motion.h3 

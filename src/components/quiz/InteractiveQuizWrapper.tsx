@@ -8,6 +8,8 @@ import { useQuizSounds } from "@/hooks/useQuizSounds";
 import { QuizCharacterAnimated, getCharacterForStory, CHARACTERS, CHARACTER_DIALOGUES, type CharacterMood, type CharacterId } from "./QuizCharacters";
 import QuizCertificate from "./QuizCertificate";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
+import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 
 interface InteractiveQuizWrapperProps {
   quiz: StoryQuiz;
@@ -55,6 +57,9 @@ export const InteractiveQuizWrapper = ({
   const [showStreakBonus, setShowStreakBonus] = useState(false);
   const [starsEarned, setStarsEarned] = useState(3);
 
+  // Mascot emotion context for reactive feedback
+  const { triggerSuccess, triggerWow, triggerError, triggerGotIt } = useMascotEmotionContext();
+
   const {
     playCorrectSound,
     playIncorrectSound,
@@ -100,6 +105,8 @@ export const InteractiveQuizWrapper = ({
       setCharacterMood("celebrating");
       setCharacterMessage(getRandomMessage("correct", characterId));
       setStreak(prev => prev + 1);
+      // Trigger success mascot emotion
+      triggerSuccess();
 
       // Show streak bonus for consecutive correct answers
       if (streak > 0) {
@@ -126,6 +133,8 @@ export const InteractiveQuizWrapper = ({
             setCharacterMood("dancing");
             setCharacterMessage(getRandomMessage("celebrate", characterId));
             playCelebrationSound();
+            // Trigger wow for quiz completion
+            triggerWow();
             setTimeout(() => {
               setShowCelebration(false);
               setShowConfetti(false);
@@ -139,6 +148,8 @@ export const InteractiveQuizWrapper = ({
           setCharacterMood("dancing");
           setCharacterMessage(getRandomMessage("celebrate", characterId));
           playCelebrationSound();
+          // Trigger wow for quiz completion
+          triggerWow();
           setTimeout(() => {
             setShowCelebration(false);
             setShowConfetti(false);
@@ -151,6 +162,8 @@ export const InteractiveQuizWrapper = ({
       setCharacterMood("encouraging");
       setCharacterMessage(getRandomMessage("incorrect", characterId));
       setStreak(0);
+      // Trigger oops mascot emotion for wrong answers
+      triggerError();
     }
   }, [
     showResult, isCompleted, activeQuiz.correctIndex, currentQuiz, quiz2,
@@ -165,7 +178,9 @@ export const InteractiveQuizWrapper = ({
     setCharacterMood("thinking");
     setCharacterMessage(getRandomMessage("hint", characterId));
     playSynthSound("whoosh");
-  }, [playSynthSound, characterId]);
+    // Trigger gotIt for understanding
+    triggerGotIt();
+  }, [playSynthSound, characterId, triggerGotIt]);
 
   const isCorrect = selectedAnswer === activeQuiz.correctIndex;
 
