@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useAutoSpeak, useTapSpeak } from "@/hooks/useAutoSpeak";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
+import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
@@ -43,6 +45,14 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
   const { haptic, success } = useHapticFeedback();
   const { playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain, playSparkle } = useMascotSounds();
   const { speak: speakTap } = useTapSpeak();
+  
+  // Mascot emotion context for reactive feedback
+  const { triggerHelp, triggerSuccess, triggerWow } = useMascotEmotionContext();
+  
+  // Trigger help emotion when quest starts
+  useEffect(() => {
+    triggerHelp();
+  }, [triggerHelp]);
 
   // Voice-first: Auto-speak instructions for toothpaste phase
   const { replay: replayToothpasteInstruction } = useAutoSpeak({
@@ -85,6 +95,8 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
         setShowToothpasteSparkle(true);
         setMascotReaction("cheering");
         playCheer();
+        // Trigger success mascot emotion
+        triggerSuccess();
         
         // Voice feedback for success
         speakTap("Perfect! You did it!");
@@ -139,6 +151,8 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
       setMascotReaction("dancing");
       playCelebrate();
       speakTap("Amazing! All your teeth are sparkling clean!");
+      // Trigger wow for quest completion
+      triggerWow();
       setTimeout(() => {
         playQuestComplete();
         playXpGain();

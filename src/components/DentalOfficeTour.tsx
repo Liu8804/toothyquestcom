@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
+import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 
 interface DentalEquipment {
@@ -149,10 +151,22 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
   const [selectedEquipment, setSelectedEquipment] = useState<DentalEquipment | null>(null);
   const [exploredItems, setExploredItems] = useState<Set<string>>(new Set());
   const [showCelebration, setShowCelebration] = useState(false);
+  
+  // Mascot emotion context for reactive feedback
+  const { triggerHelp, triggerWow, triggerGotIt } = useMascotEmotionContext();
+  
+  // Trigger help emotion when tour opens
+  useEffect(() => {
+    if (isOpen) {
+      triggerHelp();
+    }
+  }, [isOpen, triggerHelp]);
 
   const handleEquipmentClick = (equipment: DentalEquipment) => {
     setSelectedEquipment(equipment);
     setExploredItems(prev => new Set([...prev, equipment.id]));
+    // Trigger gotIt when exploring equipment
+    triggerGotIt();
   };
 
   const handleCloseInfo = () => {
@@ -161,6 +175,8 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
     if (exploredItems.size === dentalEquipment.length - 1 && selectedEquipment) {
       const newExplored = new Set([...exploredItems, selectedEquipment.id]);
       if (newExplored.size === dentalEquipment.length) {
+        // Trigger wow for completing the tour
+        triggerWow();
         setTimeout(() => setShowCelebration(true), 300);
       }
     }
@@ -184,13 +200,8 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
         <div className="absolute top-0 left-0 right-0 z-20 bg-white/90 backdrop-blur-sm p-4 border-b shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <motion.img
-                src={toothyMascot}
-                alt="Toothy mascot"
-                className="w-10 h-10 object-contain"
-                animate={{ rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
+              {/* Mascot emotion state - shows help when exploring */}
+              <MascotEmotionState emotion="help" size="sm" />
               <div>
                 <h2 className="font-display text-xl font-bold text-foreground">Explore the Dental Office!</h2>
                 <p className="text-xs text-muted-foreground">Tap on things to learn about them!</p>
