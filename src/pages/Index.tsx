@@ -32,19 +32,21 @@ import ReferralProgram from "@/components/ReferralProgram";
 import AdminDiagnosticsPanel from "@/components/admin/AdminDiagnosticsPanel";
 import WorldSelector from "@/components/worlds/WorldSelector";
 import VolumeControlPanel from "@/components/VolumeControlPanel";
+import AudioDiagnosticsPanel from "@/components/audio/AudioDiagnosticsPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useAudioUnlock } from "@/hooks/useAudioUnlock";
+import { useHomeMusic } from "@/hooks/useHomeMusic";
 import { useDailyTask } from "@/hooks/useDailyTask";
 import { useStreak } from "@/hooks/useStreak";
 import { useStreakRecovery } from "@/hooks/useStreakRecovery";
 import { useDailyReminder } from "@/hooks/useDailyReminder";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2, Sparkles } from "lucide-react";
+import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2, Sparkles, Bug } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 
@@ -61,6 +63,9 @@ const Index = () => {
     dailyBonusClaimed, 
     claimDailyBonus 
   } = useRewardsSystem(selectedChild?.id);
+  
+  // Home screen background music
+  const { isPlaying: isMusicPlaying } = useHomeMusic();
   
   // Use the consolidated daily task hook
   const { hasCompletedToday: taskCompleted } = useDailyTask(selectedChild?.id);
@@ -79,6 +84,7 @@ const Index = () => {
   const [showDailyBonus, setShowDailyBonus] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
   const [showVolumeControl, setShowVolumeControl] = useState(false);
+  const [showAudioDiagnostics, setShowAudioDiagnostics] = useState(false);
   const [showStreakRecovery, setShowStreakRecovery] = useState(false);
   const [previousStreakValue, setPreviousStreakValue] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
@@ -284,8 +290,20 @@ const Index = () => {
             variant="ghost"
             size="icon"
             className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
+            title="Sound Settings"
           >
             <Volume2 className="w-4 h-4" />
+          </Button>
+
+          {/* Audio Diagnostics */}
+          <Button
+            onClick={() => setShowAudioDiagnostics(true)}
+            variant="ghost"
+            size="icon"
+            className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
+            title="Audio Diagnostics"
+          >
+            <Bug className="w-4 h-4" />
           </Button>
 
           {/* Sparkle Points */}
@@ -446,6 +464,13 @@ const Index = () => {
         <VolumeControlPanel 
           isOpen={showVolumeControl} 
           onClose={() => setShowVolumeControl(false)} 
+        />
+
+        {/* Audio Diagnostics Panel */}
+        <AudioDiagnosticsPanel
+          isOpen={showAudioDiagnostics}
+          onClose={() => setShowAudioDiagnostics(false)}
+          isMusicPlaying={isMusicPlaying}
         />
       </main>
     </>
