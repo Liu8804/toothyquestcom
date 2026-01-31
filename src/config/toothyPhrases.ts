@@ -96,6 +96,24 @@ export const TOOTHY_PHRASES: Record<string, ToothyPhrase> = {
     category: "encouragement",
     mood: "encouraging",
   },
+  youDidIt: {
+    text: "You did it! Amazing!",
+    emoji: "🌈",
+    category: "celebration",
+    mood: "excited",
+  },
+  superStar: {
+    text: "You're a super star!",
+    emoji: "💫",
+    category: "celebration",
+    mood: "excited",
+  },
+  teethLoveThat: {
+    text: "Your teeth love that!",
+    emoji: "🦷",
+    category: "encouragement",
+    mood: "positive",
+  },
 };
 
 /**
@@ -106,6 +124,26 @@ export const getRandomPhrase = (category: PhraseCategory): ToothyPhrase => {
     (p) => p.category === category
   );
   return categoryPhrases[Math.floor(Math.random() * categoryPhrases.length)];
+};
+
+/**
+ * Get a random celebration phrase for variety
+ */
+export const getRandomCelebration = (): ToothyPhrase => {
+  const celebrations = Object.values(TOOTHY_PHRASES).filter(
+    (p) => p.category === "celebration"
+  );
+  return celebrations[Math.floor(Math.random() * celebrations.length)];
+};
+
+/**
+ * Get a random encouragement phrase
+ */
+export const getRandomEncouragement = (): ToothyPhrase => {
+  const encouragements = Object.values(TOOTHY_PHRASES).filter(
+    (p) => p.category === "encouragement"
+  );
+  return encouragements[Math.floor(Math.random() * encouragements.length)];
 };
 
 /**

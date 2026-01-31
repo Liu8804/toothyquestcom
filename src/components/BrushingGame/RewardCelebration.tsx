@@ -2,9 +2,10 @@ import { motion } from "framer-motion";
 import { Star, Trophy, Sparkles, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
-import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useAIEncouragement } from "@/hooks/useAIEncouragement";
-import { useEffect, useState } from "react";
+import { useToothyPhrases } from "@/hooks/useToothyPhrases";
+import { getRandomCelebration } from "@/config/toothyPhrases";
+import { useEffect, useState, useRef } from "react";
 
 interface RewardCelebrationProps {
   onPlayAgain: () => void;
@@ -30,10 +31,11 @@ export const RewardCelebration = ({
   sessionType = "morning",
   onChatWithToothy,
 }: RewardCelebrationProps) => {
-  const { speak, stop } = useQuestVoice();
+  const { sayCelebration } = useToothyPhrases();
   const { getEncouragement, isLoading: isLoadingAI } = useAIEncouragement();
   const [celebrationMessage, setCelebrationMessage] = useState<string>("");
   const [shortTitle, setShortTitle] = useState<string>("Super Brusher!");
+  const hasSpokenRef = useRef(false);
   
   const titles = [
     "Super Brusher!",
@@ -42,7 +44,7 @@ export const RewardCelebration = ({
     "Dental Superstar!",
   ];
 
-  // Fetch AI-generated encouragement message
+  // Fetch AI-generated encouragement message and play random celebration
   useEffect(() => {
     const fetchMessage = async () => {
       // Set a random title immediately
@@ -51,14 +53,15 @@ export const RewardCelebration = ({
       const result = await getEncouragement(childName, sessionType, 120);
       setCelebrationMessage(result.message);
       
-      // Speak the message
-      speak(result.message);
+      // Play a random celebration phrase (like "Hooray! We did it!" or "I'm so proud of you!")
+      if (!hasSpokenRef.current) {
+        hasSpokenRef.current = true;
+        sayCelebration();
+      }
     };
 
     fetchMessage();
-    
-    return () => stop();
-  }, [childName, sessionType, getEncouragement, speak, stop]);
+  }, [childName, sessionType, getEncouragement, sayCelebration]);
 
   return (
     <div className="relative text-center py-8 overflow-hidden">
