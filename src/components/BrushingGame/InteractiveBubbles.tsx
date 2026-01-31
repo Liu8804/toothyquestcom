@@ -23,7 +23,7 @@ const BUBBLE_LIFETIME = 4000; // Bubbles last 4 seconds
 
 const InteractiveBubbles = ({ isActive, onBubblePop }: InteractiveBubblesProps) => {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
-  const { playSparkle, playCheer } = useMascotSounds();
+  const { playSparkleChime, playDing, playCheer } = useMascotSounds();
   const { haptic } = useHapticFeedback();
 
   // Spawn bubbles periodically
@@ -68,11 +68,16 @@ const InteractiveBubbles = ({ isActive, onBubblePop }: InteractiveBubblesProps) 
         prev.map((b) => (b.id === bubbleId ? { ...b, popped: true } : b))
       );
       haptic("light");
-      playSparkle();
       
-      // Occasionally play cheer for extra delight
-      if (Math.random() > 0.7) {
-        setTimeout(() => playCheer(), 100);
+      // Play ding for each pop, sparkle chime occasionally for extra delight
+      playDing();
+      if (Math.random() > 0.6) {
+        setTimeout(() => playSparkleChime(), 80);
+      }
+      
+      // Occasionally play cheer for big celebration moments
+      if (Math.random() > 0.85) {
+        setTimeout(() => playCheer(), 150);
       }
 
       onBubblePop?.();
@@ -82,7 +87,7 @@ const InteractiveBubbles = ({ isActive, onBubblePop }: InteractiveBubblesProps) 
         setBubbles((prev) => prev.filter((b) => b.id !== bubbleId));
       }, 300);
     },
-    [haptic, playSparkle, playCheer, onBubblePop]
+    [haptic, playDing, playSparkleChime, playCheer, onBubblePop]
   );
 
   return (

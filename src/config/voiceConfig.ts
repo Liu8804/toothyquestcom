@@ -21,21 +21,22 @@ export const TOOTHY_VOICE = {
   },
   
   // Emotional variations using the SAME voice
+  // Tuned for cheerful, playful, energetic kid-friendly delivery
   moods: {
     // For quiz questions, story narration
     neutral: {
-      stability: 0.5,
+      stability: 0.45,
       similarityBoost: 0.75,
-      style: 0.5,
-      speed: 0.95,
+      style: 0.55,
+      speed: 1.0,
     },
     
-    // "Yay! You got it right! 🎉 Tooth-tastic job!"
+    // "Yay! You made me sparkle!" - High energy celebration
     excited: {
-      stability: 0.35,
-      similarityBoost: 0.8,
-      style: 0.8,
-      speed: 1.0,
+      stability: 0.25,       // More expressive variation
+      similarityBoost: 0.85,
+      style: 0.9,            // Maximum style for cartoon effect
+      speed: 1.1,            // Slightly faster = more energetic
     },
     
     // "Hmm… let's think about this one!"
@@ -43,23 +44,23 @@ export const TOOTHY_VOICE = {
       stability: 0.5,
       similarityBoost: 0.75,
       style: 0.6,
-      speed: 0.9,
-    },
-    
-    // "Almost! Want to try again?"
-    encouraging: {
-      stability: 0.45,
-      similarityBoost: 0.75,
-      style: 0.65,
-      speed: 0.92,
-    },
-    
-    // "Great effort! You're learning so much!"
-    positive: {
-      stability: 0.4,
-      similarityBoost: 0.78,
-      style: 0.7,
       speed: 0.95,
+    },
+    
+    // "Let's brush together!" - Warm and inviting
+    encouraging: {
+      stability: 0.4,
+      similarityBoost: 0.8,
+      style: 0.75,           // More expressive
+      speed: 1.0,
+    },
+    
+    // "Great job, superstar!" - Proud and cheerful
+    positive: {
+      stability: 0.35,
+      similarityBoost: 0.82,
+      style: 0.8,
+      speed: 1.05,           // Slightly upbeat
     },
     
     // Calm bedtime/gentle moments
@@ -69,10 +70,21 @@ export const TOOTHY_VOICE = {
       style: 0.4,
       speed: 0.88,
     },
+    
+    // "Hooray! We did it!" - Maximum celebration energy
+    celebration: {
+      stability: 0.2,        // Very expressive
+      similarityBoost: 0.85,
+      style: 0.95,           // Full cartoon energy
+      speed: 1.15,           // Fast and energetic
+    },
   },
 } as const;
 
 export type VoiceMood = keyof typeof TOOTHY_VOICE.moods;
+
+// Extended mood type that includes celebration
+export type ExtendedVoiceMood = VoiceMood | "celebration";
 
 /**
  * Get voice settings for a specific emotional context

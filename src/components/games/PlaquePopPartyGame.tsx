@@ -49,11 +49,18 @@ const PlaquePopPartyGame = ({ game, onComplete }: PlaquePopPartyGameProps) => {
   const popBubble = (bubbleId: number) => {
     setBubbles(prev => prev.filter(b => b.id !== bubbleId));
     setScore(prev => prev + 1);
-    playSound("pop");
+    
+    // Play quick ding for each pop
+    playSound("ding");
+    
+    // Play sparkle sound every 3 pops for extra delight
+    if ((score + 1) % 3 === 0) {
+      setTimeout(() => playSound("sparkle"), 50);
+    }
     
     // Play celebration sound every 5 pops
     if ((score + 1) % 5 === 0) {
-      setTimeout(() => playSound("correct"), 100);
+      setTimeout(() => playSound("woohoo"), 100);
     }
   };
 

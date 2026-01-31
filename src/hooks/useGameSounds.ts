@@ -21,6 +21,10 @@ const GAME_SOUNDS = {
   correct: { frequency: 660, duration: 0.15, type: "sine" as OscillatorType },
   progress: { frequency: 550, duration: 0.12, type: "triangle" as OscillatorType },
   complete: { frequency: 784, duration: 0.2, type: "sine" as OscillatorType },
+  // NEW: Playful kid-friendly sounds
+  ding: { frequency: 1760, duration: 0.12, type: "sine" as OscillatorType },       // Quick satisfying ding
+  sparkle: { frequency: 2093, duration: 0.15, type: "sine" as OscillatorType },    // High sparkle tone
+  woohoo: { frequency: 1319, duration: 0.18, type: "triangle" as OscillatorType }, // Celebration sound
 };
 
 type SoundName = keyof typeof GAME_SOUNDS;

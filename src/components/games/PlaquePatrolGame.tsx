@@ -53,7 +53,14 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
   const tapBug = (bugId: number) => {
     setBugs(prev => prev.filter(b => b.id !== bugId));
     setScore(prev => prev + 1);
-    playSound("tap");
+    
+    // Play quick ding for satisfying feedback
+    playSound("ding");
+    
+    // Occasional sparkle for delight
+    if (Math.random() > 0.6) {
+      setTimeout(() => playSound("sparkle"), 60);
+    }
   };
 
   useEffect(() => {
