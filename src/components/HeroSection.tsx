@@ -8,6 +8,9 @@ import ConfettiCelebration from "@/components/ConfettiCelebration";
 import FloatingSparkles from "@/components/FloatingSparkles";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import DirtyToCleanMascot from "@/components/kid/DirtyToCleanMascot";
+import TapSparkleArea from "@/components/kid/TapSparkleArea";
+import PlayfulBackground from "@/components/kid/PlayfulBackground";
+import AliveMascot from "@/components/mascot/AliveMascot";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
@@ -393,11 +396,15 @@ export const HeroSection = () => {
         )}
       </AnimatePresence>
 
-      <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
-        <FloatingBubbles />
-        
-        {/* Floating sparkles when completed */}
-        {isCompleted && <FloatingSparkles count={20} />}
+      <TapSparkleArea className="relative min-h-screen">
+        <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
+          {/* Playful animated background */}
+          <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="medium" />
+          
+          <FloatingBubbles />
+          
+          {/* Floating sparkles when completed */}
+          {isCompleted && <FloatingSparkles count={20} />}
         
         {/* ToothyQuest Logo - Top left corner */}
         <motion.div
@@ -1043,7 +1050,8 @@ export const HeroSection = () => {
             />
           </svg>
         </div>
-      </section>
+        </section>
+      </TapSparkleArea>
     </>
   );
 };
