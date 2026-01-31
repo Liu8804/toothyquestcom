@@ -61,12 +61,14 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // ToothyQuest custom colors
+        // ToothyQuest Playful Custom Colors
         tooth: "hsl(var(--tooth-white))",
         bubble: "hsl(var(--bubble-blue))",
         mint: "hsl(var(--mint-fresh))",
         candy: "hsl(var(--candy-pink))",
         star: "hsl(var(--star-gold))",
+        sparkle: "hsl(var(--sparkle-purple))",
+        lime: "hsl(var(--lime-pop))",
       },
       borderRadius: {
         lg: "var(--radius)",
