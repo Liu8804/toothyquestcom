@@ -1,21 +1,23 @@
 import { useState, useEffect, useMemo } from "react";
+import { TOOTHY_PHRASES } from "@/config/toothyPhrases";
 
 export interface DailyGreeting {
   message: string;
   emoji: string;
 }
 
+// Use new Toothy phrases for cheerful, playful greetings
 const GREETINGS: DailyGreeting[] = [
-  { message: "Hi, I'm Toothy! Help me sparkle today!", emoji: "✨" },
-  { message: "Hi, I'm Toothy! Help me brush today so I can get shiny!", emoji: "🦷" },
-  { message: "Hi, I'm Toothy! Uh oh! Sugar bugs are coming! Can you save my smile?", emoji: "😬" },
-  { message: "Hi, I'm Toothy! My teeth need your super powers today!", emoji: "💪" },
-  { message: "Hi, I'm Toothy! Will you help me become sparkly today?", emoji: "🌟" },
+  { message: TOOTHY_PHRASES.brushTogether.text, emoji: TOOTHY_PHRASES.brushTogether.emoji },
+  { message: TOOTHY_PHRASES.sparkle.text, emoji: TOOTHY_PHRASES.sparkle.emoji },
+  { message: TOOTHY_PHRASES.tapTeeth.text, emoji: TOOTHY_PHRASES.tapTeeth.emoji },
+  { message: TOOTHY_PHRASES.shinySmile.text, emoji: TOOTHY_PHRASES.shinySmile.emoji },
+  { message: TOOTHY_PHRASES.keepGoing.text, emoji: TOOTHY_PHRASES.keepGoing.emoji },
 ];
 
 const COMPLETION_MESSAGE: DailyGreeting = {
-  message: "Yay! I'm so shiny now! 🎉 Come back tomorrow!",
-  emoji: "🎉",
+  message: TOOTHY_PHRASES.allClean.text,
+  emoji: TOOTHY_PHRASES.allClean.emoji,
 };
 
 // Use date-based seed for consistent greeting per day

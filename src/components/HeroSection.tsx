@@ -16,7 +16,7 @@ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import { useDailyGreeting } from "@/hooks/useDailyGreeting";
-import { useQuestVoice } from "@/hooks/useQuestVoice";
+import { useToothyPhrases } from "@/hooks/useToothyPhrases";
 import { useTapSpeak } from "@/hooks/useAutoSpeak";
 import { useHomeMusic } from "@/hooks/useHomeMusic";
 import { useButtonSounds } from "@/hooks/useButtonSounds";
@@ -35,7 +35,7 @@ export const HeroSection = () => {
     trackSessionStart 
   } = useEngagementAnalytics();
   const { greeting, isCompleted } = useDailyGreeting();
-  const { speak: speakGreeting } = useQuestVoice();
+  const { sayWelcome } = useToothyPhrases();
   
   // Home screen background music
   const {
@@ -92,10 +92,9 @@ export const HeroSection = () => {
     if (!onboardingComplete) return;
     
     hasSpokenGreetingRef.current = true;
-    // IMPORTANT: Call synchronously from the first user gesture.
-    // Delaying (setTimeout) frequently causes iOS/Safari to block playback.
-    speakGreeting(greeting.message, "curious");
-  }, [greeting.message, speakGreeting, isCompleted]);
+    // Use the new Toothy phrases hook for consistent cheerful voice
+    sayWelcome(greeting.message);
+  }, [greeting.message, sayWelcome, isCompleted]);
 
   // Check if onboarding is complete and start session tracking
   useEffect(() => {
@@ -1003,7 +1002,7 @@ export const HeroSection = () => {
                 transition={{ delay: 0.6 }}
                 onClick={() => {
                   unlockAudioContext();
-                  speakGreeting(greeting.message, "curious");
+                  sayWelcome(greeting.message);
                   resetIdleTimer();
                 }}
                 className="mt-6 text-base font-medium text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 hover:bg-card/80 border border-primary/20"
