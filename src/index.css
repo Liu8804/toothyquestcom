@@ -6,106 +6,111 @@
 
 @layer base {
   :root {
-    /* ToothyQuest Playful Color System */
-    --background: 45 50% 98%;
-    --foreground: 220 30% 25%;
+    /* ToothyQuest PLAYFUL Color System - Bright, High-Saturation for Ages 3-6 */
+    --background: 45 70% 98%;
+    --foreground: 220 40% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 30% 25%;
+    --card-foreground: 220 40% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 30% 25%;
+    --popover-foreground: 220 40% 20%;
 
-    /* Fresh Teal - Calming & Dental */
-    --primary: 174 58% 50%;
+    /* Vibrant Teal - Primary Action Color */
+    --primary: 174 80% 45%;
     --primary-foreground: 0 0% 100%;
 
-    /* Warm Coral - Friendly */
-    --secondary: 12 85% 65%;
+    /* Sunny Orange - Warm & Exciting */
+    --secondary: 25 95% 55%;
     --secondary-foreground: 0 0% 100%;
 
     /* Soft Lavender - Comforting */
-    --muted: 260 30% 96%;
-    --muted-foreground: 220 15% 50%;
+    --muted: 260 40% 96%;
+    --muted-foreground: 220 20% 45%;
 
-    /* Sunny Yellow - Rewards & Joy */
-    --accent: 45 95% 60%;
-    --accent-foreground: 220 30% 25%;
+    /* Bright Yellow - Rewards & Celebration */
+    --accent: 45 100% 55%;
+    --accent-foreground: 220 40% 20%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 90% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 174 58% 50%;
+    --border: 220 25% 88%;
+    --input: 220 25% 88%;
+    --ring: 174 80% 45%;
 
-    --radius: 1.25rem;
+    --radius: 1.5rem;
 
-    /* Custom ToothyQuest tokens */
-    --tooth-white: 45 30% 98%;
-    --bubble-blue: 200 80% 70%;
-    --mint-fresh: 160 50% 75%;
-    --candy-pink: 340 70% 75%;
-    --star-gold: 45 100% 55%;
+    /* Custom ToothyQuest Playful Tokens */
+    --tooth-white: 45 40% 98%;
+    --bubble-blue: 200 90% 65%;
+    --mint-fresh: 160 70% 65%;
+    --candy-pink: 340 85% 70%;
+    --star-gold: 45 100% 50%;
+    --sparkle-purple: 280 80% 70%;
+    --lime-pop: 120 70% 55%;
     
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(174 58% 50%) 0%, hsl(200 80% 70%) 100%);
-    --gradient-warm: linear-gradient(135deg, hsl(12 85% 65%) 0%, hsl(340 70% 75%) 100%);
-    --gradient-sky: linear-gradient(180deg, hsl(200 80% 85%) 0%, hsl(45 50% 98%) 100%);
-    --gradient-adventure: linear-gradient(135deg, hsl(260 50% 65%) 0%, hsl(200 80% 70%) 100%);
+    /* Vibrant Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(174 80% 45%) 0%, hsl(200 90% 65%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(25 95% 55%) 0%, hsl(340 85% 70%) 100%);
+    --gradient-sky: linear-gradient(180deg, hsl(200 90% 85%) 0%, hsl(45 70% 98%) 100%);
+    --gradient-adventure: linear-gradient(135deg, hsl(280 80% 65%) 0%, hsl(200 90% 65%) 100%);
+    --gradient-celebration: linear-gradient(135deg, hsl(45 100% 55%) 0%, hsl(25 95% 55%) 50%, hsl(340 85% 70%) 100%);
+    --gradient-rainbow: linear-gradient(135deg, hsl(0 90% 65%) 0%, hsl(45 100% 55%) 25%, hsl(120 70% 55%) 50%, hsl(200 90% 65%) 75%, hsl(280 80% 70%) 100%);
     
-    /* Shadows */
-    --shadow-playful: 0 8px 30px -8px hsl(174 58% 50% / 0.3);
-    --shadow-card: 0 4px 20px -4px hsl(220 30% 25% / 0.1);
-    --shadow-float: 0 12px 40px -12px hsl(220 30% 25% / 0.15);
+    /* Enhanced Shadows */
+    --shadow-playful: 0 10px 40px -8px hsl(174 80% 45% / 0.4);
+    --shadow-card: 0 6px 25px -5px hsl(220 40% 20% / 0.12);
+    --shadow-float: 0 15px 50px -15px hsl(220 40% 20% / 0.18);
+    --shadow-glow: 0 0 30px hsl(45 100% 55% / 0.5);
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 174 58% 50%;
+    --sidebar-primary: 174 80% 45%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 260 30% 96%;
-    --sidebar-accent-foreground: 220 30% 25%;
-    --sidebar-border: 220 20% 90%;
-    --sidebar-ring: 174 58% 50%;
+    --sidebar-accent: 260 40% 96%;
+    --sidebar-accent-foreground: 220 40% 20%;
+    --sidebar-border: 220 25% 88%;
+    --sidebar-ring: 174 80% 45%;
   }
 
   .dark {
-    --background: 220 30% 12%;
-    --foreground: 45 30% 95%;
+    --background: 220 40% 10%;
+    --foreground: 45 40% 95%;
 
-    --card: 220 25% 16%;
-    --card-foreground: 45 30% 95%;
+    --card: 220 35% 14%;
+    --card-foreground: 45 40% 95%;
 
-    --popover: 220 25% 16%;
-    --popover-foreground: 45 30% 95%;
+    --popover: 220 35% 14%;
+    --popover-foreground: 45 40% 95%;
 
-    --primary: 174 58% 55%;
-    --primary-foreground: 220 30% 12%;
+    --primary: 174 75% 50%;
+    --primary-foreground: 220 40% 10%;
 
-    --secondary: 12 75% 60%;
+    --secondary: 25 85% 55%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 20% 20%;
-    --muted-foreground: 220 15% 65%;
+    --muted: 220 25% 18%;
+    --muted-foreground: 220 20% 60%;
 
-    --accent: 45 90% 55%;
-    --accent-foreground: 220 30% 12%;
+    --accent: 45 95% 50%;
+    --accent-foreground: 220 40% 10%;
 
-    --destructive: 0 62% 50%;
+    --destructive: 0 70% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 20% 22%;
-    --input: 220 20% 22%;
-    --ring: 174 58% 55%;
+    --border: 220 25% 20%;
+    --input: 220 25% 20%;
+    --ring: 174 75% 50%;
 
-    --sidebar-background: 220 30% 12%;
-    --sidebar-foreground: 45 30% 95%;
-    --sidebar-primary: 174 58% 55%;
-    --sidebar-primary-foreground: 220 30% 12%;
-    --sidebar-accent: 220 20% 20%;
-    --sidebar-accent-foreground: 45 30% 95%;
-    --sidebar-border: 220 20% 22%;
-    --sidebar-ring: 174 58% 55%;
+    --sidebar-background: 220 40% 10%;
+    --sidebar-foreground: 45 40% 95%;
+    --sidebar-primary: 174 75% 50%;
+    --sidebar-primary-foreground: 220 40% 10%;
+    --sidebar-accent: 220 25% 18%;
+    --sidebar-accent-foreground: 45 40% 95%;
+    --sidebar-border: 220 25% 20%;
+    --sidebar-ring: 174 75% 50%;
   }
 }
 
@@ -141,6 +146,14 @@
     background: var(--gradient-adventure);
   }
   
+  .gradient-celebration {
+    background: var(--gradient-celebration);
+  }
+  
+  .gradient-rainbow {
+    background: var(--gradient-rainbow);
+  }
+  
   .shadow-playful {
     box-shadow: var(--shadow-playful);
   }
@@ -153,10 +166,85 @@
     box-shadow: var(--shadow-float);
   }
   
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
   .text-gradient-hero {
     background: var(--gradient-hero);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  
+  .text-gradient-rainbow {
+    background: var(--gradient-rainbow);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Alive mascot animations */
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+  
+  @keyframes blink {
+    0%, 95%, 100% { opacity: 1; }
+    97% { opacity: 0.1; }
+  }
+  
+  @keyframes wiggle-happy {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    15% { transform: rotate(-8deg) scale(1.02); }
+    30% { transform: rotate(8deg) scale(1.04); }
+    45% { transform: rotate(-6deg) scale(1.02); }
+    60% { transform: rotate(6deg) scale(1.03); }
+    75% { transform: rotate(-4deg) scale(1.01); }
+    90% { transform: rotate(4deg) scale(1.01); }
+  }
+  
+  @keyframes bounce-joy {
+    0%, 100% { transform: translateY(0) scale(1); }
+    25% { transform: translateY(-15px) scale(1.05); }
+    50% { transform: translateY(-5px) scale(1.02); }
+    75% { transform: translateY(-10px) scale(1.03); }
+  }
+  
+  @keyframes spin-celebrate {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  
+  @keyframes tap-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0.5); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 15px hsl(var(--primary) / 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+  }
+  
+  .animate-breathe {
+    animation: breathe 3s ease-in-out infinite;
+  }
+  
+  .animate-blink {
+    animation: blink 4s ease-in-out infinite;
+  }
+  
+  .animate-wiggle-happy {
+    animation: wiggle-happy 0.8s ease-in-out;
+  }
+  
+  .animate-bounce-joy {
+    animation: bounce-joy 0.6s ease-out;
+  }
+  
+  .animate-spin-celebrate {
+    animation: spin-celebrate 0.8s ease-in-out;
+  }
+  
+  .animate-tap-pulse {
+    animation: tap-pulse 0.4s ease-out;
   }
 }
