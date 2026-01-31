@@ -37,6 +37,8 @@ export const useToothyPhrases = () => {
     try {
       const headers = await buildFunctionsHeaders();
       
+      console.log("[ToothyPhrases] Speaking:", phrase.text, "with mood:", phrase.mood);
+      
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
         {
@@ -48,10 +50,12 @@ export const useToothyPhrases = () => {
           body: JSON.stringify({
             text: phrase.text,
             voiceId: voiceSettings.voiceId,
-            stability: voiceSettings.stability,
-            similarityBoost: voiceSettings.similarityBoost,
-            style: voiceSettings.style,
-            speed: voiceSettings.speed,
+            voiceSettings: {
+              stability: voiceSettings.stability,
+              similarityBoost: voiceSettings.similarityBoost,
+              style: voiceSettings.style,
+              speed: voiceSettings.speed,
+            },
           }),
         }
       );
