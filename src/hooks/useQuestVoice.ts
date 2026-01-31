@@ -1,5 +1,4 @@
 import { useCallback, useRef } from "react";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { getVoiceSettings } from "@/components/VoiceSettingsModal";
 import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
@@ -11,13 +10,12 @@ import {
   unlockAudioContext,
 } from "./useAudioManager";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
-import { speakBrowserTts, cancelBrowserTts } from "@/lib/speechSynthesis";
 
 /**
  * Quest voice hook for short narration lines (intro, ending, celebrations).
  * Uses ONE consistent voice (Toothy) with mood variations for emotional context.
  * - Uses Premium AI voice (ElevenLabs) ONLY when the user is signed in
- * - NO browser speech fallback (eliminates male voice issue)
+ * - NO browser speech fallback (eliminates mixed voice issue)
  * 
  * AUDIO COORDINATION: Uses centralized audio manager to prevent overlapping
  */
@@ -29,7 +27,7 @@ export const useQuestVoice = () => {
   const webSourceRef = useRef<AudioBufferSourceNode | null>(null);
   const webGainRef = useRef<GainNode | null>(null);
 
-  const hasShownAuthToastRef = useRef(false);
+  
 
   const cleanupAudio = useCallback(() => {
     // Stop WebAudio fallback if active
@@ -65,8 +63,6 @@ export const useQuestVoice = () => {
     // Use centralized stop to ensure everything stops
     stopAllMedia();
     setVoicePlaying(false);
-    // Ensure browser TTS is also stopped (some platforms keep speaking).
-    cancelBrowserTts();
     cleanupAudio();
   }, [cleanupAudio]);
 
@@ -102,7 +98,6 @@ export const useQuestVoice = () => {
 
         const effectiveVolume = getEffectiveVolume("voice");
         if (effectiveVolume <= 0.001) {
-          toast.info("Toothy's voice is muted in Sound Settings.");
           onEnd?.();
           return;
         }
@@ -173,44 +168,11 @@ export const useQuestVoice = () => {
 
       // If master is effectively muted, don't waste an AI call.
       if (getEffectiveVolume("voice") <= 0.001) {
-        toast.info("Toothy's voice is muted in Sound Settings.");
         onEnd?.();
         return;
       }
 
       const settings = getVoiceSettings();
-      const wantsAiVoice = settings.provider === "elevenlabs";
-
-      const playBrowserFallback = () => {
-        const effectiveVolume = getEffectiveVolume("voice");
-        if (effectiveVolume <= 0.001) {
-          onEnd?.();
-          return;
-        }
-
-        setVoicePlaying(true);
-        speakBrowserTts({
-          text,
-          rate: settings.speed,
-          pitch: settings.pitch,
-          volume: effectiveVolume,
-          onEnd: () => {
-            setVoicePlaying(false);
-            onEnd?.();
-          },
-          onError: () => {
-            setVoicePlaying(false);
-            toast.error("Couldn't play the voice. Please try again.");
-            onEnd?.();
-          },
-        });
-      };
-
-      if (!wantsAiVoice) {
-        // User explicitly chose browser voice.
-        playBrowserFallback();
-        return;
-      }
 
       // CRITICAL: Create Audio element IMMEDIATELY in user gesture context
       // This ensures browser allows playback after async operations
@@ -224,12 +186,9 @@ export const useQuestVoice = () => {
         try {
           const { data: { session } } = await supabase.auth.getSession();
           if (!session?.access_token) {
-            if (!hasShownAuthToastRef.current) {
-              hasShownAuthToastRef.current = true;
-              toast.info("AI voice needs sign-in — using browser voice for now.");
-            }
+            // No session - silently skip voice (user is not signed in)
             cleanupAudio();
-            playBrowserFallback();
+            onEnd?.();
             return;
           }
 
@@ -260,7 +219,7 @@ export const useQuestVoice = () => {
 
           if (!response.ok) {
             cleanupAudio();
-            playBrowserFallback();
+            onEnd?.();
             return;
           }
 
@@ -280,7 +239,7 @@ export const useQuestVoice = () => {
           audio.onerror = () => {
             setVoicePlaying(false);
             cleanupAudio();
-            playBrowserFallback();
+            onEnd?.();
           };
 
           try {
@@ -295,7 +254,7 @@ export const useQuestVoice = () => {
           }
         } catch {
           cleanupAudio();
-          playBrowserFallback();
+          onEnd?.();
         }
       })();
     },

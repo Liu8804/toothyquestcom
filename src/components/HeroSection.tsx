@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Volume2, VolumeX } from "lucide-react";
 import FloatingBubbles from "@/components/FloatingBubbles";
 import FirstTapCelebration from "@/components/FirstTapCelebration";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
@@ -10,7 +10,6 @@ import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import DirtyToCleanMascot from "@/components/kid/DirtyToCleanMascot";
 import TapSparkleArea from "@/components/kid/TapSparkleArea";
 import PlayfulBackground from "@/components/kid/PlayfulBackground";
-import AliveMascot from "@/components/mascot/AliveMascot";
 import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
@@ -19,15 +18,15 @@ import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useTapSpeak } from "@/hooks/useAutoSpeak";
+import { useHomeMusic } from "@/hooks/useHomeMusic";
+import { useButtonSounds } from "@/hooks/useButtonSounds";
 import { unlockAudioContext } from "@/hooks/useAudioManager";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
-import mascotMain from "@/assets/mascot-sticker-main-v2.png";
-import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
-import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
   const { playWave, playCheer, playQuestStart, playQuestComplete, playIntroHello } = useMascotSounds();
+  const { playTap } = useButtonSounds();
   const { 
     trackFirstTap, 
     trackCTAHover, 
@@ -35,17 +34,17 @@ export const HeroSection = () => {
     trackCelebration,
     trackSessionStart 
   } = useEngagementAnalytics();
-  const { greeting, isCompleted, markComplete } = useDailyGreeting();
+  const { greeting, isCompleted } = useDailyGreeting();
   const { speak: speakGreeting } = useQuestVoice();
-  const { speak: speakTap } = useTapSpeak();
+  
+  // Home screen background music
+  const { start: startMusic, stop: stopMusic, isMuted: musicMuted, toggleMute: toggleMusicMute } = useHomeMusic();
   
   // Global mascot emotion context
   const { 
     emotion: globalEmotion, 
-    triggerSuccess, 
     triggerWow, 
     triggerLetsPlay,
-    triggerCelebrating 
   } = useMascotEmotionContext();
   
   const [showCelebration, setShowCelebration] = useState(false);
@@ -62,7 +61,7 @@ export const HeroSection = () => {
   // Show celebration briefly when quest was just completed this session
   const [justCompleted, setJustCompleted] = useState(false);
   
-  // Idle timer for wiggle animation
+  // Idle timer for wiggle animation (reduced for performance)
   const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isWiggling, setIsWiggling] = useState(false);
   
@@ -205,6 +204,8 @@ export const HeroSection = () => {
         hasInteractedRef.current = true;
         // Best-effort unlock as early as possible.
         unlockAudioContext();
+        // Start background music on first interaction
+        startMusic();
       }
 
       speakGreetingOnce();
@@ -354,8 +355,9 @@ export const HeroSection = () => {
     // If the first tap happened during onboarding, re-attempt the greeting now
     hasInteractedRef.current = true;
     unlockAudioContext();
+    startMusic();
     speakGreetingOnce();
-  }, [isCompleted, speakGreetingOnce]);
+  }, [isCompleted, speakGreetingOnce, startMusic]);
 
   const handleKidMascotComplete = useCallback(() => {
     localStorage.setItem("toothyquest_kid_mascot_done", "true");
@@ -422,13 +424,30 @@ export const HeroSection = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="absolute top-4 left-4 z-20"
+          className="absolute top-4 left-4 z-20 flex items-center gap-3"
         >
           <img
             src={toothyQuestLogo}
             alt="ToothyQuest"
             className="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-lg"
           />
+          
+          {/* Music toggle button - subtle */}
+          <motion.button
+            onClick={() => {
+              toggleMusicMute();
+              playTap();
+            }}
+            className="p-2 rounded-full bg-card/80 shadow-md border border-border/50 hover:bg-card transition-colors"
+            whileTap={{ scale: 0.9 }}
+            title={musicMuted ? "Unmute background music" : "Mute background music"}
+          >
+            {musicMuted ? (
+              <VolumeX className="w-4 h-4 text-muted-foreground" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-primary" />
+            )}
+          </motion.button>
         </motion.div>
         
         {/* Minimal decorative sparkles - only on desktop */}
@@ -629,12 +648,14 @@ export const HeroSection = () => {
                   }}
                   className="cursor-pointer"
                 >
+                  {/* ALWAYS visible mascot - use waving as default */}
                   <MascotEmotionState
                     emotion={
                       isCompleted ? "greatJob" :
                       isWiggling ? "letsPlay" :
-                      mascotMood === "cheering" ? "wow" :
-                      globalEmotion
+                      mascotMood === "cheering" ? "celebrating" :
+                      isIntroWaving ? "waving" :
+                      "waving" // Always show waving state as default for visibility
                     }
                     size="2xl"
                     showSparkles={isCompleted || isWiggling}
