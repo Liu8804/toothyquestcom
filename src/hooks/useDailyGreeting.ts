@@ -1,33 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { TOOTHY_PHRASES } from "@/config/toothyPhrases";
+import { useTranslation } from "react-i18next";
+import { TOOTHY_PHRASES, getLocalizedText } from "@/config/toothyPhrases";
 
 export interface DailyGreeting {
   message: string;
   emoji: string;
 }
-
-// Use new Toothy phrases for cheerful, playful greetings
-const GREETINGS: DailyGreeting[] = [
-  { message: TOOTHY_PHRASES.brushTogether.text, emoji: TOOTHY_PHRASES.brushTogether.emoji },
-  { message: TOOTHY_PHRASES.sparkle.text, emoji: TOOTHY_PHRASES.sparkle.emoji },
-  { message: TOOTHY_PHRASES.tapTeeth.text, emoji: TOOTHY_PHRASES.tapTeeth.emoji },
-  { message: TOOTHY_PHRASES.shinySmile.text, emoji: TOOTHY_PHRASES.shinySmile.emoji },
-  { message: TOOTHY_PHRASES.keepGoing.text, emoji: TOOTHY_PHRASES.keepGoing.emoji },
-];
-
-const COMPLETION_MESSAGE: DailyGreeting = {
-  message: TOOTHY_PHRASES.allClean.text,
-  emoji: TOOTHY_PHRASES.allClean.emoji,
-};
-
-// Use date-based seed for consistent greeting per day
-const getDailyGreetingIndex = (): number => {
-  const today = new Date();
-  const dayOfYear = Math.floor(
-    (today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000
-  );
-  return dayOfYear % GREETINGS.length;
-};
 
 // Local storage key for today's completion
 const DAILY_COMPLETION_KEY = "toothyquest_daily_quest_completed";
@@ -64,16 +42,59 @@ const setCompletionToCache = (completed: boolean): void => {
   }
 };
 
+// Use date-based seed for consistent greeting per day
+const getDailyGreetingIndex = (count: number): number => {
+  const today = new Date();
+  const dayOfYear = Math.floor(
+    (today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000
+  );
+  return dayOfYear % count;
+};
+
+// Get greeting phrases from Toothy phrases config
+const getGreetingPhrases = () => [
+  TOOTHY_PHRASES.brushTogether,
+  TOOTHY_PHRASES.sparkle,
+  TOOTHY_PHRASES.tapTeeth,
+  TOOTHY_PHRASES.shinySmile,
+  TOOTHY_PHRASES.keepGoing,
+  TOOTHY_PHRASES.helloFriend,
+  TOOTHY_PHRASES.welcomeBack,
+  TOOTHY_PHRASES.letsHaveFun,
+];
+
 export const useDailyGreeting = () => {
+  const { i18n } = useTranslation();
   const [isCompleted, setIsCompleted] = useState(() => getCompletionFromCache());
+
+  const greetingPhrases = getGreetingPhrases();
 
   // Get today's greeting (deterministic based on day)
   const greeting = useMemo<DailyGreeting>(() => {
+    const lang = i18n.language;
+    
     if (isCompleted) {
-      return COMPLETION_MESSAGE;
+      return {
+        message: getLocalizedText(TOOTHY_PHRASES.allClean, lang),
+        emoji: TOOTHY_PHRASES.allClean.emoji,
+      };
     }
-    return GREETINGS[getDailyGreetingIndex()];
-  }, [isCompleted]);
+    
+    const todaysPhrase = greetingPhrases[getDailyGreetingIndex(greetingPhrases.length)];
+    return {
+      message: getLocalizedText(todaysPhrase, lang),
+      emoji: todaysPhrase.emoji,
+    };
+  }, [isCompleted, i18n.language, greetingPhrases]);
+
+  // Get all greetings in current language
+  const allGreetings = useMemo<DailyGreeting[]>(() => {
+    const lang = i18n.language;
+    return greetingPhrases.map((phrase) => ({
+      message: getLocalizedText(phrase, lang),
+      emoji: phrase.emoji,
+    }));
+  }, [i18n.language, greetingPhrases]);
 
   // Mark today's quest as complete
   const markComplete = () => {
@@ -93,7 +114,7 @@ export const useDailyGreeting = () => {
     greeting,
     isCompleted,
     markComplete,
-    allGreetings: GREETINGS,
+    allGreetings,
   };
 };
 

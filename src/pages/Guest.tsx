@@ -13,8 +13,7 @@ const GUEST_GREETING =
 /**
  * Guest Mode page with a dedicated tap-to-unlock step.
  * On iOS Safari, audio cannot start until there's a user gesture; we use a bright,
- * kid-friendly "Tap to Enable Sound!" button that explicitly unlocks both WebAudio
- * *and* native speechSynthesis.
+ * kid-friendly "Tap to Enable Sound!" button that explicitly unlocks WebAudio.
  */
 const Guest = () => {
   const [audioUnlocked, setAudioUnlocked] = useState(false);
@@ -53,7 +52,6 @@ const Guest = () => {
 
     return {
       ctxState,
-      ttsSupported: typeof window !== "undefined" && "speechSynthesis" in window,
       masterEffective: getEffectiveVolume("sfx"),
       voiceEffective: getEffectiveVolume("voice"),
       voiceEnabled: volume.voiceEnabled,
@@ -203,10 +201,6 @@ const Guest = () => {
               Audio diagnostics
             </summary>
             <div className="mt-3 text-sm text-muted-foreground space-y-2">
-              <div>
-                Browser TTS supported:{" "}
-                <span className="text-foreground font-medium">{String(diagnostics.ttsSupported)}</span>
-              </div>
               <div>
                 AudioContext state:{" "}
                 <span className="text-foreground font-medium">{diagnostics.ctxState}</span>

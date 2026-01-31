@@ -5,15 +5,11 @@ import {
   Settings2,
   Check,
   Sparkles,
-  Monitor,
   Heart,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
 import { getBaseVoice } from "@/config/voiceConfig";
 
@@ -22,10 +18,9 @@ interface VoiceSettingsModalProps {
   onClose: () => void;
 }
 
-export type VoiceProvider = "elevenlabs" | "browser";
-
+// Voice settings - only ElevenLabs is supported now
 export interface VoiceSettings {
-  provider: VoiceProvider;
+  provider: "elevenlabs";
   speed: number;
   pitch: number;
 }
@@ -59,20 +54,7 @@ export const saveVoiceSettings = (settings: VoiceSettings) => {
 };
 
 const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
-  const [settings, setSettings] = useState<VoiceSettings>(getVoiceSettings);
   const [testPlaying, setTestPlaying] = useState(false);
-
-  useEffect(() => {
-    if (isOpen) {
-      setSettings(getVoiceSettings());
-    }
-  }, [isOpen]);
-
-  const handleSave = () => {
-    saveVoiceSettings(settings);
-    window.dispatchEvent(new CustomEvent('voiceSettingsChanged', { detail: settings }));
-    onClose();
-  };
 
   const handleTestVoice = async () => {
     if (testPlaying) return;
@@ -81,63 +63,14 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
     const voiceConfig = getBaseVoice();
     const testText = "Hey there, superstar! I'm your friendly guide. Ready to make those teeth sparkle and shine?";
 
-    const playBrowserVoice = () => {
-      if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
-        toast.error("Voice playback isn't available on this device.");
-        setTestPlaying(false);
-        return;
-      }
-
-      const utterance = new SpeechSynthesisUtterance(testText);
-      utterance.rate = settings.speed;
-      utterance.pitch = settings.pitch;
-      utterance.volume = 1;
-
-      const speakNow = () => {
-        const voices = window.speechSynthesis.getVoices();
-        const englishVoice =
-          voices.find((v) => v.lang.startsWith("en") && v.localService) ||
-          voices.find((v) => v.lang.startsWith("en")) ||
-          voices[0];
-        if (englishVoice) utterance.voice = englishVoice;
-
-        utterance.onend = () => setTestPlaying(false);
-        utterance.onerror = () => {
-          setTestPlaying(false);
-          toast.error("Couldn't play the voice. Please try again.");
-        };
-
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-      };
-
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          window.speechSynthesis.onvoiceschanged = null;
-          speakNow();
-        };
-        setTimeout(() => {
-          speakNow();
-        }, 150);
-      } else {
-        speakNow();
-      }
-    };
-
     try {
-      if (settings.provider === "browser") {
-        playBrowserVoice();
-        return;
-      }
-
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (!session?.access_token) {
-        toast.info("Sign in to unlock the premium AI voice! Using browser voice for now.");
-        playBrowserVoice();
+        toast.info("Sign in to unlock the AI voice!");
+        setTestPlaying(false);
         return;
       }
 
@@ -168,8 +101,8 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error("ElevenLabs TTS error:", response.status, errorData);
-        toast.info("AI voice isn't available right now — using browser voice.");
-        playBrowserVoice();
+        toast.error("AI voice isn't available right now. Please try again.");
+        setTestPlaying(false);
         return;
       }
 
@@ -184,16 +117,16 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
       audio.onerror = () => {
         URL.revokeObjectURL(url);
         console.error("Audio playback error");
-        toast.info("Couldn't play AI voice — using browser voice.");
-        playBrowserVoice();
+        toast.error("Couldn't play AI voice. Please try again.");
+        setTestPlaying(false);
       };
 
       await audio.play();
-      toast.success("🎤 AI voice is working!");
+      toast.success("🎤 Toothy's voice is working!");
     } catch (err) {
       console.error("Voice settings test failed:", err);
-      toast.info("Couldn't connect to AI voice — using browser voice.");
-      playBrowserVoice();
+      toast.error("Couldn't connect to AI voice service.");
+      setTestPlaying(false);
     }
   };
 
@@ -210,151 +143,31 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
         </DialogHeader>
 
         <div className="space-y-6 mt-4">
-          {/* Voice Provider Selection */}
-          <div className="space-y-3">
-            <Label className="text-sm font-display font-bold text-foreground">
-              Narration Voice
-            </Label>
-            <RadioGroup
-              value={settings.provider}
-              onValueChange={(value) =>
-                setSettings({ ...settings, provider: value as VoiceProvider })
-              }
-              className="space-y-3"
-            >
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className={`relative flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                  settings.provider === "elevenlabs"
-                    ? "border-primary bg-primary/5"
-                    : "border-border hover:border-primary/50"
-                }`}
-                onClick={() => setSettings({ ...settings, provider: "elevenlabs" })}
-              >
-                <RadioGroupItem value="elevenlabs" id="elevenlabs" className="sr-only" />
-                <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-display font-bold text-foreground">AI Voice</span>
-                    <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full">
-                      Premium
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Natural, expressive voices with fun personalities!
-                  </p>
-                </div>
-                {settings.provider === "elevenlabs" && (
-                  <Check className="w-5 h-5 text-primary" />
-                )}
-              </motion.div>
-
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                className={`relative flex items-center gap-4 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                  settings.provider === "browser"
-                    ? "border-primary bg-primary/5"
-                    : "border-border hover:border-primary/50"
-                }`}
-                onClick={() => setSettings({ ...settings, provider: "browser" })}
-              >
-                <RadioGroupItem value="browser" id="browser" className="sr-only" />
-                <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500">
-                  <Monitor className="w-5 h-5 text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-display font-bold text-foreground">Browser Voice</span>
-                    <span className="text-xs px-2 py-0.5 bg-green-500/10 text-green-600 rounded-full">
-                      Free
-                    </span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Built-in voice, works offline
-                  </p>
-                </div>
-                {settings.provider === "browser" && (
-                  <Check className="w-5 h-5 text-primary" />
-                )}
-              </motion.div>
-            </RadioGroup>
-          </div>
-
-          {/* AI Voice Info (only for ElevenLabs) */}
-          {settings.provider === "elevenlabs" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-3"
-            >
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-2 border-purple-200 dark:border-purple-800">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-purple-400 to-pink-400">
-                    <Heart className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="font-display font-bold text-foreground">Toothy's Friend</h4>
-                    <p className="text-xs text-muted-foreground">Your friendly guide voice</p>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  A warm, kid-friendly voice that stays consistent throughout your adventure. 
-                  The voice naturally adjusts its tone for exciting moments, encouragement, and calm storytelling! 🌟
-                </p>
+          {/* Voice Info Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-4 rounded-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-2 border-purple-200 dark:border-purple-800"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-purple-400 to-pink-400">
+                <Heart className="w-5 h-5 text-white" />
               </div>
-            </motion.div>
-          )}
-
-          {/* Speed & Pitch (only for browser voice) */}
-          {settings.provider === "browser" && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-4"
-            >
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label className="text-sm font-medium">Speed</Label>
-                  <span className="text-sm text-muted-foreground">
-                    {settings.speed.toFixed(1)}x
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="font-display font-bold text-foreground">Toothy's Voice</h4>
+                  <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary rounded-full">
+                    AI Powered
                   </span>
                 </div>
-                <Slider
-                  value={[settings.speed]}
-                  onValueChange={([value]) =>
-                    setSettings({ ...settings, speed: value })
-                  }
-                  min={0.5}
-                  max={1.5}
-                  step={0.1}
-                  className="w-full"
-                />
+                <p className="text-xs text-muted-foreground">Your friendly guide voice</p>
               </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <Label className="text-sm font-medium">Pitch</Label>
-                  <span className="text-sm text-muted-foreground">
-                    {settings.pitch.toFixed(1)}
-                  </span>
-                </div>
-                <Slider
-                  value={[settings.pitch]}
-                  onValueChange={([value]) =>
-                    setSettings({ ...settings, pitch: value })
-                  }
-                  min={0.5}
-                  max={1.5}
-                  step={0.1}
-                  className="w-full"
-                />
-              </div>
-            </motion.div>
-          )}
+            </div>
+            <p className="text-sm text-muted-foreground">
+              A warm, kid-friendly AI voice that stays consistent throughout your adventure. 
+              The voice naturally adjusts its tone for exciting moments, encouragement, and calm storytelling! 🌟
+            </p>
+          </motion.div>
 
           {/* Test Voice Button */}
           <Button
@@ -376,17 +189,17 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
             ) : (
               <>
                 <Volume2 className="w-4 h-4" />
-                Test Voice
+                Test Toothy's Voice
               </>
             )}
           </Button>
 
-          {/* Save Button */}
+          {/* Close Button */}
           <Button
             className="w-full rounded-xl font-display font-bold"
-            onClick={handleSave}
+            onClick={onClose}
           >
-            Save Settings
+            Done
           </Button>
         </div>
       </DialogContent>

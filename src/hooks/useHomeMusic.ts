@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 import { isVoiceActive, unlockAudioContext } from "./useAudioManager";
+import { registerMusicStopCallback, unregisterMusicStopCallback } from "./useRouteMusicController";
 
 /**
  * Home Screen Background Music
@@ -182,9 +183,11 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
     }
   }, [isMuted, stop, start, isPlaying]);
 
-  // Cleanup on unmount
+  // Register stop callback for route-based music control
   useEffect(() => {
+    registerMusicStopCallback(stop);
     return () => {
+      unregisterMusicStopCallback();
       stop();
       if (audioRef.current) {
         audioRef.current = null;

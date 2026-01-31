@@ -4,7 +4,6 @@ import { Sparkles, Volume2, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getVoiceSettings, saveVoiceSettings } from "@/components/VoiceSettingsModal";
 import { getBaseVoice } from "@/config/voiceConfig";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,6 +13,12 @@ interface VoicePersonalityQuizProps {
   onComplete?: () => void;
 }
 
+/**
+ * Voice Personality Quiz
+ * 
+ * Uses ONLY ElevenLabs AI voice - no browser TTS fallback
+ * This ensures consistent Toothy character voice
+ */
 const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQuizProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasListened, setHasListened] = useState(false);
@@ -25,67 +30,17 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
     setIsPlaying(true);
 
     const testText =
-      "Hey there, superstar! I'm your friendly guide, Toothy's Friend! I'll be here to cheer you on during all your brushing adventures. Ready to make those teeth sparkle and shine?";
-
-    const playBrowserVoice = () => {
-      if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
-        toast.error("Voice playback isn't available on this device.");
-        setIsPlaying(false);
-        return;
-      }
-
-      const settings = getVoiceSettings();
-      const utterance = new SpeechSynthesisUtterance(testText);
-      utterance.rate = settings.speed;
-      utterance.pitch = settings.pitch;
-      utterance.volume = 1;
-
-      const speakNow = () => {
-        const voices = window.speechSynthesis.getVoices();
-        const englishVoice =
-          voices.find((v) => v.lang.startsWith("en") && v.localService) ||
-          voices.find((v) => v.lang.startsWith("en")) ||
-          voices[0];
-        if (englishVoice) utterance.voice = englishVoice;
-
-        utterance.onend = () => {
-          setIsPlaying(false);
-          setHasListened(true);
-        };
-
-        utterance.onerror = () => {
-          setIsPlaying(false);
-          toast.error("Couldn't play the voice. Please try again.");
-        };
-
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
-      };
-
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length === 0) {
-        window.speechSynthesis.onvoiceschanged = () => {
-          window.speechSynthesis.onvoiceschanged = null;
-          speakNow();
-        };
-        // Fallback if onvoiceschanged doesn't fire
-        setTimeout(() => {
-          speakNow();
-        }, 150);
-      } else {
-        speakNow();
-      }
-    };
+      "Hey there, superstar! I'm your friendly guide, Toothy! I'll be here to cheer you on during all your brushing adventures. Ready to make those teeth sparkle and shine?";
 
     try {
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
-      // Not signed in -> browser voice with clear message
+      // Not signed in -> show info message
       if (!session?.access_token) {
-        toast.info("Sign in to unlock the premium AI voice!");
-        playBrowserVoice();
+        toast.info("Sign in to unlock the AI voice!");
+        setIsPlaying(false);
         return;
       }
 
@@ -116,8 +71,8 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error("ElevenLabs TTS error:", response.status, errorData);
-        toast.info("AI voice isn't available right now — using browser voice.");
-        playBrowserVoice();
+        toast.error("AI voice isn't available right now. Please try again.");
+        setIsPlaying(false);
         return;
       }
 
@@ -134,22 +89,20 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
       audio.onerror = () => {
         URL.revokeObjectURL(url);
         console.error("Audio playback error");
-        toast.info("Couldn't play AI voice — using browser voice.");
-        playBrowserVoice();
+        toast.error("Couldn't play AI voice. Please try again.");
+        setIsPlaying(false);
       };
 
       await audio.play();
-      toast.success("🎤 Toothy's Friend is speaking!");
+      toast.success("🎤 Toothy is speaking!");
     } catch (err) {
       console.error("Voice test failed:", err);
-      toast.info("Couldn't connect to AI voice — using browser voice.");
-      playBrowserVoice();
+      toast.error("Couldn't connect to AI voice service.");
+      setIsPlaying(false);
     }
   };
 
   const handleComplete = () => {
-    const settings = getVoiceSettings();
-    saveVoiceSettings({ ...settings, provider: "elevenlabs" });
     onComplete?.();
     onClose();
   };
@@ -193,7 +146,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
                   🦷
                 </motion.div>
                 <h3 className="text-xl font-display font-bold text-foreground">
-                  Say Hello to Toothy's Friend!
+                  Say Hello to Toothy!
                 </h3>
               </motion.div>
 
@@ -213,7 +166,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
                   {voiceConfig.name}
                 </h4>
                 <p className="text-white/90 text-sm">
-                  A warm, kid-friendly voice that will be your friendly guide throughout all your dental adventures! 🌟
+                  A warm, kid-friendly AI voice that will be your guide throughout all your dental adventures! 🌟
                 </p>
               </motion.div>
 
@@ -242,7 +195,7 @@ const VoicePersonalityQuiz = ({ isOpen, onClose, onComplete }: VoicePersonalityQ
                   ) : (
                     <>
                       <Volume2 className="w-5 h-5" />
-                      {hasListened ? "Listen Again!" : "Hear the Voice!"}
+                      {hasListened ? "Listen Again!" : "Hear Toothy's Voice!"}
                     </>
                   )}
                 </Button>

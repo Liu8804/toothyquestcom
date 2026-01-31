@@ -1,17 +1,22 @@
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { buildFunctionsHeaders } from "@/lib/functionsAuth";
-import { TOOTHY_PHRASES, getPhrase, getRandomPhrase, PhraseCategory, ToothyPhrase } from "@/config/toothyPhrases";
+import { TOOTHY_PHRASES, getPhrase, getRandomPhrase, PhraseCategory, ToothyPhrase, getLocalizedText } from "@/config/toothyPhrases";
 import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 import { useMascotSounds } from "./useMascotSounds";
 import { getEffectiveVolume } from "@/components/VolumeControlPanel";
-import { unlockAudioContext } from "./useAudioManager";
+import { unlockAudioContext, registerVoiceAudio, stopAllMedia } from "./useAudioManager";
 
 /**
  * Hook for speaking Toothy's playful phrases with matching sounds
  * 
- * Combines AI voice + sparkle/ding sounds for immersive kid experience
+ * Uses ONLY ElevenLabs AI voice (LSfMSUsuD24K9gbY84R5)
+ * No browser speechSynthesis fallback - consistent character voice only
+ * 
+ * Supports English and Spanish based on current language
  */
 export const useToothyPhrases = () => {
+  const { i18n } = useTranslation();
   const { 
     playSparkleChime, 
     playDing, 
@@ -22,22 +27,35 @@ export const useToothyPhrases = () => {
   } = useMascotSounds();
 
   /**
-   * Speak a phrase with AI voice
+   * Get the text in the current language
+   */
+  const getTextForPhrase = useCallback((phrase: ToothyPhrase): string => {
+    return getLocalizedText(phrase, i18n.language);
+  }, [i18n.language]);
+
+  /**
+   * Speak a phrase with ElevenLabs AI voice ONLY
+   * No browser TTS fallback - we want consistent Toothy voice everywhere
    */
   const speakPhrase = useCallback(async (phrase: ToothyPhrase) => {
     const voiceVolume = getEffectiveVolume("voice");
     if (voiceVolume === 0) return;
 
+    // Stop any existing audio first
+    stopAllMedia();
     unlockAudioContext();
 
-    // Map phrase mood to voice mood (celebration is an extended mood)
+    // Map phrase mood to voice mood
     const voiceMood = phrase.mood === "excited" ? "excited" : phrase.mood as VoiceMood;
     const voiceSettings = getVoiceForMood(voiceMood);
+
+    // Get localized text
+    const text = getTextForPhrase(phrase);
 
     try {
       const headers = await buildFunctionsHeaders();
       
-      console.log("[ToothyPhrases] Speaking:", phrase.text, "with mood:", phrase.mood);
+      console.log("[ToothyPhrases] Speaking:", text, "with mood:", phrase.mood, "lang:", i18n.language);
       
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
@@ -48,7 +66,7 @@ export const useToothyPhrases = () => {
             ...headers,
           },
           body: JSON.stringify({
-            text: phrase.text,
+            text,
             voiceId: voiceSettings.voiceId,
             voiceSettings: {
               stability: voiceSettings.stability,
@@ -62,6 +80,7 @@ export const useToothyPhrases = () => {
 
       if (!response.ok) {
         console.warn("[ToothyPhrases] TTS request failed:", response.status);
+        // No fallback to browser TTS - just log and return
         return;
       }
 
@@ -70,14 +89,18 @@ export const useToothyPhrases = () => {
       const audio = new Audio(audioUrl);
       audio.volume = Math.min(voiceVolume, 0.9);
       
+      // Register with audio manager for proper coordination
+      registerVoiceAudio(audio);
+      
       await audio.play();
       
       // Cleanup
       audio.onended = () => URL.revokeObjectURL(audioUrl);
     } catch (error) {
       console.warn("[ToothyPhrases] Error speaking phrase:", error);
+      // No fallback - just log the error
     }
-  }, []);
+  }, [getTextForPhrase, i18n.language]);
 
   /**
    * Speak "Yay! You made me sparkle!" with sparkle sound
@@ -152,15 +175,25 @@ export const useToothyPhrases = () => {
 
   /**
    * Speak a welcome greeting - uses the provided greeting text with cheerful voice
+   * Supports both English and Spanish based on current language
    */
   const sayWelcome = useCallback((greetingText: string) => {
     playSparkleChime();
     speakPhrase({
       text: greetingText,
+      textEs: greetingText, // If custom text is passed, use it for both
       emoji: "✨",
-      category: "greeting" as any,
+      category: "greeting",
       mood: "encouraging",
     });
+  }, [playSparkleChime, speakPhrase]);
+
+  /**
+   * Speak a random greeting phrase
+   */
+  const sayGreeting = useCallback(() => {
+    playSparkleChime();
+    speakPhrase(getRandomPhrase("greeting"));
   }, [playSparkleChime, speakPhrase]);
 
   return {
@@ -176,10 +209,13 @@ export const useToothyPhrases = () => {
     // Random category phrases
     sayEncouragement,
     sayCelebration,
+    sayGreeting,
     // Welcome greeting
     sayWelcome,
     // Generic speak function
     speakPhrase,
+    // Utility
+    getTextForPhrase,
   };
 };
 
