@@ -6,6 +6,7 @@ import {
   setVoicePlaying, 
   registerVoiceAudio 
 } from "./useAudioManager";
+import { buildFunctionsHeaders } from "@/lib/functionsAuth";
 
 interface UseStoryNarrationReturn {
   isPlaying: boolean;
@@ -122,22 +123,10 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
       }
 
       const voiceConfig = getVoiceForMood(mood);
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (!session?.access_token) {
-          // No session - require login for voice narration
-          setIsLoading(false);
-          setError("Please sign in to hear Toothy's voice.");
-          cleanupAudio();
-          return;
-        }
-        
+      void buildFunctionsHeaders().then((headers) => {
         fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-            "Authorization": `Bearer ${session.access_token}`,
-          },
+          headers,
           body: JSON.stringify({ 
             text, 
             voiceId: voiceConfig.voiceId,

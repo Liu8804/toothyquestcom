@@ -2,6 +2,7 @@ import { useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getVoiceSettings } from "@/components/VoiceSettingsModal";
 import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
+import { buildFunctionsHeaders } from "@/lib/functionsAuth";
 import { 
   stopAllMedia, 
   setVoicePlaying, 
@@ -14,7 +15,7 @@ import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeContro
 /**
  * Quest voice hook for short narration lines (intro, ending, celebrations).
  * Uses ONE consistent voice (Toothy) with mood variations for emotional context.
- * - Uses Premium AI voice (ElevenLabs) ONLY when the user is signed in
+ * - Uses Toothy AI voice for BOTH signed-in users and guests
  * - NO browser speech fallback (eliminates mixed voice issue)
  * 
  * AUDIO COORDINATION: Uses centralized audio manager to prevent overlapping
@@ -184,26 +185,15 @@ export const useQuestVoice = () => {
       // Try Premium AI voice with consistent Toothy voice
       (async () => {
         try {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (!session?.access_token) {
-            // No session - silently skip voice (user is not signed in)
-            cleanupAudio();
-            onEnd?.();
-            return;
-          }
-
           // Get the consistent Toothy voice with mood variation
           const voiceConfig = getVoiceForMood(mood);
+          const headers = await buildFunctionsHeaders();
 
           const response = await fetch(
             `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
             {
               method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-                Authorization: `Bearer ${session.access_token}`,
-              },
+              headers,
               body: JSON.stringify({
                 text,
                 voiceId: voiceConfig.voiceId,

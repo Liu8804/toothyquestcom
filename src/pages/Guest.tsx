@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { getEffectiveVolume, getVolumeSettings, setVolumeSettings } from "@/components/VolumeControlPanel";
 import { unlockAudioContext, getAudioContext, playSynthTone } from "@/hooks/useAudioManager";
+import { useQuestVoice } from "@/hooks/useQuestVoice";
 
 const GUEST_GREETING =
   "Hi! I'm Toothy. You can play as a guest — and sign in later to unlock the premium AI voice!";
@@ -19,6 +20,8 @@ const Guest = () => {
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const [testPlaying, setTestPlaying] = useState(false);
   const [diagTick, setDiagTick] = useState(0);
+
+  const { speak } = useQuestVoice();
 
   const hasSpokenGreetingRef = useRef(false);
 
@@ -85,20 +88,6 @@ const Guest = () => {
     // MUST be synchronous with the gesture — unlock WebAudio.
     unlockAudioContext();
 
-    // Also prime native speechSynthesis (Safari quirk).
-    if ("speechSynthesis" in window) {
-      try {
-        // Speak a tiny silent utterance to trigger activation.
-        const warmUp = new SpeechSynthesisUtterance(" ");
-        warmUp.volume = 0;
-        warmUp.rate = 1;
-        warmUp.pitch = 1;
-        window.speechSynthesis.speak(warmUp);
-      } catch {
-        // ignore
-      }
-    }
-
     // Quick confirmation beep.
     playSynthTone(880, 0.14, "sine");
 
@@ -118,56 +107,12 @@ const Guest = () => {
       return;
     }
 
-    const ttsSupported = typeof window !== "undefined" && "speechSynthesis" in window;
-    if (!ttsSupported) {
-      toast.error("Voice playback isn't available on this browser.");
+    // Use Toothy AI voice for guests too.
+    speak(GUEST_GREETING, "curious", () => {
       setTestPlaying(false);
       refreshDiagnostics();
-      return;
-    }
-
-    // Using native speechSynthesis for guests.
-    const utterance = new SpeechSynthesisUtterance(GUEST_GREETING);
-    utterance.rate = 1;
-    utterance.pitch = 1.1;
-    utterance.volume = Math.max(0.3, Math.min(1, diagnostics.voiceEffective || 1));
-
-    const speakNow = () => {
-      const voices = window.speechSynthesis.getVoices();
-      const voice =
-        voices.find((v) => v.lang.startsWith("en") && v.localService) ||
-        voices.find((v) => v.lang.startsWith("en")) ||
-        voices[0];
-      if (voice) utterance.voice = voice;
-
-      utterance.onend = () => {
-        setTestPlaying(false);
-        refreshDiagnostics();
-      };
-      utterance.onerror = () => {
-        toast.error("Couldn't play the voice. Please try again.");
-        setTestPlaying(false);
-        refreshDiagnostics();
-      };
-
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(utterance);
-    };
-
-    // Voices might load asynchronously on iOS Safari.
-    if (window.speechSynthesis.getVoices().length === 0) {
-      const prev = window.speechSynthesis.onvoiceschanged;
-      window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.onvoiceschanged = prev ?? null;
-        speakNow();
-      };
-      // Fallback if event never fires.
-      setTimeout(speakNow, 200);
-      return;
-    }
-
-    speakNow();
-  }, [audioUnlocked, diagnostics.voiceEffective, refreshDiagnostics, testPlaying]);
+    });
+  }, [audioUnlocked, refreshDiagnostics, speak, testPlaying]);
 
   // Speak greeting automatically once after first unlock.
   useEffect(() => {

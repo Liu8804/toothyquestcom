@@ -3,13 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 import { unlockAudioContext, setVoicePlaying, registerVoiceAudio } from "./useAudioManager";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
+import { buildFunctionsHeaders } from "@/lib/functionsAuth";
 
 /**
  * Voice-first hook for non-readers (ages 3-6)
  * Auto-speaks instructions when a screen loads using Toothy's AI voice ONLY
  * Tapping again replays the instruction
  * 
- * NO browser TTS fallback - only uses ElevenLabs for consistent Toothy voice
+  * NO browser TTS fallback - uses Toothy AI voice for both signed-in and guest users
  */
 
 interface UseAutoSpeakOptions {
@@ -80,27 +81,14 @@ export const useAutoSpeak = ({
     // Use Toothy's AI voice only
     (async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session?.access_token) {
-          // No session - silently skip (user not signed in)
-          isSpeakingRef.current = false;
-          cleanupAudio();
-          onEnd?.();
-          return;
-        }
-
         const voiceConfig = getVoiceForMood(mood);
+        const headers = await buildFunctionsHeaders();
 
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-              Authorization: `Bearer ${session.access_token}`,
-            },
+            headers,
             body: JSON.stringify({
               text: instruction,
               voiceId: voiceConfig.voiceId,
@@ -235,25 +223,14 @@ export const useTapSpeak = () => {
 
     (async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session?.access_token) {
-          cleanupAudio();
-          onEnd?.();
-          return;
-        }
-
         const voiceConfig = getVoiceForMood(mood);
+        const headers = await buildFunctionsHeaders();
 
         const response = await fetch(
           `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-              Authorization: `Bearer ${session.access_token}`,
-            },
+            headers,
             body: JSON.stringify({
               text,
               voiceId: voiceConfig.voiceId,

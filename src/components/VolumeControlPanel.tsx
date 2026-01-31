@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Volume2, VolumeX, Music, Mic, Settings, Sparkles } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { isPositiveSoundsEnabled, setPositiveSoundsEnabled } from "@/hooks/usePositiveSounds";
+import { VOLUME_PRESETS, VolumePresets } from "@/components/volume/VolumePresets";
 
 interface VolumeSettings {
   masterVolume: number;
@@ -116,6 +116,16 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
     }
   };
 
+  const applyPreset = (presetKey: keyof typeof VOLUME_PRESETS) => {
+    const preset = VOLUME_PRESETS[presetKey];
+    const updated = setVolumeSettings({
+      ...preset,
+      globalMute: false,
+    });
+    setSettings(updated);
+    clearMuteFlags();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -170,68 +180,16 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                 />
               </div>
 
-              {/* Master Volume */}
-              <div className={`space-y-2 ${settings.globalMute ? "opacity-50 pointer-events-none" : ""}`}>
-                <div className="flex items-center justify-between">
-                  <Label className="flex items-center gap-2 text-foreground">
-                    <Volume2 className="w-4 h-4" />
-                    Master Volume
-                  </Label>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {settings.masterVolume}%
-                  </span>
-                </div>
-                <Slider
-                  value={[settings.masterVolume]}
-                  onValueChange={([v]) => updateSetting("masterVolume", v)}
-                  max={100}
-                  step={5}
-                  className="w-full"
-                  disabled={settings.globalMute}
-                />
-              </div>
-
-              {/* SFX Volume */}
-              <div className={`space-y-2 ${settings.globalMute ? "opacity-50 pointer-events-none" : ""}`}>
-                <div className="flex items-center justify-between">
-                  <Label className="flex items-center gap-2 text-foreground">
-                    <span className="text-lg">🔊</span>
-                    Sound Effects
-                  </Label>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {settings.sfxVolume}%
-                  </span>
-                </div>
-                <Slider
-                  value={[settings.sfxVolume]}
-                  onValueChange={([v]) => updateSetting("sfxVolume", v)}
-                  max={100}
-                  step={5}
-                  className="w-full"
-                  disabled={settings.globalMute}
-                />
-              </div>
-
-              {/* Music Volume */}
-              <div className={`space-y-2 ${settings.globalMute ? "opacity-50 pointer-events-none" : ""}`}>
-                <div className="flex items-center justify-between">
-                  <Label className="flex items-center gap-2 text-foreground">
-                    <Music className="w-4 h-4" />
-                    Background Music
-                  </Label>
-                  <span className="text-sm text-muted-foreground font-medium">
-                    {settings.musicVolume}%
-                  </span>
-                </div>
-                <Slider
-                  value={[settings.musicVolume]}
-                  onValueChange={([v]) => updateSetting("musicVolume", v)}
-                  max={100}
-                  step={5}
-                  className="w-full"
-                  disabled={settings.globalMute}
-                />
-              </div>
+              {/* Volume Presets (replaces sliders) */}
+              <VolumePresets
+                values={{
+                  masterVolume: settings.masterVolume,
+                  sfxVolume: settings.sfxVolume,
+                  musicVolume: settings.musicVolume,
+                }}
+                disabled={settings.globalMute}
+                onSelectPreset={applyPreset}
+              />
 
               {/* Voice Toggle */}
               <div className={`flex items-center justify-between p-3 bg-muted/50 rounded-xl ${settings.globalMute ? "opacity-50" : ""}`}>
