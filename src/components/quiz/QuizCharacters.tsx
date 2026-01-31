@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
+import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
@@ -554,23 +555,56 @@ export const QuizCharacterAnimated = ({
     }
   }, [mood, character.isVillain]);
 
+  // Map CharacterMood to MascotEmotion for unified mascot system
+  const getMascotEmotion = useCallback((): MascotEmotion => {
+    switch (mood) {
+      case "celebrating":
+      case "dancing":
+        return "celebrating";
+      case "excited":
+        return "wow";
+      case "encouraging":
+        return "gotIt";
+      case "thinking":
+        return "help";
+      case "waving":
+        return "waving";
+      case "surprised":
+        return "wow";
+      case "scared":
+        return "oops";
+      case "mischievous":
+        return "letsPlay";
+      case "idle":
+      default:
+        return "idle";
+    }
+  }, [mood]);
+
+  // Size mapping for MascotEmotionState
+  const mascotSizeMap = {
+    sm: "md" as const,
+    md: "lg" as const,
+    lg: "xl" as const,
+  };
+
   return (
-    <div className="relative flex flex-col items-center">
-      {/* Speech Bubble */}
+    <div className="relative flex flex-col items-center gap-4">
+      {/* Speech Bubble - with better spacing */}
       <AnimatePresence>
         {showSpeechBubble && message && (
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.8 }}
-            className={`relative mb-3 px-4 py-3 rounded-2xl shadow-lg max-w-[250px] bg-gradient-to-br ${character.color}`}
+            className={`relative mb-2 px-5 py-4 rounded-2xl shadow-lg max-w-[280px] bg-gradient-to-br ${character.color} border-2 ${character.borderColor}`}
           >
             <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 
               border-l-8 border-r-8 border-t-8 
               border-l-transparent border-r-transparent border-t-bubble/80`} 
             />
             
-            <p className="text-sm font-medium text-foreground text-center leading-relaxed">
+            <p className="text-base font-semibold text-foreground text-center leading-relaxed">
               {displayedText}
               {isTyping && (
                 <motion.span
@@ -585,16 +619,19 @@ export const QuizCharacterAnimated = ({
         )}
       </AnimatePresence>
 
-      {/* Character Container */}
+      {/* Character Container - using MascotEmotionState */}
       <div className="relative">
-        {/* Character Name Badge */}
+        {/* Character Name Badge - more visible */}
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          className={`absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-2 py-0.5 rounded-full text-xs font-bold text-white bg-gradient-to-r ${character.gradientFrom} ${character.gradientTo} border ${character.borderColor} shadow-sm`}
-          style={{ backgroundColor: character.isVillain ? '#9333ea' : undefined }}
+          className={`absolute -top-4 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-sm font-bold shadow-md ${
+            character.isVillain 
+              ? "bg-purple-600 text-white" 
+              : "bg-gradient-to-r from-primary to-accent text-white"
+          }`}
         >
-          <span className={character.isVillain ? "text-white" : "text-gray-700"}>{character.name}</span>
+          <span>{character.name}</span>
         </motion.div>
 
         {/* Mood Emoji Indicator */}
@@ -604,12 +641,12 @@ export const QuizCharacterAnimated = ({
               initial={{ scale: 0, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0, y: -20, opacity: 0 }}
-              className="absolute -top-2 -right-2 z-20"
+              className="absolute -top-2 -right-2 z-30"
             >
               <motion.span
                 animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 0.6, repeat: 3 }}
-                className="text-2xl drop-shadow-lg"
+                className="text-3xl drop-shadow-lg"
               >
                 {moodEmojis[mood]}
               </motion.span>
@@ -620,7 +657,7 @@ export const QuizCharacterAnimated = ({
         {/* Accessory for character */}
         {character.accessory && (
           <motion.div
-            className="absolute -top-4 -right-1 z-30 text-xl"
+            className="absolute -top-5 -right-2 z-30 text-2xl drop-shadow-lg"
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
@@ -631,23 +668,23 @@ export const QuizCharacterAnimated = ({
         {/* Sparkle Effects for celebrating */}
         {mood === "celebrating" && (
           <>
-            {[...Array(6)].map((_, i) => (
+            {[...Array(8)].map((_, i) => (
               <motion.span
                 key={i}
-                className="absolute text-xl pointer-events-none"
+                className="absolute text-2xl pointer-events-none"
                 style={{
-                  top: `${20 + Math.sin(i) * 30}%`,
-                  left: `${20 + Math.cos(i) * 30}%`,
+                  top: `${15 + Math.sin(i) * 35}%`,
+                  left: `${15 + Math.cos(i) * 35}%`,
                 }}
                 animate={{
                   opacity: [0, 1, 0],
                   scale: [0, 1.5, 0],
-                  y: [-10, -30],
+                  y: [-10, -40],
                 }}
                 transition={{
-                  duration: 1,
+                  duration: 1.2,
                   repeat: Infinity,
-                  delay: i * 0.15,
+                  delay: i * 0.12,
                 }}
               >
                 ✨
@@ -662,15 +699,15 @@ export const QuizCharacterAnimated = ({
             {["🍬", "🍭", "🍫", "🧁"].map((candy, i) => (
               <motion.span
                 key={i}
-                className="absolute text-lg pointer-events-none"
+                className="absolute text-xl pointer-events-none"
                 style={{
                   top: `${10 + i * 20}%`,
-                  left: `${-20 + i * 15}%`,
+                  left: `${-25 + i * 18}%`,
                 }}
                 animate={{
                   opacity: [0, 1, 0],
-                  y: [0, -20, -40],
-                  x: [0, i % 2 === 0 ? 10 : -10, 0],
+                  y: [0, -25, -50],
+                  x: [0, i % 2 === 0 ? 15 : -15, 0],
                   rotate: [0, 180, 360],
                 }}
                 transition={{
@@ -685,88 +722,42 @@ export const QuizCharacterAnimated = ({
           </>
         )}
 
-        {/* Main Character */}
-        <motion.div
-          className={`${sizeClasses[size]} relative`}
-          animate={getCharacterAnimation()}
-        >
-          <motion.div
-            className={`w-full h-full rounded-full ${character.shadowColor} shadow-xl overflow-hidden border-4 ${character.borderColor}`}
-            whileHover={{ scale: 1.1 }}
-          >
-            {/* Character face */}
-            <div
-              className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${character.gradientFrom} ${character.gradientTo}`}
-            >
-              {character.imageSrc ? (
-                <motion.img
-                  src={character.imageSrc}
-                  alt={`${character.name} mascot`}
-                  className="w-full h-full object-contain p-2"
-                  draggable={false}
-                />
-              ) : (
-                <motion.span
-                  className="text-4xl"
-                  animate={
-                    character.isVillain && mood === "mischievous"
-                      ? {
-                          scale: [1, 1.2, 1],
-                          rotate: [0, 10, -10, 0],
-                        }
-                      : {}
-                  }
-                  transition={{ duration: 0.5, repeat: Infinity }}
-                >
-                  {character.emoji}
-                </motion.span>
-              )}
-            </div>
-          </motion.div>
-
-          {/* Thinking bubbles */}
-          {mood === "thinking" && (
-            <>
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-white/80 dark:bg-gray-700/80"
-                  style={{
-                    width: 8 + i * 4,
-                    height: 8 + i * 4,
-                    right: -15 - i * 8,
-                    top: 5 + i * 10,
-                  }}
-                  animate={{ 
-                    opacity: [0.4, 1, 0.4],
-                    scale: [0.8, 1, 0.8]
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    delay: i * 0.3,
-                  }}
-                />
-              ))}
-            </>
-          )}
+        {/* Main Character - Using MascotEmotionState for consistent rendering */}
+        <motion.div animate={getCharacterAnimation()}>
+          <MascotEmotionState
+            emotion={getMascotEmotion()}
+            size={mascotSizeMap[size]}
+            animate={true}
+            showSparkles={mood === "celebrating" || mood === "excited"}
+          />
         </motion.div>
 
-        {/* Glow effect based on mood */}
-        <motion.div
-          className={`absolute inset-0 rounded-full blur-xl -z-10 bg-gradient-radial ${
-            mood === "celebrating" ? "from-yellow-400/30 to-transparent" :
-            mood === "excited" ? "from-accent/30 to-transparent" :
-            mood === "encouraging" ? "from-green-400/30 to-transparent" :
-            character.isVillain ? "from-purple-500/30 to-transparent" :
-            "from-primary/20 to-transparent"
-          }`}
-          animate={{
-            scale: mood === "celebrating" || mood === "excited" ? [1, 1.3, 1] : [1, 1.1, 1],
-            opacity: [0.5, 0.8, 0.5],
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
+        {/* Thinking bubbles */}
+        {mood === "thinking" && (
+          <>
+            {[...Array(3)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full bg-white/90 dark:bg-gray-600/90 shadow-sm"
+                style={{
+                  width: 10 + i * 5,
+                  height: 10 + i * 5,
+                  right: -18 - i * 10,
+                  top: 8 + i * 12,
+                }}
+                animate={{ 
+                  opacity: [0.5, 1, 0.5],
+                  scale: [0.8, 1, 0.8]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.3,
+                }}
+              />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

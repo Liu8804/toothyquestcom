@@ -896,27 +896,27 @@ export const HeroSection = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-5 flex flex-col items-center gap-2"
+                    className="mt-8 flex flex-col items-center gap-3"
                   >
-                    <span className="text-sm text-muted-foreground">New here?</span>
-                    <div className="flex items-center gap-3">
+                    <span className="text-base font-medium text-foreground/80">New here?</span>
+                    <div className="flex items-center gap-4">
                       <motion.button
                         onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
-                        className="relative inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 hover:bg-primary/20 border-2 border-primary rounded-full font-bold text-primary transition-all"
+                        className="relative inline-flex items-center gap-2 px-6 py-3 bg-accent/20 hover:bg-accent/30 border-2 border-accent rounded-full font-bold text-accent-foreground transition-all shadow-lg"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <motion.span
-                          className="absolute inset-0 rounded-full bg-primary/20"
-                          animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0, 0.5] }}
+                          className="absolute inset-0 rounded-full bg-accent/30"
+                          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
                           transition={{ duration: 1.5, repeat: Infinity }}
                         />
-                        <span className="relative">✨ Sign up free</span>
+                        <span className="relative text-lg">✨ Sign up free</span>
                       </motion.button>
-                      <span className="text-muted-foreground/60">or</span>
+                      <span className="text-foreground/50 font-medium">or</span>
                       <a
                         href="/guest"
-                        className="font-semibold text-secondary hover:text-secondary/80 underline underline-offset-2 transition-colors"
+                        className="font-bold text-lg text-secondary hover:text-secondary/80 underline underline-offset-4 transition-colors"
                       >
                         try as guest
                       </a>
@@ -964,7 +964,7 @@ export const HeroSection = () => {
               )}
             </motion.div>
 
-            {/* Tap to hear - subtle secondary action */}
+            {/* Tap to hear - more visible secondary action */}
             {!isCompleted && (
               <motion.button
                 initial={{ opacity: 0 }}
@@ -975,29 +975,27 @@ export const HeroSection = () => {
                   speakGreeting(greeting.message, "curious");
                   resetIdleTimer();
                 }}
-                className="mt-4 text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5"
+                className="mt-6 text-base font-medium text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 hover:bg-card/80 border border-primary/20"
               >
                 🔊 Tap to hear Toothy speak
               </motion.button>
             )}
 
-            {/* Trust indicators - compact, below CTA */}
+            {/* Trust indicators - compact, below CTA - with better visibility */}
             {!isCompleted && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-6 text-xs sm:text-sm"
+                className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-8 text-sm sm:text-base"
               >
-                <span className="font-medium text-muted-foreground flex items-center gap-1">
+                <span className="font-bold text-green-600 dark:text-green-400 flex items-center gap-2 bg-green-100 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
                   ✅ Kid-Safe
                 </span>
-                <span className="text-muted-foreground/30 hidden sm:block">•</span>
-                <span className="font-medium text-muted-foreground flex items-center gap-1">
+                <span className="font-bold text-red-600 dark:text-red-400 flex items-center gap-2 bg-red-100 dark:bg-red-900/30 px-3 py-1.5 rounded-full">
                   🚫 No Ads
                 </span>
-                <span className="text-muted-foreground/30 hidden sm:block">•</span>
-                <span className="font-medium text-muted-foreground flex items-center gap-1">
+                <span className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 px-3 py-1.5 rounded-full">
                   ⭐ Ages 3-9
                 </span>
               </motion.div>
