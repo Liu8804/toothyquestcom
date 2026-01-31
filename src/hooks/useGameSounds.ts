@@ -8,7 +8,9 @@ const GAME_SOUNDS = {
   tap: { frequency: 800, duration: 0.12, type: "sine" as OscillatorType },
   success: { frequency: 523, duration: 0.18, type: "sine" as OscillatorType },
   win: { frequency: 659, duration: 0.22, type: "sine" as OscillatorType },
-  lose: { frequency: 200, duration: 0.25, type: "sawtooth" as OscillatorType },
+  // Oops/Lose: Soft descending tone - friendly, not harsh
+  oops: { frequency: 523, duration: 0.15, type: "sine" as OscillatorType, endFreq: 392 },
+  lose: { frequency: 523, duration: 0.15, type: "sine" as OscillatorType, endFreq: 392 }, // Same as oops
   star: { frequency: 1047, duration: 0.15, type: "sine" as OscillatorType },
   achievement: { frequency: 880, duration: 0.25, type: "triangle" as OscillatorType },
   locked: { frequency: 150, duration: 0.18, type: "square" as OscillatorType },
@@ -162,12 +164,19 @@ export const useGameSounds = () => {
     });
   }, [isMuted]);
 
+  // Soft "oops" / "lose" sound - gentle descending tone (NOT harsh or punishing)
   const playLoseSound = useCallback(() => {
     if (isMuted || isVoiceActive()) return;
     unlockAudioContext();
-    // Soft, non-harsh "try again" sound - just a gentle descending tone
-    playSynthTone(330, 0.15, "sine", 220);
+    // E5 → C5 (descending minor third = gentle "try again")
+    playSynthTone(659, 0.12, "sine");
+    setTimeout(() => playSynthTone(523, 0.15, "sine"), 100);
   }, [isMuted]);
+
+  // Alias for friendly "oops" sound
+  const playOopsSound = useCallback(() => {
+    playLoseSound();
+  }, [playLoseSound]);
 
   const playAchievementUnlock = useCallback(() => {
     if (isMuted || isVoiceActive()) return;
@@ -280,6 +289,7 @@ export const useGameSounds = () => {
     playSound,
     playWinFanfare,
     playLoseSound,
+    playOopsSound,
     playAchievementUnlock,
     startBackgroundMusic,
     stopBackgroundMusic,

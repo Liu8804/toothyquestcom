@@ -1,5 +1,5 @@
-import { useCallback, useRef, useState, useEffect } from "react";
-import { getEffectiveVolume } from "@/components/VolumeControlPanel";
+import { useCallback, useRef } from "react";
+import { getEffectiveVolume, isGloballyMuted } from "@/components/VolumeControlPanel";
 
 /**
  * Centralized Audio Manager
@@ -9,7 +9,7 @@ import { getEffectiveVolume } from "@/components/VolumeControlPanel";
  * 2. Ducking (lowering volume) of sound effects when voice is playing
  * 3. Queueing voice playback to prevent multiple voices at once
  * 4. Managing audio element lifecycle
- * 5. Respecting user volume settings
+ * 5. Respecting user volume settings and global mute
  */
 
 interface AudioState {
@@ -136,9 +136,12 @@ export const isVoiceActive = (): boolean => {
 
 /**
  * Get current synth volume (ducked when voice is playing).
+ * Returns 0 if globally muted.
  * iOS Safari needs louder signals and less aggressive ramp-down.
  */
 export const getSynthVolume = (): number => {
+  if (isGloballyMuted()) return 0;
+  
   const userVolume = getEffectiveVolume("sfx");
   // Boost for mobile audibility (clamped to [0,1]).
   return Math.min(1, audioState.isVoicePlaying ? userVolume * 0.35 : userVolume * 1.2);
@@ -172,6 +175,7 @@ export const registerVoiceAudio = (audio: HTMLAudioElement): void => {
 
 /**
  * Play a synth tone with proper volume ducking
+ * Respects global mute setting
  */
 export const playSynthTone = (
   frequency: number,
@@ -179,6 +183,8 @@ export const playSynthTone = (
   type: OscillatorType,
   startFreq?: number
 ): void => {
+  // Check global mute first
+  if (isGloballyMuted()) return;
   const run = () => {
     try {
       const ctx = getGlobalAudioContext();

@@ -12,6 +12,7 @@ interface VolumeSettings {
   sfxVolume: number;
   musicVolume: number;
   voiceEnabled: boolean;
+  globalMute: boolean;
 }
 
 const defaultSettings: VolumeSettings = {
@@ -19,6 +20,7 @@ const defaultSettings: VolumeSettings = {
   sfxVolume: 50,
   musicVolume: 40,
   voiceEnabled: true,
+  globalMute: false,
 };
 
 export const getVolumeSettings = (): VolumeSettings => {
@@ -40,9 +42,18 @@ export const setVolumeSettings = (settings: Partial<VolumeSettings>) => {
   return updated;
 };
 
+// Check if globally muted
+export const isGloballyMuted = (): boolean => {
+  return getVolumeSettings().globalMute;
+};
+
 // Get effective volume (0-1 scale)
 export const getEffectiveVolume = (type: "sfx" | "music" | "voice"): number => {
   const settings = getVolumeSettings();
+  
+  // If globally muted, return 0 for everything
+  if (settings.globalMute) return 0;
+  
   const master = settings.masterVolume / 100;
   
   switch (type) {
@@ -137,8 +148,30 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
             </div>
 
             <div className="space-y-5">
+              {/* Global Mute Toggle - Most prominent */}
+              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-muted to-muted/50 rounded-xl border-2 border-border">
+                <Label className="flex items-center gap-3 text-foreground cursor-pointer">
+                  {settings.globalMute ? (
+                    <VolumeX className="w-5 h-5 text-destructive" />
+                  ) : (
+                    <Volume2 className="w-5 h-5 text-primary" />
+                  )}
+                  <span className="font-medium">
+                    {settings.globalMute ? "Sound Off" : "Sound On"}
+                    <span className="block text-xs text-muted-foreground">Mute all app sounds</span>
+                  </span>
+                </Label>
+                <Switch
+                  checked={!settings.globalMute}
+                  onCheckedChange={(checked) => {
+                    updateSetting("globalMute", !checked);
+                    if (checked) clearMuteFlags();
+                  }}
+                />
+              </div>
+
               {/* Master Volume */}
-              <div className="space-y-2">
+              <div className={`space-y-2 ${settings.globalMute ? "opacity-50 pointer-events-none" : ""}`}>
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-2 text-foreground">
                     <Volume2 className="w-4 h-4" />
@@ -154,11 +187,12 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                   max={100}
                   step={5}
                   className="w-full"
+                  disabled={settings.globalMute}
                 />
               </div>
 
               {/* SFX Volume */}
-              <div className="space-y-2">
+              <div className={`space-y-2 ${settings.globalMute ? "opacity-50 pointer-events-none" : ""}`}>
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-2 text-foreground">
                     <span className="text-lg">🔊</span>
@@ -174,11 +208,12 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                   max={100}
                   step={5}
                   className="w-full"
+                  disabled={settings.globalMute}
                 />
               </div>
 
               {/* Music Volume */}
-              <div className="space-y-2">
+              <div className={`space-y-2 ${settings.globalMute ? "opacity-50 pointer-events-none" : ""}`}>
                 <div className="flex items-center justify-between">
                   <Label className="flex items-center gap-2 text-foreground">
                     <Music className="w-4 h-4" />
@@ -194,11 +229,12 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                   max={100}
                   step={5}
                   className="w-full"
+                  disabled={settings.globalMute}
                 />
               </div>
 
               {/* Voice Toggle */}
-              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-xl">
+              <div className={`flex items-center justify-between p-3 bg-muted/50 rounded-xl ${settings.globalMute ? "opacity-50" : ""}`}>
                 <Label className="flex items-center gap-2 text-foreground cursor-pointer">
                   <Mic className="w-4 h-4" />
                   Toothy's Voice (AI)
@@ -206,11 +242,12 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                 <Switch
                   checked={settings.voiceEnabled}
                   onCheckedChange={(v) => updateSetting("voiceEnabled", v)}
+                  disabled={settings.globalMute}
                 />
               </div>
 
               {/* Positive Sounds Toggle */}
-              <div className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20">
+              <div className={`flex items-center justify-between p-3 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-primary/20 ${settings.globalMute ? "opacity-50" : ""}`}>
                 <Label className="flex items-center gap-2 text-foreground cursor-pointer">
                   <Sparkles className="w-4 h-4 text-primary" />
                   <span>
@@ -221,6 +258,7 @@ const VolumeControlPanel = ({ isOpen, onClose }: VolumeControlPanelProps) => {
                 <Switch
                   checked={positiveSoundsOn}
                   onCheckedChange={handlePositiveSoundsToggle}
+                  disabled={settings.globalMute}
                 />
               </div>
             </div>

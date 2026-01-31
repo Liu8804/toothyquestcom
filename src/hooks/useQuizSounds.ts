@@ -29,14 +29,16 @@ const SOUND_PHRASES = {
   ],
 };
 
-// Web Audio synthesized sounds - quieter and shorter
+// Web Audio synthesized sounds - quieter, gentler, and child-friendly
 const SYNTH_SOUNDS = {
-  sparkle: { notes: [1047, 1319], duration: 0.06, type: "sine" as OscillatorType },
-  success: { notes: [523, 784], duration: 0.08, type: "triangle" as OscillatorType },
-  error: { notes: [311], duration: 0.1, type: "sawtooth" as OscillatorType },
-  fanfare: { notes: [523, 784, 1047], duration: 0.1, type: "sine" as OscillatorType },
-  pop: { notes: [800], duration: 0.03, type: "sine" as OscillatorType },
-  whoosh: { notes: [400], duration: 0.06, type: "sine" as OscillatorType },
+  sparkle: { notes: [1047, 1319], duration: 0.08, type: "sine" as OscillatorType },
+  success: { notes: [523, 784], duration: 0.1, type: "triangle" as OscillatorType },
+  // Oops: Soft descending tone (NOT harsh or punishing)
+  oops: { notes: [659, 523], duration: 0.12, type: "sine" as OscillatorType },
+  error: { notes: [659, 523], duration: 0.12, type: "sine" as OscillatorType }, // Same as oops
+  fanfare: { notes: [523, 784, 1047], duration: 0.12, type: "sine" as OscillatorType },
+  pop: { notes: [800], duration: 0.05, type: "sine" as OscillatorType },
+  whoosh: { notes: [400], duration: 0.08, type: "sine" as OscillatorType },
 };
 
 type SynthSoundName = keyof typeof SYNTH_SOUNDS;
@@ -154,8 +156,14 @@ export const useQuizSounds = () => {
     playSynthSound("sparkle");
   }, [playSynthSound]);
 
+  // Play soft "oops" sound for incorrect answers (NOT harsh)
   const playIncorrectSound = useCallback(() => {
-    playSynthSound("error");
+    playSynthSound("oops");
+  }, [playSynthSound]);
+
+  // Alias for consistency
+  const playOopsSound = useCallback(() => {
+    playSynthSound("oops");
   }, [playSynthSound]);
 
   const playCelebrationSound = useCallback(() => {
@@ -183,6 +191,7 @@ export const useQuizSounds = () => {
     playVoiceSound,
     playCorrectSound,
     playIncorrectSound,
+    playOopsSound,
     playCelebrationSound,
     playGiggleSound,
     playSparkleEffect,

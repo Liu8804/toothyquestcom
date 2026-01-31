@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { getAudioContext, playSynthTone, isVoiceActive, unlockAudioContext } from "./useAudioManager";
-import { getEffectiveVolume } from "@/components/VolumeControlPanel";
+import { getEffectiveVolume, isGloballyMuted } from "@/components/VolumeControlPanel";
 
 /**
  * Positive Sounds System
@@ -52,7 +52,7 @@ export const usePositiveSounds = () => {
 
   // Quest Complete Sound - Triumphant ascending melody (1.5s)
   const playQuestComplete = useCallback(() => {
-    if (!isEnabled || isVoiceActive()) return;
+    if (!isEnabled || isVoiceActive() || isGloballyMuted()) return;
     
     unlockAudioContext();
     const ctx = getAudioContext();
@@ -92,7 +92,7 @@ export const usePositiveSounds = () => {
 
   // Reward Unlocked Sound - Sparkly chime (1s)
   const playRewardUnlocked = useCallback(() => {
-    if (!isEnabled || isVoiceActive()) return;
+    if (!isEnabled || isVoiceActive() || isGloballyMuted()) return;
     
     unlockAudioContext();
     const ctx = getAudioContext();
@@ -131,7 +131,7 @@ export const usePositiveSounds = () => {
 
   // Streak Achieved Sound - Celebratory jingle (1.5s)
   const playStreakAchieved = useCallback(() => {
-    if (!isEnabled || isVoiceActive()) return;
+    if (!isEnabled || isVoiceActive() || isGloballyMuted()) return;
     
     unlockAudioContext();
     const ctx = getAudioContext();
