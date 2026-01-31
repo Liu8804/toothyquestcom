@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Sparkles, Trophy, Star, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect, useState } from "react";
 import { isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
@@ -161,12 +161,10 @@ const QuestCompleteCelebration = ({
           transition={{ delay: 0.3, type: "spring" }}
           className="absolute top-4 right-4"
         >
-          <motion.img
-            src={mascotCelebrating}
-            alt="Toothy celebrating"
-            className="w-16 h-16 object-contain drop-shadow-lg"
-            animate={{ y: [0, -5, 0], rotate: [0, 5, -5, 0] }}
-            transition={{ duration: 1, repeat: Infinity }}
+          <MascotEmotionState
+            emotion="greatJob"
+            size="md"
+            showSparkles={true}
           />
         </motion.div>
 
