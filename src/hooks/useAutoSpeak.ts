@@ -1,12 +1,15 @@
 import { useEffect, useRef, useCallback } from "react";
-import { speakBrowserTts, cancelBrowserTts } from "@/lib/speechSynthesis";
-import { unlockAudioContext } from "./useAudioManager";
+import { supabase } from "@/integrations/supabase/client";
+import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
+import { unlockAudioContext, setVoicePlaying, registerVoiceAudio } from "./useAudioManager";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 
 /**
  * Voice-first hook for non-readers (ages 3-6)
- * Auto-speaks instructions when a screen loads
+ * Auto-speaks instructions when a screen loads using Toothy's AI voice ONLY
  * Tapping again replays the instruction
+ * 
+ * NO browser TTS fallback - only uses ElevenLabs for consistent Toothy voice
  */
 
 interface UseAutoSpeakOptions {
@@ -18,6 +21,8 @@ interface UseAutoSpeakOptions {
   autoSpeak?: boolean;
   /** Callback when speech ends */
   onEnd?: () => void;
+  /** Voice mood for emotional variation */
+  mood?: VoiceMood;
 }
 
 export const useAutoSpeak = ({
@@ -25,9 +30,24 @@ export const useAutoSpeak = ({
   delay = 500,
   autoSpeak = true,
   onEnd,
+  mood = "neutral",
 }: UseAutoSpeakOptions) => {
   const hasSpokenRef = useRef(false);
   const isSpeakingRef = useRef(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+
+  const cleanupAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+      audioRef.current = null;
+    }
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+  }, []);
 
   const speak = useCallback(() => {
     // Check if voice is enabled
@@ -43,29 +63,94 @@ export const useAutoSpeak = ({
       return;
     }
 
-    // Cancel any ongoing speech
-    cancelBrowserTts();
+    // Cleanup any previous audio
+    cleanupAudio();
 
     // Unlock audio context (important for iOS)
     unlockAudioContext();
 
     isSpeakingRef.current = true;
 
-    speakBrowserTts({
-      text: instruction,
-      rate: 0.85, // Slower for kids
-      pitch: 1.1, // Slightly higher pitch for friendly tone
-      volume: effectiveVolume,
-      onEnd: () => {
+    // Create audio element immediately for iOS compatibility
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.volume = effectiveVolume;
+    audioRef.current = audio;
+
+    // Use Toothy's AI voice only
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session?.access_token) {
+          // No session - silently skip (user not signed in)
+          isSpeakingRef.current = false;
+          cleanupAudio();
+          onEnd?.();
+          return;
+        }
+
+        const voiceConfig = getVoiceForMood(mood);
+
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              text: instruction,
+              voiceId: voiceConfig.voiceId,
+              voiceSettings: {
+                stability: voiceConfig.stability,
+                similarityBoost: voiceConfig.similarityBoost,
+                style: voiceConfig.style,
+                speed: voiceConfig.speed,
+              },
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          isSpeakingRef.current = false;
+          cleanupAudio();
+          onEnd?.();
+          return;
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        audioUrlRef.current = url;
+
+        audio.src = url;
+
+        audio.onended = () => {
+          isSpeakingRef.current = false;
+          setVoicePlaying(false);
+          cleanupAudio();
+          onEnd?.();
+        };
+
+        audio.onerror = () => {
+          isSpeakingRef.current = false;
+          setVoicePlaying(false);
+          cleanupAudio();
+          onEnd?.();
+        };
+
+        await audio.play();
+        setVoicePlaying(true);
+        registerVoiceAudio(audio);
+      } catch {
         isSpeakingRef.current = false;
+        cleanupAudio();
         onEnd?.();
-      },
-      onError: () => {
-        isSpeakingRef.current = false;
-        onEnd?.();
-      },
-    });
-  }, [instruction, onEnd]);
+      }
+    })();
+  }, [instruction, onEnd, mood, cleanupAudio]);
 
   // Auto-speak on mount
   useEffect(() => {
@@ -78,25 +163,26 @@ export const useAutoSpeak = ({
 
     return () => {
       clearTimeout(timer);
-      cancelBrowserTts();
+      cleanupAudio();
     };
-  }, [autoSpeak, delay, speak]);
+  }, [autoSpeak, delay, speak, cleanupAudio]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      cancelBrowserTts();
+      cleanupAudio();
     };
-  }, []);
+  }, [cleanupAudio]);
 
   const replay = useCallback(() => {
     speak();
   }, [speak]);
 
   const stop = useCallback(() => {
-    cancelBrowserTts();
+    cleanupAudio();
     isSpeakingRef.current = false;
-  }, []);
+    setVoicePlaying(false);
+  }, [cleanupAudio]);
 
   return {
     speak,
@@ -108,10 +194,25 @@ export const useAutoSpeak = ({
 
 /**
  * Simplified hook for tap-to-speak buttons
- * Speaks a short phrase when tapped
+ * Uses Toothy's AI voice only - no browser TTS fallback
  */
 export const useTapSpeak = () => {
-  const speak = useCallback((text: string, onEnd?: () => void) => {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+
+  const cleanupAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+      audioRef.current = null;
+    }
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
+  }, []);
+
+  const speak = useCallback((text: string, onEnd?: () => void, mood: VoiceMood = "neutral") => {
     const volumeSettings = getVolumeSettings();
     if (!volumeSettings.voiceEnabled) {
       onEnd?.();
@@ -125,17 +226,80 @@ export const useTapSpeak = () => {
     }
 
     unlockAudioContext();
-    cancelBrowserTts();
+    cleanupAudio();
 
-    speakBrowserTts({
-      text,
-      rate: 0.9,
-      pitch: 1.1,
-      volume: effectiveVolume,
-      onEnd,
-      onError: onEnd,
-    });
-  }, []);
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.volume = effectiveVolume;
+    audioRef.current = audio;
+
+    (async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!session?.access_token) {
+          cleanupAudio();
+          onEnd?.();
+          return;
+        }
+
+        const voiceConfig = getVoiceForMood(mood);
+
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              text,
+              voiceId: voiceConfig.voiceId,
+              voiceSettings: {
+                stability: voiceConfig.stability,
+                similarityBoost: voiceConfig.similarityBoost,
+                style: voiceConfig.style,
+                speed: voiceConfig.speed,
+              },
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          cleanupAudio();
+          onEnd?.();
+          return;
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        audioUrlRef.current = url;
+
+        audio.src = url;
+
+        audio.onended = () => {
+          setVoicePlaying(false);
+          cleanupAudio();
+          onEnd?.();
+        };
+
+        audio.onerror = () => {
+          setVoicePlaying(false);
+          cleanupAudio();
+          onEnd?.();
+        };
+
+        await audio.play();
+        setVoicePlaying(true);
+        registerVoiceAudio(audio);
+      } catch {
+        cleanupAudio();
+        onEnd?.();
+      }
+    })();
+  }, [cleanupAudio]);
 
   return { speak };
 };

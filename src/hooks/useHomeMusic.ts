@@ -52,6 +52,47 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
     audioRef.current.volume = currentVol + diff * 0.1;
   }, []);
 
+  // Fade in effect
+  const fadeIn = useCallback((audio: HTMLAudioElement, targetVolume: number, duration = 1500) => {
+    audio.volume = 0;
+    const steps = 30;
+    const stepTime = duration / steps;
+    const volumeStep = targetVolume / steps;
+    let currentStep = 0;
+    
+    const fadeInterval = setInterval(() => {
+      currentStep++;
+      audio.volume = Math.min(volumeStep * currentStep, targetVolume);
+      if (currentStep >= steps) {
+        clearInterval(fadeInterval);
+      }
+    }, stepTime);
+    
+    return fadeInterval;
+  }, []);
+
+  // Fade out effect
+  const fadeOut = useCallback((audio: HTMLAudioElement, duration = 800): Promise<void> => {
+    return new Promise((resolve) => {
+      const startVolume = audio.volume;
+      const steps = 20;
+      const stepTime = duration / steps;
+      const volumeStep = startVolume / steps;
+      let currentStep = 0;
+      
+      const fadeInterval = setInterval(() => {
+        currentStep++;
+        audio.volume = Math.max(startVolume - (volumeStep * currentStep), 0);
+        if (currentStep >= steps) {
+          clearInterval(fadeInterval);
+          audio.pause();
+          audio.currentTime = 0;
+          resolve();
+        }
+      }, stepTime);
+    });
+  }, []);
+
   const start = useCallback(() => {
     if (isInitializedRef.current || isMuted) return;
     
@@ -68,15 +109,18 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
         audioRef.current.preload = "auto";
       }
       
-      // Set initial low volume
-      const baseVolume = getEffectiveVolume("music");
-      audioRef.current.volume = baseVolume * 0.3;
+      // Start with volume at 0 for fade-in
+      audioRef.current.volume = 0;
       
-      // Play audio
+      // Play audio with fade-in
       audioRef.current.play()
         .then(() => {
           isInitializedRef.current = true;
           setIsPlaying(true);
+          
+          // Fade in to target volume
+          const baseVolume = getEffectiveVolume("music");
+          fadeIn(audioRef.current!, baseVolume * 0.3);
           
           // Start volume monitoring for ducking
           volumeUpdateIntervalRef.current = setInterval(updateVolume, 100);
@@ -88,10 +132,13 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
     } catch (err) {
       console.error("Failed to start home music:", err);
     }
-  }, [isMuted, updateVolume]);
+  }, [isMuted, updateVolume, fadeIn]);
 
-  const stop = useCallback(() => {
-    if (audioRef.current) {
+  const stop = useCallback(async () => {
+    if (audioRef.current && audioRef.current.volume > 0) {
+      // Fade out before stopping
+      await fadeOut(audioRef.current);
+    } else if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
@@ -103,7 +150,7 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
     
     isInitializedRef.current = false;
     setIsPlaying(false);
-  }, []);
+  }, [fadeOut]);
 
   const toggleMute = useCallback(() => {
     const newMuted = !isMuted;

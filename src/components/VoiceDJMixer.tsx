@@ -109,17 +109,8 @@ const VoiceDJMixer = ({ isOpen, onClose }: VoiceDJMixerProps) => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (!session?.access_token) {
-        // Fallback to browser speech
-        if ("speechSynthesis" in window) {
-          const utterance = new SpeechSynthesisUtterance(customPhrase);
-          utterance.rate = settings.speed;
-          utterance.pitch = 1 + (settings.style - 0.5);
-          utterance.onend = () => setIsPlaying(false);
-          utterance.onerror = () => setIsPlaying(false);
-          window.speechSynthesis.speak(utterance);
-        } else {
-          setIsPlaying(false);
-        }
+        // No session - require login for voice preview
+        setIsPlaying(false);
         return;
       }
 

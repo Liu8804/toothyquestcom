@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getVoiceSettings } from "@/components/VoiceSettingsModal";
 import { getVoiceForMood, VoiceMood } from "@/config/voiceConfig";
 import { supabase } from "@/integrations/supabase/client";
 import { 
@@ -18,8 +17,6 @@ interface UseStoryNarrationReturn {
   resume: () => void;
   stop: () => void;
 }
-
-type NarrationMode = "none" | "audio" | "speech";
 
 const createSilenceWavBlob = (durationMs = 250, sampleRate = 8000) => {
   const numSamples = Math.max(1, Math.floor((sampleRate * durationMs) / 1000));
@@ -54,13 +51,9 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
   const [isPaused, setIsPaused] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const modeRef = useRef<NarrationMode>("none");
-
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
   const unlockUrlRef = useRef<string | null>(null);
-
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const cleanupAudio = useCallback(() => {
     if (audioRef.current) {
@@ -78,121 +71,26 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
     }
   }, []);
 
-  const cleanupSpeech = useCallback(() => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-    utteranceRef.current = null;
-  }, []);
-
   const stop = useCallback(() => {
     // Use centralized stop for proper coordination
     stopAllMedia();
-    
-    if (modeRef.current === "speech") {
-      cleanupSpeech();
-    }
     cleanupAudio();
-    modeRef.current = "none";
     setIsPlaying(false);
     setIsPaused(false);
     setIsLoading(false);
     setVoicePlaying(false);
-  }, [cleanupAudio, cleanupSpeech]);
+  }, [cleanupAudio]);
 
   useEffect(() => {
     return () => stop();
   }, [stop]);
-
-  const playWithBrowserSpeech = useCallback((text: string) => {
-    if (!(typeof window !== "undefined" && "speechSynthesis" in window)) {
-      setError("Audio playback isn't available on this device.");
-      return;
-    }
-
-    // Stop all media first for clean transition
-    stopAllMedia();
-    cleanupAudio();
-    cleanupSpeech();
-    modeRef.current = "speech";
-
-    setError(null);
-    setIsLoading(false);
-    setIsPaused(false);
-
-    const voiceSettings = getVoiceSettings();
-    
-    const speakNow = () => {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = voiceSettings.speed;
-      utterance.pitch = voiceSettings.pitch;
-      utterance.volume = 1;
-      
-      const voices = window.speechSynthesis.getVoices();
-      const englishVoice = voices.find(v => v.lang.startsWith('en') && v.localService) 
-        || voices.find(v => v.lang.startsWith('en'))
-        || voices[0];
-      if (englishVoice) {
-        utterance.voice = englishVoice;
-      }
-
-      utterance.onstart = () => {
-        setIsPlaying(true);
-        setIsPaused(false);
-        setVoicePlaying(true);
-      };
-      utterance.onend = () => {
-        setIsPlaying(false);
-        setIsPaused(false);
-        setVoicePlaying(false);
-      };
-      utterance.onerror = (event) => {
-        console.error("Browser speech error:", event.error);
-        setIsPlaying(false);
-        setIsPaused(false);
-        setVoicePlaying(false);
-        if (event.error !== "interrupted" && event.error !== "canceled") {
-          setError("Sorry, there was an error playing the story.");
-        }
-      };
-
-      utteranceRef.current = utterance;
-      
-      setIsPlaying(true);
-      setVoicePlaying(true);
-      window.speechSynthesis.speak(utterance);
-    };
-
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length === 0) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        speakNow();
-      };
-      setTimeout(() => {
-        if (!utteranceRef.current) {
-          speakNow();
-        }
-      }, 100);
-    } else {
-      speakNow();
-    }
-  }, [cleanupAudio, cleanupSpeech]);
 
   const play = useCallback(
     (text: string, mood: VoiceMood = "neutral") => {
       // Stop ALL media first (centralized coordination)
       stop();
       setError(null);
-
-      const voiceSettings = getVoiceSettings();
-
-      if (voiceSettings.provider === "browser") {
-        playWithBrowserSpeech(text);
-        return;
-      }
-
       setIsLoading(true);
-      modeRef.current = "audio";
 
       const audio = new Audio();
       audioRef.current = audio;
@@ -226,8 +124,10 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
       const voiceConfig = getVoiceForMood(mood);
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (!session?.access_token) {
+          // No session - require login for voice narration
           setIsLoading(false);
-          playWithBrowserSpeech(text);
+          setError("Please sign in to hear Toothy's voice.");
+          cleanupAudio();
           return;
         }
         
@@ -269,12 +169,6 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
               unlockUrlRef.current = null;
             }
 
-            if ([401, 402, 429, 403].includes(response.status)) {
-              setError(serverMessage);
-              playWithBrowserSpeech(text);
-              return;
-            }
-
             setIsLoading(false);
             setError(serverMessage);
             return;
@@ -314,7 +208,6 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
               setIsPaused(false);
               setVoicePlaying(false);
               setError("Audio playback was blocked. Tap Listen again.");
-              playWithBrowserSpeech(text);
             }
           );
         })
@@ -326,18 +219,10 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
         });
       });
     },
-    [playWithBrowserSpeech, stop]
+    [stop, cleanupAudio]
   );
 
   const pause = useCallback(() => {
-    if (modeRef.current === "speech") {
-      if (typeof window !== "undefined" && "speechSynthesis" in window && isPlaying) {
-        window.speechSynthesis.pause();
-        setIsPaused(true);
-      }
-      return;
-    }
-
     if (audioRef.current && isPlaying) {
       audioRef.current.pause();
       setIsPaused(true);
@@ -345,14 +230,6 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
   }, [isPlaying]);
 
   const resume = useCallback(() => {
-    if (modeRef.current === "speech") {
-      if (typeof window !== "undefined" && "speechSynthesis" in window && isPaused) {
-        window.speechSynthesis.resume();
-        setIsPaused(false);
-      }
-      return;
-    }
-
     if (audioRef.current && isPaused) {
       audioRef.current.play().catch(() => {
         setError("Audio playback was blocked. Tap Listen again.");
