@@ -4,12 +4,12 @@
  * Goal: Create a familiar "friendly guide" voice that kids recognize
  * and feel comfortable with every time they use the app.
  * 
- * Voice: Custom Toothy Voice (OC9hDauvuNDOmVtStV9K) - Warm, kid-friendly
+ * Voice: Custom Toothy Voice (LSfMSUsuD24K9gbY84R5) - Warm, kid-friendly
  */
 
 // The ONE consistent voice for all app narration
 export const TOOTHY_VOICE = {
-  voiceId: "OC9hDauvuNDOmVtStV9K", // Custom Toothy voice
+  voiceId: "LSfMSUsuD24K9gbY84R5", // Custom Toothy voice
   name: "Toothy's Friend",
   
   // Base settings for natural, expressive delivery
