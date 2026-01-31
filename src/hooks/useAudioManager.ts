@@ -4,12 +4,11 @@ import { getEffectiveVolume, isGloballyMuted } from "@/components/VolumeControlP
 /**
  * Centralized Audio Manager
  * 
- * Prevents chaotic audio overlapping by:
- * 1. Canceling all speech before starting new speech
- * 2. Ducking (lowering volume) of sound effects when voice is playing
- * 3. Queueing voice playback to prevent multiple voices at once
- * 4. Managing audio element lifecycle
- * 5. Respecting user volume settings and global mute
+ * Manages all audio playback coordination:
+ * 1. Voice audio (ElevenLabs TTS only - no browser speechSynthesis)
+ * 2. Sound effects with ducking when voice is playing
+ * 3. AudioContext lifecycle for iOS compatibility
+ * 4. Volume settings and global mute
  */
 
 interface AudioState {
@@ -22,7 +21,7 @@ interface AudioState {
 const audioState: AudioState = {
   isVoicePlaying: false,
   currentAudio: null,
-  synthVolume: 0.15, // Lowered default SFX volume
+  synthVolume: 0.15,
 };
 
 // Global audio context for synth sounds
@@ -37,7 +36,6 @@ const getGlobalAudioContext = (): AudioContext => {
 
 /**
  * Public accessor for the shared AudioContext.
- * (Used by game music + SFX so we don't create/ leak contexts.)
  */
 export const getAudioContext = (): AudioContext => getGlobalAudioContext();
 
@@ -49,8 +47,6 @@ export const unlockAudioContext = (): void => {
     const ctx = getGlobalAudioContext();
 
     const prime = () => {
-      // Prime WebAudio with a near-silent, ultra-short oscillator.
-      // This is a common iOS Safari requirement to fully unlock audio output.
       try {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -67,24 +63,13 @@ export const unlockAudioContext = (): void => {
     };
 
     if (ctx.state === "suspended") {
-      void ctx.resume().then(prime).catch(() => {
-        // ignore
-      });
+      void ctx.resume().then(prime).catch(() => {});
       return;
     }
 
     prime();
   } catch {
     // ignore
-  }
-};
-
-/**
- * Stop all currently playing speech synthesis
- */
-export const stopAllSpeech = (): void => {
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
   }
 };
 
@@ -101,10 +86,10 @@ export const stopAllAudio = (): void => {
 };
 
 /**
- * Stop everything - speech and audio
+ * Stop everything - all audio
+ * Note: Browser speechSynthesis removed - only ElevenLabs voice is used
  */
 export const stopAllMedia = (): void => {
-  stopAllSpeech();
   stopAllAudio();
 };
 
@@ -113,7 +98,6 @@ export const stopAllMedia = (): void => {
  */
 export const setVoicePlaying = (playing: boolean): void => {
   audioState.isVoicePlaying = playing;
-  // When voice starts, duck synth sounds even more; restore when voice stops
   audioState.synthVolume = playing ? 0.05 : 0.15;
 };
 
@@ -121,8 +105,6 @@ export const setVoicePlaying = (playing: boolean): void => {
  * Check if voice is currently playing
  */
 export const isVoiceActive = (): boolean => {
-  // Self-heal: if something went wrong and we never received an "ended" event,
-  // don't permanently block SFX/music.
   if (audioState.isVoicePlaying) {
     const a = audioState.currentAudio;
     if (!a || a.ended || a.paused) {
@@ -136,14 +118,11 @@ export const isVoiceActive = (): boolean => {
 
 /**
  * Get current synth volume (ducked when voice is playing).
- * Returns 0 if globally muted.
- * iOS Safari needs louder signals and less aggressive ramp-down.
  */
 export const getSynthVolume = (): number => {
   if (isGloballyMuted()) return 0;
   
   const userVolume = getEffectiveVolume("sfx");
-  // Boost for mobile audibility (clamped to [0,1]).
   return Math.min(1, audioState.isVoicePlaying ? userVolume * 0.35 : userVolume * 1.2);
 };
 
@@ -151,15 +130,12 @@ export const getSynthVolume = (): number => {
  * Register an audio element as the current voice audio
  */
 export const registerVoiceAudio = (audio: HTMLAudioElement): void => {
-  // Stop any existing audio first
   stopAllAudio();
-  stopAllSpeech();
   
   audioState.currentAudio = audio;
   audioState.isVoicePlaying = true;
-  audioState.synthVolume = 0.05; // Duck synth sounds
+  audioState.synthVolume = 0.05;
   
-  // Reset state when audio ends
   audio.addEventListener("ended", () => {
     audioState.isVoicePlaying = false;
     audioState.synthVolume = 0.15;
@@ -175,7 +151,6 @@ export const registerVoiceAudio = (audio: HTMLAudioElement): void => {
 
 /**
  * Play a synth tone with proper volume ducking
- * Respects global mute setting
  */
 export const playSynthTone = (
   frequency: number,
@@ -183,8 +158,8 @@ export const playSynthTone = (
   type: OscillatorType,
   startFreq?: number
 ): void => {
-  // Check global mute first
   if (isGloballyMuted()) return;
+  
   const run = () => {
     try {
       const ctx = getGlobalAudioContext();
@@ -198,10 +173,8 @@ export const playSynthTone = (
         oscillator.frequency.exponentialRampToValueAtTime(frequency, ctx.currentTime + duration);
       }
 
-      // Use user volume settings + ducking when voice is playing
       const volume = getSynthVolume();
-      // iOS Safari: avoid instant 0-gain start; ramp up briefly, sustain, then decay.
-      gainNode.gain.setValueAtTime(0.0001, ctx.currentTime); // avoid click
+      gainNode.gain.setValueAtTime(0.0001, ctx.currentTime);
       gainNode.gain.linearRampToValueAtTime(volume, ctx.currentTime + 0.005);
       gainNode.gain.setValueAtTime(volume, ctx.currentTime + duration * 0.7);
       gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
@@ -210,7 +183,7 @@ export const playSynthTone = (
       gainNode.connect(ctx.destination);
 
       oscillator.start(ctx.currentTime);
-      oscillator.stop(ctx.currentTime + duration + 0.02); // small tail to avoid iOS cutoff
+      oscillator.stop(ctx.currentTime + duration + 0.02);
     } catch (error) {
       console.error("Error playing synth tone:", error);
     }
@@ -219,9 +192,7 @@ export const playSynthTone = (
   try {
     const ctx = getGlobalAudioContext();
     if (ctx.state === "suspended") {
-      ctx.resume().then(run).catch(() => {
-        // If resume fails (no user gesture), just skip.
-      });
+      ctx.resume().then(run).catch(() => {});
       return;
     }
   } catch {
@@ -251,7 +222,6 @@ export const useAudioManager = () => {
   }, []);
 
   const playVoiceAudio = useCallback(async (audioBlob: Blob): Promise<void> => {
-    // Stop everything first
     stopAllMedia();
     cleanup();
 
@@ -262,7 +232,6 @@ export const useAudioManager = () => {
     audio.volume = getEffectiveVolume("voice");
     audioRef.current = audio;
     
-    // Register with global manager
     registerVoiceAudio(audio);
 
     audio.addEventListener("ended", () => {
@@ -281,9 +250,6 @@ export const useAudioManager = () => {
       throw err;
     }
   }, [cleanup]);
-
-  // Note: Browser speech removed - only use ElevenLabs AI voice
-  // This eliminates the "man voice" issue
 
   return {
     playVoiceAudio,

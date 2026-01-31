@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { PurchaseProvider } from "@/hooks/usePurchase";
 import { useAudioUnlock } from "@/hooks/useAudioUnlock";
+import { useRouteMusicController } from "@/hooks/useRouteMusicController";
 import { MascotEmotionProvider } from "@/contexts/MascotEmotionContext";
 import { TesterWelcomeModal } from "@/components/tester/TesterWelcomeModal";
 import { TesterExpiryModal } from "@/components/tester/TesterExpiryModal";
@@ -33,6 +34,12 @@ const AudioUnlocker = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+// Component that controls music based on route
+const RouteMusicController = ({ children }: { children: React.ReactNode }) => {
+  useRouteMusicController();
+  return <>{children}</>;
+};
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -48,25 +55,27 @@ const App = () => (
               <TesterExpiryModal />
               <TesterDay6Reminder />
               <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/guest" element={<Guest />} />
-                  <Route path="/admin" element={<Admin />} />
-                  <Route path="/privacy" element={<PrivacyPolicy />} />
-                  <Route path="/terms" element={<TermsOfService />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/payment-success" element={<PaymentSuccess />} />
-                  <Route path="/payment-canceled" element={<PaymentCanceled />} />
-                  <Route path="/install" element={<Install />} />
-                  <Route path="/redeem" element={<Redeem />} />
-                  <Route path="/tester-invite" element={<TesterInvite />} />
-                  <Route path="/become-tester" element={<BecomeTester />} />
-                  <Route path="/app-privacy" element={<AppPrivacy />} />
-                  <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <RouteMusicController>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/guest" element={<Guest />} />
+                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<TermsOfService />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/payment-success" element={<PaymentSuccess />} />
+                    <Route path="/payment-canceled" element={<PaymentCanceled />} />
+                    <Route path="/install" element={<Install />} />
+                    <Route path="/redeem" element={<Redeem />} />
+                    <Route path="/tester-invite" element={<TesterInvite />} />
+                    <Route path="/become-tester" element={<BecomeTester />} />
+                    <Route path="/app-privacy" element={<AppPrivacy />} />
+                    <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </RouteMusicController>
               </BrowserRouter>
             </AudioUnlocker>
           </TooltipProvider>
