@@ -20,37 +20,60 @@ serve(async (req) => {
   }
 
   try {
-    // Validate authentication
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader?.startsWith("Bearer ")) {
-      console.error("Missing or invalid authorization header");
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+    // We support BOTH signed-in users and guests.
+    // Signed-in: Authorization Bearer <access_token> (verified)
+    // Guest: Authorization Bearer <publishable_key> OR missing token, rate-limited by hashed IP/UA.
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const apikeyHeader = req.headers.get("apikey") ?? "";
+
+    if (!authHeader.startsWith("Bearer ") && !apikeyHeader) {
+      console.error("Missing authorization/apikey headers");
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    const token = authHeader.replace("Bearer ", "");
+    // Default: treat as guest
+    let rateLimitKey = "guest";
 
-    // Use anon key client for auth verification (same pattern as redeem-code)
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
-    );
+    // If there's a bearer token, attempt to validate it as a real user session.
+    if (authHeader.startsWith("Bearer ")) {
+      const token = authHeader.replace("Bearer ", "").trim();
 
-    // Verify user with the token
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    
-    if (userError || !userData.user) {
-      console.error("Authentication failed:", userError?.message || "No user found");
-      return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      // Use anon key client for auth verification (same pattern as redeem-code)
+      const supabaseClient = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_ANON_KEY") ?? ""
       );
+
+      const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
+      if (!userError && userData?.user?.id) {
+        rateLimitKey = userData.user.id;
+        console.log("Authenticated user:", rateLimitKey);
+      } else {
+        // Not a valid session token: fall back to guest rate limiting.
+        // (We intentionally do NOT hard-fail here to support guest mode.)
+        console.log("Guest request (no valid user session)");
+      }
     }
 
-    const user = userData.user;
-    console.log("Authenticated user:", user.id);
+    // For guests, derive a stable-ish rate limit key from IP + UA (hashed, no raw IP stored).
+    if (rateLimitKey === "guest") {
+      const forwardedFor = req.headers.get("x-forwarded-for") ?? "";
+      const cfIp = req.headers.get("cf-connecting-ip") ?? "";
+      const ip = (forwardedFor.split(",")[0]?.trim() || cfIp || "unknown").slice(0, 128);
+      const ua = (req.headers.get("user-agent") ?? "unknown").slice(0, 256);
+      const raw = `${ip}|${ua}`;
+      const digest = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(raw)
+      );
+      const hex = Array.from(new Uint8Array(digest))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      rateLimitKey = `guest:${hex.slice(0, 32)}`;
+    }
 
     // Create admin client for rate limiting (bypasses RLS)
     const supabaseAdmin = createClient(
@@ -67,7 +90,7 @@ serve(async (req) => {
     const { data: existingLimit, error: limitError } = await supabaseAdmin
       .from("rate_limits")
       .select("request_count")
-      .eq("user_id", user.id)
+      .eq("user_id", rateLimitKey)
       .eq("endpoint", endpoint)
       .eq("window_start", windowStart.toISOString())
       .single();
@@ -80,7 +103,9 @@ serve(async (req) => {
     const currentCount = existingLimit?.request_count ?? 0;
 
     if (currentCount >= RATE_LIMIT_REQUESTS) {
-      console.warn(`Rate limit exceeded for user ${user.id}: ${currentCount}/${RATE_LIMIT_REQUESTS}`);
+      console.warn(
+        `Rate limit exceeded for key ${rateLimitKey}: ${currentCount}/${RATE_LIMIT_REQUESTS}`
+      );
       return new Response(
         JSON.stringify({ 
           error: "Rate limit exceeded. Please wait a minute before generating more speech.",
@@ -95,21 +120,23 @@ serve(async (req) => {
       await supabaseAdmin
         .from("rate_limits")
         .update({ request_count: currentCount + 1 })
-        .eq("user_id", user.id)
+        .eq("user_id", rateLimitKey)
         .eq("endpoint", endpoint)
         .eq("window_start", windowStart.toISOString());
     } else {
       await supabaseAdmin
         .from("rate_limits")
         .insert({
-          user_id: user.id,
+          user_id: rateLimitKey,
           endpoint,
           window_start: windowStart.toISOString(),
           request_count: 1
         });
     }
 
-    console.log(`Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for user ${user.id}`);
+    console.log(
+      `Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for key ${rateLimitKey}`
+    );
 
     const { text, voiceId = DEFAULT_VOICE_ID, voiceSettings } = await req.json();
 

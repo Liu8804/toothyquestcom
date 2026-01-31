@@ -38,7 +38,13 @@ export const HeroSection = () => {
   const { speak: speakGreeting } = useQuestVoice();
   
   // Home screen background music
-  const { start: startMusic, stop: stopMusic, isMuted: musicMuted, toggleMute: toggleMusicMute } = useHomeMusic();
+  const {
+    start: startMusic,
+    stop: stopMusic,
+    isPlaying: isMusicPlaying,
+    isMuted: musicMuted,
+    toggleMute: toggleMusicMute,
+  } = useHomeMusic();
   
   // Global mascot emotion context
   const { 
@@ -204,7 +210,11 @@ export const HeroSection = () => {
         hasInteractedRef.current = true;
         // Best-effort unlock as early as possible.
         unlockAudioContext();
-        // Start background music on first interaction
+      }
+
+      // IMPORTANT: Retry music start on subsequent gestures until it actually starts.
+      // Some browsers can still block the first attempt even if it was gesture-triggered.
+      if (!musicMuted && !isMusicPlaying) {
         startMusic();
       }
 
@@ -233,7 +243,7 @@ export const HeroSection = () => {
       window.removeEventListener("touchstart", handleFirstInteraction, true);
       window.removeEventListener("keydown", handleFirstInteraction, true);
     };
-  }, [speakGreetingOnce, startMusic]);
+  }, [speakGreetingOnce, startMusic, isMusicPlaying, musicMuted]);
 
   // Reset idle timer whenever user interacts
   const resetIdleTimer = useCallback(() => {
