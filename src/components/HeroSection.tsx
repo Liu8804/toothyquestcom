@@ -233,7 +233,7 @@ export const HeroSection = () => {
       window.removeEventListener("touchstart", handleFirstInteraction, true);
       window.removeEventListener("keydown", handleFirstInteraction, true);
     };
-  }, [speakGreetingOnce]);
+  }, [speakGreetingOnce, startMusic]);
 
   // Reset idle timer whenever user interacts
   const resetIdleTimer = useCallback(() => {

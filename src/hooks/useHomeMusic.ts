@@ -97,6 +97,7 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
     if (isInitializedRef.current || isMuted) return;
     
     const volumeSettings = getVolumeSettings();
+    if (volumeSettings.globalMute) return;
     if (volumeSettings.musicVolume === 0 || volumeSettings.masterVolume === 0) return;
     
     try {
@@ -104,30 +105,47 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
       
       // Create audio element if not exists
       if (!audioRef.current) {
-        audioRef.current = new Audio(AUDIO_PATH);
-        audioRef.current.loop = true;
-        audioRef.current.preload = "auto";
+        const audio = new Audio();
+        audio.loop = true;
+        audio.preload = "auto";
+        audio.crossOrigin = "anonymous";
+        
+        // Add error handler before setting src
+        audio.addEventListener("error", (e) => {
+          console.error("Home music failed to load:", e);
+        });
+        
+        audio.addEventListener("canplaythrough", () => {
+          console.log("Home music loaded and ready to play");
+        }, { once: true });
+        
+        audio.src = AUDIO_PATH;
+        audioRef.current = audio;
       }
       
       // Start with volume at 0 for fade-in
       audioRef.current.volume = 0;
       
       // Play audio with fade-in
-      audioRef.current.play()
-        .then(() => {
-          isInitializedRef.current = true;
-          setIsPlaying(true);
-          
-          // Fade in to target volume
-          const baseVolume = getEffectiveVolume("music");
-          fadeIn(audioRef.current!, baseVolume * 0.3);
-          
-          // Start volume monitoring for ducking
-          volumeUpdateIntervalRef.current = setInterval(updateVolume, 100);
-        })
-        .catch((err) => {
-          console.log("Audio autoplay blocked, waiting for interaction:", err.message);
-        });
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            isInitializedRef.current = true;
+            setIsPlaying(true);
+            console.log("Home music started playing");
+            
+            // Fade in to target volume
+            const baseVolume = getEffectiveVolume("music");
+            fadeIn(audioRef.current!, baseVolume * 0.3);
+            
+            // Start volume monitoring for ducking
+            volumeUpdateIntervalRef.current = setInterval(updateVolume, 100);
+          })
+          .catch((err) => {
+            console.log("Audio autoplay blocked or failed:", err.message);
+          });
+      }
       
     } catch (err) {
       console.error("Failed to start home music:", err);
