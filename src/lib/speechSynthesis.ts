@@ -23,12 +23,33 @@ export const cancelBrowserTts = (): void => {
   }
 };
 
+/**
+ * Pick a FEMALE English voice to match Toothy's character.
+ * Prioritizes voices with female-associated names to ensure consistency.
+ */
 const pickEnglishVoice = (voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | undefined => {
-  return (
-    voices.find((v) => v.lang?.startsWith("en") && v.localService) ||
-    voices.find((v) => v.lang?.startsWith("en")) ||
-    voices[0]
-  );
+  // Female voice name patterns (common across platforms)
+  const femaleNames = ["samantha", "karen", "victoria", "tessa", "moira", "fiona", "kate", "susan", "zira", "hazel", "libby", "google us english", "female"];
+  
+  // First priority: female English voices
+  const femaleEnglish = voices.find((v) => {
+    const name = v.name.toLowerCase();
+    const isEnglish = v.lang?.startsWith("en");
+    const isFemale = femaleNames.some(fn => name.includes(fn));
+    return isEnglish && isFemale;
+  });
+  if (femaleEnglish) return femaleEnglish;
+  
+  // Second: any local English voice (often defaults to female on iOS/Mac)
+  const localEnglish = voices.find((v) => v.lang?.startsWith("en") && v.localService);
+  if (localEnglish) return localEnglish;
+  
+  // Third: any English voice
+  const anyEnglish = voices.find((v) => v.lang?.startsWith("en"));
+  if (anyEnglish) return anyEnglish;
+  
+  // Fallback to first available
+  return voices[0];
 };
 
 /**
