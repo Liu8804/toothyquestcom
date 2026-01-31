@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { isVoiceActive } from "./useAudioManager";
+import { isGloballyMuted } from "@/components/VolumeControlPanel";
 
 interface UseSoundEffectsReturn {
   playSound: (prompt: string, duration?: number) => Promise<void>;
@@ -35,8 +36,8 @@ export const useSoundEffects = (): UseSoundEffectsReturn => {
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const playSound = useCallback(async (prompt: string, duration = 3) => {
-    // Don't play sound effects if voice is active (audio ducking)
-    if (isMuted || isVoiceActive()) return;
+    // Don't play sound effects if muted, globally muted, or voice is active
+    if (isMuted || isGloballyMuted() || isVoiceActive()) return;
 
     // Check cache first
     const cacheKey = `${prompt}-${duration}`;
