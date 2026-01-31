@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import mascotMain from "@/assets/mascot-sticker-main-v2.png";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 
 interface MotivationalPopupProps {
   isOpen: boolean;
@@ -59,14 +59,18 @@ export const MotivationalPopup = ({ isOpen, onClose }: MotivationalPopupProps) =
                 ))}
               </div>
 
-              <motion.img
-                src={mascotMain}
-                alt="Toothy mascot"
+              <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
-                className="w-24 h-24 mx-auto mb-4 object-contain drop-shadow-lg"
-              />
+                className="mb-4"
+              >
+                <MascotEmotionState
+                  emotion="help"
+                  size="lg"
+                  showSparkles={false}
+                />
+              </motion.div>
 
               <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-4">
                 Keep Going, Hero!

@@ -11,6 +11,8 @@ import DirtyToCleanMascot from "@/components/kid/DirtyToCleanMascot";
 import TapSparkleArea from "@/components/kid/TapSparkleArea";
 import PlayfulBackground from "@/components/kid/PlayfulBackground";
 import AliveMascot from "@/components/mascot/AliveMascot";
+import MascotEmotionState from "@/components/mascot/MascotEmotionState";
+import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
@@ -36,6 +38,15 @@ export const HeroSection = () => {
   const { greeting, isCompleted, markComplete } = useDailyGreeting();
   const { speak: speakGreeting } = useQuestVoice();
   const { speak: speakTap } = useTapSpeak();
+  
+  // Global mascot emotion context
+  const { 
+    emotion: globalEmotion, 
+    triggerSuccess, 
+    triggerWow, 
+    triggerLetsPlay,
+    triggerCelebrating 
+  } = useMascotEmotionContext();
   
   const [showCelebration, setShowCelebration] = useState(false);
   const [showQuestCelebration, setShowQuestCelebration] = useState(false);
@@ -579,23 +590,8 @@ export const HeroSection = () => {
                   }}
                 />
                 
-                {/* Main mascot with 3D transforms */}
-                <motion.img
-                  src={isCompleted ? mascotCelebrating : (isIntroWaving || mascotMood === "waving") ? mascotWaving : mascotMood === "cheering" ? mascotCelebrating : mascotMain}
-                  alt="Toothy - Your friendly dental buddy"
-                  className={`w-40 h-40 sm:w-52 sm:h-52 md:w-60 md:h-60 object-contain cursor-pointer transition-all duration-300 ${
-                    isCompleted 
-                      ? "brightness-115 saturate-125" 
-                      : isWiggling 
-                        ? "brightness-105 saturate-105" 
-                        : "brightness-90 saturate-80 grayscale-[0.15]"
-                  }`}
-                  style={{
-                    transformStyle: "preserve-3d",
-                    filter: isCompleted 
-                      ? "drop-shadow(0 20px 25px rgba(0,0,0,0.25)) drop-shadow(0 10px 10px rgba(0,0,0,0.2)) drop-shadow(0 4px 6px rgba(0,0,0,0.15))"
-                      : "drop-shadow(0 15px 20px rgba(0,0,0,0.2)) drop-shadow(0 8px 8px rgba(0,0,0,0.15)) drop-shadow(0 3px 4px rgba(0,0,0,0.1))",
-                  }}
+                {/* Main mascot using emotion state system */}
+                <motion.div
                   initial={isIntroWaving ? { opacity: 0, scale: 0.5, y: 50, rotateX: 30 } : undefined}
                   animate={
                     isIntroWaving
@@ -615,40 +611,35 @@ export const HeroSection = () => {
                           y: [0, -5, 5, -5, 5, -3, 3, 0],
                           rotateX: [0, 5, -5, 5, -5, 3, -3, 0],
                         }
-                      : isCompleted || mascotMood === "cheering"
-                      ? { 
-                          y: [0, -12, 0], 
-                          scale: [1, 1.08, 1], 
-                          rotateY: [0, 5, -5, 0],
-                          rotateX: [0, -3, 3, 0],
-                        }
-                      : mascotMood === "waving"
-                      ? { 
-                          rotateZ: [0, -8, 8, -8, 0],
-                          rotateY: [0, 3, -3, 0],
-                        }
-                      : { 
-                          y: [0, -6, 0], 
-                          scale: [1, 1.01, 1],
-                          rotateY: [0, 2, -2, 0],
-                          rotateX: [0, 1, -1, 0],
-                        }
+                      : {}
                   }
                   transition={{
-                    duration: isIntroWaving ? 2 : isWiggling ? 1.2 : mascotMood === "cheering" || isCompleted ? 0.8 : 2.5,
-                    repeat: isIntroWaving ? 0 : isWiggling ? 2 : Infinity,
+                    duration: isIntroWaving ? 2 : isWiggling ? 1.2 : 2.5,
+                    repeat: isIntroWaving ? 0 : isWiggling ? 2 : 0,
                     ease: "easeOut",
                   }}
                   onClick={() => {
                     trackMascotInteraction("tap");
-                    setMascotMood("cheering");
+                    triggerWow();
                     playCheer();
                     resetIdleTimer();
                     setTimeout(() => {
-                      if (!isCompleted) setMascotMood("idle");
-                    }, 2000);
+                      if (!isCompleted) triggerLetsPlay();
+                    }, 3000);
                   }}
-                />
+                  className="cursor-pointer"
+                >
+                  <MascotEmotionState
+                    emotion={
+                      isCompleted ? "greatJob" :
+                      isWiggling ? "letsPlay" :
+                      mascotMood === "cheering" ? "wow" :
+                      globalEmotion
+                    }
+                    size="2xl"
+                    showSparkles={isCompleted || isWiggling}
+                  />
+                </motion.div>
                 
                 {/* Highlight/shine effect for 3D appearance */}
                 <motion.div
