@@ -11,7 +11,7 @@ const RATE_LIMIT_REQUESTS = 20; // Max requests per window
 const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute window
 
 // Default Toothy voice ID
-const DEFAULT_VOICE_ID = "OC9hDauvuNDOmVtStV9K";
+const DEFAULT_VOICE_ID = "LSfMSUsuD24K9gbY84R5";
 
 serve(async (req) => {
   // Handle CORS preflight requests
