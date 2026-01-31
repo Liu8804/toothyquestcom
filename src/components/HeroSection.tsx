@@ -7,11 +7,13 @@ import FirstTapCelebration from "@/components/FirstTapCelebration";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import FloatingSparkles from "@/components/FloatingSparkles";
 import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
+import DirtyToCleanMascot from "@/components/kid/DirtyToCleanMascot";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useEngagementAnalytics } from "@/hooks/useEngagementAnalytics";
 import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
+import { useTapSpeak } from "@/hooks/useAutoSpeak";
 import { unlockAudioContext } from "@/hooks/useAudioManager";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
 import mascotMain from "@/assets/mascot-sticker-main-v2.png";
@@ -30,13 +32,18 @@ export const HeroSection = () => {
   } = useEngagementAnalytics();
   const { greeting, isCompleted, markComplete } = useDailyGreeting();
   const { speak: speakGreeting } = useQuestVoice();
+  const { speak: speakTap } = useTapSpeak();
   
   const [showCelebration, setShowCelebration] = useState(false);
   const [showQuestCelebration, setShowQuestCelebration] = useState(false);
   const [hasCompletedFirstTap, setHasCompletedFirstTap] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [isHoveringCTA, setIsHoveringCTA] = useState(false);
-  const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering" | "wiggle">("waving"); // Start with waving for intro
+  const [mascotMood, setMascotMood] = useState<"idle" | "waving" | "cheering" | "wiggle">("waving");
+  
+  // Kid mode: show dirty-to-clean mascot for first-time users
+  const [showKidMascot, setShowKidMascot] = useState(false);
+  const [kidMascotTransformed, setKidMascotTransformed] = useState(false);
   
   // Show celebration briefly when quest was just completed this session
   const [justCompleted, setJustCompleted] = useState(false);
@@ -75,6 +82,7 @@ export const HeroSection = () => {
   useEffect(() => {
     const onboardingComplete = localStorage.getItem("toothyquest_onboarding_complete");
     const firstTapComplete = localStorage.getItem("toothyquest_first_tap");
+    const kidMascotComplete = localStorage.getItem("toothyquest_kid_mascot_done");
     
     // Track session start
     trackSessionStart();
@@ -88,7 +96,12 @@ export const HeroSection = () => {
     if (firstTapComplete) {
       setHasCompletedFirstTap(true);
     }
-  }, [trackSessionStart]);
+    
+    // Show kid mascot transformation for first-time users who completed onboarding
+    if (!kidMascotComplete && !isCompleted) {
+      setShowKidMascot(true);
+    }
+  }, [trackSessionStart, isCompleted]);
 
   // Intro wave animation - Toothy waves when first appearing
   useEffect(() => {
@@ -319,11 +332,24 @@ export const HeroSection = () => {
 
   const handleOnboardingComplete = useCallback(() => {
     setShowOnboarding(false);
+    // Show kid mascot transformation after onboarding
+    const kidMascotComplete = localStorage.getItem("toothyquest_kid_mascot_done");
+    if (!kidMascotComplete && !isCompleted) {
+      setShowKidMascot(true);
+    }
     // If the first tap happened during onboarding, re-attempt the greeting now
-    // (this is still a user gesture: the onboarding "Done" button).
     hasInteractedRef.current = true;
     unlockAudioContext();
     speakGreetingOnce();
+  }, [isCompleted, speakGreetingOnce]);
+
+  const handleKidMascotComplete = useCallback(() => {
+    localStorage.setItem("toothyquest_kid_mascot_done", "true");
+    setKidMascotTransformed(true);
+    // Hide kid mascot after celebration
+    setTimeout(() => {
+      setShowKidMascot(false);
+    }, 1500);
   }, []);
 
 
@@ -337,6 +363,35 @@ export const HeroSection = () => {
       
       {/* Quest Completion Celebration */}
       <ConfettiCelebration isActive={showQuestCelebration || justCompleted} duration={3000} particleCount={60} />
+
+      {/* Kid Mode: Dirty-to-Clean Mascot Transformation (First 10 seconds experience) */}
+      <AnimatePresence>
+        {showKidMascot && !kidMascotTransformed && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[80] bg-gradient-to-b from-sky-100 via-sky-50 to-white flex flex-col items-center justify-center"
+          >
+            <DirtyToCleanMascot 
+              size="lg" 
+              showHint={true}
+              onTransformComplete={handleKidMascotComplete}
+            />
+            
+            {/* Skip button for parents */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 3 }}
+              onClick={handleKidMascotComplete}
+              className="mt-8 text-xs text-muted-foreground/50 underline"
+            >
+              Skip (for parents)
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
         <FloatingBubbles />
