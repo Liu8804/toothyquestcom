@@ -146,6 +146,19 @@ export const useToothyPhrases = () => {
     speakPhrase(getRandomPhrase("celebration"));
   }, [playWoohoo, speakPhrase]);
 
+  /**
+   * Speak a welcome greeting - uses the provided greeting text with cheerful voice
+   */
+  const sayWelcome = useCallback((greetingText: string) => {
+    playSparkleChime();
+    speakPhrase({
+      text: greetingText,
+      emoji: "✨",
+      category: "greeting" as any,
+      mood: "encouraging",
+    });
+  }, [playSparkleChime, speakPhrase]);
+
   return {
     // Specific phrases
     saySparkle,
@@ -159,6 +172,8 @@ export const useToothyPhrases = () => {
     // Random category phrases
     sayEncouragement,
     sayCelebration,
+    // Welcome greeting
+    sayWelcome,
     // Generic speak function
     speakPhrase,
   };
