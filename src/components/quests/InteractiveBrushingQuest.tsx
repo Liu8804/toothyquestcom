@@ -1,9 +1,10 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Sparkles, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useAutoSpeak, useTapSpeak } from "@/hooks/useAutoSpeak";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
@@ -41,6 +42,24 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
   const [xpPopups, setXpPopups] = useState<{ id: number; x: number; y: number }[]>([]);
   const { haptic, success } = useHapticFeedback();
   const { playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain, playSparkle } = useMascotSounds();
+  const { speak: speakTap } = useTapSpeak();
+
+  // Voice-first: Auto-speak instructions for toothpaste phase
+  const { replay: replayToothpasteInstruction } = useAutoSpeak({
+    instruction: "Drag the toothpaste onto the toothbrush! Pull it up!",
+    delay: 600,
+    autoSpeak: phase === "toothpaste",
+  });
+
+  // Voice-first: Auto-speak instructions for brushing phase  
+  useEffect(() => {
+    if (phase === "brushing") {
+      // Speak brushing instructions when phase changes
+      setTimeout(() => {
+        speakTap("Great job! Now tap each tooth to make it sparkle!");
+      }, 500);
+    }
+  }, [phase, speakTap]);
 
   // Handle toothpaste drag end
   const handleToothpasteDragEnd = (_: any, info: PanInfo) => {
@@ -66,6 +85,9 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
         setShowToothpasteSparkle(true);
         setMascotReaction("cheering");
         playCheer();
+        
+        // Voice feedback for success
+        speakTap("Perfect! You did it!");
         
         setTimeout(() => {
           setMascotReaction("idle");
@@ -102,6 +124,12 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
     setMascotReaction("cheering");
     playCheer(); // Mascot cheer sound
 
+    // Voice encouragement on some taps (not every one to avoid overwhelming)
+    const encouragements = ["Great!", "Sparkle!", "Yay!", "Good job!", "Nice!"];
+    if (cleanedTeeth.length % 3 === 0) {
+      speakTap(encouragements[cleanedTeeth.length % encouragements.length]);
+    }
+
     // Reset mascot after animation
     setTimeout(() => setMascotReaction("idle"), 800);
 
@@ -110,13 +138,14 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
       success();
       setMascotReaction("dancing");
       playCelebrate();
+      speakTap("Amazing! All your teeth are sparkling clean!");
       setTimeout(() => {
         playQuestComplete();
         playXpGain();
         setShowReward(true);
       }, 500);
     }
-  }, [cleanedTeeth, haptic, success, playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain]);
+  }, [cleanedTeeth, haptic, success, playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain, speakTap]);
 
   const handleCollectReward = () => {
     onComplete();
@@ -140,10 +169,22 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 50 }}
             >
-              {/* Header */}
+              {/* Header - Icon-based for non-readers */}
               <div className="gradient-hero p-4 text-center text-white">
-                <h2 className="font-display text-xl font-bold">Add Toothpaste! 🦷</h2>
-                <p className="text-sm opacity-90">Drag the toothpaste onto your toothbrush!</p>
+                <div className="flex items-center justify-center gap-3 text-4xl mb-1">
+                  <span>🧴</span>
+                  <motion.span animate={{ x: [0, 10, 0] }} transition={{ duration: 1, repeat: Infinity }}>➡️</motion.span>
+                  <span>🪥</span>
+                </div>
+                {/* Tap mascot to hear instructions */}
+                <motion.button
+                  onClick={() => replayToothpasteInstruction()}
+                  className="mt-2 flex items-center justify-center gap-1 mx-auto bg-white/20 rounded-full px-3 py-1"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="text-lg">🔊</span>
+                  <span className="text-xs">Tap to hear</span>
+                </motion.button>
               </div>
 
               {/* Toothpaste drag area */}
@@ -231,32 +272,40 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                 )}
               </div>
 
-              {/* Mascot encouragement */}
+              {/* Mascot encouragement - Icon-based */}
               <div className="flex justify-center pb-4">
-                <motion.div
+                <motion.button
+                  onClick={() => replayToothpasteInstruction()}
                   animate={mascotReaction === "cheering" ? { y: [0, -10, 0] } : { y: [0, -5, 0] }}
                   transition={{ duration: mascotReaction === "cheering" ? 0.5 : 2, repeat: Infinity }}
-                  className="flex items-center gap-3"
+                  className="flex flex-col items-center gap-2"
                 >
                   <img
                     src={toothpasteApplied ? mascotCelebrating : mascotWaving}
                     alt="Toothy"
-                    className="w-16 h-16 object-contain"
+                    className="w-20 h-20 object-contain"
                   />
-                  <div className="bg-primary/10 rounded-2xl px-4 py-2 max-w-[200px]">
-                    <p className="text-sm font-medium text-foreground">
-                      {toothpasteApplied 
-                        ? "Perfect! Now let's brush! 🎉" 
-                        : "Drag the toothpaste onto the brush! 🪥"}
-                    </p>
+                  {/* Visual hint instead of text */}
+                  <div className="flex items-center gap-1 text-2xl">
+                    {toothpasteApplied ? (
+                      <>
+                        <span>✅</span>
+                        <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 0.5, repeat: Infinity }}>🎉</motion.span>
+                      </>
+                    ) : (
+                      <>
+                        <span>👆</span>
+                        <motion.span animate={{ y: [0, -5, 0] }} transition={{ duration: 1, repeat: Infinity }}>☝️</motion.span>
+                      </>
+                    )}
                   </div>
-                </motion.div>
+                </motion.button>
               </div>
 
-              {/* Close button */}
+              {/* Close button - Icon only */}
               <div className="p-4 pt-0 text-center">
-                <Button variant="ghost" onClick={onClose} className="text-muted-foreground">
-                  Close
+                <Button variant="ghost" onClick={onClose} className="text-muted-foreground text-2xl">
+                  ❌
                 </Button>
               </div>
             </motion.div>
@@ -270,25 +319,45 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -50 }}
             >
-              {/* Header */}
+              {/* Header - Icon-based for non-readers */}
               <div className="gradient-hero p-4 text-center text-white">
-                <h2 className="font-display text-xl font-bold">Tap to Brush! 🪥</h2>
-                <p className="text-sm opacity-90">Tap each tooth to make it sparkle!</p>
+                <div className="flex items-center justify-center gap-3 text-4xl mb-1">
+                  <span>👆</span>
+                  <span>🦷</span>
+                  <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 0.8, repeat: Infinity }}>✨</motion.span>
+                </div>
+                {/* Tap to hear instructions */}
+                <motion.button
+                  onClick={() => speakTap("Tap each tooth to make it sparkle!")}
+                  className="mt-2 flex items-center justify-center gap-1 mx-auto bg-white/20 rounded-full px-3 py-1"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="text-lg">🔊</span>
+                  <span className="text-xs">Tap to hear</span>
+                </motion.button>
               </div>
 
-              {/* Progress bar */}
+              {/* Progress bar - Visual only (stars instead of text) */}
               <div className="px-4 pt-4">
-                <div className="h-3 bg-muted rounded-full overflow-hidden">
+                <div className="h-4 bg-muted rounded-full overflow-hidden relative">
                   <motion.div
                     className="h-full gradient-hero"
                     initial={{ width: 0 }}
                     animate={{ width: `${progress}%` }}
                     transition={{ duration: 0.3 }}
                   />
-                </div>
-                <div className="flex items-center justify-center gap-1 mt-2 text-sm text-muted-foreground">
-                  <Star className="w-4 h-4 text-star" />
-                  <span>{cleanedTeeth.length}/{TEETH.length} teeth cleaned</span>
+                  {/* Star indicators instead of text */}
+                  <div className="absolute inset-0 flex items-center justify-around px-2">
+                    {TEETH.map((_, i) => (
+                      <motion.span
+                        key={i}
+                        className="text-xs"
+                        animate={cleanedTeeth.length > i ? { scale: [1, 1.3, 1] } : {}}
+                      >
+                        {cleanedTeeth.length > i ? "⭐" : "○"}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -375,9 +444,10 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                 </AnimatePresence>
               </div>
 
-              {/* Mascot */}
+              {/* Mascot - Tappable for voice replay */}
               <div className="flex justify-center pb-4">
-                <motion.div
+                <motion.button
+                  onClick={() => speakTap("Tap the teeth to make them sparkle!")}
                   animate={
                     mascotReaction === "cheering"
                       ? { y: [0, -10, 0], scale: [1, 1.1, 1] }
@@ -405,17 +475,25 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
                       {mascotReaction === "cheering" ? "🎉" : "💃"}
                     </motion.span>
                   )}
-                </motion.div>
+                  {/* Voice hint */}
+                  <motion.div
+                    className="absolute -bottom-1 -right-1 bg-star text-white text-xs rounded-full w-6 h-6 flex items-center justify-center"
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    🔊
+                  </motion.div>
+                </motion.button>
               </div>
 
-              {/* Close button */}
+              {/* Close button - Icon only */}
               <div className="p-4 pt-0 text-center">
                 <Button
                   variant="ghost"
                   onClick={onClose}
-                  className="text-muted-foreground"
+                  className="text-muted-foreground text-2xl"
                 >
-                  Close
+                  ❌
                 </Button>
               </div>
 
