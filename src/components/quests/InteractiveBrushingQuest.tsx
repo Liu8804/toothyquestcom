@@ -4,6 +4,7 @@ import { Sparkles, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useToothyPhrases } from "@/hooks/useToothyPhrases";
 import { useAutoSpeak, useTapSpeak } from "@/hooks/useAutoSpeak";
 import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
@@ -43,8 +44,11 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
   const [mascotReaction, setMascotReaction] = useState<"idle" | "cheering" | "dancing">("idle");
   const [xpPopups, setXpPopups] = useState<{ id: number; x: number; y: number }[]>([]);
   const { haptic, success } = useHapticFeedback();
-  const { playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain, playSparkle } = useMascotSounds();
+  const { playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain, playSparkle, playToothTapShine, playDing } = useMascotSounds();
   const { speak: speakTap } = useTapSpeak();
+  
+  // Toothy's playful phrases for start and completion
+  const { sayBrushTogether, sayAllClean, saySparkle, playToothTapDing } = useToothyPhrases();
   
   // Mascot emotion context for reactive feedback
   const { triggerHelp, triggerSuccess, triggerWow } = useMascotEmotionContext();
@@ -54,12 +58,20 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
     triggerHelp();
   }, [triggerHelp]);
 
-  // Voice-first: Auto-speak instructions for toothpaste phase
+  // Voice-first: Say "Let's brush together!" when toothpaste phase starts
   const { replay: replayToothpasteInstruction } = useAutoSpeak({
     instruction: "Drag the toothpaste onto the toothbrush! Pull it up!",
     delay: 600,
-    autoSpeak: phase === "toothpaste",
+    autoSpeak: false, // We'll use sayBrushTogether instead
   });
+
+  // Say "Let's brush together!" on mount
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      sayBrushTogether();
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [sayBrushTogether]);
 
   // Voice-first: Auto-speak instructions for brushing phase  
   useEffect(() => {
@@ -98,8 +110,8 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
         // Trigger success mascot emotion
         triggerSuccess();
         
-        // Voice feedback for success
-        speakTap("Perfect! You did it!");
+        // Say "Yay! You made me sparkle!" with sparkle sound
+        saySparkle();
         
         setTimeout(() => {
           setMascotReaction("idle");
@@ -123,7 +135,12 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
     const y = rect.top;
 
     haptic("light");
-    playToothClean(); // Sound on each tooth clean
+    
+    // Play quick ding + sparkle sound synced with visual
+    playToothTapShine();
+    if (Math.random() > 0.5) {
+      setTimeout(() => playDing(), 50);
+    }
     
     // Add XP popup at tap location
     const popupId = Date.now();
@@ -145,12 +162,15 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
     // Reset mascot after animation
     setTimeout(() => setMascotReaction("idle"), 800);
 
-    // Check if all teeth cleaned
+    // Check if all teeth cleaned - say "All clean! Woohoo!"
     if (cleanedTeeth.length + 1 >= TEETH.length) {
       success();
       setMascotReaction("dancing");
       playCelebrate();
-      speakTap("Amazing! All your teeth are sparkling clean!");
+      
+      // Use Toothy's playful phrase for completion
+      sayAllClean();
+      
       // Trigger wow for quest completion
       triggerWow();
       setTimeout(() => {
@@ -159,7 +179,7 @@ const InteractiveBrushingQuest = ({ onComplete, onClose }: InteractiveBrushingQu
         setShowReward(true);
       }, 500);
     }
-  }, [cleanedTeeth, haptic, success, playToothClean, playCheer, playCelebrate, playQuestComplete, playXpGain, speakTap]);
+  }, [cleanedTeeth, haptic, success, playToothTapShine, playDing, playCheer, playCelebrate, playQuestComplete, playXpGain, speakTap, sayAllClean, triggerWow]);
 
   const handleCollectReward = () => {
     onComplete();

@@ -18,11 +18,14 @@ interface TapSparkleAreaProps {
   sparkleEmojis?: string[];
   maxSparkles?: number;
   onTap?: (x: number, y: number) => void;
+  /** Use ding sound instead of happy sound for quicker feedback */
+  useDingSound?: boolean;
 }
 
 /**
  * TapSparkleArea - Wraps content and triggers sparkles/sounds on any tap
  * Makes the entire area feel interactive and rewarding for kids
+ * Now synced with sparkle chime sounds for delightful audio-visual feedback
  */
 const TapSparkleArea = ({
   children,
@@ -31,11 +34,12 @@ const TapSparkleArea = ({
   sparkleEmojis = ["✨", "⭐", "💫", "🌟", "💖", "🎉"],
   maxSparkles = 6,
   onTap,
+  useDingSound = false,
 }: TapSparkleAreaProps) => {
   const [sparkles, setSparkles] = useState<SparkleParticle[]>([]);
   const nextIdRef = useRef(0);
   const { haptic } = useHapticFeedback();
-  const { playHappy } = useMascotSounds();
+  const { playHappy, playDing, playSparkleChime, playToothTapShine } = useMascotSounds();
 
   const handleTap = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (!enabled) return;
@@ -69,9 +73,24 @@ const TapSparkleArea = ({
     
     setSparkles(prev => [...prev, ...newSparkles]);
     
-    // Haptic and sound feedback
+    // Haptic feedback
     haptic("light");
-    playHappy();
+    
+    // Sound feedback synced with sparkle visuals
+    if (useDingSound) {
+      // Quick ding for tooth taps
+      playDing();
+      // Add sparkle chime occasionally for extra delight
+      if (Math.random() > 0.5) {
+        setTimeout(() => playToothTapShine(), 50);
+      }
+    } else {
+      // Happy sound with occasional sparkle chime
+      playHappy();
+      if (Math.random() > 0.6) {
+        setTimeout(() => playSparkleChime(), 80);
+      }
+    }
     
     // Clean up sparkles after animation
     setTimeout(() => {
@@ -79,7 +98,7 @@ const TapSparkleArea = ({
     }, 1000);
     
     onTap?.(x, y);
-  }, [enabled, maxSparkles, sparkleEmojis, haptic, playHappy, onTap]);
+  }, [enabled, maxSparkles, sparkleEmojis, haptic, playHappy, playDing, playSparkleChime, playToothTapShine, useDingSound, onTap]);
 
   return (
     <div 

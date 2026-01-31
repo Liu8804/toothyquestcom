@@ -1,11 +1,54 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 interface FloatingSparklesProps {
   count?: number;
   className?: string;
+  /** Play subtle sparkle sounds synced with animations */
+  withSound?: boolean;
+  /** Sound interval in ms (default: 3000) */
+  soundInterval?: number;
 }
 
-const FloatingSparkles = ({ count = 15, className = "" }: FloatingSparklesProps) => {
+/**
+ * FloatingSparkles - Ambient sparkle particles with optional synced sounds
+ * When withSound is true, plays subtle sparkle chimes periodically
+ */
+const FloatingSparkles = ({ 
+  count = 15, 
+  className = "",
+  withSound = false,
+  soundInterval = 3000,
+}: FloatingSparklesProps) => {
+  const { playSparkleChime } = useMascotSounds();
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Play periodic sparkle sounds when enabled
+  useEffect(() => {
+    if (!withSound) return;
+
+    // Play initial sound after a short delay
+    const initialTimeout = setTimeout(() => {
+      playSparkleChime();
+    }, 1500);
+
+    // Then play at intervals
+    intervalRef.current = setInterval(() => {
+      // Only play occasionally (30% chance) to keep it subtle
+      if (Math.random() > 0.7) {
+        playSparkleChime();
+      }
+    }, soundInterval);
+
+    return () => {
+      clearTimeout(initialTimeout);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [withSound, soundInterval, playSparkleChime]);
+
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
       {[...Array(count)].map((_, i) => (
