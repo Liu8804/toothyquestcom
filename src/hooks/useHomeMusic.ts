@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 import { isVoiceActive, unlockAudioContext } from "./useAudioManager";
 import { registerMusicStopCallback, unregisterMusicStopCallback } from "./useRouteMusicController";
@@ -27,6 +28,7 @@ const STORAGE_KEY = "toothyquest-home-music-muted";
 const AUDIO_PATH = "/audio/home-background.wav";
 
 export const useHomeMusic = (): UseHomeMusicReturn => {
+  const location = useLocation();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -36,6 +38,24 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isInitializedRef = useRef(false);
   const volumeUpdateIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  
+  // Stop music immediately when leaving home route
+  useEffect(() => {
+    if (location.pathname !== "/" && isPlaying) {
+      console.log("Stopping home music - navigated away from /");
+      // Immediately stop without fade for route changes
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      if (volumeUpdateIntervalRef.current) {
+        clearInterval(volumeUpdateIntervalRef.current);
+        volumeUpdateIntervalRef.current = null;
+      }
+      isInitializedRef.current = false;
+      setIsPlaying(false);
+    }
+  }, [location.pathname, isPlaying]);
 
   // Update volume based on settings and voice activity
   const updateVolume = useCallback(() => {
