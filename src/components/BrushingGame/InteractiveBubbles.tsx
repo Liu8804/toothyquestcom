@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 
 interface Bubble {
@@ -17,78 +16,69 @@ interface InteractiveBubblesProps {
   onBubblePop?: () => void;
 }
 
-const BUBBLE_EMOJIS = ["✨", "⭐", "🌟", "💫", "🫧", "💎"];
-const SPAWN_INTERVAL = 3500; // Spawn every 3.5 seconds
-const BUBBLE_LIFETIME = 4000; // Bubbles last 4 seconds
+const BUBBLE_EMOJIS = ["✨", "⭐", "🌟"];
+const SPAWN_INTERVAL = 5000; // Increased from 3500
+const BUBBLE_LIFETIME = 5000; // Increased from 4000
+const MAX_BUBBLES = 3; // Limit concurrent bubbles
 
 const InteractiveBubbles = ({ isActive, onBubblePop }: InteractiveBubblesProps) => {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
-  const { playSparkleChime, playDing, playCheer } = useMascotSounds();
+  const prefersReducedMotion = useReducedMotion();
   const { haptic } = useHapticFeedback();
+
+  // Pre-compute random positions
+  const getRandomPosition = useCallback(() => ({
+    x: 15 + Math.random() * 70,
+    y: 25 + Math.random() * 50,
+    size: 45 + Math.random() * 20,
+    emoji: BUBBLE_EMOJIS[Math.floor(Math.random() * BUBBLE_EMOJIS.length)],
+  }), []);
 
   // Spawn bubbles periodically
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive || prefersReducedMotion) {
       setBubbles([]);
       return;
     }
 
     const spawnBubble = () => {
-      const newBubble: Bubble = {
-        id: Date.now() + Math.random(),
-        x: 10 + Math.random() * 80, // 10-90% from left
-        y: 20 + Math.random() * 60, // 20-80% from top
-        size: 40 + Math.random() * 30, // 40-70px
-        emoji: BUBBLE_EMOJIS[Math.floor(Math.random() * BUBBLE_EMOJIS.length)],
-        popped: false,
-      };
-      setBubbles((prev) => [...prev, newBubble]);
-
-      // Auto-remove after lifetime
-      setTimeout(() => {
-        setBubbles((prev) => prev.filter((b) => b.id !== newBubble.id));
-      }, BUBBLE_LIFETIME);
+      setBubbles(prev => {
+        // Limit max bubbles for performance
+        if (prev.length >= MAX_BUBBLES) return prev;
+        
+        const pos = getRandomPosition();
+        const newBubble: Bubble = {
+          id: Date.now(),
+          ...pos,
+          popped: false,
+        };
+        return [...prev, newBubble];
+      });
     };
 
-    // Spawn initial bubble after a short delay
-    const initialTimeout = setTimeout(spawnBubble, 1000);
-    
-    // Then spawn at intervals
+    // Initial spawn
+    const initialTimeout = setTimeout(spawnBubble, 1500);
     const interval = setInterval(spawnBubble, SPAWN_INTERVAL);
+
+    // Auto-cleanup old bubbles
+    const cleanup = setInterval(() => {
+      setBubbles(prev => prev.filter(b => !b.popped));
+    }, BUBBLE_LIFETIME);
 
     return () => {
       clearTimeout(initialTimeout);
       clearInterval(interval);
+      clearInterval(cleanup);
     };
-  }, [isActive]);
+  }, [isActive, prefersReducedMotion, getRandomPosition]);
 
-  const handleBubblePop = useCallback(
-    (bubbleId: number) => {
-      setBubbles((prev) =>
-        prev.map((b) => (b.id === bubbleId ? { ...b, popped: true } : b))
-      );
-      haptic("light");
-      
-      // Play ding for each pop, sparkle chime occasionally for extra delight
-      playDing();
-      if (Math.random() > 0.6) {
-        setTimeout(() => playSparkleChime(), 80);
-      }
-      
-      // Occasionally play cheer for big celebration moments
-      if (Math.random() > 0.85) {
-        setTimeout(() => playCheer(), 150);
-      }
+  const handleBubblePop = useCallback((bubbleId: number) => {
+    setBubbles(prev => prev.filter(b => b.id !== bubbleId));
+    haptic("light");
+    onBubblePop?.();
+  }, [haptic, onBubblePop]);
 
-      onBubblePop?.();
-
-      // Remove after pop animation
-      setTimeout(() => {
-        setBubbles((prev) => prev.filter((b) => b.id !== bubbleId));
-      }, 300);
-    },
-    [haptic, playDing, playSparkleChime, playCheer, onBubblePop]
-  );
+  if (prefersReducedMotion) return null;
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -97,64 +87,29 @@ const InteractiveBubbles = ({ isActive, onBubblePop }: InteractiveBubblesProps) 
           <motion.button
             key={bubble.id}
             initial={{ opacity: 0, scale: 0 }}
-            animate={
-              bubble.popped
-                ? { opacity: 0, scale: 1.5 }
-                : { opacity: 1, scale: [0.8, 1.1, 1], y: [0, -10, 0] }
-            }
-            exit={{ opacity: 0, scale: 0 }}
-            transition={
-              bubble.popped
-                ? { duration: 0.3 }
-                : { duration: 2, repeat: Infinity, ease: "easeInOut" }
-            }
-            className="absolute pointer-events-auto touch-manipulation cursor-pointer"
+            animate={{ opacity: 1, scale: 1, y: [0, -8, 0] }}
+            exit={{ opacity: 0, scale: 1.3 }}
+            transition={{ 
+              duration: 2.5, 
+              repeat: Infinity, 
+              ease: "easeInOut",
+            }}
+            className="absolute pointer-events-auto touch-manipulation cursor-pointer will-change-transform"
             style={{
               left: `${bubble.x}%`,
               top: `${bubble.y}%`,
               width: bubble.size,
               height: bubble.size,
             }}
-            onClick={() => !bubble.popped && handleBubblePop(bubble.id)}
+            onClick={() => handleBubblePop(bubble.id)}
             onTouchStart={(e) => {
               e.preventDefault();
-              if (!bubble.popped) handleBubblePop(bubble.id);
+              handleBubblePop(bubble.id);
             }}
           >
-            <motion.div
-              className="w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 backdrop-blur-sm flex items-center justify-center shadow-lg border-2 border-white/50"
-              whileTap={{ scale: 0.8 }}
-              animate={
-                !bubble.popped
-                  ? { rotate: [0, 5, -5, 0] }
-                  : {}
-              }
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <span className="text-2xl">{bubble.emoji}</span>
-            </motion.div>
-
-            {/* Pop effect */}
-            {bubble.popped && (
-              <>
-                {[...Array(6)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 1, scale: 0.5, x: 0, y: 0 }}
-                    animate={{
-                      opacity: 0,
-                      scale: 0.8,
-                      x: Math.cos((i * 60 * Math.PI) / 180) * 30,
-                      y: Math.sin((i * 60 * Math.PI) / 180) * 30,
-                    }}
-                    transition={{ duration: 0.4 }}
-                    className="absolute inset-0 flex items-center justify-center text-sm"
-                  >
-                    ✨
-                  </motion.div>
-                ))}
-              </>
-            )}
+            <div className="w-full h-full rounded-full bg-gradient-to-br from-primary/25 to-secondary/25 backdrop-blur-sm flex items-center justify-center shadow-md border border-white/40">
+              <span className="text-xl">{bubble.emoji}</span>
+            </div>
           </motion.button>
         ))}
       </AnimatePresence>

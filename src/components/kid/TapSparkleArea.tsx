@@ -1,14 +1,12 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useCallback, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState, useCallback, useRef, useMemo } from "react";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
-import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 interface SparkleParticle {
   id: number;
   x: number;
   y: number;
   emoji: string;
-  size: number;
 }
 
 interface TapSparkleAreaProps {
@@ -18,33 +16,35 @@ interface TapSparkleAreaProps {
   sparkleEmojis?: string[];
   maxSparkles?: number;
   onTap?: (x: number, y: number) => void;
-  /** Use ding sound instead of happy sound for quicker feedback */
   useDingSound?: boolean;
 }
 
 /**
- * TapSparkleArea - Wraps content and triggers sparkles/sounds on any tap
- * Makes the entire area feel interactive and rewarding for kids
- * Now synced with sparkle chime sounds for delightful audio-visual feedback
+ * TapSparkleArea - Optimized version with reduced particles
  */
 const TapSparkleArea = ({
   children,
   className = "",
   enabled = true,
-  sparkleEmojis = ["✨", "⭐", "💫", "🌟", "💖", "🎉"],
-  maxSparkles = 6,
+  sparkleEmojis = ["✨", "⭐", "🌟"],
+  maxSparkles = 3, // Reduced from 6
   onTap,
-  useDingSound = false,
 }: TapSparkleAreaProps) => {
   const [sparkles, setSparkles] = useState<SparkleParticle[]>([]);
   const nextIdRef = useRef(0);
+  const lastTapRef = useRef(0);
   const { haptic } = useHapticFeedback();
-  const { playHappy, playDing, playSparkleChime, playToothTapShine } = useMascotSounds();
+  const prefersReducedMotion = useReducedMotion();
 
   const handleTap = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     if (!enabled) return;
     
-    // Get tap position relative to container
+    // Throttle taps to prevent excessive sparkles
+    const now = Date.now();
+    if (now - lastTapRef.current < 150) return;
+    lastTapRef.current = now;
+    
+    // Get tap position
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     let clientX: number, clientY: number;
     
@@ -59,46 +59,36 @@ const TapSparkleArea = ({
     const x = clientX - rect.left;
     const y = clientY - rect.top;
     
-    // Create sparkle particles
+    // Haptic only
+    haptic("light");
+    
+    // Skip sparkles if reduced motion
+    if (prefersReducedMotion) {
+      onTap?.(x, y);
+      return;
+    }
+    
+    // Create fewer sparkle particles
     const newSparkles: SparkleParticle[] = [];
-    for (let i = 0; i < maxSparkles; i++) {
+    const sparkleCount = Math.min(maxSparkles, 3);
+    for (let i = 0; i < sparkleCount; i++) {
       newSparkles.push({
         id: nextIdRef.current++,
-        x: x + (Math.random() - 0.5) * 60,
-        y: y + (Math.random() - 0.5) * 60,
-        emoji: sparkleEmojis[Math.floor(Math.random() * sparkleEmojis.length)],
-        size: 0.8 + Math.random() * 0.6,
+        x: x + (Math.random() - 0.5) * 40,
+        y: y + (Math.random() - 0.5) * 40,
+        emoji: sparkleEmojis[i % sparkleEmojis.length],
       });
     }
     
-    setSparkles(prev => [...prev, ...newSparkles]);
+    setSparkles(prev => [...prev.slice(-6), ...newSparkles]); // Keep max 9 total
     
-    // Haptic feedback
-    haptic("light");
-    
-    // Sound feedback synced with sparkle visuals
-    if (useDingSound) {
-      // Quick ding for tooth taps
-      playDing();
-      // Add sparkle chime occasionally for extra delight
-      if (Math.random() > 0.5) {
-        setTimeout(() => playToothTapShine(), 50);
-      }
-    } else {
-      // Happy sound with occasional sparkle chime
-      playHappy();
-      if (Math.random() > 0.6) {
-        setTimeout(() => playSparkleChime(), 80);
-      }
-    }
-    
-    // Clean up sparkles after animation
+    // Clean up after animation
     setTimeout(() => {
       setSparkles(prev => prev.filter(s => !newSparkles.find(ns => ns.id === s.id)));
-    }, 1000);
+    }, 800);
     
     onTap?.(x, y);
-  }, [enabled, maxSparkles, sparkleEmojis, haptic, playHappy, playDing, playSparkleChime, playToothTapShine, useDingSound, onTap]);
+  }, [enabled, maxSparkles, sparkleEmojis, haptic, prefersReducedMotion, onTap]);
 
   return (
     <div 
@@ -107,27 +97,21 @@ const TapSparkleArea = ({
     >
       {children}
       
-      {/* Sparkle particles */}
+      {/* Sparkle particles - simplified */}
       <AnimatePresence>
         {sparkles.map(sparkle => (
           <motion.span
             key={sparkle.id}
-            className="absolute pointer-events-none z-50"
-            style={{
-              left: sparkle.x,
-              top: sparkle.y,
-              fontSize: `${sparkle.size * 1.5}rem`,
-            }}
-            initial={{ opacity: 0, scale: 0, y: 0 }}
+            className="absolute pointer-events-none z-50 text-xl will-change-transform"
+            style={{ left: sparkle.x, top: sparkle.y }}
+            initial={{ opacity: 0, scale: 0 }}
             animate={{
-              opacity: [0, 1, 1, 0],
-              scale: [0, 1.2, 1, 0.5],
-              y: [0, -40 - Math.random() * 30],
-              x: (Math.random() - 0.5) * 40,
-              rotate: Math.random() * 360,
+              opacity: [0, 1, 0],
+              scale: [0, 1, 0.5],
+              y: -30,
             }}
-            exit={{ opacity: 0, scale: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {sparkle.emoji}
           </motion.span>

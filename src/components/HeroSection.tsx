@@ -244,41 +244,38 @@ export const HeroSection = () => {
     };
   }, [speakGreetingOnce, startMusic, isMusicPlaying, musicMuted]);
 
-  // Reset idle timer whenever user interacts
+  // Reset idle timer whenever user interacts - increased delay for performance
   const resetIdleTimer = useCallback(() => {
     if (idleTimerRef.current) {
       clearTimeout(idleTimerRef.current);
     }
     setIsWiggling(false);
     
-    // Only set wiggle timer if quest is not completed
+    // Only set wiggle timer if quest is not completed - increased to 10 seconds
     if (!isCompleted) {
       idleTimerRef.current = setTimeout(() => {
         setIsWiggling(true);
         setMascotMood("wiggle");
-        // Only play sounds after the user has interacted once (prevents autoplay blocks on iOS).
         if (hasInteractedRef.current) {
           playWave();
         }
         trackMascotInteraction("idle_wiggle");
         
-        // Stop wiggling after 3 seconds (extended for better visibility)
         setTimeout(() => {
           setIsWiggling(false);
           if (!isCompleted) setMascotMood("idle");
-        }, 3000);
-      }, 5000); // 5 seconds of inactivity
+        }, 2500);
+      }, 10000); // Increased from 5000 to 10000
     }
   }, [isCompleted, playWave, trackMascotInteraction]);
 
-  // Start idle timer on mount and reset on any interaction
+  // Start idle timer on mount - use passive listeners
   useEffect(() => {
     resetIdleTimer();
     
-    // Add global interaction listeners
     const handleInteraction = () => resetIdleTimer();
-    window.addEventListener("click", handleInteraction);
-    window.addEventListener("touchstart", handleInteraction);
+    window.addEventListener("click", handleInteraction, { passive: true });
+    window.addEventListener("touchstart", handleInteraction, { passive: true });
     
     return () => {
       if (idleTimerRef.current) {
@@ -420,13 +417,11 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative min-h-screen">
         <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
-          {/* Playful animated background */}
-          <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="medium" />
+          {/* Simplified animated background - reduced intensity */}
+          <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="light" />
           
-          <FloatingBubbles />
-          
-          {/* Floating sparkles when completed */}
-          {isCompleted && <FloatingSparkles count={20} />}
+          {/* Floating sparkles when completed - reduced count */}
+          {isCompleted && <FloatingSparkles count={8} />}
         
         {/* ToothyQuest Logo - Top left corner */}
         <motion.div

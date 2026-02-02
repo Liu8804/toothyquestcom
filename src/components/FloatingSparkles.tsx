@@ -1,6 +1,5 @@
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
-import { useMascotSounds } from "@/hooks/useMascotSounds";
+import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useMemo, useState } from "react";
 
 interface FloatingSparklesProps {
   count?: number;
@@ -12,72 +11,65 @@ interface FloatingSparklesProps {
 }
 
 /**
- * FloatingSparkles - Ambient sparkle particles with optional synced sounds
- * When withSound is true, plays subtle sparkle chimes periodically
+ * FloatingSparkles - Optimized ambient sparkle particles
+ * Reduced count and simplified animations for better performance
  */
 const FloatingSparkles = ({ 
-  count = 15, 
+  count = 8, // Reduced default from 15
   className = "",
   withSound = false,
-  soundInterval = 3000,
+  soundInterval = 5000, // Increased from 3000
 }: FloatingSparklesProps) => {
-  const { playSparkleChime } = useMascotSounds();
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Play periodic sparkle sounds when enabled
+  const prefersReducedMotion = useReducedMotion();
+  const [isVisible, setIsVisible] = useState(true);
+  
+  // Disable when tab is not visible
   useEffect(() => {
-    if (!withSound) return;
+    const handleVisibility = () => setIsVisible(!document.hidden);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
+  }, []);
 
-    // Play initial sound after a short delay
-    const initialTimeout = setTimeout(() => {
-      playSparkleChime();
-    }, 1500);
+  // Pre-compute sparkle positions to avoid re-renders
+  const sparkles = useMemo(() => {
+    const emojis = ["✨", "⭐"];
+    return [...Array(Math.min(count, 8))].map((_, i) => ({
+      id: i,
+      emoji: emojis[i % 2],
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: i * 0.4,
+      duration: 5 + (i % 3),
+    }));
+  }, [count]);
 
-    // Then play at intervals
-    intervalRef.current = setInterval(() => {
-      // Only play occasionally (30% chance) to keep it subtle
-      if (Math.random() > 0.7) {
-        playSparkleChime();
-      }
-    }, soundInterval);
-
-    return () => {
-      clearTimeout(initialTimeout);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [withSound, soundInterval, playSparkleChime]);
+  // Skip rendering if reduced motion is preferred or tab is hidden
+  if (prefersReducedMotion || !isVisible) {
+    return null;
+  }
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
-      {[...Array(count)].map((_, i) => (
+      {sparkles.map((sparkle) => (
         <motion.div
-          key={i}
-          className="absolute"
-          initial={{
-            x: `${Math.random() * 100}%`,
-            y: `${Math.random() * 100}%`,
-            opacity: 0,
-            scale: 0,
+          key={sparkle.id}
+          className="absolute will-change-transform"
+          style={{
+            left: `${sparkle.x}%`,
+            top: `${sparkle.y}%`,
           }}
           animate={{
-            y: [`${Math.random() * 100}%`, `${Math.random() * 100}%`],
-            x: [`${Math.random() * 100}%`, `${Math.random() * 100}%`],
-            opacity: [0, 1, 0.8, 0],
-            scale: [0, 1, 0.8, 0],
-            rotate: [0, 180, 360],
+            opacity: [0, 0.7, 0],
+            scale: [0.5, 1, 0.5],
           }}
           transition={{
-            duration: 4 + Math.random() * 3,
+            duration: sparkle.duration,
             repeat: Infinity,
-            delay: Math.random() * 3,
+            delay: sparkle.delay,
             ease: "easeInOut",
           }}
         >
-          <span className="text-lg md:text-xl">
-            {["✨", "⭐", "🌟", "💫"][Math.floor(Math.random() * 4)]}
-          </span>
+          <span className="text-base">{sparkle.emoji}</span>
         </motion.div>
       ))}
     </div>
