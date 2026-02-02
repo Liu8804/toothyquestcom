@@ -66,6 +66,56 @@ export const useRouteMusicController = () => {
     previousPathRef.current = currentPath;
   }, [location.pathname]);
 
+  // Many "games/quizzes" are opened as modal overlays on the home route ("/")
+  // so route changes never occur. Detect blocking modals and stop home music.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    if (location.pathname !== "/") return;
+
+    const isBlockingOverlayOpen = () => {
+      // Radix Dialog / Sheet typically renders role="dialog" and toggles data-state.
+      const radixDialogOpen = !!document.querySelector(
+        '[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]',
+      );
+
+      // Some libraries lock scrolling on open modals.
+      const bodyScrollLocked = document.body?.hasAttribute?.("data-scroll-locked") ?? false;
+
+      return radixDialogOpen || bodyScrollLocked;
+    };
+
+    const stopIfNeeded = () => {
+      if (isBlockingOverlayOpen()) {
+        stopHomeMusicGlobally();
+      }
+    };
+
+    // Run once immediately in case a modal is already open.
+    stopIfNeeded();
+
+    let rafId: number | null = null;
+    const scheduleCheck = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        stopIfNeeded();
+      });
+    };
+
+    const observer = new MutationObserver(() => scheduleCheck());
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["data-state", "role", "data-scroll-locked"],
+    });
+
+    return () => {
+      observer.disconnect();
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
+    };
+  }, [location.pathname]);
+
   return null;
 };
 
