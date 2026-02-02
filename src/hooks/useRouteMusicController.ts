@@ -34,17 +34,19 @@ export const registerHomeMusicAudio = (audio: HTMLAudioElement | null) => {
 };
 
 export const stopHomeMusicGlobally = () => {
-  console.log("stopHomeMusicGlobally called, callback exists:", !!stopMusicCallback);
-  
-  if (stopMusicCallback) {
-    stopMusicCallback();
-  }
-  
-  // Fallback: directly stop the audio element if callback was unregistered
+  // Always stop immediately via the audio element to avoid any fade-out overlap
+  // with voice/quiz narration.
   if (homeMusicAudioRef) {
-    console.log("Directly stopping home music audio element");
+    // Ensure any hook-level fade-out logic short-circuits.
+    homeMusicAudioRef.volume = 0;
     homeMusicAudioRef.pause();
     homeMusicAudioRef.currentTime = 0;
+  }
+
+  // Also call the hook-level stop callback so it can clean up intervals/state.
+  // (This may fade out, but audio is already paused above.)
+  if (stopMusicCallback) {
+    stopMusicCallback();
   }
 };
 
