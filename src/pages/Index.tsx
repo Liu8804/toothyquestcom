@@ -267,8 +267,8 @@ const Index = () => {
         {/* Free Preview Banner (only shows when not purchased) */}
         <FreePreviewBanner />
         
-        {/* Subtle floating sparkles background */}
-        <FloatingSparkles count={10} className="fixed inset-0 z-0 opacity-50" />
+        {/* Subtle floating sparkles background - reduced count for performance */}
+        <FloatingSparkles count={5} className="fixed inset-0 z-0 opacity-40" />
 
         {/* Floating Tooth Pet Companions */}
         {user && selectedChild && (
