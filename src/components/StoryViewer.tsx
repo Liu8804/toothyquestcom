@@ -7,6 +7,7 @@ import { useSoundEffects, SOUND_PROMPTS } from "@/hooks/useSoundEffects";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuestVoice } from "@/hooks/useQuestVoice";
+import { stopHomeMusicGlobally } from "@/hooks/useRouteMusicController";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
@@ -57,6 +58,13 @@ const StoryViewer = ({
   const [showBracesEffect, setShowBracesEffect] = useState(false);
   const [showBracesReward, setShowBracesReward] = useState(false);
   const questCompleted = isQuestCompleted(story.id);
+
+  // Home music should ONLY be audible on the home screen UI.
+  // Story/quiz experiences are overlays on the home route, so route-based stopping
+  // won’t trigger—force-stop immediately to prevent narration interference.
+  useEffect(() => {
+    stopHomeMusicGlobally();
+  }, [story.id]);
 
   // Reset intro and quiz when story changes and speak intro
   useEffect(() => {
