@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getEffectiveVolume, getVolumeSettings } from "@/components/VolumeControlPanel";
 import { isVoiceActive, unlockAudioContext } from "./useAudioManager";
-import { registerMusicStopCallback, unregisterMusicStopCallback } from "./useRouteMusicController";
+import { registerMusicStopCallback, unregisterMusicStopCallback, registerHomeMusicAudio } from "./useRouteMusicController";
 
 /**
  * Home Screen Background Music
@@ -142,6 +142,9 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
         
         audio.src = AUDIO_PATH;
         audioRef.current = audio;
+        
+        // Register audio element for direct stop capability
+        registerHomeMusicAudio(audio);
       }
       
       // Start with volume at 0 for fade-in
@@ -208,6 +211,7 @@ export const useHomeMusic = (): UseHomeMusicReturn => {
     registerMusicStopCallback(stop);
     return () => {
       unregisterMusicStopCallback();
+      // Note: Don't unregister audio element here - let route controller handle stop
       stop();
       if (audioRef.current) {
         audioRef.current = null;
