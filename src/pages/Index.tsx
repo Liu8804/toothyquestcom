@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
-
 import AdventuresSection from "@/components/AdventuresSection";
 import StoryModeSection from "@/components/StoryModeSection";
 import DentalHelpersWorld from "@/components/DentalHelpersWorld";
@@ -19,20 +18,13 @@ import FloatingSparkles from "@/components/FloatingSparkles";
 import FloatingUnlockCTA from "@/components/FloatingUnlockCTA";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import SplashScreen from "@/components/SplashScreen";
-import FreePreviewBanner from "@/components/FreePreviewBanner";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
-import FloatingToothPets from "@/components/FloatingToothPets";
 import DailyTaskModal from "@/components/DailyTaskModal";
 import StreakRecoveryModal from "@/components/StreakRecoveryModal";
 import DailyBonusModal from "@/components/DailyBonusModal";
 import RewardsPanel from "@/components/rewards/RewardsPanel";
-import SparkMeter from "@/components/rewards/SparkMeter";
 import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
-import ReferralProgram from "@/components/ReferralProgram";
-import AdminDiagnosticsPanel from "@/components/admin/AdminDiagnosticsPanel";
 import WorldSelector from "@/components/worlds/WorldSelector";
-import VolumeControlPanel from "@/components/VolumeControlPanel";
-import AudioDiagnosticsPanel from "@/components/audio/AudioDiagnosticsPanel";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
 import { usePageViewTracking } from "@/hooks/useAnalytics";
@@ -45,8 +37,7 @@ import { useStreak } from "@/hooks/useStreak";
 import { useStreakRecovery } from "@/hooks/useStreakRecovery";
 import { useDailyReminder } from "@/hooks/useDailyReminder";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { LayoutDashboard, LogIn, MessageCircle, Trophy, Mic, Volume2, Sparkles, Bug } from "lucide-react";
+import { LayoutDashboard, LogIn, MessageCircle, Trophy } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 
@@ -59,13 +50,12 @@ const Index = () => {
   const { 
     totalPoints, 
     streak, 
-    unlockedPets, 
     dailyBonusClaimed, 
     claimDailyBonus 
   } = useRewardsSystem(selectedChild?.id);
   
-  // Home screen background music
-  const { isPlaying: isMusicPlaying } = useHomeMusic();
+  // Home screen background music (tracked for potential use)
+  useHomeMusic();
   
   // Use the consolidated daily task hook
   const { hasCompletedToday: taskCompleted } = useDailyTask(selectedChild?.id);
@@ -83,19 +73,10 @@ const Index = () => {
   const [showDailyTask, setShowDailyTask] = useState(false);
   const [showDailyBonus, setShowDailyBonus] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
-  const [showVolumeControl, setShowVolumeControl] = useState(false);
-  const [showAudioDiagnostics, setShowAudioDiagnostics] = useState(false);
   const [showStreakRecovery, setShowStreakRecovery] = useState(false);
   const [previousStreakValue, setPreviousStreakValue] = useState(0);
   const [isNavVisible, setIsNavVisible] = useState(true);
-  const [showNavBounce, setShowNavBounce] = useState(false);
-  const [isFirstVisit, setIsFirstVisit] = useState(false);
   const lastScrollY = useRef(0);
-
-  const openVoiceQuiz = useCallback(() => {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event("toothyquest:openVoiceQuiz"));
-  }, []);
 
   // Track page views
   usePageViewTracking();
@@ -107,43 +88,18 @@ const Index = () => {
     return () => window.removeEventListener('toothyquest:openAuth', handleOpenAuth);
   }, []);
 
-  // First visit bounce animation for nav bar
-  useEffect(() => {
-    const hasSeenNav = sessionStorage.getItem('navBounceShown');
-    if (!hasSeenNav) {
-      setIsFirstVisit(true);
-      // Start bounce animation after splash screen
-      const bounceTimer = setTimeout(() => {
-        setShowNavBounce(true);
-        sessionStorage.setItem('navBounceShown', 'true');
-        // Stop bounce after 3 seconds
-        setTimeout(() => {
-          setShowNavBounce(false);
-          setIsFirstVisit(false);
-        }, 3000);
-      }, 1500);
-      return () => clearTimeout(bounceTimer);
-    }
-  }, []);
-
-  // Auto-hide nav bar on scroll (but not during first visit bounce)
+  // Auto-hide nav bar on scroll
   useEffect(() => {
     const handleScroll = () => {
-      // Don't hide during first visit bounce animation
-      if (isFirstVisit) return;
-      
       const currentScrollY = window.scrollY;
-      const scrollThreshold = 50; // Minimum scroll to trigger hide/show
+      const scrollThreshold = 50;
       
       if (currentScrollY > lastScrollY.current + scrollThreshold) {
-        // Scrolling down - hide nav
         setIsNavVisible(false);
       } else if (currentScrollY < lastScrollY.current - scrollThreshold) {
-        // Scrolling up - show nav
         setIsNavVisible(true);
       }
       
-      // Always show when at top
       if (currentScrollY < 100) {
         setIsNavVisible(true);
       }
@@ -153,7 +109,7 @@ const Index = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isFirstVisit]);
+  }, []);
 
   // Check if we've shown splash today (only show once per session)
   useEffect(() => {
@@ -264,49 +220,16 @@ const Index = () => {
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       
       <main className="min-h-screen relative">
-        {/* Free Preview Banner (only shows when not purchased) */}
-        <FreePreviewBanner />
-        
-        {/* Subtle floating sparkles background - reduced count for performance */}
-        <FloatingSparkles count={5} className="fixed inset-0 z-0 opacity-40" />
+        {/* Subtle floating sparkles background - reduced for cleaner look */}
+        <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 
-        {/* Floating Tooth Pet Companions */}
-        {user && selectedChild && (
-          <FloatingToothPets 
-            unlockedPets={unlockedPets}
-            activePetId={unlockedPets[unlockedPets.length - 1] || "toothy"}
-          />
-        )}
-
-        {/* Auth button, language switcher and streak tracker - floating nav - bottom on mobile, top-right on desktop */}
+        {/* Simplified floating nav - bottom on mobile, top-right on desktop */}
         <div 
-          className={`fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1 sm:gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-2 py-1.5 shadow-lg border border-border/50 scale-90 md:scale-100 transition-all duration-300 ${
+          className={`fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-3 py-2 shadow-lg border border-border/50 transition-all duration-300 ${
             isNavVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 md:translate-y-0 md:-translate-y-20 opacity-0 pointer-events-none'
-          } ${showNavBounce ? 'animate-bounce ring-2 ring-primary ring-offset-2 ring-offset-background' : ''}`}
+          }`}
         >
-          {/* Volume Control */}
-          <Button
-            onClick={() => setShowVolumeControl(true)}
-            variant="ghost"
-            size="icon"
-            className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
-            title="Sound Settings"
-          >
-            <Volume2 className="w-4 h-4" />
-          </Button>
-
-          {/* Audio Diagnostics */}
-          <Button
-            onClick={() => setShowAudioDiagnostics(true)}
-            variant="ghost"
-            size="icon"
-            className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
-            title="Audio Diagnostics"
-          >
-            <Bug className="w-4 h-4" />
-          </Button>
-
-          {/* Sparkle Points */}
+          {/* Sparkle Points - only for logged in users */}
           {user && selectedChild && (
             <Button
               onClick={() => setShowRewards(true)}
@@ -319,18 +242,8 @@ const Index = () => {
             </Button>
           )}
 
-          {/* Quick Voice access */}
-          <Button
-            onClick={openVoiceQuiz}
-            variant="ghost"
-            size="icon"
-            className="rounded-full w-8 h-8 sm:w-9 sm:h-9"
-          >
-            <Mic className="w-4 h-4" />
-          </Button>
-
-          <LanguageSwitcher />
           <StreakTracker />
+          <LanguageSwitcher />
           
           {!loading && (
             <>
@@ -347,40 +260,18 @@ const Index = () => {
                   <span className="hidden sm:inline text-sm">Dashboard</span>
                 </Button>
               ) : (
-                <div className="flex items-center gap-1">
-                  <Button
-                    asChild
-                    variant="secondary"
-                    size="sm"
-                    className="rounded-full gap-1.5 px-3"
-                  >
-                    <Link to="/guest">
-                      <Sparkles className="w-4 h-4" />
-                      <span className="hidden sm:inline text-sm">Guest</span>
-                    </Link>
-                  </Button>
-
-                  <Button
-                    onClick={() => setShowAuth(true)}
-                    variant="outline"
-                    size="sm"
-                    className="rounded-full gap-1.5 px-3"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span className="hidden sm:inline text-sm">Login</span>
-                  </Button>
-                </div>
+                <Button
+                  onClick={() => setShowAuth(true)}
+                  size="sm"
+                  className="rounded-full gap-1.5 px-3"
+                >
+                  <LogIn className="w-4 h-4" />
+                  <span className="text-sm">Sign In</span>
+                </Button>
               )}
             </>
           )}
         </div>
-
-        {/* Referral Program - separate from nav */}
-        {user && (
-          <div className="fixed top-3 left-3 z-40">
-            <ReferralProgram />
-          </div>
-        )}
 
         <HeroSection />
         <WorldSelector />
@@ -454,24 +345,8 @@ const Index = () => {
         {/* Price Change Announcement */}
         <PriceChangeAnnouncement />
 
-        {/* Admin-only diagnostics (no sensitive data) */}
-        <AdminDiagnosticsPanel />
-
         {/* Owner diagnostics (for your test accounts) */}
         <OwnerDiagnosticsPanel />
-        
-        {/* Volume Control Panel */}
-        <VolumeControlPanel 
-          isOpen={showVolumeControl} 
-          onClose={() => setShowVolumeControl(false)} 
-        />
-
-        {/* Audio Diagnostics Panel */}
-        <AudioDiagnosticsPanel
-          isOpen={showAudioDiagnostics}
-          onClose={() => setShowAudioDiagnostics(false)}
-          isMusicPlaying={isMusicPlaying}
-        />
       </main>
     </>
   );
