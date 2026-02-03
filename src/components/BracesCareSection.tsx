@@ -272,7 +272,7 @@ const BracesCareSection = () => {
             className="relative order-2 lg:order-1"
           >
             <div className="bg-gradient-to-br from-pink-100 to-purple-100 rounded-3xl p-8 shadow-card">
-              <AnimatedBracesMouth activeAnimation={activeTipData?.animation || "brush"} />
+              <BracesCareIllustration activeTip={activeTip} />
               
               {/* Bracey with tip-specific message */}
               <motion.div
