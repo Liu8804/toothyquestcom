@@ -239,7 +239,7 @@ export const stories: Story[] = [
     story: "A group of tiny teeth went on a quest to find the Shiny Smile Crown. Along the way, they met sticky plaque and sugary traps! With brushing and flossing, they reached the crown and celebrated with sparkling smiles.",
     lesson: "Daily care leads to healthy teeth.",
     questEnding: "Complete your quest with daily brushing!",
-    illustrationPath: "/stories/smile-quest.png",
+    illustrationPath: "/stories/smile-quest-adventure.webp",
     emoji: "👑",
     isFree: false,
     quiz: {
@@ -257,7 +257,7 @@ export const stories: Story[] = [
     story: "Zara mixed a sparkling mouthwash potion with magic bubbles. She swished it around and… POP! Tiny sparkling shields appeared on all her teeth. Her mouth felt fresh and magical!",
     lesson: "Rinsing helps keep teeth healthy.",
     questEnding: "Swish some magic mouthwash!",
-    illustrationPath: "/stories/magic-mouthwash.png",
+    illustrationPath: "/stories/magic-mouthwash-potion.webp",
     emoji: "✨",
     isFree: false,
     quiz: {
@@ -311,7 +311,7 @@ export const stories: Story[] = [
     story: "Sneaky Plaque Pirates tried to attack Leo's teeth while he slept. \"Not on my watch!\" Leo shouted, grabbing his toothbrush sword. Swish-swash! The pirates were defeated, leaving Leo's teeth safe and sparkly.",
     lesson: "Regular brushing fights plaque.",
     questEnding: "Defeat the plaque pirates with your brush!",
-    illustrationPath: "/stories/plaque-pirates.png",
+    illustrationPath: "/stories/plaque-pirates-adventure.webp",
     emoji: "🏴‍☠️",
     isFree: false,
     quiz: {
@@ -329,7 +329,7 @@ export const stories: Story[] = [
     story: "A tiny tooth peeked out from the back of the mouth. \"I don't like brushing,\" the tooth whispered. \"The toothbrush is too tickly!\" Toothy smiled. \"Let's try slowly,\" he said. The toothbrush moved gently. Swish… swish… swish. The tooth started to giggle. \"Oh!\" said the tooth. \"That feels nice!\" Soon, the tooth was sparkling.",
     lesson: "Trying something new can feel scary — but it can turn fun.",
     questEnding: "Brush gently and make your teeth giggle!",
-    illustrationPath: "/stories/shy-tooth.png",
+    illustrationPath: "/stories/shy-tooth-friend.webp",
     emoji: "😊",
     isFree: false,
     quiz: {
@@ -347,7 +347,7 @@ export const stories: Story[] = [
     story: "Timmy felt his tooth move. \"It's wiggling!\" he said. The tooth was nervous. \"What if I fall out?\" it whispered. Toothy popped in. \"Wiggly teeth mean you're growing!\" Timmy smiled and kept brushing gently every day. One morning… plop! The tooth was ready.",
     lesson: "Growing up means change — and that's okay.",
     questEnding: "Growing teeth need gentle care!",
-    illustrationPath: "/stories/wiggly-tooth.png",
+    illustrationPath: "/stories/wiggly-tooth-excitement.webp",
     emoji: "🦷",
     isFree: false,
     quiz: {
@@ -383,7 +383,7 @@ export const stories: Story[] = [
     story: "A tooth wanted candy right now. \"I don't want to wait!\" Toothy shook his head kindly. \"First brush, then treat.\" The tooth waited. Brush… rinse… smile! The candy tasted even better after.",
     lesson: "Good habits come first.",
     questEnding: "Brush first, then enjoy your treat!",
-    illustrationPath: "/stories/patient-tooth.png",
+    illustrationPath: "/stories/patient-tooth-waiting.webp",
     emoji: "⏰",
     isFree: false,
     quiz: {
@@ -437,7 +437,7 @@ export const stories: Story[] = [
     story: "After bedtime, crumbs stayed behind. The teeth whispered, \"Uh-oh.\" Tiny sugar bugs woke up. They started a midnight party! Suddenly— Swish! Scrub! Toothy arrived with toothpaste foam. \"Bedtime brushing saves the day,\" he said.",
     lesson: "Brushing before bed is very important.",
     questEnding: "Brush your teeth before sleep to keep them safe!",
-    illustrationPath: "/stories/midnight-snack.png",
+    illustrationPath: "/stories/midnight-snack-battle.webp",
     emoji: "🌙",
     isFree: false,
     quiz: {
@@ -455,7 +455,7 @@ export const stories: Story[] = [
     story: "A tooth was covered in sticky sugar. \"I'm stuck!\" it cried. Toothy squeezed the toothpaste. Bubbles filled the mouth. Pop! Pop! Pop! The sugar floated away. \"I feel clean!\" said the tooth happily.",
     lesson: "Toothpaste helps clean hard-to-reach spots.",
     questEnding: "Let's use toothpaste and make bubbles!",
-    illustrationPath: "/stories/bubble-rescue.png",
+    illustrationPath: "/stories/bubble-toothpaste-rescue.webp",
     emoji: "🫧",
     isFree: false,
     quiz: {
@@ -527,7 +527,7 @@ export const stories: Story[] = [
     story: "The teeth felt dull and tired. \"We need help!\" Toothy called the Super Smile Squad. Brush Hero! Floss Friend! Rinse Ranger! Together they cleaned every tooth. The smiles sparkled brighter than ever.",
     lesson: "Working together keeps smiles strong.",
     questEnding: "Join the Super Smile Squad and brush!",
-    illustrationPath: "/stories/super-smile-squad.png",
+    illustrationPath: "/stories/super-smile-squad-heroes.webp",
     emoji: "🦸‍♀️",
     isFree: false,
     quiz: {
@@ -581,7 +581,7 @@ export const stories: Story[] = [
     story: "Toothy waved his brush. \"Sparkle… scrub… swish!\" The teeth repeated the words. They brushed together. Shiny magic filled the mouth. \"Spell complete!\" cheered the teeth.",
     lesson: "Brushing can be fun and magical.",
     questEnding: "Say the sparkle spell and brush!",
-    illustrationPath: "/stories/sparkle-spell.png",
+    illustrationPath: "/stories/sparkle-spell-magic.webp",
     emoji: "✨",
     isFree: false,
     quiz: {
@@ -599,7 +599,7 @@ export const stories: Story[] = [
     story: "As the child fell asleep, the teeth yawned. \"Time to rest,\" they said. In Dreamland, Toothy guided them. Brush softly… rinse gently… The teeth curled up, clean and happy. They dreamed of shiny smiles.",
     lesson: "Clean teeth sleep better.",
     questEnding: "Brush before bed and sweet dreams!",
-    illustrationPath: "/stories/dreamland-adventure.png",
+    illustrationPath: "/stories/dreamland-teeth-adventure.webp",
     emoji: "💤",
     isFree: false,
     quiz: {
@@ -923,7 +923,7 @@ export const stories: Story[] = [
     story: "Dark clouds gathered over Mouthland — a candy storm was coming! The dentist knight handed you a magical brush. \"Quick! Paint the invisible armor on each molar before the candy falls!\" You worked fast, covering each tooth with protective sealant. Just in time! Candies rained down but bounced right off the magical shields. The molars glowed with protective magic!",
     lesson: "Sealants prevent cavities and protect teeth from sticky candy attacks.",
     questEnding: "The molars are protected with magic armor!",
-    illustrationPath: "/stories/tooth-armor.png",
+    illustrationPath: "/stories/tooth-armor-shield.webp",
     emoji: "🛡️",
     miniGameInstructions: "Paint the armor on each tooth before the candy falls.",
     rewards: {
@@ -1016,7 +1016,7 @@ export const stories: Story[] = [
     story: "Something was hiding inside the teeth, but what? The dentist detective pulled out a magic camera — an X-ray machine! \"This helps us see what's hidden inside,\" Toothy explained. The camera showed shadows where germs were hiding. \"Match each germ to its tooth!\" You carefully identified each problem spot. The germs vanished, and a detective hat popped up on your head!",
     lesson: "X-rays help dentists see problems before they grow.",
     questEnding: "You're now a certified Tooth Detective!",
-    illustrationPath: "/stories/tooth-detective.png",
+    illustrationPath: "/stories/tooth-detective-xray.webp",
     emoji: "🔍",
     miniGameInstructions: "Match germs seen in the X-ray to the correct tooth.",
     rewards: {
@@ -1496,7 +1496,7 @@ export const stories: Story[] = [
     story: "Plaque the sticky germ was trying to build a home on teeth! \"Not so fast!\" said Toothy. \"We patrol every day!\" With brushing and flossing, the plaque had nowhere to hide. \"RETREAT!\" cried the germs. The teeth stayed clean and shiny. Plaque Patrol wins again!",
     lesson: "Daily brushing and flossing remove plaque!",
     questEnding: "Plaque Patrol saves the day!",
-    illustrationPath: "/stories/plaque-patrol.png",
+    illustrationPath: "/stories/plaque-patrol-team.webp",
     emoji: "🔍",
     miniGameInstructions: "Find and remove all the plaque!",
     rewards: {
