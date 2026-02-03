@@ -81,7 +81,7 @@ export const storiesEs: Story[] = [
     story: "¡Bracey recibió sus primeros frenos hoy! Al principio, se sintió un poco nerviosa — el metal se sentía extraño en sus dientes. Pero Toothy llegó saltando con una gran sonrisa. \"¡No te preocupes, Bracey! ¡Los frenos son como armadura para tus dientes!\" Le mostró cómo cepillarse suavemente alrededor de cada bracket. \"¿Ves? ¡Es fácil cuando te tomas tu tiempo!\" Bracey sonrió. Sus nuevos frenos brillaban en el espejo.",
     lesson: "Los frenos ayudan a que tu sonrisa sea hermosa — ¡solo cepíllate con cuidado!",
     questEnding: "¡Bienvenida a la aventura de los frenos, Bracey!",
-    illustrationPath: "/stories/bracey-first-day.png",
+    illustrationPath: "/braces/braces-care-hero.webp",
     emoji: "🦷",
     isFree: false,
     quiz: {
@@ -659,7 +659,7 @@ export const storiesEs: Story[] = [
     story: "¡Bracey eligió sus colores favoritos para las bandas de sus frenos — rosa y morado! ¡Se veían geniales! Toothy le enseñó un truco especial. \"Cepilla alrededor de cada bracket en círculos pequeños,\" dijo. \"¡Así ninguna comida se puede esconder!\" Bracey practicó sus nuevos movimientos de cepillado. Sus dientes brillaban como gemas con sus bandas coloridas.",
     lesson: "Cepillarse cuidadosamente alrededor de los brackets mantiene los dientes brillantes.",
     questEnding: "¡Tu sonrisa colorida está brillando!",
-    illustrationPath: "/stories/bracey-colorful-bands.png",
+    illustrationPath: "/braces/braces-tips-infographic.webp",
     emoji: "🌈",
     isFree: false,
     quiz: {
@@ -677,7 +677,7 @@ export const storiesEs: Story[] = [
     story: "Bracey probó un dulce pegajoso, ¡y se atoró en sus frenos! \"¡Oh no!\" gritó. Toothy voló rápidamente. \"¡No te preocupes! ¡Conozco un truco!\" Le dio un cepillo de dientes e hilo dental. \"Primero cepilla suavemente, luego usa hilo dental para los pedacitos difíciles.\" Bracey siguió los pasos. ¡Pop! El dulce desapareció. \"¡Mis frenos se sienten limpios de nuevo!\" aplaudió.",
     lesson: "Cepillarse y usar hilo dental remueve la comida atrapada de los frenos.",
     questEnding: "¡Salvaste tus frenos de problemas pegajosos!",
-    illustrationPath: "/stories/bracey-sticky-snack.png",
+    illustrationPath: "/braces/braces-adventure.webp",
     emoji: "🍬",
     isFree: false,
     quiz: {
@@ -695,7 +695,7 @@ export const storiesEs: Story[] = [
     story: "Bracey notó que sus frenos se sentían un poco flojos después de que su ortodoncista los ajustó. \"¿Algo está mal?\" preguntó nerviosa. Toothy sonrió. \"¡Eso es totalmente normal! ¡Significa que tus dientes se están moviendo a los lugares correctos!\" Bracey se sintió mejor. Siguió cepillándose suavemente todos los días. \"¡Pronto mi sonrisa será perfecta!\" dijo feliz.",
     lesson: "¡Los frenos flojos significan que tus dientes se están enderezando!",
     questEnding: "¡Sigue cepillándote — tu sonrisa está en camino!",
-    illustrationPath: "/stories/bracey-wiggly-braces.png",
+    illustrationPath: "/braces/orthodontic-fun.webp",
     emoji: "✨",
     isFree: false,
     quiz: {
@@ -713,7 +713,7 @@ export const storiesEs: Story[] = [
     story: "Bracey aprendió que cepillarse antes de dormir es súper importante, especialmente con frenos. \"A los bichos del azúcar les encanta hacer fiestas en la noche,\" advirtió Toothy. \"¡Pero si te cepillas antes de dormir, no tienen dónde esconderse!\" Bracey agarró su cepillo de dientes. Se cepilló alrededor de cada bracket cuidadosamente. \"Buenas noches, bichos del azúcar — ¡aquí no son bienvenidos!\" Sus frenos brillaron mientras sonreía en el espejo.",
     lesson: "El cepillado nocturno mantiene los frenos limpios mientras duermes.",
     questEnding: "¡Dulces sueños con una sonrisa brillante!",
-    illustrationPath: "/stories/bracey-nighttime.png",
+    illustrationPath: "/braces/orthodontic-lab.webp",
     emoji: "🌙",
     isFree: false,
     quiz: {
@@ -731,7 +731,7 @@ export const storiesEs: Story[] = [
     story: "¡Bracey eligió nuevas bandas coloridas para sus frenos — azul y verde esta vez! ¡Se veían increíbles! Toothy le recordó que cepillarse alrededor de cada banda mantiene su sonrisa brillante. \"Piensa en cada banda como un pequeño tesoro,\" dijo. \"¡Límpialas cuidadosamente!\" Bracey se cepilló suavemente alrededor de cada banda. ¡Su sonrisa arcoíris brilló intensamente!",
     lesson: "El cepillado cuidadoso alrededor de las bandas mantiene tu sonrisa brillante.",
     questEnding: "¡Tu sonrisa arcoíris está brillando!",
-    illustrationPath: "/stories/bracey-bands-challenge.png",
+    illustrationPath: "/braces/braces-crowd.webp",
     emoji: "🎨",
     isFree: false,
     quiz: {
@@ -749,7 +749,7 @@ export const storiesEs: Story[] = [
     story: "Bracey se dio cuenta de algo increíble — ¡cuidar sus frenos le da superpoderes! ¡Una sonrisa saludable y brillante y dientes fuertes! \"Cada vez que te cepillas y usas hilo dental,\" explicó Toothy, \"¡estás haciendo tu sonrisa más fuerte!\" Bracey se sintió como una superheroína. Agarró su cepillo de dientes como una varita mágica. \"¡Súper Poder de Sonrisa, actívate!\" Sus dientes brillaron con confianza.",
     lesson: "¡Cepillarse y usar hilo dental le da superpoderes a tus dientes!",
     questEnding: "¡Has desbloqueado los superpoderes de los frenos!",
-    illustrationPath: "/stories/bracey-superpowers.png",
+    illustrationPath: "/braces/braces-care-progress.webp",
     emoji: "💪",
     isFree: false,
     quiz: {
@@ -1186,7 +1186,7 @@ export const storiesEs: Story[] = [
     story: "¡Hoy fue especial! Bracey el ayudante de frenos llegó para mostrar cómo funcionan los frenos. \"¡Somos como pequeños ayudantes que guían los dientes a su lugar!\" explicó Bracey. Los dientes estaban emocionados pero un poco nerviosos. \"No te preocupes,\" sonrió Bracey. \"Trabajamos juntos lenta y suavemente. ¡Antes de que lo sepas, tu sonrisa será perfecta!\"",
     lesson: "Los frenos guían los dientes al lugar correcto.",
     questEnding: "¡Entiendes cómo ayudan los frenos!",
-    illustrationPath: "/stories/braces-helpers.png",
+    illustrationPath: "/braces/braces-care-doctor.webp",
     emoji: "😁",
     miniGameInstructions: "¡Ayuda a Bracey a guiar los dientes a su lugar!",
     rewards: {

@@ -112,7 +112,7 @@ export const stories: Story[] = [
     story: "Bracey got her first braces today! At first, she felt a little nervous — the metal felt strange on her teeth. But Toothy bounced over with a big smile. \"Don't worry, Bracey! Braces are like armor for your teeth!\" He showed her how to brush gently around each bracket. \"See? It's easy when you take your time!\" Bracey smiled. Her new braces sparkled in the mirror.",
     lesson: "Braces help make your smile beautiful — just brush carefully!",
     questEnding: "Welcome to the braces adventure, Bracey!",
-    illustrationPath: "/stories/bracey-first-day.png",
+    illustrationPath: "/braces/braces-care-hero.webp",
     emoji: "🦷",
     isFree: false,
     quiz: {
@@ -690,7 +690,7 @@ export const stories: Story[] = [
     story: "Bracey picked her favorite colors for her braces bands — pink and purple! They looked so cool! Toothy taught her a special trick. \"Brush around each bracket in tiny circles,\" he said. \"That way, no food can hide!\" Bracey practiced her new brushing moves. Her teeth sparkled like gems with their colorful bands.",
     lesson: "Brushing carefully around brackets keeps teeth shiny.",
     questEnding: "Your colorful smile is sparkling!",
-    illustrationPath: "/stories/bracey-colorful-bands.png",
+    illustrationPath: "/braces/braces-tips-infographic.webp",
     emoji: "🌈",
     isFree: false,
     quiz: {
@@ -708,7 +708,7 @@ export const stories: Story[] = [
     story: "Bracey tried a sticky candy, and it got stuck in her braces! \"Oh no!\" she cried. Toothy flew over quickly. \"Don't worry! I know a trick!\" He handed her a toothbrush and floss. \"Gently brush first, then use floss to get the tricky bits.\" Bracey followed the steps. Pop! The candy was gone. \"My braces feel clean again!\" she cheered.",
     lesson: "Brushing and flossing removes stuck food from braces.",
     questEnding: "You saved your braces from sticky trouble!",
-    illustrationPath: "/stories/bracey-sticky-snack.png",
+    illustrationPath: "/braces/braces-adventure.webp",
     emoji: "🍬",
     isFree: false,
     quiz: {
@@ -726,7 +726,7 @@ export const stories: Story[] = [
     story: "Bracey noticed her braces felt a little wiggly after her orthodontist tightened them. \"Is something wrong?\" she asked nervously. Toothy smiled. \"That's totally normal! It means your teeth are moving to the right spots!\" Bracey felt better. She kept brushing gently every day. \"Soon my smile will be perfect!\" she said happily.",
     lesson: "Wiggly braces mean your teeth are getting straighter!",
     questEnding: "Keep brushing — your smile is on its way!",
-    illustrationPath: "/stories/bracey-wiggly-braces.png",
+    illustrationPath: "/braces/orthodontic-fun.webp",
     emoji: "✨",
     isFree: false,
     quiz: {
@@ -743,7 +743,7 @@ export const stories: Story[] = [
     story: "Bracey learned that brushing before bed is super important, especially with braces. \"Sugar bugs love to party at night,\" Toothy warned. \"But if you brush before sleep, they have nowhere to hide!\" Bracey grabbed her toothbrush. She brushed around every bracket carefully. \"Goodnight, sugar bugs — you're not welcome here!\" Her braces sparkled as she smiled in the mirror.",
     lesson: "Nighttime brushing keeps braces clean while you sleep.",
     questEnding: "Sweet dreams with a sparkling smile!",
-    illustrationPath: "/stories/bracey-nighttime.png",
+    illustrationPath: "/braces/orthodontic-lab.webp",
     emoji: "🌙",
     isFree: false,
     quiz: {
@@ -761,7 +761,7 @@ export const stories: Story[] = [
     story: "Bracey picked new colorful bands for her braces — blue and green this time! They looked amazing! Toothy reminded her that brushing around each band keeps her smile sparkling. \"Think of each band as a little treasure,\" he said. \"Clean around them carefully!\" Bracey brushed gently around every single band. Her rainbow smile shined bright!",
     lesson: "Careful brushing around bands keeps your smile bright.",
     questEnding: "Your rainbow smile is shining!",
-    illustrationPath: "/stories/bracey-bands-challenge.png",
+    illustrationPath: "/braces/braces-crowd.webp",
     emoji: "🎨",
     isFree: false,
     quiz: {
@@ -779,7 +779,7 @@ export const stories: Story[] = [
     story: "Bracey realized something amazing — taking care of her braces gives her superpowers! A healthy, shiny smile and strong teeth! \"Every time you brush and floss,\" Toothy explained, \"you're making your smile stronger!\" Bracey felt like a superhero. She grabbed her toothbrush like a magic wand. \"Super Smile Power, activate!\" Her teeth glowed with confidence.",
     lesson: "Brushing and flossing gives your teeth superpowers!",
     questEnding: "You've unlocked braces superpowers!",
-    illustrationPath: "/stories/bracey-superpowers.png",
+    illustrationPath: "/braces/braces-care-progress.webp",
     emoji: "💪",
     isFree: false,
     quiz: {
@@ -1240,7 +1240,7 @@ export const stories: Story[] = [
     story: "Today was special! Bracey the braces helper arrived to show how braces work. \"We're like little helpers that guide teeth into place!\" Bracey explained. The teeth were excited but a little nervous. \"Don't worry,\" Bracey smiled. \"We work together slowly and gently. Before you know it, your smile will be perfect!\"",
     lesson: "Braces guide teeth into the right place.",
     questEnding: "You understand how braces help!",
-    illustrationPath: "/stories/braces-helpers.png",
+    illustrationPath: "/braces/braces-care-doctor.webp",
     emoji: "😁",
     miniGameInstructions: "Help Bracey guide the teeth into place!",
     rewards: {
