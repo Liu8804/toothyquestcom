@@ -22,6 +22,7 @@ export const AdventuresSection = () => {
       icon: BookOpen,
       color: "teal" as const,
       action: "scroll-to-stories",
+      backgroundImage: "/sections/story-time.webp",
     },
     {
       titleKey: "adventures.funGames.title",
@@ -29,6 +30,7 @@ export const AdventuresSection = () => {
       icon: Gamepad2,
       color: "coral" as const,
       action: "open-game",
+      backgroundImage: "/sections/games.webp",
     },
     {
       titleKey: "adventures.singAlong.title",
@@ -51,6 +53,7 @@ export const AdventuresSection = () => {
       color: "mint" as const,
       action: "open-tour",
       isNew: true,
+      backgroundImage: "/sections/explore-office.webp",
     },
   ];
 
@@ -108,6 +111,7 @@ export const AdventuresSection = () => {
                 delay={index * 0.1}
                 onClick={() => handleAdventureClick(adventure.action)}
                 isNew={'isNew' in adventure ? adventure.isNew : false}
+                backgroundImage={'backgroundImage' in adventure ? adventure.backgroundImage : undefined}
               />
             ))}
           </div>
