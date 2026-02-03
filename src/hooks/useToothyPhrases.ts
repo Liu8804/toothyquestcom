@@ -79,9 +79,16 @@ export const useToothyPhrases = () => {
       );
 
       if (!response.ok) {
+        // Check for quota errors specifically
+        if (response.status === 401) {
+          const errorData = await response.json().catch(() => ({}));
+          if (errorData?.error?.includes?.("quota") || errorData?.error?.includes?.("credits")) {
+            console.info("[ToothyPhrases] Voice quota exceeded - continuing silently");
+            return; // Gracefully continue without voice
+          }
+        }
         console.warn("[ToothyPhrases] TTS request failed:", response.status);
-        // No fallback to browser TTS - just log and return
-        return;
+        return; // Continue without voice
       }
 
       const audioBlob = await response.blob();
@@ -97,8 +104,8 @@ export const useToothyPhrases = () => {
       // Cleanup
       audio.onended = () => URL.revokeObjectURL(audioUrl);
     } catch (error) {
-      console.warn("[ToothyPhrases] Error speaking phrase:", error);
-      // No fallback - just log the error
+      // Silently continue - voice is optional
+      console.info("[ToothyPhrases] Voice unavailable, continuing silently:", error);
     }
   }, [getTextForPhrase, i18n.language]);
 
