@@ -218,6 +218,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                     description={isSpanish ? world.descriptionEs : world.description}
                     emoji={world.emoji}
                     color={world.color}
+                    backgroundImage={world.backgroundImage}
                     isLocked={world.isLocked && !isUnlocked && !isAccessLoading}
                     progress={getWorldProgress(world)}
                     onClick={() => setSelectedWorld(world)}

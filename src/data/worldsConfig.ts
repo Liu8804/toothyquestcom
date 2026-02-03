@@ -22,6 +22,7 @@ export interface World {
   descriptionEs: string;
   emoji: string;
   color: string;
+  backgroundImage?: string;
   isLocked: boolean;
   phases: Phase[];
 }
@@ -161,6 +162,7 @@ export const WORLDS: World[] = [
     descriptionEs: "Un viaje mágico que ayuda a los niños a sentirse valientes antes, durante y después del dentista.",
     emoji: "🏰",
     color: "from-primary to-secondary",
+    backgroundImage: "/worlds/dental-castle.webp",
     isLocked: false,
     phases: [
       {
@@ -221,6 +223,7 @@ export const WORLDS: World[] = [
     descriptionEs: "¡Domina el arte del cepillado con desafíos divertidos y poderes!",
     emoji: "🦸",
     color: "from-pink-400 to-fuchsia-500",
+    backgroundImage: "/worlds/brush-hero.webp",
     isLocked: false,
     phases: [
       {
@@ -281,6 +284,7 @@ export const WORLDS: World[] = [
     descriptionEs: "¡Aprende qué alimentos son amigos de los dientes y cuáles son bichos de azúcar!",
     emoji: "🍎",
     color: "from-mint to-primary",
+    backgroundImage: "/worlds/food-cavities.webp",
     isLocked: false,
     phases: [
       {
@@ -341,6 +345,7 @@ export const WORLDS: World[] = [
     descriptionEs: "¡Aventuras especiales para niños con brackets! Aprende a mantener tus brackets brillantes.",
     emoji: "✨",
     color: "from-star to-accent",
+    backgroundImage: "/worlds/braces-world.webp",
     isLocked: false,
     phases: [
       {
