@@ -73,204 +73,42 @@ const bracesTips: BracesTip[] = [
   },
 ];
 
-// Animated Braces Mouth Component
-const AnimatedBracesMouth = ({ activeAnimation }: { activeAnimation: string }) => {
+// Braces Care Illustration Component with real images
+const BracesCareIllustration = ({ activeTip }: { activeTip: string }) => {
+  // Map tips to specific images
+  const imageMap: Record<string, string> = {
+    brush: "/braces/braces-care-hero.webp",
+    floss: "/braces/braces-care-progress.webp",
+    rinse: "/braces/braces-care-doctor.webp",
+    avoid: "/braces/braces-tips-infographic.webp",
+    protect: "/braces/braces-adventure.webp",
+    visit: "/braces/orthodontic-fun.webp",
+  };
+
+  const currentImage = imageMap[activeTip] || imageMap.brush;
+
   return (
-    <div className="relative w-64 h-48 mx-auto">
-      {/* Mouth outline */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-pink-200 to-pink-300 rounded-[50%] border-4 border-pink-400"
-        animate={{ scale: [1, 1.02, 1] }}
-        transition={{ duration: 2, repeat: Infinity }}
+    <motion.div 
+      className="relative w-full aspect-[16/10] rounded-3xl overflow-hidden shadow-lg"
+      key={activeTip}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+    >
+      <img 
+        src={currentImage}
+        alt="Braces care illustration"
+        className="w-full h-full object-cover"
       />
-      
-      {/* Teeth row - top */}
-      <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-1">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`top-${i}`}
-            className="relative"
-            animate={
-              activeAnimation === "brush"
-                ? { y: [0, -2, 0], rotate: [0, 5, -5, 0] }
-                : {}
-            }
-            transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
-          >
-            <div className="w-6 h-8 bg-white rounded-b-lg border-2 border-gray-200 shadow-sm" />
-            <motion.div
-              className="absolute top-3 left-1/2 -translate-x-1/2 w-4 h-3 bg-gray-400 rounded-sm border border-gray-500"
-              animate={
-                activeAnimation === "smile"
-                  ? { backgroundColor: ["#9CA3AF", "#EC4899", "#8B5CF6", "#3B82F6", "#9CA3AF"] }
-                  : {}
-              }
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-            {i < 5 && (
-              <div className="absolute top-4 left-6 w-2 h-0.5 bg-gray-500" />
-            )}
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Teeth row - bottom */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-1">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={`bottom-${i}`}
-            className="relative"
-            animate={
-              activeAnimation === "brush"
-                ? { y: [0, 2, 0], rotate: [0, -5, 5, 0] }
-                : {}
-            }
-            transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
-          >
-            <div className="w-6 h-7 bg-white rounded-t-lg border-2 border-gray-200 shadow-sm" />
-            <motion.div
-              className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-3 bg-gray-400 rounded-sm border border-gray-500"
-              animate={
-                activeAnimation === "smile"
-                  ? { backgroundColor: ["#9CA3AF", "#10B981", "#F59E0B", "#EF4444", "#9CA3AF"] }
-                  : {}
-              }
-              transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-            />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Toothbrush animation */}
-      {activeAnimation === "brush" && (
-        <motion.div
-          className="absolute top-1/2 -translate-y-1/2 right-0"
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ 
-            x: [50, -20, 50],
-            y: [0, -10, 10, 0],
-            rotate: [0, -15, 15, 0],
-            opacity: 1 
-          }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="text-4xl">🪥</div>
-          <motion.span
-            className="absolute -top-2 -left-2 text-lg"
-            animate={{ scale: [0, 1, 0], opacity: [0, 1, 0] }}
-            transition={{ duration: 0.8, repeat: Infinity }}
-          >
-            ✨
-          </motion.span>
-        </motion.div>
-      )}
-
-      {/* Floss animation */}
-      {activeAnimation === "floss" && (
-        <motion.div
-          className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
-          animate={{ 
-            y: [-30, 30, -30],
-            scaleY: [1, 1.2, 1]
-          }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          <div className="w-1 h-16 bg-gradient-to-b from-blue-300 to-blue-500 rounded-full" />
-        </motion.div>
-      )}
-
-      {/* Rinse animation */}
-      {activeAnimation === "rinse" && (
-        <>
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={`bubble-${i}`}
-              className="absolute w-3 h-3 bg-blue-300/60 rounded-full"
-              style={{
-                left: `${20 + Math.random() * 60}%`,
-                top: `${30 + Math.random() * 40}%`,
-              }}
-              animate={{
-                y: [-10, -30],
-                x: [0, (Math.random() - 0.5) * 20],
-                opacity: [0.8, 0],
-                scale: [1, 0.5],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {/* Food warning animation */}
-      {activeAnimation === "food" && (
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          initial={{ scale: 0 }}
-          animate={{ 
-            scale: [1, 1.2, 1],
-            rotate: [0, 10, -10, 0]
-          }}
-          transition={{ duration: 0.8, repeat: Infinity }}
-        >
-          <div className="relative">
-            <span className="text-4xl">🍬</span>
-            <motion.div
-              className="absolute -top-2 -right-2 text-2xl"
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 0.5, repeat: Infinity }}
-            >
-              🚫
-            </motion.div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Protect animation */}
-      {activeAnimation === "protect" && (
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center"
-          animate={{ 
-            scale: [0.9, 1.1, 0.9],
-          }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          <div className="text-6xl opacity-60">🛡️</div>
-        </motion.div>
-      )}
-
-      {/* Smile/celebration animation */}
-      {activeAnimation === "smile" && (
-        <>
-          {[...Array(6)].map((_, i) => (
-            <motion.span
-              key={`star-${i}`}
-              className="absolute text-xl"
-              style={{
-                left: `${10 + i * 15}%`,
-                top: `${20 + (i % 2) * 40}%`,
-              }}
-              animate={{
-                scale: [0, 1, 0],
-                rotate: [0, 180, 360],
-                opacity: [0, 1, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-            >
-              ⭐
-            </motion.span>
-          ))}
-        </>
-      )}
-    </div>
+      {/* Sparkle overlay */}
+      <motion.div
+        className="absolute top-4 right-4 text-3xl"
+        animate={{ scale: [1, 1.3, 1], rotate: [0, 15, -15, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        ✨
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -434,7 +272,7 @@ const BracesCareSection = () => {
             className="relative order-2 lg:order-1"
           >
             <div className="bg-gradient-to-br from-pink-100 to-purple-100 rounded-3xl p-8 shadow-card">
-              <AnimatedBracesMouth activeAnimation={activeTipData?.animation || "brush"} />
+              <BracesCareIllustration activeTip={activeTip} />
               
               {/* Bracey with tip-specific message */}
               <motion.div
