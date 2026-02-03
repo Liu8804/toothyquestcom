@@ -9,6 +9,7 @@ interface AdventureCardProps {
   delay?: number;
   onClick?: () => void;
   isNew?: boolean;
+  backgroundImage?: string;
 }
 
 const colorStyles = {
@@ -42,6 +43,7 @@ export const AdventureCard = ({
   delay = 0,
   onClick,
   isNew = false,
+  backgroundImage,
 }: AdventureCardProps) => {
   const styles = colorStyles[color];
 
@@ -54,35 +56,52 @@ export const AdventureCard = ({
       whileHover={{ scale: 1.05, y: -8 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`${styles.bg} rounded-3xl p-6 cursor-pointer shadow-float hover:shadow-playful transition-all duration-300 relative overflow-hidden`}
+      className={`${!backgroundImage ? styles.bg : ''} rounded-3xl cursor-pointer shadow-float hover:shadow-playful transition-all duration-300 relative overflow-hidden min-h-[200px]`}
     >
-      {/* New badge */}
-      {isNew && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="absolute -top-1 -right-1 z-10"
-        >
-          <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
-            <motion.span
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 0.8, repeat: Infinity }}
-            >
-              ✨ NEW
-            </motion.span>
-          </div>
-        </motion.div>
+      {/* Background Image */}
+      {backgroundImage && (
+        <>
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+        </>
       )}
 
-      <div className={`${styles.iconBg} w-16 h-16 rounded-2xl flex items-center justify-center mb-4`}>
-        <Icon className="w-8 h-8 text-primary-foreground" />
+      {/* Content */}
+      <div className={`relative z-10 p-6 h-full flex flex-col ${backgroundImage ? 'justify-end' : ''}`}>
+        {/* New badge */}
+        {isNew && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute top-2 right-2 z-10"
+          >
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+              <motion.span
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 0.8, repeat: Infinity }}
+              >
+                ✨ NEW
+              </motion.span>
+            </div>
+          </motion.div>
+        )}
+
+        {!backgroundImage && (
+          <div className={`${styles.iconBg} w-16 h-16 rounded-2xl flex items-center justify-center mb-4`}>
+            <Icon className="w-8 h-8 text-primary-foreground" />
+          </div>
+        )}
+        
+        <h3 className={`font-display text-xl font-bold mb-2 ${backgroundImage ? 'text-white drop-shadow-lg' : 'text-primary-foreground'}`}>
+          {title}
+        </h3>
+        <p className={`text-sm leading-relaxed ${backgroundImage ? 'text-white/90 drop-shadow-md' : 'text-primary-foreground/80'}`}>
+          {description}
+        </p>
       </div>
-      <h3 className="font-display text-xl font-bold text-primary-foreground mb-2">
-        {title}
-      </h3>
-      <p className="text-primary-foreground/80 text-sm leading-relaxed">
-        {description}
-      </p>
     </motion.div>
   );
 };
