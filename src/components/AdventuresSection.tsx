@@ -38,6 +38,7 @@ export const AdventuresSection = () => {
       icon: Music,
       color: "purple" as const,
       action: "open-songs",
+      backgroundImage: "/sections/sing-along.webp",
     },
     {
       titleKey: "adventures.chatWithToothy.title",
@@ -45,6 +46,7 @@ export const AdventuresSection = () => {
       icon: MessageCircle,
       color: "gold" as const,
       action: "open-chat",
+      backgroundImage: "/sections/chat-toothy.webp",
     },
     {
       titleKey: "adventures.exploreOffice.title",
