@@ -532,7 +532,7 @@ export const storiesEs: Story[] = [
     story: "Por la noche, los dientes se formaron. Los más limpios brillaban fuerte. Otros susurraron, \"Nosotros también queremos brillar.\" Toothy sonrió. \"Cepíllense cada noche, y lo harán.\" Pronto, todos los dientes brillaron bajo la luna.",
     lesson: "El cepillado nocturno mantiene los dientes brillantes.",
     questEnding: "¡Cepíllate esta noche para unirte al desfile!",
-    illustrationPath: "/stories/moonlight-parade.png",
+    illustrationPath: "/stories/moonlight-tooth-parade.webp",
     emoji: "🌙",
     isFree: false,
     quiz: {
@@ -827,7 +827,7 @@ export const storiesEs: Story[] = [
     story: "¡Ciudad Sonrisa se preparaba para un gran desfile! Pero los dientes necesitaban alinearse perfectamente. Toothy te mostró las vías mágicas de los frenos. \"¡Arrastra cada diente a lo largo de la vía para alinearlos!\" dijo. Uno por uno, ayudaste a cada diente a encontrar su lugar perfecto. ¡Cuando todos los dientes estaban alineados, el desfile comenzó! ¡Los dientes bailarines celebraron con un espectáculo espectacular!",
     lesson: "Alinea los dientes para una sonrisa fuerte y recta.",
     questEnding: "¡El desfile de Ciudad Sonrisa es un éxito!",
-    illustrationPath: "/stories/tooth-train.png",
+    illustrationPath: "/stories/tooth-train-adventure.webp",
     emoji: "🚂",
     miniGameInstructions: "Arrastra los dientes a lo largo de las vías para alinearlos perfectamente.",
     rewards: {
@@ -856,7 +856,7 @@ export const storiesEs: Story[] = [
     story: "¡Los Piratas de Placa habían invadido y se escondían por todos los dientes! El superhéroe dentista necesitaba refuerzos. Agarraste un cepillo brillante y te pusiste a trabajar. \"¡Desliza para eliminar a los piratas!\" gritó Toothy. Con cada movimiento del cepillo, los piratas huían chillando. Cuando todos los piratas se fueron, ¡los dientes brillaron más que nunca bajo una ducha brillante de limpieza!",
     lesson: "La limpieza regular mantiene los dientes libres de placa.",
     questEnding: "¡Todos los Piratas de Placa han navegado lejos!",
-    illustrationPath: "/stories/sparkle-shower.png",
+    illustrationPath: "/stories/sparkle-shower-clean.webp",
     emoji: "🚿",
     miniGameInstructions: "Desliza el cepillo para eliminar piratas, gana puntos brillantes.",
     rewards: {
@@ -1088,7 +1088,7 @@ export const storiesEs: Story[] = [
     story: "¡El gran partido estaba por comenzar! Pero los dientes necesitaban protección antes de ir al campo. El entrenador dentista repartió protectores bucales personalizados. \"¡Colócalos en cada diente antes de que empiece el partido!\" animó Toothy. Rápidamente ajustaste cada protector bucal perfectamente. ¡Los dientes vitorearon, listos para jugar con seguridad! ¡Un protector brillante apareció en cada diente como una medalla de campeón!",
     lesson: "Los protectores bucales protegen los dientes durante los deportes.",
     questEnding: "¡Los dientes están protegidos y listos para ganar!",
-    illustrationPath: "/stories/sports-shield.png",
+    illustrationPath: "/stories/sports-shield-hero.webp",
     emoji: "🏆",
     miniGameInstructions: "Coloca el protector bucal en cada diente antes de que empiece el partido.",
     rewards: {
@@ -1473,7 +1473,7 @@ export const storiesEs: Story[] = [
     story: "¡Hora del snack! ¿Pero cuáles snacks son amigos de los dientes? Toothy preparó una estación de snacks. \"¡El queso, las zanahorias y las manzanas son SÚPER para los dientes!\" Los vegetales crujientes incluso ayudan a limpiar los dientes mientras masticas. \"¡Y el agua es la MEJOR bebida!\" Los niños eligieron snacks inteligentes, ¡y sus dientes vitorearon!",
     lesson: "¡Elige snacks amigos de los dientes!",
     questEnding: "¡Logro de snacker inteligente desbloqueado!",
-    illustrationPath: "/stories/snack-smart.png",
+    illustrationPath: "/stories/snack-smart-choices.webp",
     emoji: "🧀",
     miniGameInstructions: "¡Elige los snacks amigos de los dientes!",
     rewards: {
@@ -1576,7 +1576,7 @@ export const storiesEs: Story[] = [
     story: "El ayudante del dentista sacó un pequeño espejo. \"¡Vamos a contar tus dientes!\" Uno... dos... tres... ¡cada diente recibió un saludo gentil! Luego vino el cepillo de cosquillas. \"¡Hora de una lluvia de brillos!\" El cepillo limpió suavemente cada diente mientras el agua hacía un sonido divertido. \"¡Eso hace cosquillas!\" se rieron los dientes. ¡Antes de que te dieras cuenta, cada diente estaba brillante!",
     lesson: "La limpieza no duele. El dentista cuenta y revisa, nunca lastima.",
     questEnding: "¡Todos los dientes contados y brillantes!",
-    illustrationPath: "/stories/sparkle-shower.png",
+    illustrationPath: "/stories/sparkle-shower-clean.webp",
     emoji: "🧼",
     isFree: false,
     quiz: {
@@ -1652,7 +1652,7 @@ export const storiesEs: Story[] = [
     story: "¡Bienvenido de vuelta, Héroe! ¡Toothy estaba MUY orgulloso de ti! \"¿Te sentaste en la silla?\" ✓ ¡SÍ! \"¿Abriste la boca?\" ✓ ¡SÍ! \"¿Dejaste que limpiaran tus dientes?\" ✓ ¡SÍ! ¡HURRA! ¡Explotó confeti por todas partes! Todos los dientes bailaron y vitorearon. Apareció un certificado especial con tu nombre: '¡Certificado de Valentía - Este héroe visitó al dentista y protegió su sonrisa!'",
     lesson: "¡Cada visita dental te hace más valiente y tu sonrisa más sana!",
     questEnding: "¡Certificado desbloqueado: Campeón de Valentía!",
-    illustrationPath: "/stories/moonlight-parade.png",
+    illustrationPath: "/stories/moonlight-tooth-parade.webp",
     emoji: "🎊",
     isFree: false,
     quiz: {

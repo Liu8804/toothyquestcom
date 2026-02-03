@@ -563,7 +563,7 @@ export const stories: Story[] = [
     story: "At night, the teeth lined up. The cleanest ones glowed bright. Others whispered, \"We want to shine too.\" Toothy smiled. \"Brush every night, and you will.\" Soon, all the teeth sparkled under the moon.",
     lesson: "Nighttime brushing keeps teeth glowing.",
     questEnding: "Brush tonight to join the parade!",
-    illustrationPath: "/stories/moonlight-parade.png",
+    illustrationPath: "/stories/moonlight-tooth-parade.webp",
     emoji: "🌙",
     isFree: false,
     quiz: {
@@ -861,7 +861,7 @@ export const stories: Story[] = [
     story: "Smile City was preparing for a grand parade! But the teeth needed to line up perfectly. Toothy showed you the magic braces tracks. \"Drag each tooth along the track to line them up!\" he said. One by one, you helped each tooth find its perfect spot. When all teeth were aligned, the parade began! Dancing teeth celebrated with a spectacular show!",
     lesson: "Align teeth for a strong, straight smile.",
     questEnding: "The Smile City parade is a success!",
-    illustrationPath: "/stories/tooth-train.png",
+    illustrationPath: "/stories/tooth-train-adventure.webp",
     emoji: "🚂",
     miniGameInstructions: "Drag teeth along tracks to line them up perfectly.",
     rewards: {
@@ -892,7 +892,7 @@ export const stories: Story[] = [
     story: "Plaque Pirates had invaded and were hiding all over the teeth! The dentist superhero needed backup. You grabbed a sparkly brush and got to work. \"Swipe to remove the pirates!\" Toothy called out. With every brush stroke, pirates ran away squealing. When all pirates were gone, the teeth shined brighter than ever under a sparkly shower of cleanliness!",
     lesson: "Regular cleaning keeps teeth free from plaque.",
     questEnding: "All Plaque Pirates have sailed away!",
-    illustrationPath: "/stories/sparkle-shower.png",
+    illustrationPath: "/stories/sparkle-shower-clean.webp",
     emoji: "🚿",
     miniGameInstructions: "Swipe the brush to remove pirates, earn sparkle points.",
     rewards: {
@@ -1140,7 +1140,7 @@ export const stories: Story[] = [
     story: "The big game was about to start! But the teeth needed protection before heading onto the field. The dentist coach handed out custom mouth guards. \"Place these on each tooth before the game starts!\" Toothy cheered. You quickly fitted each mouth guard perfectly. The teeth cheered, ready to play safely! A sparkly guard appeared on each tooth like a champion's medal!",
     lesson: "Mouth guards protect teeth during sports.",
     questEnding: "Teeth are protected and ready to win!",
-    illustrationPath: "/stories/sports-shield.png",
+    illustrationPath: "/stories/sports-shield-hero.webp",
     emoji: "🏆",
     miniGameInstructions: "Place the mouth guard on each tooth before the game starts.",
     rewards: {
@@ -1527,7 +1527,7 @@ export const stories: Story[] = [
     story: "Snack time! But which snacks are tooth friends? Toothy set up a snack station. \"Cheese, carrots, and apples are SUPER for teeth!\" Crunchy veggies even help clean teeth while you munch. \"And water is the BEST drink!\" The kids chose smart snacks, and their teeth cheered!",
     lesson: "Choose tooth-friendly snacks!",
     questEnding: "Smart snacker achievement unlocked!",
-    illustrationPath: "/stories/snack-smart.png",
+    illustrationPath: "/stories/snack-smart-choices.webp",
     emoji: "🧀",
     miniGameInstructions: "Pick the tooth-friendly snacks!",
     rewards: {
@@ -1630,7 +1630,7 @@ export const stories: Story[] = [
     story: "The dentist helper pulled out a tiny mirror. \"Let's count your teeth!\" One... two... three... each tooth got a gentle hello! Then came the tickle brush. \"Time for a sparkle shower!\" The brush gently cleaned each tooth while water made a fun swooshing sound. \"That tickles!\" the teeth giggled. Before you knew it, every tooth was sparkling clean!",
     lesson: "Cleaning doesn't hurt. The dentist counts and checks, never hurts.",
     questEnding: "All teeth counted and sparkling!",
-    illustrationPath: "/stories/sparkle-shower.png",
+    illustrationPath: "/stories/sparkle-shower-clean.webp",
     emoji: "🧼",
     isFree: false,
     quiz: {
@@ -1706,7 +1706,7 @@ export const stories: Story[] = [
     story: "Welcome back, Hero! Toothy was SO proud of you! \"Did you sit in the chair?\" ✓ YES! \"Did you open your mouth?\" ✓ YES! \"Did you let them clean your teeth?\" ✓ YES! HOORAY! Confetti exploded everywhere! All the teeth danced and cheered. A special certificate appeared with your name on it: 'Certificate of Bravery - This hero visited the dentist and protected their smile!'",
     lesson: "Every dental visit makes you braver and your smile healthier!",
     questEnding: "Certificate unlocked: Bravery Champion!",
-    illustrationPath: "/stories/moonlight-parade.png",
+    illustrationPath: "/stories/moonlight-tooth-parade.webp",
     emoji: "🎊",
     isFree: false,
     quiz: {
