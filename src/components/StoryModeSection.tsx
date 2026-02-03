@@ -82,9 +82,24 @@ const StoryModeSection = () => {
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("storyMode.title")}
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
             {t("storyMode.subtitle")}
           </p>
+          
+          {/* Epic Tooth Quest Hero Image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="max-w-2xl mx-auto mb-6 rounded-2xl overflow-hidden shadow-card"
+          >
+            <img 
+              src="/quiz/epic-tooth-quest.webp" 
+              alt="Epic Tooth Quest Adventure" 
+              className="w-full h-auto object-cover"
+            />
+          </motion.div>
           
           {/* Quest progress bar */}
           <motion.div
