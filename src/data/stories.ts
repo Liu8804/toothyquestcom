@@ -985,7 +985,7 @@ export const stories: Story[] = [
     story: "The Sugar Monsters were planning another attack! But this time, teeth would be ready. The dentist handed you a bottle of magic fluoride. \"Spread this shield over each tooth to make them extra strong!\" You carefully applied the sparkly solution to every tooth. They glowed bright blue with superhero power! When Sugar Monsters tried to attack, they bounced right off!",
     lesson: "Fluoride strengthens teeth and prevents cavities.",
     questEnding: "Your teeth have superhero shields!",
-    illustrationPath: "/stories/superhero-shield.png",
+    illustrationPath: "/stories/fluoride-shield-power.webp",
     emoji: "💎",
     miniGameInstructions: "Spread shield over each tooth to make them sparkle.",
     rewards: {
@@ -1047,7 +1047,7 @@ export const stories: Story[] = [
     story: "Deep in the back of Mouthland, a wisdom tooth was growing in a tricky spot! It was getting crowded back there. Toothy put on his adventure backpack. \"Sometimes these teeth need help moving out so everyone has room!\" You tapped gently to wiggle the wisdom tooth free. It packed its tiny backpack and waved goodbye. Sparkles appeared as it headed off on its new adventure!",
     lesson: "Some teeth need removal to keep the mouth healthy.",
     questEnding: "The wisdom tooth is off on a new adventure!",
-    illustrationPath: "/stories/adventure-tooth.png",
+    illustrationPath: "/stories/adventure-tooth-farewell.webp",
     emoji: "🎒",
     miniGameInstructions: "Tap gently to wiggle the wisdom tooth out.",
     rewards: {
@@ -1078,7 +1078,7 @@ export const stories: Story[] = [
     story: "The teeth were feeling a little dull and wanted to shine bright again! The dentist pulled out a magical bottle of sparkle potion. \"This will make your teeth extra shiny!\" Toothy smiled. You carefully spread the potion evenly on each tooth. One by one, they began to glow and sparkle! The whole smile lit up like a constellation of stars!",
     lesson: "Healthy teeth are happy teeth; whitening can make them extra shiny.",
     questEnding: "Your smile sparkles like stars!",
-    illustrationPath: "/stories/sparkle-potion.png",
+    illustrationPath: "/stories/magic-mouthwash-potion.webp",
     emoji: "✨",
     miniGameInstructions: "Spread potion evenly on teeth to make them sparkle.",
     rewards: {
@@ -1174,7 +1174,7 @@ export const stories: Story[] = [
     story: "Toothy noticed some kids doing funny things with their mouths. \"Did you know some habits can hurt your teeth?\" he asked. He showed pictures of thumb sucking and nail biting. \"These can push teeth out of place!\" But don't worry — Toothy had tricks to help break bad habits. With practice and patience, teeth stayed straight and strong!",
     lesson: "Healthy habits help teeth grow straight and strong.",
     questEnding: "You know which habits to avoid!",
-    illustrationPath: "/stories/mouth-habits.png",
+    illustrationPath: "/stories/mouth-habits-learning.webp",
     emoji: "👍",
     miniGameInstructions: "Tap on the healthy habits and avoid the bad ones!",
     rewards: {
@@ -1207,7 +1207,7 @@ export const stories: Story[] = [
     story: "BONK! One of the teeth got bumped during play. \"Oh no!\" cried Toothy. But he knew just what to do! \"Stay calm,\" he said. \"Find the tooth, hold it by the crown, and get to a dentist fast!\" The tooth was saved just in time. The dentist made everything better, and the tooth sparkled again!",
     lesson: "Quick action can save a bumped tooth!",
     questEnding: "You know how to rescue a tooth!",
-    illustrationPath: "/stories/tooth-rescue.png",
+    illustrationPath: "/stories/tooth-rescue-mission.webp",
     emoji: "🚑",
     miniGameInstructions: "Help rescue the tooth in time!",
     rewards: {
@@ -1273,7 +1273,7 @@ export const stories: Story[] = [
     story: "The teeth were a little crowded. \"We need some space!\" they said. The dentist brought tiny spacers. \"These little helpers make room between teeth,\" she explained. The spacers gently pushed to create space. \"It might feel funny at first,\" said Toothy, \"but soon there will be room for everyone!\"",
     lesson: "Separators gently make space for teeth to move.",
     questEnding: "You learned about tooth spacers!",
-    illustrationPath: "/stories/tooth-separators.png",
+    illustrationPath: "/stories/tooth-separators-adventure.webp",
     emoji: "⭕",
     miniGameInstructions: "Place the spacers between the teeth!",
     rewards: {
@@ -1306,7 +1306,7 @@ export const stories: Story[] = [
     story: "Toothy met a friend with a special helper called an expander. \"What's that?\" asked Toothy. \"It helps my jaw grow bigger so all my teeth fit!\" the friend explained. The expander worked slowly and gently. \"Every little turn makes more room,\" the friend smiled. Soon there was space for every tooth!",
     lesson: "Expanders help jaws grow to fit all teeth.",
     questEnding: "You learned about expanders!",
-    illustrationPath: "/stories/dental-expanders.png",
+    illustrationPath: "/stories/dental-expander-helper.webp",
     emoji: "🌟",
     miniGameInstructions: "Turn the expander to make room!",
     rewards: {
@@ -1372,7 +1372,7 @@ export const stories: Story[] = [
     story: "Flossy the floss string was ready to teach! \"I reach tiny spaces brushes can't!\" she said proudly. But some kids flossed too hard. \"Ouch!\" said the gums. \"Be gentle,\" Flossy reminded. \"Slide me softly between teeth.\" The kids learned the gentle way, and their gums were happy!",
     lesson: "Floss gently every day to clean between teeth.",
     questEnding: "You're a flossing expert!",
-    illustrationPath: "/stories/floss-boss.png",
+    illustrationPath: "/stories/floss-boss-hero.webp",
     emoji: "🧵",
     miniGameInstructions: "Floss gently between all the teeth!",
     rewards: {
@@ -1434,7 +1434,7 @@ export const stories: Story[] = [
     story: "It was dentist day! Some teeth were nervous, but Toothy was excited. \"Dentists are smile helpers!\" he cheered. The dentist gently counted each tooth, checked for cavities, and made everything sparkle. \"See? Nothing scary!\" The teeth smiled big. Going to the dentist was actually FUN!",
     lesson: "Visit the dentist every six months!",
     questEnding: "Dentist day is fun day!",
-    illustrationPath: "/stories/dentist-day.png",
+    illustrationPath: "/stories/dentist-day-celebration.webp",
     emoji: "🏥",
     miniGameInstructions: "Help the dentist check each tooth!",
     rewards: {
@@ -1558,7 +1558,7 @@ export const stories: Story[] = [
     story: "Some kids used teeth to open things. \"STOP!\" cried Toothy. \"Teeth are NOT tools!\" Teeth are for eating food, not opening bottles or biting hard objects. \"Treat us gently,\" the teeth asked, \"and we'll stay strong forever!\" The kids learned the safety rules and protected their smiles.",
     lesson: "Teeth are for food, not tools!",
     questEnding: "Safety rules mastered!",
-    illustrationPath: "/stories/tooth-safety.png",
+    illustrationPath: "/stories/tooth-armor-shield.webp",
     emoji: "⚠️",
     miniGameInstructions: "Identify what's safe for teeth!",
     rewards: {
@@ -1592,7 +1592,7 @@ export const stories: Story[] = [
     story: "Welcome, Explorer! Today you're visiting the Dental Castle, where friendly helpers keep teeth strong and shiny. The waiting room has fun games, the dentist is a tooth hero, and the chair is a magic chair that goes up and down like a spaceship! Toothy bounced excitedly. \"This is going to be so much fun!\" Everything here is designed to help your smile sparkle!",
     lesson: "The dentist is a helper, not scary. Nothing happens without explanation.",
     questEnding: "You're ready to explore the Dental Castle!",
-    illustrationPath: "/stories/friendly-dentist.png",
+    illustrationPath: "/stories/friendly-dentist-visit.webp",
     emoji: "🏰",
     isFree: true,
     quiz: {
@@ -1611,7 +1611,7 @@ export const stories: Story[] = [
     story: "Toothy hopped into the special dental chair. \"Watch this!\" he said with a grin. The chair started moving UP... UP... UP! Then gently DOWN... DOWN... DOWN! \"It's like a spaceship ride!\" Toothy cheered. The chair moved so smoothly, it felt like floating on a cloud. You can press the buttons too! Up and down you go!",
     lesson: "The dental chair is fun! You can feel in control.",
     questEnding: "You rode the magic chair like a pro!",
-    illustrationPath: "/stories/explore-office-tour.png",
+    illustrationPath: "/stories/explore-dental-office.webp",
     emoji: "🪑",
     isFree: true,
     quiz: {
@@ -1649,7 +1649,7 @@ export const stories: Story[] = [
     story: "HOORAY! The dental adventure was complete! Toothy jumped up and down with joy. \"You did it, Explorer! You were SO brave!\" Confetti rained down from the ceiling as all the teeth cheered. A special badge appeared — the Brave Explorer badge! \"Your smile is stronger and sparklier than ever!\" The Tooth Fairy flew by and waved. What an amazing adventure!",
     lesson: "You did it! Being brave leads to a healthy, sparkly smile!",
     questEnding: "Badge unlocked: Brave Explorer! 🦁",
-    illustrationPath: "/stories/shiny-club.png",
+    illustrationPath: "/stories/shiny-club-party.webp",
     emoji: "🎉",
     isFree: false,
     quiz: {
@@ -1668,7 +1668,7 @@ export const stories: Story[] = [
     story: "\"Hello!\" said Mr. Mirror. \"I help the dentist see your shiny smile!\" Next came Bubbles the Air Sprayer. \"Pfffft! Just drying teeth with air!\" she giggled. Then Sparkle Brush cheered, \"Let's make teeth sparkle like stars!\" And Water Sprout said calmly, \"Swish… rinse… all clean!\" All the tools waved hello — they were friends, not scary at all!",
     lesson: "Dental tools are friendly helpers with special jobs!",
     questEnding: "You met all the friendly dental tools!",
-    illustrationPath: "/stories/explore-office-tour.png",
+    illustrationPath: "/stories/tooth-detective-xray.webp",
     emoji: "🪞",
     isFree: false,
     quiz: {
@@ -1687,7 +1687,7 @@ export const stories: Story[] = [
     story: "Toothy sat down with you for some calm breathing. \"Breathe in like smelling a flower... breathe out like blowing bubbles!\" After three deep breaths, Toothy reminded you: \"Remember, the dentist is your smile friend!\" He showed you what would happen — sitting in the fun chair, counting teeth, getting a sparkle clean. \"You can do this!\" said Toothy. \"I am brave. I can ask questions. My dentist helps my smile!\"",
     lesson: "Being prepared helps you feel brave and calm!",
     questEnding: "You're ready for your Tooth Quest Day!",
-    illustrationPath: "/stories/dreamland-adventure.png",
+    illustrationPath: "/stories/dreamland-teeth-journey.webp",
     emoji: "🌈",
     isFree: true,
     quiz: {

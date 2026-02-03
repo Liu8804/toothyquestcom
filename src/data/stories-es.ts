@@ -244,7 +244,7 @@ export const storiesEs: Story[] = [
     story: "¡A los dientes de Liam les encantaba bailar! Cada vez que se cepillaba, rebotaban y giraban felices. Cuanto más limpio cepillaba, más brillantes eran sus movimientos. ¡Pronto, ganaron el Gran Concurso de Baile de Dientes!",
     lesson: "¡Cepillarse puede ser divertido!",
     questEnding: "¡Baila y cepíllate al mismo tiempo!",
-    illustrationPath: "/stories/brush-bounce.png",
+    illustrationPath: "/stories/brush-bounce-adventure.webp",
     emoji: "💃",
     isFree: false,
     quiz: {
@@ -262,7 +262,7 @@ export const storiesEs: Story[] = [
     story: "Emma se unió al Club del Diente Brillante. Todos los días se cepillaba y usaba hilo dental, ganando insignias brillantes por cada diente limpio. ¡Pronto, tenía la sonrisa más brillante del club!",
     lesson: "Cepillarse y usar hilo dental diariamente vale la pena.",
     questEnding: "¡Gana tu insignia del Club del Diente Brillante!",
-    illustrationPath: "/stories/shiny-club.png",
+    illustrationPath: "/stories/shiny-club-party.webp",
     emoji: "🏅",
     isFree: false,
     quiz: {
@@ -388,7 +388,7 @@ export const storiesEs: Story[] = [
     story: "Un pequeño monstruo de caries se sentó solo. \"No quise lastimar los dientes,\" suspiró. Los dientes se veían preocupados. Toothy dio un paso adelante. \"Todos pueden aprender,\" dijo. El monstruo observó cómo los dientes se cepillaban y usaban hilo dental. El monstruo de caries se hizo más pequeño… y más pequeño… Hasta que — ¡poof! — desapareció con una sonrisa.",
     lesson: "Los buenos hábitos hacen que los problemas desaparezcan.",
     questEnding: "¡Cepillémonos y no demos oportunidad a las caries!",
-    illustrationPath: "/stories/cavity-monster-chance.png",
+    illustrationPath: "/stories/cavity-castle-battle.webp",
     emoji: "👾",
     isFree: false,
     quiz: {
@@ -442,7 +442,7 @@ export const storiesEs: Story[] = [
     story: "Un pedacito de maíz estaba atrapado entre dos dientes. \"¡No sale!\" gritaron. El Capitán Hilo Dental llegó volando. ¡Deslizar… suavemente… jalar! El maíz desapareció. \"¡El hilo dental salva el día!\" aplaudieron los dientes.",
     lesson: "El hilo dental ayuda donde los cepillos no llegan.",
     questEnding: "¡Es hora de usar hilo dental como un héroe!",
-    illustrationPath: "/stories/captain-floss-corn.png",
+    illustrationPath: "/stories/captain-floss-corn-rescue.webp",
     emoji: "🦸‍♂️",
     isFree: false,
     quiz: {
@@ -460,7 +460,7 @@ export const storiesEs: Story[] = [
     story: "Los piratas de la placa navegaron por los dientes. \"¡Creen que esta boca les pertenece!\" rió Toothy. El cepillo se convirtió en un barco. La pasta se convirtió en olas de espuma. ¡Frotar! ¡Frotar! Los piratas saltaron del barco y desaparecieron.",
     lesson: "El cepillado diario mantiene los dientes seguros.",
     questEnding: "¡Cepilla a los piratas de la placa!",
-    illustrationPath: "/stories/plaque-pirates-battle.png",
+    illustrationPath: "/stories/plaque-pirates-defeat.webp",
     emoji: "🏴‍☠️",
     isFree: false,
     quiz: {
@@ -514,7 +514,7 @@ export const storiesEs: Story[] = [
     story: "El Hada de los Dientes revoloteaba triste. \"Perdí mi mapa,\" dijo. Los dientes siguieron pistas brillantes. Se cepillaron y limpiaron en el camino. Detrás de un molar brillante — ¡ahí estaba! \"Los dientes limpios ayudan a que la magia brille,\" dijo el Hada.",
     lesson: "Los dientes limpios hacen que cosas mágicas sucedan.",
     questEnding: "¡Cepíllate para ayudar al Hada de los Dientes!",
-    illustrationPath: "/stories/tooth-fairy-map.png",
+    illustrationPath: "/stories/tooth-fairy-treasure-map.webp",
     emoji: "🗺️",
     isFree: false,
     quiz: {
@@ -586,7 +586,7 @@ export const storiesEs: Story[] = [
     story: "Una manzana rodó orgullosa. \"Yo ayudo a hacer los dientes fuertes,\" dijo. Los dientes crujieron felices. \"¡Yum!\" Los dulces intentaron colarse. Toothy los alejó. \"Las comidas saludables ayudan a los dientes a crecer fuertes.\"",
     lesson: "Las comidas crujientes y saludables son buenas para los dientes.",
     questEnding: "¡Elige un snack saludable hoy!",
-    illustrationPath: "/stories/apple-crunch.png",
+    illustrationPath: "/stories/apple-crunch-adventure.webp",
     emoji: "🍎",
     isFree: false,
     quiz: {
@@ -604,7 +604,7 @@ export const storiesEs: Story[] = [
     story: "El jugo salpicó ruidosamente. \"¡Soy saludable!\" dijo. Toothy leyó la etiqueta. \"Mucha azúcar,\" dijo gentilmente. El agua entró tranquila. \"Yo ayudo a enjuagar los dientes limpios.\" Los dientes eligieron agua.",
     lesson: "El agua es la mejor bebida para los dientes.",
     questEnding: "¡Bebe agua después de los snacks!",
-    illustrationPath: "/stories/juice-sugar.png",
+    illustrationPath: "/stories/juice-sugar-lesson.webp",
     emoji: "🧃",
     isFree: false,
     quiz: {
@@ -622,7 +622,7 @@ export const storiesEs: Story[] = [
     story: "El agua entró volando con una capa. \"¡Splash!\" Lavó el azúcar y los pedacitos de comida. Los dientes aplaudieron. \"¡Toothy tenía razón!\" dijeron.",
     lesson: "El agua mantiene las bocas limpias y frescas.",
     questEnding: "¡Toma un sorbo de agua ahora!",
-    illustrationPath: "/stories/water-superhero.png",
+    illustrationPath: "/stories/water-superhero-splash.webp",
     emoji: "💧",
     isFree: false,
     quiz: {
@@ -640,7 +640,7 @@ export const storiesEs: Story[] = [
     story: "Los dientes miraron los snacks. Dulces… manzana… galletas… Toothy preguntó, \"¿Qué nos ayuda más?\" Los dientes eligieron snacks inteligentes. Sonrieron orgullosos.",
     lesson: "Las buenas elecciones ayudan a los dientes a mantenerse felices.",
     questEnding: "¡Elige un snack amigo de los dientes!",
-    illustrationPath: "/stories/snack-choices.png",
+    illustrationPath: "/stories/healthy-snack-heroes.webp",
     emoji: "🥕",
     isFree: false,
     quiz: {
@@ -943,7 +943,7 @@ export const storiesEs: Story[] = [
     story: "¡Los Monstruos de Azúcar planeaban otro ataque! Pero esta vez, los dientes estarían listos. El dentista te dio una botella de flúor mágico. \"¡Esparce este escudo sobre cada diente para hacerlos extra fuertes!\" Aplicaste cuidadosamente la solución brillante a cada diente. ¡Brillaron azul intenso con poder de superhéroe! Cuando los Monstruos de Azúcar intentaron atacar, ¡rebotaron!",
     lesson: "El flúor fortalece los dientes y previene las caries.",
     questEnding: "¡Tus dientes tienen escudos de superhéroe!",
-    illustrationPath: "/stories/superhero-shield.png",
+    illustrationPath: "/stories/fluoride-shield-power.webp",
     emoji: "💎",
     miniGameInstructions: "Esparce el escudo sobre cada diente para hacerlos brillar.",
     rewards: {
@@ -1001,7 +1001,7 @@ export const storiesEs: Story[] = [
     story: "En lo profundo de Tierradiente, ¡una muela del juicio crecía en un lugar complicado! Estaba apretado allá atrás. Toothy se puso su mochila de aventuras. \"¡A veces estos dientes necesitan ayuda para mudarse y que todos tengan espacio!\" Tocaste suavemente para aflojar la muela del juicio. Empacó su pequeña mochila y se despidió. ¡Aparecieron destellos mientras partía hacia su nueva aventura!",
     lesson: "Algunos dientes necesitan ser removidos para mantener la boca sana.",
     questEnding: "¡La muela del juicio está en una nueva aventura!",
-    illustrationPath: "/stories/adventure-tooth.png",
+    illustrationPath: "/stories/adventure-tooth-farewell.webp",
     emoji: "🎒",
     miniGameInstructions: "Toca suavemente para aflojar la muela del juicio.",
     rewards: {
@@ -1030,7 +1030,7 @@ export const storiesEs: Story[] = [
     story: "¡Los dientes se sentían un poco opacos y querían brillar de nuevo! El dentista sacó una botella mágica de poción brillante. \"¡Esto hará tus dientes extra brillantes!\" sonrió Toothy. Esparciste cuidadosamente la poción uniformemente en cada diente. ¡Uno por uno, comenzaron a brillar y destellar! ¡Toda la sonrisa se iluminó como una constelación de estrellas!",
     lesson: "Los dientes sanos son dientes felices; el blanqueamiento puede hacerlos extra brillantes.",
     questEnding: "¡Tu sonrisa brilla como estrellas!",
-    illustrationPath: "/stories/sparkle-potion.png",
+    illustrationPath: "/stories/magic-mouthwash-potion.webp",
     emoji: "✨",
     miniGameInstructions: "Esparce la poción uniformemente en los dientes para hacerlos brillar.",
     rewards: {
@@ -1120,7 +1120,7 @@ export const storiesEs: Story[] = [
     story: "Toothy notó que algunos niños hacían cosas graciosas con sus bocas. \"¿Sabías que algunos hábitos pueden lastimar tus dientes?\" preguntó. Mostró fotos de chuparse el dedo y morderse las uñas. \"¡Estos pueden empujar los dientes fuera de lugar!\" Pero no te preocupes — Toothy tenía trucos para ayudar a romper los malos hábitos. ¡Con práctica y paciencia, los dientes se mantuvieron rectos y fuertes!",
     lesson: "Los hábitos saludables ayudan a que los dientes crezcan rectos y fuertes.",
     questEnding: "¡Sabes qué hábitos evitar!",
-    illustrationPath: "/stories/mouth-habits.png",
+    illustrationPath: "/stories/mouth-habits-learning.webp",
     emoji: "👍",
     miniGameInstructions: "¡Toca los hábitos saludables y evita los malos!",
     rewards: {
@@ -1153,7 +1153,7 @@ export const storiesEs: Story[] = [
     story: "¡PUM! Uno de los dientes se golpeó mientras jugaba. \"¡Oh no!\" gritó Toothy. ¡Pero él sabía exactamente qué hacer! \"Mantén la calma,\" dijo. \"¡Encuentra el diente, sostenlo por la corona, y ve al dentista rápido!\" El diente fue salvado justo a tiempo. El dentista arregló todo, ¡y el diente brilló de nuevo!",
     lesson: "¡La acción rápida puede salvar un diente golpeado!",
     questEnding: "¡Sabes cómo rescatar un diente!",
-    illustrationPath: "/stories/tooth-rescue.png",
+    illustrationPath: "/stories/tooth-rescue-mission.webp",
     emoji: "🚑",
     miniGameInstructions: "¡Ayuda a rescatar el diente a tiempo!",
     rewards: {
@@ -1219,7 +1219,7 @@ export const storiesEs: Story[] = [
     story: "Los dientes estaban un poco apretados. \"¡Necesitamos espacio!\" dijeron. El dentista trajo pequeños separadores. \"Estos pequeños ayudantes hacen espacio entre los dientes,\" explicó. Los separadores empujaron suavemente para crear espacio. \"Puede sentirse raro al principio,\" dijo Toothy, \"¡pero pronto habrá espacio para todos!\"",
     lesson: "Los separadores hacen espacio suavemente para que los dientes se muevan.",
     questEnding: "¡Aprendiste sobre los separadores de dientes!",
-    illustrationPath: "/stories/tooth-separators.png",
+    illustrationPath: "/stories/tooth-separators-adventure.webp",
     emoji: "⭕",
     miniGameInstructions: "¡Coloca los separadores entre los dientes!",
     rewards: {
@@ -1252,7 +1252,7 @@ export const storiesEs: Story[] = [
     story: "Toothy conoció a un amigo con un ayudante especial llamado expansor. \"¿Qué es eso?\" preguntó Toothy. \"¡Ayuda a mi mandíbula a crecer más grande para que todos mis dientes quepan!\" explicó el amigo. El expansor trabajó lenta y suavemente. \"Cada pequeña vuelta hace más espacio,\" sonrió el amigo. ¡Pronto hubo espacio para cada diente!",
     lesson: "Los expansores ayudan a las mandíbulas a crecer para que quepan todos los dientes.",
     questEnding: "¡Aprendiste sobre los expansores!",
-    illustrationPath: "/stories/dental-expanders.png",
+    illustrationPath: "/stories/dental-expander-helper.webp",
     emoji: "🌟",
     miniGameInstructions: "¡Gira el expansor para hacer espacio!",
     rewards: {
@@ -1318,7 +1318,7 @@ export const storiesEs: Story[] = [
     story: "¡Flossy la cuerda de hilo dental estaba lista para enseñar! \"¡Yo llego a espacios pequeñitos donde los cepillos no pueden!\" dijo orgullosa. Pero algunos niños usaban el hilo dental muy fuerte. \"¡Auch!\" dijeron las encías. \"Sé suave,\" recordó Flossy. \"Deslízame suavemente entre los dientes.\" Los niños aprendieron la forma suave, ¡y sus encías estaban felices!",
     lesson: "Usa el hilo dental suavemente todos los días para limpiar entre los dientes.",
     questEnding: "¡Eres un experto del hilo dental!",
-    illustrationPath: "/stories/floss-boss.png",
+    illustrationPath: "/stories/floss-boss-hero.webp",
     emoji: "🧵",
     miniGameInstructions: "¡Usa el hilo dental suavemente entre todos los dientes!",
     rewards: {
@@ -1380,7 +1380,7 @@ export const storiesEs: Story[] = [
     story: "¡Era día del dentista! Algunos dientes estaban nerviosos, pero Toothy estaba emocionado. \"¡Los dentistas son ayudantes de sonrisas!\" aplaudió. El dentista contó suavemente cada diente, revisó las caries y lo hizo todo brillar. \"¿Ves? ¡Nada de miedo!\" Los dientes sonrieron grande. ¡Ir al dentista en realidad era DIVERTIDO!",
     lesson: "¡Visita al dentista cada seis meses!",
     questEnding: "¡El día del dentista es día divertido!",
-    illustrationPath: "/stories/dentist-day.png",
+    illustrationPath: "/stories/dentist-day-celebration.webp",
     emoji: "🏥",
     miniGameInstructions: "¡Ayuda al dentista a revisar cada diente!",
     rewards: {
@@ -1504,7 +1504,7 @@ export const storiesEs: Story[] = [
     story: "Algunos niños usaban los dientes para abrir cosas. \"¡PARA!\" gritó Toothy. \"¡Los dientes NO son herramientas!\" Los dientes son para comer comida, no para abrir botellas o morder objetos duros. \"Trátanos suavemente,\" pidieron los dientes, \"¡y nos mantendremos fuertes para siempre!\" Los niños aprendieron las reglas de seguridad y protegieron sus sonrisas.",
     lesson: "¡Los dientes son para la comida, no son herramientas!",
     questEnding: "¡Reglas de seguridad dominadas!",
-    illustrationPath: "/stories/tooth-safety.png",
+    illustrationPath: "/stories/tooth-armor-shield.webp",
     emoji: "⚠️",
     miniGameInstructions: "¡Identifica qué es seguro para los dientes!",
     rewards: {
@@ -1557,7 +1557,7 @@ export const storiesEs: Story[] = [
     story: "Toothy saltó a la silla dental especial. \"¡Mira esto!\" dijo con una sonrisa. La silla comenzó a moverse ARRIBA... ARRIBA... ARRIBA! Luego suavemente ABAJO... ABAJO... ABAJO! \"¡Es como un paseo en nave espacial!\" vitoreó Toothy. La silla se movía tan suavemente que se sentía como flotar en una nube. ¡Tú también puedes presionar los botones! ¡Arriba y abajo!",
     lesson: "¡La silla dental es divertida! Puedes sentirte en control.",
     questEnding: "¡Montaste la silla mágica como un profesional!",
-    illustrationPath: "/stories/explore-office-tour.png",
+    illustrationPath: "/stories/explore-dental-office.webp",
     emoji: "🪑",
     isFree: true,
     quiz: {
@@ -1595,7 +1595,7 @@ export const storiesEs: Story[] = [
     story: "¡HURRA! ¡La aventura dental estaba completa! Toothy saltó de alegría. \"¡Lo lograste, Explorador! ¡Fuiste MUY valiente!\" Confeti llovió del techo mientras todos los dientes vitoreaban. ¡Apareció una insignia especial — la insignia de Explorador Valiente! \"¡Tu sonrisa es más fuerte y brillante que nunca!\" El Hada de los Dientes voló y saludó. ¡Qué aventura increíble!",
     lesson: "¡Lo lograste! ¡Ser valiente lleva a una sonrisa sana y brillante!",
     questEnding: "¡Insignia desbloqueada: Explorador Valiente! 🦁",
-    illustrationPath: "/stories/shiny-club.png",
+    illustrationPath: "/stories/shiny-club-party.webp",
     emoji: "🎉",
     isFree: false,
     quiz: {
@@ -1614,7 +1614,7 @@ export const storiesEs: Story[] = [
     story: "\"¡Hola!\" dijo el Señor Espejo. \"¡Ayudo al dentista a ver tu sonrisa brillante!\" Luego vino Burbujas la Rociadora de Aire. \"¡Pfffft! ¡Solo secando dientes con aire!\" se rió. Luego Cepillo Brillante vitoreó, \"¡Hagamos que los dientes brillen como estrellas!\" Y Chorrito de Agua dijo calmadamente, \"¡Swish... enjuaga... todo limpio!\" Todas las herramientas saludaron — ¡eran amigos, no daban miedo!",
     lesson: "¡Las herramientas dentales son ayudantes amigables con trabajos especiales!",
     questEnding: "¡Conociste todas las herramientas dentales amigables!",
-    illustrationPath: "/stories/explore-office-tour.png",
+    illustrationPath: "/stories/tooth-detective-xray.webp",
     emoji: "🪞",
     isFree: false,
     quiz: {
@@ -1633,7 +1633,7 @@ export const storiesEs: Story[] = [
     story: "Toothy se sentó contigo para respirar calmadamente. \"Respira como oliendo una flor... exhala como soplando burbujas!\" Después de tres respiraciones profundas, Toothy te recordó: \"Recuerda, el dentista es tu amigo de sonrisas!\" Te mostró lo que pasaría — sentarse en la silla divertida, contar dientes, recibir una limpieza brillante. \"¡Tú puedes hacerlo!\" dijo Toothy. \"Soy valiente. Puedo hacer preguntas. ¡Mi dentista ayuda a mi sonrisa!\"",
     lesson: "¡Estar preparado te ayuda a sentirte valiente y tranquilo!",
     questEnding: "¡Estás listo para tu Día de Búsqueda de Dientes!",
-    illustrationPath: "/stories/dreamland-adventure.png",
+    illustrationPath: "/stories/dreamland-teeth-journey.webp",
     emoji: "🌈",
     isFree: true,
     quiz: {
