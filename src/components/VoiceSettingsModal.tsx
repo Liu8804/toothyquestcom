@@ -101,7 +101,12 @@ const VoiceSettingsModal = ({ isOpen, onClose }: VoiceSettingsModalProps) => {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error("ElevenLabs TTS error:", response.status, errorData);
-        toast.error("AI voice isn't available right now. Please try again.");
+        // Check for quota errors specifically
+        if (errorData?.error?.includes?.("quota") || errorData?.error?.includes?.("credits")) {
+          toast.info("Voice credits exhausted. The app still works without voice!");
+        } else {
+          toast.error("AI voice isn't available right now. Please try again.");
+        }
         setTestPlaying(false);
         return;
       }

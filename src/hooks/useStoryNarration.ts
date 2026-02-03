@@ -141,9 +141,17 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
         .then(async (response) => {
           if (!response.ok) {
             let serverMessage = `Voice request failed (${response.status})`;
+            let isQuotaError = false;
             try {
               const data = await response.json();
-              if (typeof data?.error === "string") serverMessage = data.error;
+              if (typeof data?.error === "string") {
+                serverMessage = data.error;
+                // Check for quota/credit errors
+                if (data.error.includes("quota") || data.error.includes("credits")) {
+                  isQuotaError = true;
+                  serverMessage = "Voice is temporarily unavailable. You can still enjoy the story!";
+                }
+              }
             } catch {
               // ignore
             }
@@ -159,6 +167,10 @@ export const useStoryNarration = (): UseStoryNarrationReturn => {
             }
 
             setIsLoading(false);
+            // For quota errors, show friendly message instead of error
+            if (isQuotaError) {
+              console.info("[StoryNarration] Voice quota exceeded - continuing without audio");
+            }
             setError(serverMessage);
             return;
           }
