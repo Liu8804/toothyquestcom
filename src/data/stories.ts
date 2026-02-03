@@ -40,7 +40,7 @@ export const stories: Story[] = [
     story: "Welcome to ToothyQuest! Today is the start of something amazing. Toothy the tooth mascot bounced excitedly. \"I'm so happy you're here!\" he said. \"Together, we'll learn how to keep your smile sparkling bright.\" He showed you the magical world of teeth — each one ready to shine. \"Your first quest is simple,\" Toothy smiled. \"Just say hello to your teeth in the mirror!\"",
     lesson: "Every great adventure starts with a single step.",
     questEnding: "You've started your smile adventure!",
-    illustrationPath: "/stories/smile-quest.png",
+    illustrationPath: "/stories/smile-quest-adventure.webp",
     emoji: "⭐",
     isFree: true,
     quiz: {
@@ -58,7 +58,7 @@ export const stories: Story[] = [
     story: "Toothy held up a sparkling toothbrush. \"This is your magic wand!\" he said. \"Let me show you how to use it.\" He demonstrated gentle circles on each tooth. \"Top teeth... bottom teeth... front... and back!\" The toothbrush danced across all the teeth, making them sparkle. \"Remember,\" Toothy said, \"gentle brushing is the best brushing!\"",
     lesson: "Learn how to brush all your teeth gently and carefully.",
     questEnding: "Now you know the brushing basics!",
-    illustrationPath: "/stories/brush-bounce.png",
+    illustrationPath: "/stories/brush-bounce-adventure.webp",
     emoji: "🪥",
     isFree: true,
     quiz: {
@@ -94,7 +94,7 @@ export const stories: Story[] = [
     story: "Toothy set up a table with different foods. \"Some foods help your teeth grow strong!\" He pointed to apples, carrots, and cheese. \"These are tooth friends!\" Then he pointed to candy and soda. \"These are okay sometimes, but they can invite sugar bugs.\" The teeth nodded wisely. \"Choose tooth friends often,\" Toothy said, \"and your smile will thank you!\"",
     lesson: "Learn which foods are good for your teeth.",
     questEnding: "You know which foods help your smile!",
-    illustrationPath: "/stories/apple-crunch.png",
+    illustrationPath: "/stories/apple-crunch-adventure.webp",
     emoji: "🥕",
     isFree: true,
     quiz: {
@@ -131,7 +131,7 @@ export const stories: Story[] = [
     story: "Toothy jumped with joy! \"You did it!\" he cheered. \"You've completed your first five quests!\" All the teeth in the mouth clapped and sparkled. \"You've learned to brush, floss, and choose healthy foods,\" Toothy said proudly. A golden star appeared above. \"This is your Smile Star — proof that you're a true ToothyQuest hero!\" The adventure was just beginning...",
     lesson: "Great job! You finished your first five quests!",
     questEnding: "You're ready for even bigger adventures!",
-    illustrationPath: "/stories/shiny-club.png",
+    illustrationPath: "/stories/shiny-club-party.webp",
     emoji: "🏆",
     isFree: false,
     quiz: {
@@ -149,7 +149,7 @@ export const stories: Story[] = [
     story: "Timmy's little tooth wiggled nervously. \"I don't want to fall out!\" it whispered. But with a gentle wiggle and a brave smile, Timmy counted to three… and POP! The little tooth jumped out safely. Timmy's mouth felt lighter, and he couldn't wait to put his tooth under the pillow for the Tooth Fairy.",
     lesson: "Losing teeth is natural and nothing to fear.",
     questEnding: "Be brave like the little tooth!",
-    illustrationPath: "/stories/brave-little-tooth.png",
+    illustrationPath: "/stories/brave-little-tooth-hero.webp",
     emoji: "🦷",
     isFree: true,
     quiz: {
@@ -275,7 +275,7 @@ export const stories: Story[] = [
     story: "Liam's teeth loved to dance! Each time he brushed, they bounced and twirled happily. The cleaner he brushed, the shinier their moves became. Soon, they won the Great Tooth Dance Contest!",
     lesson: "Brushing can be fun!",
     questEnding: "Dance and brush at the same time!",
-    illustrationPath: "/stories/brush-bounce.png",
+    illustrationPath: "/stories/brush-bounce-adventure.webp",
     emoji: "💃",
     isFree: false,
     quiz: {
@@ -293,7 +293,7 @@ export const stories: Story[] = [
     story: "Emma joined the Shiny Tooth Club. Every day she brushed and flossed, earning sparkly badges for each clean tooth. Soon, she had the shiniest smile in the club!",
     lesson: "Brushing and flossing daily pays off.",
     questEnding: "Earn your Shiny Tooth Club badge!",
-    illustrationPath: "/stories/shiny-club.png",
+    illustrationPath: "/stories/shiny-club-party.webp",
     emoji: "🏅",
     isFree: false,
     quiz: {
@@ -473,7 +473,7 @@ export const stories: Story[] = [
     story: "A tiny piece of corn was stuck between two teeth. \"It won't come out!\" they cried. Captain Floss swooped in. Slide… gently… pull! The corn was gone. \"Floss saves the day!\" cheered the teeth.",
     lesson: "Floss helps where brushes can't reach.",
     questEnding: "Time to floss like a hero!",
-    illustrationPath: "/stories/captain-floss-corn.png",
+    illustrationPath: "/stories/captain-floss-corn-rescue.webp",
     emoji: "🦸‍♂️",
     isFree: false,
     quiz: {
@@ -491,7 +491,7 @@ export const stories: Story[] = [
     story: "Plaque pirates sailed across the teeth. \"They think they own this mouth!\" laughed Toothy. The toothbrush became a ship. The paste became foam waves. Scrub! Scrub! The pirates jumped ship and vanished.",
     lesson: "Daily brushing keeps teeth safe.",
     questEnding: "Brush away the plaque pirates!",
-    illustrationPath: "/stories/plaque-pirates-battle.png",
+    illustrationPath: "/stories/plaque-pirates-defeat.webp",
     emoji: "🏴‍☠️",
     isFree: false,
     quiz: {
@@ -545,7 +545,7 @@ export const stories: Story[] = [
     story: "The Tooth Fairy fluttered sadly. \"I lost my map,\" she said. The teeth followed sparkle clues. They brushed and cleaned along the way. Behind a shiny molar — there it was! \"Clean teeth help magic shine,\" said the Fairy.",
     lesson: "Clean teeth make magical things happen.",
     questEnding: "Brush to help the Tooth Fairy!",
-    illustrationPath: "/stories/tooth-fairy-map.png",
+    illustrationPath: "/stories/tooth-fairy-treasure-map.webp",
     emoji: "🗺️",
     isFree: false,
     quiz: {
@@ -617,7 +617,7 @@ export const stories: Story[] = [
     story: "An apple rolled in proudly. \"I help make teeth strong,\" it said. The teeth crunched happily. \"Yum!\" Candy tried to sneak in. Toothy waved it away. \"Healthy foods help teeth grow strong.\"",
     lesson: "Crunchy, healthy foods are good for teeth.",
     questEnding: "Choose a healthy snack today!",
-    illustrationPath: "/stories/apple-crunch.png",
+    illustrationPath: "/stories/apple-crunch-adventure.webp",
     emoji: "🍎",
     isFree: false,
     quiz: {
@@ -635,7 +635,7 @@ export const stories: Story[] = [
     story: "Juice splashed around loudly. \"I'm healthy!\" it said. Toothy read the label. \"Lots of sugar,\" he said gently. Water walked in quietly. \"I help rinse teeth clean.\" The teeth chose water.",
     lesson: "Water is the best drink for teeth.",
     questEnding: "Drink water after snacks!",
-    illustrationPath: "/stories/juice-sugar.png",
+    illustrationPath: "/stories/juice-sugar-lesson.webp",
     emoji: "🧃",
     isFree: false,
     quiz: {
@@ -653,7 +653,7 @@ export const stories: Story[] = [
     story: "Water zoomed in wearing a cape. \"Splash!\" It washed away sugar and food bits. The teeth cheered. \"Toothy was right!\" they said.",
     lesson: "Water keeps mouths clean and fresh.",
     questEnding: "Take a sip of water now!",
-    illustrationPath: "/stories/water-superhero.png",
+    illustrationPath: "/stories/water-superhero-splash.webp",
     emoji: "💧",
     isFree: false,
     quiz: {
@@ -671,7 +671,7 @@ export const stories: Story[] = [
     story: "The teeth looked at snacks. Candy… apple… crackers… Toothy asked, \"What helps us most?\" The teeth chose smart snacks. They smiled proudly.",
     lesson: "Good choices help teeth stay happy.",
     questEnding: "Pick a tooth-friendly snack!",
-    illustrationPath: "/stories/snack-choices.png",
+    illustrationPath: "/stories/snack-smart-choices.webp",
     emoji: "🥕",
     isFree: false,
     quiz: {

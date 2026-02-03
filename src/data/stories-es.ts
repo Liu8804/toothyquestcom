@@ -9,7 +9,7 @@ export const storiesEs: Story[] = [
     story: "¡Bienvenido a ToothyQuest! Hoy comienza algo increíble. Toothy, la mascota diente, saltó emocionado. \"¡Estoy tan feliz de que estés aquí!\" dijo. \"Juntos, aprenderemos cómo mantener tu sonrisa brillante.\" Te mostró el mundo mágico de los dientes — cada uno listo para brillar. \"Tu primera misión es simple,\" sonrió Toothy. \"¡Solo saluda a tus dientes en el espejo!\"",
     lesson: "Toda gran aventura comienza con un solo paso.",
     questEnding: "¡Has comenzado tu aventura de sonrisas!",
-    illustrationPath: "/stories/smile-quest.png",
+    illustrationPath: "/stories/smile-quest-adventure.webp",
     emoji: "⭐",
     isFree: true,
     quiz: {
@@ -27,7 +27,7 @@ export const storiesEs: Story[] = [
     story: "Toothy sostuvo un cepillo brillante. \"¡Esta es tu varita mágica!\" dijo. \"Déjame mostrarte cómo usarla.\" Demostró círculos suaves en cada diente. \"¡Dientes de arriba... dientes de abajo... adelante... y atrás!\" El cepillo bailó sobre todos los dientes, haciéndolos brillar. \"Recuerda,\" dijo Toothy, \"¡el cepillado suave es el mejor cepillado!\"",
     lesson: "Aprende a cepillar todos tus dientes suave y cuidadosamente.",
     questEnding: "¡Ahora conoces los básicos del cepillado!",
-    illustrationPath: "/stories/brush-bounce.png",
+    illustrationPath: "/stories/brush-bounce-adventure.webp",
     emoji: "🪥",
     isFree: true,
     quiz: {
@@ -63,7 +63,7 @@ export const storiesEs: Story[] = [
     story: "Toothy preparó una mesa con diferentes comidas. \"¡Algunas comidas ayudan a tus dientes a crecer fuertes!\" Señaló manzanas, zanahorias y queso. \"¡Estos son amigos de los dientes!\" Luego señaló dulces y refrescos. \"Estos están bien a veces, pero pueden invitar a los bichos del azúcar.\" Los dientes asintieron sabiamente. \"Elige amigos de los dientes seguido,\" dijo Toothy, \"¡y tu sonrisa te lo agradecerá!\"",
     lesson: "Aprende qué comidas son buenas para tus dientes.",
     questEnding: "¡Sabes qué comidas ayudan a tu sonrisa!",
-    illustrationPath: "/stories/apple-crunch.png",
+    illustrationPath: "/stories/apple-crunch-adventure.webp",
     emoji: "🥕",
     isFree: true,
     quiz: {
@@ -100,7 +100,7 @@ export const storiesEs: Story[] = [
     story: "¡Toothy saltó de alegría! \"¡Lo lograste!\" aplaudió. \"¡Has completado tus primeras cinco misiones!\" Todos los dientes en la boca aplaudieron y brillaron. \"Has aprendido a cepillarte, usar hilo dental y elegir comidas saludables,\" dijo Toothy orgulloso. Una estrella dorada apareció arriba. \"Esta es tu Estrella de Sonrisa — ¡prueba de que eres un verdadero héroe de ToothyQuest!\" La aventura apenas comenzaba...",
     lesson: "¡Excelente trabajo! ¡Terminaste tus primeras cinco misiones!",
     questEnding: "¡Estás listo para aventuras aún más grandes!",
-    illustrationPath: "/stories/shiny-club.png",
+    illustrationPath: "/stories/shiny-club-party.webp",
     emoji: "🏆",
     isFree: false,
     quiz: {
@@ -118,7 +118,7 @@ export const storiesEs: Story[] = [
     story: "El pequeño diente de Timmy se movía nervioso. \"¡No quiero caerme!\" susurró. Pero con un movimiento suave y una sonrisa valiente, Timmy contó hasta tres… ¡y POP! El dientecito saltó a salvo. La boca de Timmy se sintió más ligera, y no podía esperar para poner su diente bajo la almohada para el Hada de los Dientes.",
     lesson: "Perder dientes es natural y no hay nada que temer.",
     questEnding: "¡Sé valiente como el pequeño diente!",
-    illustrationPath: "/stories/brave-little-tooth.png",
+    illustrationPath: "/stories/brave-little-tooth-hero.webp",
     emoji: "🦷",
     isFree: true,
     quiz: {
