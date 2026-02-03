@@ -208,7 +208,7 @@ export const storiesEs: Story[] = [
     story: "Un grupo de pequeños dientes emprendió una búsqueda para encontrar la Corona de Sonrisa Brillante. ¡En el camino, se encontraron con placa pegajosa y trampas de azúcar! Con cepillado e hilo dental, llegaron a la corona y celebraron con sonrisas brillantes.",
     lesson: "El cuidado diario lleva a dientes saludables.",
     questEnding: "¡Completa tu búsqueda con cepillado diario!",
-    illustrationPath: "/stories/smile-quest.png",
+    illustrationPath: "/stories/smile-quest-adventure.webp",
     emoji: "👑",
     isFree: false,
     quiz: {
@@ -226,7 +226,7 @@ export const storiesEs: Story[] = [
     story: "Zara mezcló una poción de enjuague bucal brillante con burbujas mágicas. Lo movió alrededor y… ¡POP! Pequeños escudos brillantes aparecieron en todos sus dientes. ¡Su boca se sintió fresca y mágica!",
     lesson: "Enjuagarse ayuda a mantener los dientes saludables.",
     questEnding: "¡Haz un poco de enjuague bucal mágico!",
-    illustrationPath: "/stories/magic-mouthwash.png",
+    illustrationPath: "/stories/magic-mouthwash-potion.webp",
     emoji: "✨",
     isFree: false,
     quiz: {
@@ -280,7 +280,7 @@ export const storiesEs: Story[] = [
     story: "Los escurridizos Piratas de la Placa intentaron atacar los dientes de Leo mientras dormía. \"¡No bajo mi guardia!\" gritó Leo, agarrando su cepillo espada. ¡Swish-swash! Los piratas fueron derrotados, dejando los dientes de Leo seguros y brillantes.",
     lesson: "El cepillado regular combate la placa.",
     questEnding: "¡Derrota a los piratas de la placa con tu cepillo!",
-    illustrationPath: "/stories/plaque-pirates.png",
+    illustrationPath: "/stories/plaque-pirates-adventure.webp",
     emoji: "🏴‍☠️",
     isFree: false,
     quiz: {
@@ -298,7 +298,7 @@ export const storiesEs: Story[] = [
     story: "Un pequeño diente se asomó desde el fondo de la boca. \"No me gusta cepillarme,\" susurró el diente. \"¡El cepillo hace cosquillas!\" Toothy sonrió. \"Intentemos despacio,\" dijo. El cepillo se movió suavemente. Swish… swish… swish. El diente empezó a reírse. \"¡Oh!\" dijo el diente. \"¡Eso se siente bien!\" Pronto, el diente estaba brillando.",
     lesson: "Intentar algo nuevo puede dar miedo — pero puede volverse divertido.",
     questEnding: "¡Cepilla suavemente y haz reír a tus dientes!",
-    illustrationPath: "/stories/shy-tooth.png",
+    illustrationPath: "/stories/shy-tooth-friend.webp",
     emoji: "😊",
     isFree: false,
     quiz: {
@@ -316,7 +316,7 @@ export const storiesEs: Story[] = [
     story: "Timmy sintió que su diente se movía. \"¡Se está moviendo!\" dijo. El diente estaba nervioso. \"¿Qué pasa si me caigo?\" susurró. Toothy apareció. \"¡Los dientes que se mueven significan que estás creciendo!\" Timmy sonrió y siguió cepillándose suavemente todos los días. Una mañana… ¡plop! El diente estaba listo.",
     lesson: "Crecer significa cambiar — y eso está bien.",
     questEnding: "¡Los dientes que crecen necesitan cuidado gentil!",
-    illustrationPath: "/stories/wiggly-tooth.png",
+    illustrationPath: "/stories/wiggly-tooth-excitement.webp",
     emoji: "🦷",
     isFree: false,
     quiz: {
@@ -352,7 +352,7 @@ export const storiesEs: Story[] = [
     story: "Un diente quería dulces ahora mismo. \"¡No quiero esperar!\" Toothy negó con la cabeza amablemente. \"Primero cepíllate, luego el premio.\" El diente esperó. ¡Cepillarse… enjuagarse… sonreír! El dulce sabía aún mejor después.",
     lesson: "Los buenos hábitos van primero.",
     questEnding: "¡Cepíllate primero, luego disfruta tu premio!",
-    illustrationPath: "/stories/patient-tooth.png",
+    illustrationPath: "/stories/patient-tooth-waiting.webp",
     emoji: "⏰",
     isFree: false,
     quiz: {
@@ -406,7 +406,7 @@ export const storiesEs: Story[] = [
     story: "Después de acostarse, quedaron migajas. Los dientes susurraron, \"Uh-oh.\" Pequeños bichos del azúcar despertaron. ¡Empezaron una fiesta de medianoche! De repente — ¡Swish! ¡Frotar! Toothy llegó con espuma de pasta dental. \"Cepillarse antes de dormir salva el día,\" dijo.",
     lesson: "Cepillarse antes de dormir es muy importante.",
     questEnding: "¡Cepíllate los dientes antes de dormir para mantenerlos seguros!",
-    illustrationPath: "/stories/midnight-snack.png",
+    illustrationPath: "/stories/midnight-snack-battle.webp",
     emoji: "🌙",
     isFree: false,
     quiz: {
@@ -424,7 +424,7 @@ export const storiesEs: Story[] = [
     story: "Un diente estaba cubierto de azúcar pegajoso. \"¡Estoy atrapado!\" gritó. Toothy apretó la pasta dental. Las burbujas llenaron la boca. ¡Pop! ¡Pop! ¡Pop! El azúcar flotó. \"¡Me siento limpio!\" dijo el diente feliz.",
     lesson: "La pasta dental ayuda a limpiar lugares difíciles de alcanzar.",
     questEnding: "¡Usemos pasta dental y hagamos burbujas!",
-    illustrationPath: "/stories/bubble-rescue.png",
+    illustrationPath: "/stories/bubble-toothpaste-rescue.webp",
     emoji: "🫧",
     isFree: false,
     quiz: {
@@ -496,7 +496,7 @@ export const storiesEs: Story[] = [
     story: "Los dientes se sentían opacos y cansados. \"¡Necesitamos ayuda!\" Toothy llamó al Escuadrón Súper Sonrisa. ¡Héroe Cepillo! ¡Amigo Hilo Dental! ¡Ranger Enjuague! Juntos limpiaron cada diente. Las sonrisas brillaron más que nunca.",
     lesson: "Trabajar juntos mantiene las sonrisas fuertes.",
     questEnding: "¡Únete al Escuadrón Súper Sonrisa y cepíllate!",
-    illustrationPath: "/stories/super-smile-squad.png",
+    illustrationPath: "/stories/super-smile-squad-heroes.webp",
     emoji: "🦸‍♀️",
     isFree: false,
     quiz: {
@@ -550,7 +550,7 @@ export const storiesEs: Story[] = [
     story: "Toothy agitó su cepillo. \"¡Brillar… frotar… swish!\" Los dientes repitieron las palabras. Se cepillaron juntos. Magia brillante llenó la boca. \"¡Hechizo completado!\" aplaudieron los dientes.",
     lesson: "Cepillarse puede ser divertido y mágico.",
     questEnding: "¡Di el hechizo brillante y cepíllate!",
-    illustrationPath: "/stories/sparkle-spell.png",
+    illustrationPath: "/stories/sparkle-spell-magic.webp",
     emoji: "✨",
     isFree: false,
     quiz: {
@@ -568,7 +568,7 @@ export const storiesEs: Story[] = [
     story: "Cuando el niño se durmió, los dientes bostezaron. \"Hora de descansar,\" dijeron. En el País de los Sueños, Toothy los guió. Cepilla suavemente… enjuaga gentilmente… Los dientes se acurrucaron, limpios y felices. Soñaron con sonrisas brillantes.",
     lesson: "Los dientes limpios duermen mejor.",
     questEnding: "¡Cepíllate antes de dormir y dulces sueños!",
-    illustrationPath: "/stories/dreamland-adventure.png",
+    illustrationPath: "/stories/dreamland-teeth-adventure.webp",
     emoji: "💤",
     isFree: false,
     quiz: {
@@ -885,7 +885,7 @@ export const storiesEs: Story[] = [
     story: "Nubes oscuras se reunieron sobre Tierradiente — ¡venía una tormenta de dulces! Pero esta vez, los dientes estarían listos. El caballero dentista te dio un pincel mágico. \"¡Rápido! ¡Pinta la armadura invisible en cada molar antes de que caigan los dulces!\" Trabajaste rápido, cubriendo cada diente con sellador protector. ¡Justo a tiempo! Los dulces llovieron pero rebotaron en los escudos mágicos. ¡Los molares brillaron con magia protectora!",
     lesson: "Los selladores previenen las caries y protegen los dientes de ataques de dulces pegajosos.",
     questEnding: "¡Los molares están protegidos con armadura mágica!",
-    illustrationPath: "/stories/tooth-armor.png",
+    illustrationPath: "/stories/tooth-armor-shield.webp",
     emoji: "🛡️",
     miniGameInstructions: "Pinta la armadura en cada diente antes de que caigan los dulces.",
     rewards: {
@@ -972,7 +972,7 @@ export const storiesEs: Story[] = [
     story: "Algo se escondía dentro de los dientes, ¿pero qué? El detective dentista sacó una cámara mágica — ¡una máquina de rayos X! \"Esto nos ayuda a ver lo que está oculto adentro,\" explicó Toothy. La cámara mostró sombras donde los gérmenes se escondían. \"¡Empareja cada germen con su diente!\" Identificaste cuidadosamente cada punto problemático. ¡Los gérmenes desaparecieron, y un sombrero de detective apareció en tu cabeza!",
     lesson: "Los rayos X ayudan a los dentistas a ver problemas antes de que crezcan.",
     questEnding: "¡Ahora eres un Detective Dental certificado!",
-    illustrationPath: "/stories/tooth-detective.png",
+    illustrationPath: "/stories/tooth-detective-xray.webp",
     emoji: "🔍",
     miniGameInstructions: "Empareja los gérmenes vistos en los rayos X con el diente correcto.",
     rewards: {
@@ -1442,7 +1442,7 @@ export const storiesEs: Story[] = [
     story: "¡Placa el germen pegajoso estaba tratando de construir un hogar en los dientes! \"¡No tan rápido!\" dijo Toothy. \"¡Patrullamos todos los días!\" Con cepillado e hilo dental, la placa no tenía dónde esconderse. \"¡RETIRENSE!\" gritaron los gérmenes. Los dientes se mantuvieron limpios y brillantes. ¡La Patrulla de Placa gana de nuevo!",
     lesson: "¡El cepillado y el hilo dental diarios eliminan la placa!",
     questEnding: "¡La Patrulla de Placa salva el día!",
-    illustrationPath: "/stories/plaque-patrol.png",
+    illustrationPath: "/stories/plaque-patrol-team.webp",
     emoji: "🔍",
     miniGameInstructions: "¡Encuentra y elimina toda la placa!",
     rewards: {
