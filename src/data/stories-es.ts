@@ -136,7 +136,7 @@ export const storiesEs: Story[] = [
     story: "Lily puso su diente caído bajo la almohada y se durmió. ¡De repente, el Hada de los Dientes apareció, con alas brillantes revoloteando! Susurró, \"¡Gracias por mantener tus dientes limpios!\" y dejó una moneda brillante. Lily despertó emocionada y orgullosa.",
     lesson: "Cepillarse y cuidar los dientes trae recompensas.",
     questEnding: "¡Mantén tus dientes limpios para el Hada de los Dientes!",
-    illustrationPath: "/stories/tooth-fairy.png",
+    illustrationPath: "/stories/tooth-fairy-celebration.webp",
     emoji: "🧚",
     isFree: true,
     quiz: {
@@ -154,7 +154,7 @@ export const storiesEs: Story[] = [
     story: "¡Max estaba jugando cuando pequeños monstruos de caries se metieron en sus dientes! \"¡Oh no!\" gritó. Con su cepillo de dientes y un poco de pasta dental, Max ahuyentó a los monstruos. Sus dientes brillaron de nuevo, seguros y felices.",
     lesson: "Cepillarse mantiene alejadas las caries.",
     questEnding: "¡Toma tu cepillo y persigue a esos monstruos!",
-    illustrationPath: "/stories/cavity-monsters.png",
+    illustrationPath: "/stories/cavity-monster-brush.webp",
     emoji: "👾",
     isFree: false,
     quiz: {
@@ -190,7 +190,7 @@ export const storiesEs: Story[] = [
     story: "Sophie descubrió bichos del azúcar escondidos en su barra de chocolate. \"¡No podemos dejar que se queden!\" dijo. Se cepilló, enjuagó y usó hilo dental — los bichos del azúcar huyeron. Los dientes de Sophie brillaron como estrellas.",
     lesson: "Cepillarse después de los dulces protege los dientes.",
     questEnding: "¡Caza esos bichos del azúcar con tu cepillo!",
-    illustrationPath: "/stories/sugar-bugs.png",
+    illustrationPath: "/stories/sugar-bugs-party.webp",
     emoji: "🐛",
     isFree: false,
     quiz: {
@@ -334,7 +334,7 @@ export const storiesEs: Story[] = [
     story: "Max sostuvo la mano de su mamá fuerte. \"El dentista suena aterrador,\" dijo. Pero adentro, el dentista sonrió. \"¡Hola, amigo!\" La silla subió. La luz brilló. Todo se sintió gentil. \"Toothy tenía razón,\" dijo Max. \"¡Eso no dio nada de miedo!\"",
     lesson: "Los dentistas ayudan a mantener las sonrisas fuertes.",
     questEnding: "¡Los dentistas son nuestros amigos de la sonrisa!",
-    illustrationPath: "/stories/friendly-dentist.png",
+    illustrationPath: "/stories/dentist-day-celebration.webp",
     emoji: "🏥",
     isFree: false,
     quiz: {
@@ -370,7 +370,7 @@ export const storiesEs: Story[] = [
     story: "Después del snack, pequeños bichos del azúcar se escabulleron. \"Jejeje,\" se rieron. Los dientes pidieron ayuda. Toothy llegó con un ejército de cepillos. ¡Frotar! ¡Swish! ¡Enjuagar! Los bichos del azúcar huyeron. \"¡Victoria!\" aplaudieron los dientes.",
     lesson: "Cepillarse mantiene alejados a los bichos del azúcar.",
     questEnding: "¡Cepilla esos bichos del azúcar escurridizos!",
-    illustrationPath: "/stories/sugar-bugs.png",
+    illustrationPath: "/stories/sugar-bugs-swish.webp",
     emoji: "🐜",
     isFree: false,
     quiz: {
@@ -478,7 +478,7 @@ export const storiesEs: Story[] = [
     story: "Los dientes miraron el reloj. \"¿Dos minutos completos?\" exclamaron. Toothy rió. \"¡Va más rápido con música!\" Cepillar… cepillar… Lado izquierdo… lado derecho… Arriba… abajo… ¡Ding! \"¡Lo logramos!\" aplaudieron los dientes.",
     lesson: "Cepillarse por 2 minutos hace los dientes extra limpios.",
     questEnding: "¡Cepillémonos juntos hasta que termine el temporizador!",
-    illustrationPath: "/stories/brushing-timer.png",
+    illustrationPath: "/stories/brushing-timer-stars.webp",
     emoji: "⏱️",
     isFree: false,
     quiz: {
@@ -914,7 +914,7 @@ export const storiesEs: Story[] = [
     story: "Un pequeño diente estaba listo para una gran aventura — ¡era hora de dejar Tierradiente! El diente se veía nervioso, pero Toothy sonrió suavemente. \"No te preocupes, pequeño. ¡Esto hace espacio para que crezcan nuevos dientes!\" Tocaste suavemente para ayudar al diente a salir con seguridad. ¡Pop! El diente se despidió mientras aparecían estrellas. \"¡Gracias por ser valiente!\" vitoreó Toothy.",
     lesson: "A veces los dientes necesitan ser removidos para mantener la boca sana.",
     questEnding: "¡El pequeño diente se despide feliz!",
-    illustrationPath: "/stories/tooth-farewell.png",
+    illustrationPath: "/stories/tooth-farewell-friend.webp",
     emoji: "👋",
     miniGameInstructions: "Toca suavemente para ayudar al diente a salir con seguridad.",
     rewards: {
@@ -1349,7 +1349,7 @@ export const storiesEs: Story[] = [
     story: "¡Los Bichos del Azúcar estaban teniendo una fiesta! \"¡Más dulces! ¡Más refresco!\" vitoreaban. Pero Toothy llegó para detenerlos. \"El azúcar alimenta a estos gérmenes,\" advirtió. \"¡Hacen cosas asquerosas que lastiman los dientes!\" Los niños aprendieron a cepillarse después de los dulces y elegir agua. ¡Los Bichos del Azúcar tuvieron que irse!",
     lesson: "¡Limita el azúcar y cepíllate después de los dulces!",
     questEnding: "¡Bichos del Azúcar derrotados!",
-    illustrationPath: "/stories/sugar-bugs-beware.png",
+    illustrationPath: "/stories/sugar-bugs-begone.webp",
     emoji: "🍬",
     miniGameInstructions: "¡Ahuyenta a los bichos del azúcar!",
     rewards: {
@@ -1411,7 +1411,7 @@ export const storiesEs: Story[] = [
     story: "¡El pequeño Diente de Leche estaba orgulloso! \"¡Puede que sea pequeño, pero soy importante!\" Los dientes de leche ayudan a los niños a comer y hablar. También guardan espacio para los dientes de adulto. \"Cuídanos,\" dijo Diente de Leche, \"¡y nosotros te cuidaremos a ti!\" Los niños aprendieron que cada diente importa, ¡sin importar cuán pequeño sea!",
     lesson: "¡Los dientes de leche guían a los dientes adultos y también necesitan cuidado!",
     questEnding: "¡Los dientes de leche son héroes!",
-    illustrationPath: "/stories/baby-teeth-heroes.png",
+    illustrationPath: "/stories/baby-teeth-adventure.webp",
     emoji: "👶",
     miniGameInstructions: "¡Cuida cada diente de leche!",
     rewards: {
@@ -1538,7 +1538,7 @@ export const storiesEs: Story[] = [
     story: "¡Bienvenido, Explorador! Hoy visitas el Castillo Dental, donde ayudantes amigables mantienen los dientes fuertes y brillantes. ¡La sala de espera tiene juegos divertidos, el dentista es un héroe de dientes, y la silla es una silla mágica que sube y baja como una nave espacial! Toothy saltó emocionado. \"¡Esto va a ser muy divertido!\" ¡Todo aquí está diseñado para hacer brillar tu sonrisa!",
     lesson: "El dentista es un ayudante, no da miedo. Nada pasa sin explicación.",
     questEnding: "¡Estás listo para explorar el Castillo Dental!",
-    illustrationPath: "/stories/friendly-dentist.png",
+    illustrationPath: "/stories/dentist-day-celebration.webp",
     emoji: "🏰",
     isFree: true,
     quiz: {
