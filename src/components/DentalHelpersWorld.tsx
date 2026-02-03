@@ -18,6 +18,7 @@ interface Zone {
   icon: React.ReactNode;
   color: string;
   questIds: string[];
+  backgroundImage: string;
 }
 
 const zones: Zone[] = [
@@ -28,6 +29,7 @@ const zones: Zone[] = [
     icon: <span className="text-3xl">😁</span>,
     color: "from-pink-500 to-purple-500",
     questIds: ["braces-helpers"],
+    backgroundImage: "/dental-helpers/braces-zone.webp",
   },
   {
     id: "space-makers",
@@ -36,6 +38,7 @@ const zones: Zone[] = [
     icon: <span className="text-3xl">⭕</span>,
     color: "from-blue-500 to-cyan-500",
     questIds: ["tooth-separators", "dental-expanders"],
+    backgroundImage: "/dental-helpers/space-makers.webp",
   },
   {
     id: "tooth-protectors",
@@ -44,6 +47,7 @@ const zones: Zone[] = [
     icon: <Shield className="w-8 h-8 text-white" />,
     color: "from-green-500 to-emerald-500",
     questIds: ["mouthguards-hero", "dental-trauma"],
+    backgroundImage: "/dental-helpers/tooth-protectors.webp",
   },
   {
     id: "mouth-habits",
@@ -52,6 +56,7 @@ const zones: Zone[] = [
     icon: <Heart className="w-8 h-8 text-white" />,
     color: "from-orange-500 to-amber-500",
     questIds: ["mouth-habits"],
+    backgroundImage: "/dental-helpers/mouth-habits.webp",
   },
 ];
 
@@ -201,42 +206,52 @@ const DentalHelpersWorld = () => {
                     }}
                     className="cursor-pointer"
                   >
-                    <div className={`relative bg-gradient-to-br ${zone.color} rounded-3xl p-6 shadow-lg overflow-hidden`}>
+                    <div 
+                      className="relative rounded-3xl p-6 shadow-lg overflow-hidden min-h-[200px]"
+                      style={{
+                        backgroundImage: `url(${zone.backgroundImage})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    >
+                      {/* Gradient overlay for text legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                      
                       {/* Sparkle effects */}
                       <motion.div
-                        className="absolute top-4 right-4 text-white/60"
+                        className="absolute top-4 right-4 text-white/60 z-10"
                         animate={{ rotate: 360 }}
                         transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                       >
                         <Sparkles className="w-6 h-6" />
                       </motion.div>
 
-                      <div className="flex items-start gap-4">
-                        <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
-                          {zone.icon}
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-display text-xl font-bold text-white mb-1">
+                      <div className="relative z-10 flex flex-col h-full justify-end mt-16">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+                            {zone.icon}
+                          </div>
+                          <h3 className="font-display text-xl font-bold text-white drop-shadow-lg">
                             {zone.name}
                           </h3>
-                          <p className="text-white/80 text-sm mb-3">
-                            {zone.description}
-                          </p>
-                          <div className="flex items-center gap-2">
-                            <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
-                              <motion.div
-                                className="h-full bg-white rounded-full"
-                                initial={{ width: 0 }}
-                                animate={{ width: `${(progress.completed / progress.total) * 100}%` }}
-                              />
-                            </div>
-                            <span className="text-white text-sm font-bold flex items-center gap-1">
-                              <Star className="w-4 h-4" />
-                              {progress.completed}/{progress.total}
-                            </span>
-                          </div>
                         </div>
-                        <ChevronRight className="w-6 h-6 text-white/60" />
+                        <p className="text-white/90 text-sm mb-3 drop-shadow-md">
+                          {zone.description}
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+                            <motion.div
+                              className="h-full bg-white rounded-full"
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(progress.completed / progress.total) * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-white text-sm font-bold flex items-center gap-1">
+                            <Star className="w-4 h-4" />
+                            {progress.completed}/{progress.total}
+                          </span>
+                          <ChevronRight className="w-5 h-5 text-white/80" />
+                        </div>
                       </div>
                     </div>
                   </motion.div>
