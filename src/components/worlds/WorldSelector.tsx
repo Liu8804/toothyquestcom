@@ -24,11 +24,15 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
   const { t, i18n } = useTranslation();
   const { questProgress, selectedChild } = useQuestProgress();
   const stories = useStories();
-  const { isPurchased } = usePurchase();
-  const { isAdmin } = useAdminStatus();
-  const { hasEntitlement } = useEntitlementStatus();
+  const { isPurchased, isCheckingPurchase } = usePurchase();
+  const { isAdmin, isAdminLoading } = useAdminStatus();
+  const { hasEntitlement, entitlementLoading } = useEntitlementStatus();
 
-  const isUnlocked = isPurchased || isAdmin || hasEntitlement;
+  // Wait for all access checks to complete before determining lock status
+  const isAccessLoading = isCheckingPurchase || isAdminLoading || entitlementLoading;
+  
+  // Admin accounts always have full access - this is the primary unlock path
+  const isUnlocked = isAdmin || isPurchased || hasEntitlement;
 
   const [selectedWorld, setSelectedWorld] = useState<World | null>(null);
   const [selectedPhase, setSelectedPhase] = useState<Phase | null>(null);
@@ -80,8 +84,10 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
     const story = stories.find(s => s.id === storyId);
     if (!story) return;
 
-    // Check if locked (not free and not purchased)
-    if (!story.isFree && !isUnlocked) {
+    // Admin accounts bypass ALL locks - check admin first for consistency
+    // If still loading access status, allow the click (optimistic) 
+    const shouldBlock = !isUnlocked && !isAccessLoading && !story.isFree;
+    if (shouldBlock) {
       setShowPurchaseModal(true);
       return;
     }
@@ -101,7 +107,8 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
         {phaseStories.map((story, index) => {
           if (!story) return null;
           const isCompleted = completedQuestIds.includes(story.id);
-          const isLocked = !story.isFree && !isUnlocked;
+          // Never show lock for admin/purchased users, even while loading
+          const isLocked = !isUnlocked && !isAccessLoading && !story.isFree;
 
           return (
             <motion.button
@@ -211,7 +218,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                     description={isSpanish ? world.descriptionEs : world.description}
                     emoji={world.emoji}
                     color={world.color}
-                    isLocked={world.isLocked && !isUnlocked}
+                    isLocked={world.isLocked && !isUnlocked && !isAccessLoading}
                     progress={getWorldProgress(world)}
                     onClick={() => setSelectedWorld(world)}
                   />
