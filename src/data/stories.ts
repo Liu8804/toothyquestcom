@@ -40,7 +40,7 @@ export const stories: Story[] = [
     story: "Welcome to ToothyQuest! Today is the start of something amazing. Toothy the tooth mascot bounced excitedly. \"I'm so happy you're here!\" he said. \"Together, we'll learn how to keep your smile sparkling bright.\" He showed you the magical world of teeth — each one ready to shine. \"Your first quest is simple,\" Toothy smiled. \"Just say hello to your teeth in the mirror!\"",
     lesson: "Every great adventure starts with a single step.",
     questEnding: "You've started your smile adventure!",
-    illustrationPath: "/stories/smile-quest-adventure.webp",
+    illustrationPath: "/stories/sparkle-start-adventure.webp",
     emoji: "⭐",
     isFree: true,
     quiz: {
@@ -329,7 +329,7 @@ export const stories: Story[] = [
     story: "A tiny tooth peeked out from the back of the mouth. \"I don't like brushing,\" the tooth whispered. \"The toothbrush is too tickly!\" Toothy smiled. \"Let's try slowly,\" he said. The toothbrush moved gently. Swish… swish… swish. The tooth started to giggle. \"Oh!\" said the tooth. \"That feels nice!\" Soon, the tooth was sparkling.",
     lesson: "Trying something new can feel scary — but it can turn fun.",
     questEnding: "Brush gently and make your teeth giggle!",
-    illustrationPath: "/stories/shy-tooth-friend.webp",
+    illustrationPath: "/stories/shy-tooth-learning.webp",
     emoji: "😊",
     isFree: false,
     quiz: {
@@ -347,7 +347,7 @@ export const stories: Story[] = [
     story: "Timmy felt his tooth move. \"It's wiggling!\" he said. The tooth was nervous. \"What if I fall out?\" it whispered. Toothy popped in. \"Wiggly teeth mean you're growing!\" Timmy smiled and kept brushing gently every day. One morning… plop! The tooth was ready.",
     lesson: "Growing up means change — and that's okay.",
     questEnding: "Growing teeth need gentle care!",
-    illustrationPath: "/stories/wiggly-tooth-excitement.webp",
+    illustrationPath: "/stories/wiggly-tooth-adventure.webp",
     emoji: "🦷",
     isFree: false,
     quiz: {
@@ -383,7 +383,7 @@ export const stories: Story[] = [
     story: "A tooth wanted candy right now. \"I don't want to wait!\" Toothy shook his head kindly. \"First brush, then treat.\" The tooth waited. Brush… rinse… smile! The candy tasted even better after.",
     lesson: "Good habits come first.",
     questEnding: "Brush first, then enjoy your treat!",
-    illustrationPath: "/stories/patient-tooth-waiting.webp",
+    illustrationPath: "/stories/patient-tooth-lesson.webp",
     emoji: "⏰",
     isFree: false,
     quiz: {
@@ -455,7 +455,7 @@ export const stories: Story[] = [
     story: "A tooth was covered in sticky sugar. \"I'm stuck!\" it cried. Toothy squeezed the toothpaste. Bubbles filled the mouth. Pop! Pop! Pop! The sugar floated away. \"I feel clean!\" said the tooth happily.",
     lesson: "Toothpaste helps clean hard-to-reach spots.",
     questEnding: "Let's use toothpaste and make bubbles!",
-    illustrationPath: "/stories/bubble-toothpaste-rescue.webp",
+    illustrationPath: "/stories/bubble-toothpaste-hero.webp",
     emoji: "🫧",
     isFree: false,
     quiz: {
@@ -473,7 +473,7 @@ export const stories: Story[] = [
     story: "A tiny piece of corn was stuck between two teeth. \"It won't come out!\" they cried. Captain Floss swooped in. Slide… gently… pull! The corn was gone. \"Floss saves the day!\" cheered the teeth.",
     lesson: "Floss helps where brushes can't reach.",
     questEnding: "Time to floss like a hero!",
-    illustrationPath: "/stories/captain-floss-corn-rescue.webp",
+    illustrationPath: "/stories/captain-floss-corn-hero.webp",
     emoji: "🦸‍♂️",
     isFree: false,
     quiz: {
@@ -527,7 +527,7 @@ export const stories: Story[] = [
     story: "The teeth felt dull and tired. \"We need help!\" Toothy called the Super Smile Squad. Brush Hero! Floss Friend! Rinse Ranger! Together they cleaned every tooth. The smiles sparkled brighter than ever.",
     lesson: "Working together keeps smiles strong.",
     questEnding: "Join the Super Smile Squad and brush!",
-    illustrationPath: "/stories/super-smile-squad-heroes.webp",
+    illustrationPath: "/stories/super-smile-squad-team.webp",
     emoji: "🦸‍♀️",
     isFree: false,
     quiz: {
@@ -599,7 +599,7 @@ export const stories: Story[] = [
     story: "As the child fell asleep, the teeth yawned. \"Time to rest,\" they said. In Dreamland, Toothy guided them. Brush softly… rinse gently… The teeth curled up, clean and happy. They dreamed of shiny smiles.",
     lesson: "Clean teeth sleep better.",
     questEnding: "Brush before bed and sweet dreams!",
-    illustrationPath: "/stories/dreamland-teeth-adventure.webp",
+    illustrationPath: "/stories/dreamland-teeth-sleep.webp",
     emoji: "💤",
     isFree: false,
     quiz: {
