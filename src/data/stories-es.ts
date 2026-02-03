@@ -9,7 +9,7 @@ export const storiesEs: Story[] = [
     story: "¡Bienvenido a ToothyQuest! Hoy comienza algo increíble. Toothy, la mascota diente, saltó emocionado. \"¡Estoy tan feliz de que estés aquí!\" dijo. \"Juntos, aprenderemos cómo mantener tu sonrisa brillante.\" Te mostró el mundo mágico de los dientes — cada uno listo para brillar. \"Tu primera misión es simple,\" sonrió Toothy. \"¡Solo saluda a tus dientes en el espejo!\"",
     lesson: "Toda gran aventura comienza con un solo paso.",
     questEnding: "¡Has comenzado tu aventura de sonrisas!",
-    illustrationPath: "/stories/smile-quest-adventure.webp",
+    illustrationPath: "/stories/sparkle-start-adventure.webp",
     emoji: "⭐",
     isFree: true,
     quiz: {
@@ -298,7 +298,7 @@ export const storiesEs: Story[] = [
     story: "Un pequeño diente se asomó desde el fondo de la boca. \"No me gusta cepillarme,\" susurró el diente. \"¡El cepillo hace cosquillas!\" Toothy sonrió. \"Intentemos despacio,\" dijo. El cepillo se movió suavemente. Swish… swish… swish. El diente empezó a reírse. \"¡Oh!\" dijo el diente. \"¡Eso se siente bien!\" Pronto, el diente estaba brillando.",
     lesson: "Intentar algo nuevo puede dar miedo — pero puede volverse divertido.",
     questEnding: "¡Cepilla suavemente y haz reír a tus dientes!",
-    illustrationPath: "/stories/shy-tooth-friend.webp",
+    illustrationPath: "/stories/shy-tooth-learning.webp",
     emoji: "😊",
     isFree: false,
     quiz: {
@@ -316,7 +316,7 @@ export const storiesEs: Story[] = [
     story: "Timmy sintió que su diente se movía. \"¡Se está moviendo!\" dijo. El diente estaba nervioso. \"¿Qué pasa si me caigo?\" susurró. Toothy apareció. \"¡Los dientes que se mueven significan que estás creciendo!\" Timmy sonrió y siguió cepillándose suavemente todos los días. Una mañana… ¡plop! El diente estaba listo.",
     lesson: "Crecer significa cambiar — y eso está bien.",
     questEnding: "¡Los dientes que crecen necesitan cuidado gentil!",
-    illustrationPath: "/stories/wiggly-tooth-excitement.webp",
+    illustrationPath: "/stories/wiggly-tooth-adventure.webp",
     emoji: "🦷",
     isFree: false,
     quiz: {
@@ -352,7 +352,7 @@ export const storiesEs: Story[] = [
     story: "Un diente quería dulces ahora mismo. \"¡No quiero esperar!\" Toothy negó con la cabeza amablemente. \"Primero cepíllate, luego el premio.\" El diente esperó. ¡Cepillarse… enjuagarse… sonreír! El dulce sabía aún mejor después.",
     lesson: "Los buenos hábitos van primero.",
     questEnding: "¡Cepíllate primero, luego disfruta tu premio!",
-    illustrationPath: "/stories/patient-tooth-waiting.webp",
+    illustrationPath: "/stories/patient-tooth-lesson.webp",
     emoji: "⏰",
     isFree: false,
     quiz: {
@@ -424,7 +424,7 @@ export const storiesEs: Story[] = [
     story: "Un diente estaba cubierto de azúcar pegajoso. \"¡Estoy atrapado!\" gritó. Toothy apretó la pasta dental. Las burbujas llenaron la boca. ¡Pop! ¡Pop! ¡Pop! El azúcar flotó. \"¡Me siento limpio!\" dijo el diente feliz.",
     lesson: "La pasta dental ayuda a limpiar lugares difíciles de alcanzar.",
     questEnding: "¡Usemos pasta dental y hagamos burbujas!",
-    illustrationPath: "/stories/bubble-toothpaste-rescue.webp",
+    illustrationPath: "/stories/bubble-toothpaste-hero.webp",
     emoji: "🫧",
     isFree: false,
     quiz: {
@@ -442,7 +442,7 @@ export const storiesEs: Story[] = [
     story: "Un pedacito de maíz estaba atrapado entre dos dientes. \"¡No sale!\" gritaron. El Capitán Hilo Dental llegó volando. ¡Deslizar… suavemente… jalar! El maíz desapareció. \"¡El hilo dental salva el día!\" aplaudieron los dientes.",
     lesson: "El hilo dental ayuda donde los cepillos no llegan.",
     questEnding: "¡Es hora de usar hilo dental como un héroe!",
-    illustrationPath: "/stories/captain-floss-corn-rescue.webp",
+    illustrationPath: "/stories/captain-floss-corn-hero.webp",
     emoji: "🦸‍♂️",
     isFree: false,
     quiz: {
@@ -496,7 +496,7 @@ export const storiesEs: Story[] = [
     story: "Los dientes se sentían opacos y cansados. \"¡Necesitamos ayuda!\" Toothy llamó al Escuadrón Súper Sonrisa. ¡Héroe Cepillo! ¡Amigo Hilo Dental! ¡Ranger Enjuague! Juntos limpiaron cada diente. Las sonrisas brillaron más que nunca.",
     lesson: "Trabajar juntos mantiene las sonrisas fuertes.",
     questEnding: "¡Únete al Escuadrón Súper Sonrisa y cepíllate!",
-    illustrationPath: "/stories/super-smile-squad-heroes.webp",
+    illustrationPath: "/stories/super-smile-squad-team.webp",
     emoji: "🦸‍♀️",
     isFree: false,
     quiz: {
@@ -568,7 +568,7 @@ export const storiesEs: Story[] = [
     story: "Cuando el niño se durmió, los dientes bostezaron. \"Hora de descansar,\" dijeron. En el País de los Sueños, Toothy los guió. Cepilla suavemente… enjuaga gentilmente… Los dientes se acurrucaron, limpios y felices. Soñaron con sonrisas brillantes.",
     lesson: "Los dientes limpios duermen mejor.",
     questEnding: "¡Cepíllate antes de dormir y dulces sueños!",
-    illustrationPath: "/stories/dreamland-teeth-adventure.webp",
+    illustrationPath: "/stories/dreamland-teeth-sleep.webp",
     emoji: "💤",
     isFree: false,
     quiz: {
