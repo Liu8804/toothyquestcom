@@ -21,6 +21,7 @@ interface PurchaseState {
   isRestoring: boolean;
   isCheckingPurchase: boolean;
   testerInfo: TesterInfo | null;
+  isAdmin: boolean; // Track admin status directly in purchase state
 }
 
 type PurchaseContextValue = {
@@ -30,6 +31,7 @@ type PurchaseContextValue = {
   isCheckingPurchase: boolean;
   lastPurchaseCheckAt: string | null;
   testerInfo: TesterInfo | null;
+  isAdmin: boolean; // Expose admin status for direct bypass checks
   purchase: (onLoadingStart?: () => void, planType?: PlanType) => Promise<boolean>;
   restorePurchase: () => Promise<boolean>;
   isContentLocked: (contentIndex: number, contentType?: "quest" | "game", completedQuestsCount?: number) => boolean;
@@ -47,6 +49,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
     isRestoring: false,
     isCheckingPurchase: true,
     testerInfo: null,
+    isAdmin: false,
   });
   const [lastPurchaseCheckAt, setLastPurchaseCheckAt] = useState<string | null>(null);
 
@@ -64,10 +67,18 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
       setPurchaseState((prev) => ({ ...prev, isCheckingPurchase: true }));
 
       // Admin bypass: admin accounts should always be unlocked (server-validated)
-      const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin");
-      if (!adminError && isAdmin === true) {
+      const { data: isAdminResult, error: adminError } = await supabase.rpc("is_admin");
+      const adminStatus = !adminError && isAdminResult === true;
+      
+      if (adminStatus) {
         localStorage.setItem(`toothyquest_purchased_${user.id}`, "true");
-        setPurchaseState((prev) => ({ ...prev, isPurchased: true, isCheckingPurchase: false, testerInfo: null }));
+        setPurchaseState((prev) => ({ 
+          ...prev, 
+          isPurchased: true, 
+          isCheckingPurchase: false, 
+          testerInfo: null,
+          isAdmin: true 
+        }));
         setLastPurchaseCheckAt(new Date().toISOString());
         return;
       }
@@ -255,6 +266,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
       isCheckingPurchase: purchaseState.isCheckingPurchase,
       lastPurchaseCheckAt,
       testerInfo: purchaseState.testerInfo,
+      isAdmin: purchaseState.isAdmin,
       purchase,
       restorePurchase,
       isContentLocked,
@@ -267,6 +279,7 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
       purchaseState.isRestoring,
       purchaseState.isCheckingPurchase,
       purchaseState.testerInfo,
+      purchaseState.isAdmin,
       lastPurchaseCheckAt,
       purchase,
       restorePurchase,
