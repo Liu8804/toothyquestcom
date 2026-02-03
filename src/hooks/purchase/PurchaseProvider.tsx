@@ -223,12 +223,22 @@ export const PurchaseProvider = ({ children }: { children: React.ReactNode }) =>
 
   const isContentLocked = useCallback(
     (contentIndex: number, contentType: "quest" | "game" = "quest", _completedQuestsCount: number = 0): boolean => {
+      // Test mode unlocks everything
       if (TEST_MODE_UNLOCK_ALL) return false;
+      
+      // isPurchased already includes admin bypass (set in checkPurchaseStatus)
       if (purchaseState.isPurchased) return false;
+      
+      // Still checking purchase status - don't lock content yet (optimistic)
+      if (purchaseState.isCheckingPurchase) return false;
+      
+      // Games require purchase
       if (contentType === "game") return true;
+      
+      // Quests: first FREE_QUEST_LIMIT are free
       return contentIndex >= FREE_QUEST_LIMIT;
     },
-    [purchaseState.isPurchased]
+    [purchaseState.isPurchased, purchaseState.isCheckingPurchase]
   );
 
   const refreshPurchaseStatus = useCallback(() => {
