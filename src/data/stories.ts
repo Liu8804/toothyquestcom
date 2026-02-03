@@ -167,7 +167,7 @@ export const stories: Story[] = [
     story: "Lily placed her lost tooth under the pillow and drifted to sleep. Suddenly, the Tooth Fairy appeared, sparkling wings fluttering! She whispered, \"Thanks for keeping your teeth clean!\" and left a shiny coin. Lily woke up excited and proud.",
     lesson: "Brushing and caring for teeth brings rewards.",
     questEnding: "Keep your teeth clean for the Tooth Fairy!",
-    illustrationPath: "/stories/tooth-fairy.png",
+    illustrationPath: "/stories/tooth-fairy-celebration.webp",
     emoji: "🧚",
     isFree: true,
     quiz: {
@@ -185,7 +185,7 @@ export const stories: Story[] = [
     story: "Max was playing when tiny cavity monsters snuck into his teeth! \"Oh no!\" he cried. With his toothbrush and a little bubble of toothpaste, Max chased the monsters away. His teeth sparkled again, safe and happy.",
     lesson: "Brushing keeps cavities away.",
     questEnding: "Grab your toothbrush and chase those monsters!",
-    illustrationPath: "/stories/cavity-monsters.png",
+    illustrationPath: "/stories/cavity-monster-brush.webp",
     emoji: "👾",
     isFree: false,
     quiz: {
@@ -221,7 +221,7 @@ export const stories: Story[] = [
     story: "Sophie spotted sugar bugs hiding in her chocolate bar. \"We can't let them stay!\" she said. She brushed, rinsed, and flossed — the sugar bugs ran away. Sophie's teeth shone bright like stars.",
     lesson: "Brushing after sweets protects teeth.",
     questEnding: "Hunt those sugar bugs with your brush!",
-    illustrationPath: "/stories/sugar-bugs.png",
+    illustrationPath: "/stories/sugar-bugs-party.webp",
     emoji: "🐛",
     isFree: false,
     quiz: {
@@ -365,7 +365,7 @@ export const stories: Story[] = [
     story: "Max held his mom's hand tightly. \"The dentist sounds scary,\" he said. But inside, the dentist smiled. \"Hello, friend!\" The chair went up. The light shined bright. Everything felt gentle. \"Toothy was right,\" Max said. \"That wasn't scary at all!\"",
     lesson: "Dentists help keep smiles strong.",
     questEnding: "Dentists are our smile friends!",
-    illustrationPath: "/stories/friendly-dentist.png",
+    illustrationPath: "/stories/dentist-day-celebration.webp",
     emoji: "🏥",
     isFree: false,
     quiz: {
@@ -401,7 +401,7 @@ export const stories: Story[] = [
     story: "After snack time, tiny sugar bugs crept in. \"Hehehe,\" they giggled. The teeth called for help. Toothy arrived with a toothbrush army. Scrub! Swish! Rinse! The sugar bugs ran away. \"Victory!\" cheered the teeth.",
     lesson: "Brushing keeps sugar bugs away.",
     questEnding: "Brush away those sneaky sugar bugs!",
-    illustrationPath: "/stories/sugar-bugs.png",
+    illustrationPath: "/stories/sugar-bugs-swish.webp",
     emoji: "🐜",
     isFree: false,
     quiz: {
@@ -419,7 +419,7 @@ export const stories: Story[] = [
     story: "A little cavity monster sat alone. \"I didn't mean to hurt teeth,\" he sighed. The teeth looked worried. Toothy stepped forward. \"Everyone can learn,\" he said. The monster watched as the teeth brushed and flossed. The cavity monster grew smaller… and smaller… Until—poof!—he disappeared with a smile.",
     lesson: "Good habits make bad problems go away.",
     questEnding: "Let's brush and give cavities no chance!",
-    illustrationPath: "/stories/cavity-monster-chance.png",
+    illustrationPath: "/stories/cavity-bugs-attack.webp",
     emoji: "👾",
     isFree: false,
     quiz: {
@@ -509,7 +509,7 @@ export const stories: Story[] = [
     story: "The teeth looked at the clock. \"Two whole minutes?\" they gasped. Toothy laughed. \"It goes faster with music!\" Brush… brush… Left side… right side… Top… bottom… Ding! \"We did it!\" cheered the teeth.",
     lesson: "Brushing for 2 minutes makes teeth extra clean.",
     questEnding: "Let's brush together until the timer finishes!",
-    illustrationPath: "/stories/brushing-timer.png",
+    illustrationPath: "/stories/brushing-timer-stars.webp",
     emoji: "⏱️",
     isFree: false,
     quiz: {
@@ -954,7 +954,7 @@ export const stories: Story[] = [
     story: "One little tooth was ready for a big adventure — it was time to leave Mouthland! The tooth looked nervous, but Toothy smiled gently. \"Don't worry, little one. This makes room for new teeth to grow!\" You tapped gently to help the tooth wiggle out safely. Pop! The tooth waved goodbye as stars appeared. \"Thank you for being brave!\" Toothy cheered.",
     lesson: "Sometimes teeth need to be removed to keep the mouth healthy.",
     questEnding: "The little tooth waves goodbye happily!",
-    illustrationPath: "/stories/tooth-farewell.png",
+    illustrationPath: "/stories/tooth-farewell-friend.webp",
     emoji: "👋",
     miniGameInstructions: "Tap gently to help the tooth wiggle out safely.",
     rewards: {
@@ -1403,7 +1403,7 @@ export const stories: Story[] = [
     story: "The Sugar Bugs were having a party! \"More candy! More soda!\" they cheered. But Toothy arrived to stop them. \"Sugar feeds these germs,\" he warned. \"They make yucky stuff that hurts teeth!\" The kids learned to brush after sweets and choose water. The Sugar Bugs had to leave!",
     lesson: "Limit sugar and brush after sweets!",
     questEnding: "Sugar Bugs defeated!",
-    illustrationPath: "/stories/sugar-bugs-beware.png",
+    illustrationPath: "/stories/sugar-bugs-begone.webp",
     emoji: "🍬",
     miniGameInstructions: "Chase away the sugar bugs!",
     rewards: {
@@ -1465,7 +1465,7 @@ export const stories: Story[] = [
     story: "Little Baby Tooth was proud! \"I might be small, but I'm important!\" Baby teeth help kids eat and talk. They also save space for grown-up teeth. \"Take care of us,\" Baby Tooth said, \"and we'll take care of you!\" The kids learned that every tooth matters, no matter how small!",
     lesson: "Baby teeth guide adult teeth and need care too!",
     questEnding: "Baby teeth are heroes!",
-    illustrationPath: "/stories/baby-teeth-heroes.png",
+    illustrationPath: "/stories/baby-teeth-adventure.webp",
     emoji: "👶",
     miniGameInstructions: "Care for each baby tooth!",
     rewards: {
