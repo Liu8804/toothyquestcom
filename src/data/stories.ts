@@ -76,7 +76,7 @@ export const stories: Story[] = [
     story: "\"Did you know there are tiny spaces between your teeth?\" Toothy asked. He pulled out a strand of magical floss. \"This helps clean where brushes can't reach!\" He gently slid the floss between two teeth. \"Swoosh!\" Hidden bits of food floated away. \"See?\" Toothy cheered. \"Flossing is like a treasure hunt — finding hidden things to clean!\"",
     lesson: "Practice flossing between your teeth to keep them clean.",
     questEnding: "You've learned the art of flossing!",
-    illustrationPath: "/stories/captain-floss.png",
+    illustrationPath: "/stories/captain-floss-hero.webp",
     emoji: "🧵",
     isFree: true,
     quiz: {
@@ -203,7 +203,7 @@ export const stories: Story[] = [
     story: "Flossy the superhero zipped through the mouth, saving teeth stuck with hidden sugar bits. \"You're safe now!\" she cheered. Every tooth sparkled as she finished her mission. Max clapped — flossing was fun!",
     lesson: "Flossing protects teeth from sneaky sugar.",
     questEnding: "Floss like a superhero today!",
-    illustrationPath: "/stories/captain-floss.png",
+    illustrationPath: "/stories/captain-floss-hero.webp",
     emoji: "🦸",
     isFree: false,
     quiz: {
@@ -799,7 +799,7 @@ export const stories: Story[] = [
     story: "Sugar Monsters snuck into the Tooth Castle! The brave Dentist Knights needed your help to clean them out and restore the castle. Toothy handed you a magic filling brush. \"Quick! We need to seal the holes before they spread!\" You tapped and painted the filling over each cavity until every tooth sparkled. The Sugar Monsters waved goodbye as they floated away. The Tooth Castle was saved!",
     lesson: "Fill the cavities to stop Sugar Monsters from spreading. Healthy teeth are strong teeth!",
     questEnding: "The Tooth Castle sparkles again!",
-    illustrationPath: "/stories/cavity-castle.png",
+    illustrationPath: "/stories/cavity-castle-battle.webp",
     emoji: "🏰",
     miniGameInstructions: "Tap and paint the filling over the cavity until the tooth shines.",
     rewards: {
@@ -830,7 +830,7 @@ export const stories: Story[] = [
     story: "The Tooth Village has tunnels deep inside where germs were hiding! Dentist Explorer needed your help to clean them out. You grabbed a tiny flashlight and explored the twisting tunnels. \"Swipe to remove the germs!\" Toothy cheered. With each swipe, germs disappeared and the tunnels sparkled. The village was safe again, and the tiny explorer waved happily!",
     lesson: "Remove germs and save the tooth village! Root canals protect teeth from serious infections.",
     questEnding: "The Tooth Village is safe and sparkling!",
-    illustrationPath: "/stories/tunnel-adventure.png",
+    illustrationPath: "/stories/tooth-tunnel-adventure.webp",
     emoji: "🔦",
     miniGameInstructions: "Guide a tiny explorer through twisting tunnels, swipe to remove germs.",
     rewards: {
@@ -1109,7 +1109,7 @@ export const stories: Story[] = [
     story: "Oh no! A little chip appeared on one of the teeth. But don't worry — the Tooth Fixing Fairy was here to help! She pulled out a tiny wand with magic resin. \"Paint this carefully to fill in the crack,\" she said sweetly. You traced along the chip, filling it perfectly. The tooth became whole again, and the fairy sprinkled sparkles in celebration!",
     lesson: "Bonding fixes small chips and cracks.",
     questEnding: "The tooth is whole and perfect again!",
-    illustrationPath: "/stories/tooth-fairy-fix.png",
+    illustrationPath: "/stories/tooth-fixing-fun.webp",
     emoji: "🧚",
     miniGameInstructions: "Paint resin to fill in cracks perfectly.",
     rewards: {
@@ -1339,7 +1339,7 @@ export const stories: Story[] = [
     story: "Game day was here! The teeth were excited but needed protection. \"Put on your mouthguards!\" called Coach Toothy. The mouthguards snapped into place like superhero shields. \"Now you're protected!\" cheered Toothy. The teeth played safely, bouncing and running without worry. Every tooth stayed safe thanks to the mighty mouthguard!",
     lesson: "Mouthguards protect teeth during sports.",
     questEnding: "Teeth are protected and ready to play!",
-    illustrationPath: "/stories/mouthguard-hero.png",
+    illustrationPath: "/stories/tooth-protectors-squad.webp",
     emoji: "🛡️",
     miniGameInstructions: "Fit the mouthguard before the game starts!",
     rewards: {

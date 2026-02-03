@@ -24,7 +24,7 @@ const CHARACTER_TAP_EFFECTS: Record<string, {
   },
   floss: {
     sounds: ["⚡ Swoosh!", "💪 Power!", "🦸 Hero!"],
-    emojis: ["⚡", "💫", "🦸", "🌟", "💪"],
+    emojis: ["⚡", "💫", "🦸", "🌟", "💪", "🧵"],
     message: "Captain Floss saves the day! ⚡",
     particleColor: "#eab308",
   },
@@ -52,6 +52,30 @@ const CHARACTER_TAP_EFFECTS: Record<string, {
     message: "Tooth fairy sprinkles magic! 🧚",
     particleColor: "#f59e0b",
   },
+  protector: {
+    sounds: ["🛡️ Shield!", "💪 Strong!", "🏆 Champion!"],
+    emojis: ["🛡️", "⚔️", "💪", "🏆", "⭐"],
+    message: "Tooth protectors to the rescue! 🛡️",
+    particleColor: "#3b82f6",
+  },
+  fixing: {
+    sounds: ["🔧 Fix!", "✨ Heal!", "🧚 Magic!"],
+    emojis: ["🔧", "✨", "🧚", "⭐", "💖"],
+    message: "All fixed and sparkly! ✨",
+    particleColor: "#f472b6",
+  },
+  tunnel: {
+    sounds: ["🔦 Explore!", "⭐ Found!", "💖 Thank you!"],
+    emojis: ["🔦", "⭐", "💖", "🌟", "✨"],
+    message: "Tooth tunnel adventure complete! 🔦",
+    particleColor: "#d946ef",
+  },
+  castle: {
+    sounds: ["🏰 Defend!", "⚔️ Battle!", "🪥 Brush!"],
+    emojis: ["🏰", "👾", "🪥", "⚔️", "✨"],
+    message: "Cavity Castle defended! 🏰",
+    particleColor: "#6366f1",
+  },
   default: {
     sounds: ["🦷 Yay!", "😊 Happy!", "⭐ Star!"],
     emojis: ["🦷", "⭐", "✨", "😊", "💙"],
@@ -77,23 +101,98 @@ const getStoryAnimationConfig = (storyId: string) => {
     };
   }
   
-  // Flossing stories - whooshing motion
+  // Captain Floss Hero stories - swooshing superhero action
   if (storyId.includes("floss") || storyId.includes("captain")) {
     return {
       imageAnimation: {
-        x: [0, 3, -3, 0],
+        x: [0, 5, -5, 0],
+        scale: [1, 1.03, 1],
       },
       overlayElements: [
         { emoji: "🦸", position: "top-left", tappable: true },
         { emoji: "💫", position: "center-right", tappable: true },
+        { emoji: "⚡", position: "top-right", tappable: true },
+        { emoji: "🧵", position: "bottom-left", tappable: true },
       ],
       theme: "floss",
-      glowColor: "from-yellow-400/20",
+      glowColor: "from-yellow-400/30",
     };
   }
   
-  // Sugar/cavity stories - spooky wiggle
-  if (storyId.includes("sugar") || storyId.includes("cavity") || storyId.includes("monster")) {
+  // Tooth Protectors / Mouthguards stories - shield effect with power pulses
+  if (storyId.includes("mouthguard") || storyId.includes("protector") || storyId.includes("sports-shield") || storyId.includes("armor")) {
+    return {
+      imageAnimation: {
+        scale: [1, 1.02, 1],
+        filter: ["brightness(1)", "brightness(1.15)", "brightness(1)"],
+      },
+      overlayElements: [
+        { emoji: "🛡️", position: "top-right", tappable: true },
+        { emoji: "⚔️", position: "top-left", tappable: true },
+        { emoji: "💪", position: "bottom-right", tappable: true },
+        { emoji: "🏆", position: "bottom-left", tappable: true },
+      ],
+      theme: "protector",
+      glowColor: "from-blue-500/25",
+    };
+  }
+  
+  // Tooth Fixing / Repair stories - healing sparkle effect
+  if (storyId.includes("fixing") || storyId.includes("repair") || storyId.includes("bonding")) {
+    return {
+      imageAnimation: {
+        scale: [1, 1.02, 1],
+        filter: ["brightness(1)", "brightness(1.2)", "brightness(1)"],
+      },
+      overlayElements: [
+        { emoji: "🔧", position: "top-left", tappable: true },
+        { emoji: "✨", position: "top-right", tappable: true },
+        { emoji: "🧚", position: "center", tappable: true },
+        { emoji: "⭐", position: "bottom-right", tappable: true },
+      ],
+      theme: "fixing",
+      glowColor: "from-pink-300/30",
+    };
+  }
+  
+  // Tunnel Adventure / Root Canal stories - explorer glow effect
+  if (storyId.includes("tunnel") || storyId.includes("root") || storyId.includes("explorer")) {
+    return {
+      imageAnimation: {
+        y: [0, -3, 0],
+        filter: ["brightness(1)", "brightness(1.15)", "brightness(1)"],
+      },
+      overlayElements: [
+        { emoji: "🔦", position: "top-left", tappable: true },
+        { emoji: "⭐", position: "top-right", tappable: true },
+        { emoji: "💖", position: "center", tappable: true },
+        { emoji: "🌟", position: "bottom-left", tappable: true },
+      ],
+      theme: "tunnel",
+      glowColor: "from-pink-400/25",
+    };
+  }
+  
+  // Cavity Castle stories - epic battle with monsters
+  if (storyId.includes("castle") || storyId.includes("cavity")) {
+    return {
+      imageAnimation: {
+        rotate: [-1, 1, -1],
+        scale: [1, 1.03, 1],
+      },
+      overlayElements: [
+        { emoji: "🏰", position: "top-right", tappable: true },
+        { emoji: "👾", position: "top-left", tappable: true },
+        { emoji: "🪥", position: "bottom-right", tappable: true },
+        { emoji: "⚔️", position: "bottom-left", tappable: true },
+      ],
+      theme: "castle",
+      glowColor: "from-indigo-500/25",
+    };
+  }
+  
+  // Sugar/monster stories - spooky wiggle
+  if (storyId.includes("sugar") || storyId.includes("monster")) {
     return {
       imageAnimation: {
         rotate: [-1, 1, -1],

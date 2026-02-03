@@ -45,7 +45,7 @@ export const storiesEs: Story[] = [
     story: "\"¿Sabías que hay espacios pequeñitos entre tus dientes?\" preguntó Toothy. Sacó un hilo dental mágico. \"¡Esto ayuda a limpiar donde los cepillos no llegan!\" Deslizó suavemente el hilo entre dos dientes. \"¡Swoosh!\" Pedacitos escondidos de comida flotaron. \"¿Ves?\" aplaudió Toothy. \"¡Usar hilo dental es como una búsqueda del tesoro — encontrando cosas escondidas para limpiar!\"",
     lesson: "Practica usar hilo dental entre tus dientes para mantenerlos limpios.",
     questEnding: "¡Has aprendido el arte del hilo dental!",
-    illustrationPath: "/stories/captain-floss.png",
+    illustrationPath: "/stories/captain-floss-hero.webp",
     emoji: "🧵",
     isFree: true,
     quiz: {
@@ -172,7 +172,7 @@ export const storiesEs: Story[] = [
     story: "Flossy la superheroína voló por la boca, salvando dientes atrapados con pedacitos de azúcar escondidos. \"¡Ahora están a salvo!\" aplaudió. Cada diente brilló cuando terminó su misión. ¡Max aplaudió — usar hilo dental era divertido!",
     lesson: "El hilo dental protege los dientes del azúcar escurridizo.",
     questEnding: "¡Usa hilo dental como un superhéroe hoy!",
-    illustrationPath: "/stories/captain-floss.png",
+    illustrationPath: "/stories/captain-floss-hero.webp",
     emoji: "🦸",
     isFree: false,
     quiz: {
@@ -769,7 +769,7 @@ export const storiesEs: Story[] = [
     story: "¡Los Monstruos de Azúcar se colaron en el Castillo Dental! Los valientes Caballeros Dentistas necesitaban tu ayuda para limpiarlos y restaurar el castillo. Toothy te dio un pincel mágico de relleno. \"¡Rápido! ¡Necesitamos sellar los agujeros antes de que se expandan!\" Tocaste y pintaste el relleno sobre cada caries hasta que cada diente brilló. Los Monstruos de Azúcar se despidieron mientras flotaban lejos. ¡El Castillo Dental fue salvado!",
     lesson: "Rellena las caries para evitar que los Monstruos de Azúcar se expandan. ¡Los dientes sanos son dientes fuertes!",
     questEnding: "¡El Castillo Dental brilla de nuevo!",
-    illustrationPath: "/stories/cavity-castle.png",
+    illustrationPath: "/stories/cavity-castle-battle.webp",
     emoji: "🏰",
     miniGameInstructions: "Toca y pinta el relleno sobre la caries hasta que el diente brille.",
     rewards: {
@@ -798,7 +798,7 @@ export const storiesEs: Story[] = [
     story: "¡El Pueblo Dental tiene túneles profundos donde los gérmenes se escondían! El Explorador Dentista necesitaba tu ayuda para limpiarlos. Agarraste una linterna pequeña y exploraste los túneles sinuosos. \"¡Desliza para eliminar los gérmenes!\" animó Toothy. Con cada deslizamiento, los gérmenes desaparecían y los túneles brillaban. ¡El pueblo estaba a salvo de nuevo, y el pequeño explorador saludó feliz!",
     lesson: "¡Elimina los gérmenes y salva el pueblo dental! Los tratamientos de conducto protegen los dientes de infecciones graves.",
     questEnding: "¡El Pueblo Dental está a salvo y brillando!",
-    illustrationPath: "/stories/tunnel-adventure.png",
+    illustrationPath: "/stories/tooth-tunnel-adventure.webp",
     emoji: "🔦",
     miniGameInstructions: "Guía a un pequeño explorador a través de túneles sinuosos, desliza para eliminar gérmenes.",
     rewards: {
@@ -1059,7 +1059,7 @@ export const storiesEs: Story[] = [
     story: "¡Oh no! Apareció una pequeña astilla en uno de los dientes. Pero no te preocupes — ¡el Hada Reparadora de Dientes estaba aquí para ayudar! Sacó una varita pequeña con resina mágica. \"Pinta esto cuidadosamente para rellenar la grieta,\" dijo dulcemente. Trazaste a lo largo de la astilla, rellenándola perfectamente. El diente se volvió entero de nuevo, ¡y el hada roció destellos en celebración!",
     lesson: "La unión dental arregla pequeñas astillas y grietas.",
     questEnding: "¡El diente está entero y perfecto de nuevo!",
-    illustrationPath: "/stories/tooth-fairy-fix.png",
+    illustrationPath: "/stories/tooth-fixing-fun.webp",
     emoji: "🧚",
     miniGameInstructions: "Pinta resina para rellenar las grietas perfectamente.",
     rewards: {
@@ -1285,7 +1285,7 @@ export const storiesEs: Story[] = [
     story: "¡Llegó el día del partido! Los dientes estaban emocionados pero necesitaban protección. \"¡Pónganse sus protectores bucales!\" gritó el Entrenador Toothy. Los protectores bucales se colocaron como escudos de superhéroes. \"¡Ahora están protegidos!\" aplaudió Toothy. Los dientes jugaron seguros, saltando y corriendo sin preocupaciones. ¡Cada diente se mantuvo seguro gracias al poderoso protector bucal!",
     lesson: "Los protectores bucales protegen los dientes durante los deportes.",
     questEnding: "¡Los dientes están protegidos y listos para jugar!",
-    illustrationPath: "/stories/mouthguard-hero.png",
+    illustrationPath: "/stories/tooth-protectors-squad.webp",
     emoji: "🛡️",
     miniGameInstructions: "¡Coloca el protector bucal antes de que empiece el partido!",
     rewards: {
