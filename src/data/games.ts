@@ -409,6 +409,21 @@ export const routineGames: Game[] = [
 // CREATIVE / REWARD GAMES
 export const creativeGames: Game[] = [
   {
+    id: "board_game_quiz",
+    name: "Board Game Quest",
+    shortDescription: "Roll the dice and answer quizzes on the board!",
+    instructionsKids: "Roll the dice, move your tooth, and answer fun questions!",
+    instructionsParents: "Board game combining dice movement with dental quizzes. Ages 4-9.",
+    winMessage: "You finished the board! Amazing adventure!",
+    loseMessage: "Keep rolling to finish the quest!",
+    reward: "⭐ Stars + Board Master Badge",
+    badgeName: "Board Master Badge",
+    emoji: "🎲",
+    color: "from-emerald-400 to-teal-500",
+    category: "creative",
+    ageRange: "4-9",
+  },
+  {
     id: "design_a_smile",
     name: "Design a Smile",
     shortDescription: "Create your own perfect smile design!",
