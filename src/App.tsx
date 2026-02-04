@@ -25,6 +25,7 @@ import TesterInvite from "./pages/TesterInvite";
 import BecomeTester from "./pages/BecomeTester";
 import AppPrivacy from "./pages/AppPrivacy";
 import AppStoreChecklist from "./pages/AppStoreChecklist";
+import BoardGame from "./pages/BoardGame";
 import NotFound from "./pages/NotFound";
 import Guest from "./pages/Guest";
 
@@ -72,7 +73,9 @@ const App = () => (
                     <Route path="/become-tester" element={<BecomeTester />} />
                     <Route path="/app-privacy" element={<AppPrivacy />} />
                     <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
+                    <Route path="/board-game" element={<BoardGame />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </RouteMusicController>
