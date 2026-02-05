@@ -35,7 +35,6 @@ import CavityMazeGame from "./CavityMazeGame";
 import EnamelMatchGame from "./EnamelMatchGame";
 import SmileSelfieStudioGame from "./SmileSelfieStudioGame";
 import CandyVsToothArtGame from "./CandyVsToothArtGame";
-import { BoardGameQuizGame } from "./BoardGameQuiz";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import PurchaseModal from "@/components/PurchaseModal";
@@ -284,8 +283,6 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
         return <SmileSelfieStudioGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
       case "candy_vs_tooth_art":
         return <CandyVsToothArtGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
-      case "board_game_quiz":
-        return <BoardGameQuizGame onClose={handleBackToGames} />;
       default:
         return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
     }

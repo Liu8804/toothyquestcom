@@ -41,7 +41,7 @@ const OnboardingFlow = ({ isOpen, onComplete }: OnboardingFlowProps) => {
   const { playHappy, playExcited, playCelebrate } = useMascotSounds();
   const { trackOnboardingStep, trackOnboardingComplete } = useEngagementAnalytics();
 
-  // Reset step when opening
+  // Reset step when opening - only show if explicitly opened (not auto-show)
   useEffect(() => {
     if (isOpen) {
       setCurrentStep(0);
