@@ -7,7 +7,7 @@ import StoryModeSection from "@/components/StoryModeSection";
 import DentalHelpersWorld from "@/components/DentalHelpersWorld";
 import BracesCareSection from "@/components/BracesCareSection";
 import FunFactsSection from "@/components/FunFactsSection";
-import PricingSection from "@/components/PricingSection";
+// PricingSection moved to dedicated page - not shown on home screen
 import PreviewSection from "@/components/PreviewSection";
 import FooterSection from "@/components/FooterSection";
 import AuthModal from "@/components/AuthModal";
@@ -15,7 +15,7 @@ import ParentDashboard from "@/components/ParentDashboard";
 import MotivationalPopup from "@/components/MotivationalPopup";
 import StreakTracker from "@/components/StreakTracker";
 import FloatingSparkles from "@/components/FloatingSparkles";
-import FloatingUnlockCTA from "@/components/FloatingUnlockCTA";
+// FloatingUnlockCTA removed from home - let users explore first
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import SplashScreen from "@/components/SplashScreen";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
@@ -23,7 +23,7 @@ import DailyTaskModal from "@/components/DailyTaskModal";
 import StreakRecoveryModal from "@/components/StreakRecoveryModal";
 import DailyBonusModal from "@/components/DailyBonusModal";
 import RewardsPanel from "@/components/rewards/RewardsPanel";
-import PriceChangeAnnouncement from "@/components/PriceChangeAnnouncement";
+// PriceChangeAnnouncement removed from home - show after user engagement
 import WorldSelector from "@/components/worlds/WorldSelector";
 import { useAuth } from "@/hooks/useAuth";
 import { usePurchase } from "@/hooks/usePurchase";
@@ -283,14 +283,14 @@ const Index = () => {
         <DentalHelpersWorld />
         <BracesCareSection />
         <FunFactsSection />
-        <PricingSection />
+        {/* Pricing moved to separate page - users explore app first */}
         <PreviewSection />
         <FooterSection />
 
         <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} />
         {showDashboard && <ParentDashboard onClose={() => setShowDashboard(false)} />}
         <MotivationalPopup isOpen={showMotivation} onClose={() => setShowMotivation(false)} />
-        <FloatingUnlockCTA />
+        {/* FloatingUnlockCTA removed - users explore first */}
         
         {/* Streak Recovery Modal - shows if streak was broken */}
         <StreakRecoveryModal
@@ -342,8 +342,7 @@ const Index = () => {
           onClose={() => setShowDentalChat(false)}
         />
 
-        {/* Price Change Announcement */}
-        <PriceChangeAnnouncement />
+        {/* Price announcements removed from home */}
 
         {/* Owner diagnostics (for your test accounts) */}
         <OwnerDiagnosticsPanel />
