@@ -630,19 +630,35 @@ export const HeroSection = () => {
                 )}
               </AnimatePresence>
 
-              {/* Intro wave sparkles and "Hi!" text */}
+              {/* Intro wave sparkles and "Hello!" speech bubble */}
               <AnimatePresence>
                 {isIntroWaving && (
                   <>
-                    {/* "Hi!" text bubble */}
+                    {/* Large speech bubble with "Hello!" */}
                     <motion.div
-                      className="absolute -top-4 -right-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-lg font-bold shadow-lg"
-                      initial={{ opacity: 0, scale: 0, y: 20 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ delay: 0.5, duration: 0.4, type: "spring" }}
+                      className="absolute -top-16 md:-top-20 left-1/2 -translate-x-1/2 z-20"
+                      initial={{ opacity: 0, scale: 0, y: 30 }}
+                      animate={{ 
+                        opacity: 1, 
+                        scale: [0, 1.1, 1], 
+                        y: 0,
+                      }}
+                      exit={{ opacity: 0, scale: 0, y: -20 }}
+                      transition={{ delay: 0.3, duration: 0.5, type: "spring", stiffness: 300, damping: 15 }}
                     >
-                      Hi! 👋
+                      {/* Speech bubble */}
+                      <div className="relative bg-card px-5 py-3 rounded-2xl shadow-lg border-2 border-primary/30">
+                        <motion.span 
+                          className="text-xl md:text-2xl font-bold text-foreground whitespace-nowrap"
+                          animate={{ scale: [1, 1.05, 1] }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        >
+                          Hello! 👋✨
+                        </motion.span>
+                        {/* Speech bubble tail */}
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-card" />
+                        <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-t-6 border-l-transparent border-r-transparent border-t-primary/30" />
+                      </div>
                     </motion.div>
                     
                     {/* Entrance sparkles */}
