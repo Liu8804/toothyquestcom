@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { MapPin, Star, Lock, Check, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
-import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
+import { usePurchase } from "@/hooks/usePurchase";
 import { useStories } from "@/hooks/useStories";
 import PurchaseModal from "@/components/PurchaseModal";
 
@@ -16,7 +16,7 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
   const { t } = useTranslation();
   const stories = useStories();
   const { questProgress, isQuestCompleted } = useQuestProgress();
-  const { isPurchased, isContentLocked } = usePurchase();
+  const { isAdmin, isContentLocked } = usePurchase();
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   
   const completedCount = questProgress.length;
@@ -25,7 +25,7 @@ const AdventureMap = ({ onSelectQuest, className = "" }: AdventureMapProps) => {
   // Create path points for quests with purchase-based locking
   const questPoints = stories.slice(0, 10).map((story, index) => {
     const isCompleted = isQuestCompleted(story.id);
-    const progressUnlocked = index === 0 || isQuestCompleted(stories[index - 1]?.id);
+    const progressUnlocked = isAdmin || index === 0 || isQuestCompleted(stories[index - 1]?.id);
     const purchaseLocked = isContentLocked(index, 'quest');
     const isUnlocked = progressUnlocked && !purchaseLocked;
     const isCurrent = isUnlocked && !isCompleted;

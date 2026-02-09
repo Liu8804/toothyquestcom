@@ -267,7 +267,10 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                   const prevProgress = prevPhase
                     ? getPhaseProgress(prevPhase.id, completedQuestIds)
                     : 100;
-                  const isLocked = index > 0 && prevProgress < 50;
+
+                  // Admin accounts bypass progression locks. While access is still loading,
+                  // keep phases optimistically unlocked to avoid "looks locked" race conditions.
+                  const isLocked = !isAdmin && !isAccessLoading && index > 0 && prevProgress < 50;
 
                   return (
                     <PhaseCard
