@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Shield, Wrench, Heart, ChevronRight, Lock, Star } from "lucide-react";
+import { Shield, Heart, ChevronRight, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useStories } from "@/hooks/useStories";
 import StoryCard from "@/components/StoryCard";
@@ -126,30 +126,11 @@ const DentalHelpersWorld = () => {
 
   return (
     <section id="dental-helpers-world" className="py-20 bg-gradient-to-b from-muted/30 via-background to-muted/30 overflow-hidden relative">
-      {/* Floating decorations */}
-      <motion.div
-        className="absolute top-20 left-10 text-4xl hidden lg:block"
-        animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
-        transition={{ duration: 4, repeat: Infinity }}
-      >
-        🦷
-      </motion.div>
-      <motion.div
-        className="absolute bottom-20 right-10 text-4xl hidden lg:block"
-        animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity }}
-      >
-        ✨
-      </motion.div>
+      {/* Floating decorations removed for cleaner look */}
 
       <div className="container mx-auto px-4">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           {/* Bracey mascot */}
           <div className="flex justify-center mb-6">
             <BraceyMascot 
@@ -160,24 +141,14 @@ const DentalHelpersWorld = () => {
             />
           </div>
 
-          <motion.span 
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/20 to-secondary/20 text-primary px-5 py-2 rounded-full text-sm font-bold mb-4 border border-primary/30"
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            <Wrench className="w-4 h-4" />
-            NEW WORLD
-            <Sparkles className="w-4 h-4" />
-          </motion.span>
-
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            🦷 Dental Helpers ✨
+            Dental Helpers
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Meet the friendly tools that help teeth grow straight, strong, and safe! 
             Learn about braces, expanders, separators, and mouthguards in a fun and gentle way.
           </p>
-        </motion.div>
+        </div>
 
         {/* Zones Grid */}
         <AnimatePresence mode="wait">
@@ -189,22 +160,16 @@ const DentalHelpersWorld = () => {
               exit={{ opacity: 0 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
             >
-              {zones.map((zone, index) => {
+              {zones.map((zone) => {
                 const progress = getZoneProgress(zone);
                 return (
-                  <motion.div
+                  <div
                     key={zone.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       playSound("tap");
                       setSelectedZone(zone.id);
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer hover:scale-[1.02] transition-transform"
                   >
                     <div 
                       className="relative rounded-3xl p-6 shadow-lg overflow-hidden min-h-[200px]"
@@ -217,15 +182,7 @@ const DentalHelpersWorld = () => {
                       {/* Gradient overlay for text legibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                       
-                      {/* Sparkle effects */}
-                      <motion.div
-                        className="absolute top-4 right-4 text-white/60 z-10"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-                      >
-                        <Sparkles className="w-6 h-6" />
-                      </motion.div>
-
+                      {/* Content */}
                       <div className="relative z-10 flex flex-col h-full justify-end mt-16">
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
@@ -240,10 +197,9 @@ const DentalHelpersWorld = () => {
                         </p>
                         <div className="flex items-center gap-2">
                           <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
-                            <motion.div
-                              className="h-full bg-white rounded-full"
-                              initial={{ width: 0 }}
-                              animate={{ width: `${(progress.completed / progress.total) * 100}%` }}
+                            <div
+                              className="h-full bg-white rounded-full transition-all duration-500"
+                              style={{ width: `${(progress.completed / progress.total) * 100}%` }}
                             />
                           </div>
                           <span className="text-white text-sm font-bold flex items-center gap-1">
@@ -254,7 +210,7 @@ const DentalHelpersWorld = () => {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </motion.div>
@@ -311,14 +267,9 @@ const DentalHelpersWorld = () => {
         </AnimatePresence>
 
         {/* All quests in order - shown at bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mt-16"
-        >
+        <div className="mt-16">
           <h3 className="font-display text-2xl font-bold text-center text-foreground mb-6">
-            📚 All Dental Helpers Quests
+            All Dental Helpers Quests
           </h3>
           <p className="text-center text-muted-foreground mb-8">
             Complete all quests in order for the full learning adventure!
@@ -336,25 +287,18 @@ const DentalHelpersWorld = () => {
               if (!story) return null;
               const storyIndex = stories.findIndex(s => s.id === questId);
               return (
-                <motion.div
+                <StoryCard
                   key={questId}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <StoryCard
-                    story={story}
-                    index={storyIndex}
-                    onClick={() => handleOpenStory(story.id)}
-                    isCompleted={isQuestCompleted(story.id)}
-                    isLocked={isContentLocked(storyIndex, 'quest')}
-                  />
-                </motion.div>
+                  story={story}
+                  index={storyIndex}
+                  onClick={() => handleOpenStory(story.id)}
+                  isCompleted={isQuestCompleted(story.id)}
+                  isLocked={isContentLocked(storyIndex, 'quest')}
+                />
               );
             })}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Story Viewer Modal */}
