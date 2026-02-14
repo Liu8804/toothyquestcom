@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
 import dentalOffice from "@/assets/friendly-dental-office.png";
 import DentalOfficeTour from "@/components/DentalOfficeTour";
 
@@ -55,10 +54,7 @@ export const PreviewSection = () => {
             viewport={{ once: true }}
             className="flex-1"
           >
-            <span className="inline-block bg-secondary/20 text-secondary px-4 py-2 rounded-full text-sm font-bold mb-4">
-              🏥 See What It's Like!
-            </span>
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-6">
+            <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
               The Dentist is Your Friend!
             </h2>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
@@ -82,9 +78,7 @@ export const PreviewSection = () => {
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center gap-3"
                 >
-                  <div className="w-8 h-8 gradient-hero rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-primary-foreground" />
-                  </div>
+                  <span className="text-primary font-bold text-lg">✓</span>
                   <span className="text-foreground font-medium">{item}</span>
                 </motion.li>
               ))}

@@ -402,30 +402,7 @@ export const HeroSection = () => {
           </motion.button>
         </motion.div>
         
-        {/* Minimal decorative sparkles - only on desktop */}
-        <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none opacity-60">
-          {["✨", "⭐"].map((emoji, i) => (
-            <motion.div
-              key={i}
-              className="absolute text-xl"
-              style={{
-                left: i === 0 ? "8%" : "92%",
-                top: "20%",
-              }}
-              animate={{
-                y: [0, -10, 0],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: i * 0.5,
-              }}
-            >
-              {emoji}
-            </motion.div>
-          ))}
-        </div>
+        {/* Minimal decorative element - desktop only */}
 
         <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
