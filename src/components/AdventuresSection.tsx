@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { BookOpen, Gamepad2, Music, MessageCircle, Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import AdventureCard from "@/components/AdventureCard";
@@ -85,22 +84,14 @@ export const AdventuresSection = () => {
     <>
       <section id="adventures" className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <span className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
-              {t("adventures.badge")}
-            </span>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              {t("adventures.title")}
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t("adventures.subtitle")}
-            </p>
-          </motion.div>
+        <div className="text-center mb-14">
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+            {t("adventures.title")}
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {t("adventures.subtitle")}
+          </p>
+        </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {adventures.map((adventure, index) => (
