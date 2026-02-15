@@ -125,7 +125,7 @@ const DentalHelpersWorld = () => {
   };
 
   return (
-    <section id="dental-helpers-world" className="py-20 bg-gradient-to-b from-muted/30 via-background to-muted/30 overflow-hidden relative">
+    <section id="dental-helpers-world" className="py-12 bg-gradient-to-b from-muted/30 via-background to-muted/30 overflow-hidden relative">
       {/* Floating decorations removed for cleaner look */}
 
       <div className="container mx-auto px-4">

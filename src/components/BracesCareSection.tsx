@@ -154,7 +154,7 @@ const BracesCareSection = () => {
   const activeTipData = bracesTips.find(tip => tip.id === activeTip);
 
   return (
-    <section id="braces-care" className="py-20 bg-gradient-to-b from-muted/30 to-background overflow-hidden relative">
+    <section id="braces-care" className="py-12 bg-gradient-to-b from-muted/30 to-background overflow-hidden relative">
       {/* Floating mascots removed for cleaner look */}
 
       <div className="container mx-auto px-4">
