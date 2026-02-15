@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Shield, Sparkles } from "lucide-react";
+import { ArrowLeft, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import WorldCard from "./WorldCard";
@@ -175,16 +175,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
             >
               {/* Header */}
               <div className="text-center mb-12">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full mb-4"
-                >
-                  <Sparkles className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-bold text-primary">
-                    {isSpanish ? "¡Elige Tu Aventura!" : "Choose Your Adventure!"}
-                  </span>
-                </motion.div>
+
 
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
                   {isSpanish ? "¡Bienvenido a ToothyQuest!" : "Welcome to ToothyQuest!"}
