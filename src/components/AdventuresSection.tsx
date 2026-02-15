@@ -82,7 +82,7 @@ export const AdventuresSection = () => {
 
   return (
     <>
-      <section id="adventures" className="py-20 bg-background">
+      <section id="adventures" className="py-12 bg-background">
         <div className="container mx-auto px-4">
         <div className="text-center mb-14">
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">

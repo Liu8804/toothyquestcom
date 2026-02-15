@@ -57,7 +57,7 @@ const StoryModeSection = () => {
   };
 
   return (
-    <section id="stories" className="py-20 bg-gradient-to-b from-background via-muted/30 to-background">
+    <section id="stories" className="py-12 bg-gradient-to-b from-background via-muted/30 to-background">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">

@@ -8,7 +8,7 @@ export const FunFactsSection = () => {
   const facts = t("funFacts.facts", { returnObjects: true }) as string[];
 
   return (
-    <section id="facts" className="py-20 bg-muted/30">
+    <section id="facts" className="py-12 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-14">
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
