@@ -71,22 +71,13 @@ export const AdventureCard = ({
 
       {/* Content */}
       <div className={`relative z-10 p-6 h-full flex flex-col ${backgroundImage ? 'justify-end' : ''}`}>
-        {/* New badge */}
+        {/* New indicator */}
         {isNew && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute top-2 right-2 z-10"
-          >
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
-              <motion.span
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
-              >
-                ✨ NEW
-              </motion.span>
-            </div>
-          </motion.div>
+          <div className="absolute top-3 right-3 z-10">
+            <span className="bg-white/90 text-foreground text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">
+              New
+            </span>
+          </div>
         )}
 
         {!backgroundImage && (
