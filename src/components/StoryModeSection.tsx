@@ -9,11 +9,14 @@ import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
 
+const INITIAL_STORY_COUNT = 8;
+
 const StoryModeSection = () => {
   const { t } = useTranslation();
   const stories = useStories();
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_STORY_COUNT);
   
   const { questProgress, isQuestCompleted } = useQuestProgress();
   const { isPurchased, isContentLocked } = usePurchase();
@@ -108,7 +111,7 @@ const StoryModeSection = () => {
 
         {/* Stories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {stories.map((story, index) => (
+          {stories.slice(0, visibleCount).map((story, index) => (
             <StoryCard
               key={story.id}
               story={story}
@@ -119,6 +122,27 @@ const StoryModeSection = () => {
             />
           ))}
         </div>
+
+        {/* Show More / Show Less */}
+        {stories.length > INITIAL_STORY_COUNT && (
+          <div className="mt-8 text-center">
+            {visibleCount < stories.length ? (
+              <button
+                onClick={() => setVisibleCount(v => Math.min(v + 8, stories.length))}
+                className="px-8 py-3 rounded-2xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+              >
+                Show More ({stories.length - visibleCount} remaining)
+              </button>
+            ) : (
+              <button
+                onClick={() => setVisibleCount(INITIAL_STORY_COUNT)}
+                className="px-8 py-3 rounded-2xl border-2 border-muted-foreground text-muted-foreground font-bold hover:bg-muted transition-colors duration-200"
+              >
+                Show Less
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Fun stats */}
         <div className="mt-16 flex flex-wrap justify-center gap-6 text-center">
