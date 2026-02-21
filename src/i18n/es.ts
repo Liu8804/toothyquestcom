@@ -670,4 +670,9 @@ export const es = {
     thinking: "Toothy está pensando...",
     greeting: "¡Hola! ¡Soy Toothy, tu amigable compañero dental! 🦷 ¡Pregúntame cualquier cosa sobre cómo cuidar tus dientes!",
   },
+  dentalStories: {
+    title: "Crea una Historia Dental Mágica",
+    subtitle: "Crea una historia dental corta y divertida para ayudar a tu hijo a sentirse tranquilo, seguro y preparado para su próxima visita al dentista.",
+    pageTitle: "Historias Dentales",
+  },
 };

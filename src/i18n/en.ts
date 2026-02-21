@@ -670,4 +670,9 @@ export const en = {
     thinking: "Toothy is thinking...",
     greeting: "Hi there! I'm Toothy, your friendly dental buddy! 🦷 Ask me anything about taking care of your teeth!",
   },
+  dentalStories: {
+    title: "Create a Magical Dental Story",
+    subtitle: "Create a short, kid-friendly dental story to help your child feel calm, confident, and prepared for their next dental visit.",
+    pageTitle: "Dental Stories",
+  },
 };
