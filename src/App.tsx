@@ -28,6 +28,7 @@ import AppStoreChecklist from "./pages/AppStoreChecklist";
 import NotFound from "./pages/NotFound";
 import Guest from "./pages/Guest";
 import AIStories from "./pages/AIStories";
+import Clinics from "./pages/Clinics";
 
 // Component that unlocks AudioContext on first user interaction
 const AudioUnlocker = ({ children }: { children: React.ReactNode }) => {
@@ -74,6 +75,7 @@ const App = () => (
                     <Route path="/app-privacy" element={<AppPrivacy />} />
                     <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
                     <Route path="/ai-stories" element={<AIStories />} />
+                    <Route path="/clinics" element={<Clinics />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
