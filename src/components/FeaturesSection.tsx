@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
 
 export const FeaturesSection = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [showQuiz, setShowQuiz] = useState(false);
 
   useEffect(() => {
@@ -109,6 +111,49 @@ export const FeaturesSection = () => {
                 transition={{ repeat: Infinity, duration: 1.5 }}
               >
                 Take Quiz! 🎯
+              </motion.div>
+            </div>
+          </motion.button>
+        </motion.div>
+
+        {/* AI Story Creator CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6 }}
+          className="mt-4"
+        >
+          <motion.button
+            onClick={() => navigate("/ai-stories")}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full max-w-2xl mx-auto block bg-gradient-to-r from-secondary via-candy to-sparkle p-1 rounded-3xl shadow-lg hover:shadow-xl transition-all"
+          >
+            <div className="bg-card rounded-[22px] p-6 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <motion.span
+                  className="text-5xl"
+                  animate={{ scale: [1, 1.15, 1] }}
+                  transition={{ repeat: Infinity, duration: 2.5 }}
+                >
+                  ✨
+                </motion.span>
+                <div className="text-left">
+                  <h3 className="font-display text-xl font-bold text-foreground">
+                    AI Story Creator
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Generate a personalized dental story for your child's next visit 🦷
+                  </p>
+                </div>
+              </div>
+              <motion.div
+                className="hidden sm:flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-full font-display font-bold text-sm"
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5 }}
+              >
+                Try It! ✨
               </motion.div>
             </div>
           </motion.button>
