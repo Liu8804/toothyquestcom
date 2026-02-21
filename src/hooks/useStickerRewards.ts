@@ -121,9 +121,16 @@ export function useStickerRewards() {
       "streak-3": { emoji: "🔥", name: "3 Day Streak" },
       "streak-7": { emoji: "💪", name: "7 Day Streak" },
       "streak-30": { emoji: "👑", name: "30 Day King" },
+      "clinic-visitor": { emoji: "🏥", name: "Clinic Explorer" },
     };
     return stickerMap[stickerId] || null;
   }, []);
+
+  // Award clinic visitor sticker
+  const awardClinicVisitSticker = useCallback((): string | null => {
+    const isNew = unlockSticker("clinic-visitor");
+    return isNew ? "clinic-visitor" : null;
+  }, [unlockSticker]);
 
   return {
     getUnlockedStickers,
@@ -131,6 +138,7 @@ export function useStickerRewards() {
     awardQuestSticker,
     awardStreakSticker,
     awardFirstQuestSticker,
+    awardClinicVisitSticker,
     getStickerInfo,
   };
 }

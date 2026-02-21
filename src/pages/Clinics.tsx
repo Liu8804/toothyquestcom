@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useClinics, DentalClinic } from "@/hooks/useClinics";
 import { useAuth } from "@/hooks/useAuth";
+import { useStickerRewards } from "@/hooks/useStickerRewards";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Heart, MapPin, Phone, Globe, Clock, Star, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 
 const ClinicCard = ({
@@ -75,6 +77,28 @@ const ClinicProfile = ({
   onBack: () => void;
 }) => {
   const [showKidView, setShowKidView] = useState(false);
+  const { awardClinicVisitSticker, getStickerInfo } = useStickerRewards();
+  const hasAwardedRef = useRef(false);
+
+  // Award sticker + XP when kid view is opened for the first time this session
+  useEffect(() => {
+    if (showKidView && !hasAwardedRef.current) {
+      hasAwardedRef.current = true;
+      const newSticker = awardClinicVisitSticker();
+      if (newSticker) {
+        const info = getStickerInfo(newSticker);
+        toast.success(`🎉 New sticker unlocked: ${info?.emoji} ${info?.name}!`, {
+          description: "+15 Sparkle Points for visiting your clinic!",
+          duration: 4000,
+        });
+      } else {
+        toast.success("⭐ +15 Sparkle Points!", {
+          description: "Thanks for visiting your clinic!",
+          duration: 3000,
+        });
+      }
+    }
+  }, [showKidView, awardClinicVisitSticker, getStickerInfo]);
 
   return (
     <motion.div
