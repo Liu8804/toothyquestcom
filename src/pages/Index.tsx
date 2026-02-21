@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -40,8 +41,10 @@ import { Button } from "@/components/ui/button";
 import { LayoutDashboard, LogIn, MessageCircle, Trophy } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
+import { useClinics } from "@/hooks/useClinics";
 
 const Index = () => {
+  const navigate = useNavigate();
   useAudioUnlock();
 
   const { user, loading } = useAuth();
@@ -64,7 +67,8 @@ const Index = () => {
   const { currentStreak, lastActivityDate, longestStreak, refetch: refetchStreak } = useStreak();
   const { canRecover, checkStreakBroken } = useStreakRecovery();
   const { scheduleReminderCheck } = useDailyReminder();
-  
+  const { favoriteClinicData } = useClinics();
+
   const [showAuth, setShowAuth] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showMotivation, setShowMotivation] = useState(false);
@@ -275,6 +279,27 @@ const Index = () => {
 
         <HeroSection />
         <WorldSelector />
+        
+        {/* Visit Your Clinic CTA */}
+        <div className="max-w-2xl mx-auto px-4 py-3">
+          <Button
+            onClick={() => navigate("/clinics")}
+            variant="outline"
+            className="w-full rounded-2xl py-4 h-auto flex items-center gap-3 border-primary/30 hover:bg-primary/5"
+          >
+            <span className="text-2xl">🏥</span>
+            <div className="text-left flex-1">
+              <span className="font-bold text-foreground block">
+                {favoriteClinicData ? `Visit ${favoriteClinicData.name}` : "Visit Your Clinic"}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                {favoriteClinicData ? "See your clinic's tips & info" : "Find and save your dental clinic"}
+              </span>
+            </div>
+            <span className="text-lg">→</span>
+          </Button>
+        </div>
+
         <AboutSection />
         <FeaturesSection />
         

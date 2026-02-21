@@ -276,6 +276,57 @@ export type Database = {
         }
         Relationships: []
       }
+      dental_clinics: {
+        Row: {
+          address: string | null
+          created_at: string
+          created_by: string | null
+          hours: Json | null
+          id: string
+          is_active: boolean
+          kid_tip: string | null
+          logo_url: string | null
+          name: string
+          phone: string | null
+          services: string[] | null
+          updated_at: string
+          website: string | null
+          welcome_message: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          created_by?: string | null
+          hours?: Json | null
+          id?: string
+          is_active?: boolean
+          kid_tip?: string | null
+          logo_url?: string | null
+          name: string
+          phone?: string | null
+          services?: string[] | null
+          updated_at?: string
+          website?: string | null
+          welcome_message?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          created_by?: string | null
+          hours?: Json | null
+          id?: string
+          is_active?: boolean
+          kid_tip?: string | null
+          logo_url?: string | null
+          name?: string
+          phone?: string | null
+          services?: string[] | null
+          updated_at?: string
+          website?: string | null
+          welcome_message?: string | null
+        }
+        Relationships: []
+      }
       earned_achievements: {
         Row: {
           achievement_id: string
@@ -890,6 +941,38 @@ export type Database = {
           redemption_count?: number | null
         }
         Relationships: []
+      }
+      user_clinic_selections: {
+        Row: {
+          clinic_id: string
+          created_at: string
+          id: string
+          is_favorite: boolean
+          user_id: string
+        }
+        Insert: {
+          clinic_id: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          user_id: string
+        }
+        Update: {
+          clinic_id?: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_clinic_selections_clinic_id_fkey"
+            columns: ["clinic_id"]
+            isOneToOne: false
+            referencedRelation: "dental_clinics"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {

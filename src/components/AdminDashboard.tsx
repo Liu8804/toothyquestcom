@@ -25,6 +25,7 @@ import {
 import PromoCodesAdmin from "@/components/admin/PromoCodesAdmin";
 import { TesterAccountsAdmin } from "@/components/admin/TesterAccountsAdmin";
 import { TesterInvitationsAdmin } from "@/components/admin/TesterInvitationsAdmin";
+import ClinicsAdmin from "@/components/admin/ClinicsAdmin";
 import { badgeSchema } from "@/lib/validation";
 
 interface BadgeFormData {
@@ -190,10 +191,11 @@ const AdminDashboard = () => {
 
       {/* Tabs */}
       <Tabs defaultValue="badges" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="badges">Badges</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="children">Children</TabsTrigger>
+          <TabsTrigger value="clinics">Clinics</TabsTrigger>
           <TabsTrigger value="testers">Testers</TabsTrigger>
           <TabsTrigger value="promo">Promo Codes</TabsTrigger>
           <TabsTrigger value="audit">Audit Logs</TabsTrigger>
@@ -373,6 +375,11 @@ const AdminDashboard = () => {
               </Card>
             ))}
           </div>
+        </TabsContent>
+
+        {/* Clinics Tab */}
+        <TabsContent value="clinics" className="space-y-4">
+          <ClinicsAdmin />
         </TabsContent>
 
         {/* Testers Tab */}
