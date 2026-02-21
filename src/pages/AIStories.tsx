@@ -92,7 +92,7 @@ const AIStories = () => {
           </Button>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-bold font-fredoka text-foreground">AI Story Creator</h1>
+            <h1 className="text-lg font-bold font-fredoka text-foreground">Dental Stories</h1>
           </div>
         </div>
       </div>
