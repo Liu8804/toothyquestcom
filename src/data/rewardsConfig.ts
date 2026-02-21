@@ -94,6 +94,7 @@ export const QUEST_POINTS: QuestPointsConfig[] = [
   { questId: "sparkle-potion", basePoints: 35, bonusPerQuestion: 10, totalPossible: 55, difficulty: 'easy' },
   { questId: "tooth-fixing-fairy", basePoints: 40, bonusPerQuestion: 10, totalPossible: 60, difficulty: 'medium' },
   { questId: "sports-shield", basePoints: 45, bonusPerQuestion: 10, totalPossible: 65, difficulty: 'medium' },
+  { questId: "clinic-visit", basePoints: 15, bonusPerQuestion: 0, totalPossible: 15, difficulty: 'easy' },
 ];
 
 // Default points for quests not in the mapping
@@ -173,6 +174,7 @@ export const QUEST_CATEGORIES: Record<string, string> = {
   "tooth-train-track": "braces",
   "tooth-detective": "checkup",
   "sports-shield": "protection",
+  "clinic-visit": "clinic",
 };
 
 // Tooth Pets (unlockable companions)

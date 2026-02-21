@@ -11,7 +11,7 @@ interface Sticker {
   emoji: string;
   name: string;
   unlocked: boolean;
-  category: "brushing" | "flossing" | "achievement" | "streak";
+  category: "brushing" | "flossing" | "achievement" | "streak" | "clinic";
 }
 
 const ALL_STICKERS: Sticker[] = [
@@ -31,6 +31,8 @@ const ALL_STICKERS: Sticker[] = [
   { id: "streak-3", emoji: "🔥", name: "3 Day Streak", unlocked: false, category: "streak" },
   { id: "streak-7", emoji: "💪", name: "7 Day Streak", unlocked: false, category: "streak" },
   { id: "streak-30", emoji: "👑", name: "30 Day King", unlocked: false, category: "streak" },
+  // Clinic stickers
+  { id: "clinic-visitor", emoji: "🏥", name: "Clinic Explorer", unlocked: false, category: "clinic" },
 ];
 
 interface StickerCollectionProps {
