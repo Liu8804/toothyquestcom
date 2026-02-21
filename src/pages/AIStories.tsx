@@ -92,7 +92,7 @@ const AIStories = () => {
           </Button>
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            <h1 className="text-lg font-bold font-fredoka text-foreground">Dental Stories</h1>
+            <h1 className="text-lg font-bold font-fredoka text-foreground">{t("dentalStories.pageTitle")}</h1>
           </div>
         </div>
       </div>
@@ -109,13 +109,13 @@ const AIStories = () => {
             >
               {/* Intro */}
               <div className="text-center space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  Create a short, kid-friendly dental story to help your child feel calm, confident, and prepared for their next dental visit.
+                </p>
                 <p className="text-2xl">🦷✨</p>
                 <h2 className="text-xl font-bold font-fredoka text-foreground">
-                  Create a Magical Dental Story
+                  {t("dentalStories.title")}
                 </h2>
-                <p className="text-muted-foreground text-sm">
-                  Toothy will write a personalized story to help your child feel excited about their dental visit!
-                </p>
               </div>
 
               {/* Age Selection */}

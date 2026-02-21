@@ -141,10 +141,10 @@ export const FeaturesSection = () => {
                 </motion.span>
                 <div className="text-left">
                   <h3 className="font-display text-xl font-bold text-foreground">
-                    Dental Stories
+                    {t("dentalStories.pageTitle")}
                   </h3>
                   <p className="text-sm text-muted-foreground">
-                    Generate a personalized dental story for your child's next visit 🦷
+                    {t("dentalStories.subtitle")} 🦷
                   </p>
                 </div>
               </div>
