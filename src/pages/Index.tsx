@@ -5,7 +5,7 @@ import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import AdventuresSection from "@/components/AdventuresSection";
 import QuestWorldMap from "@/components/QuestWorldMap";
-// StoryModeSection replaced by QuestWorldMap
+import ToothKingdomGateway from "@/components/ToothKingdomGateway";
 import DentalHelpersWorld from "@/components/DentalHelpersWorld";
 import BracesCareSection from "@/components/BracesCareSection";
 import FunFactsSection from "@/components/FunFactsSection";
@@ -282,7 +282,9 @@ const Index = () => {
         </div>
 
         <HeroSection />
-        <SectionTrailConnector fromEmoji="🦷" toEmoji="🌍" variant="primary" index={0} />
+        <SectionTrailConnector fromEmoji="🦷" toEmoji="👑" variant="rainbow" index={0} />
+        <ToothKingdomGateway />
+        <SectionTrailConnector fromEmoji="👑" toEmoji="🌍" variant="primary" index={0} />
         <WorldSelector />
         
         {/* Visit Your Clinic CTA */}

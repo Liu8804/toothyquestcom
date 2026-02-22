@@ -12,9 +12,9 @@ import mascotLetsPlay from "@/assets/mascot-emotions/lets-play.png";
 import mascotLevelUp from "@/assets/mascot-emotions/level-up.png";
 import mascotPlayQuit from "@/assets/mascot-emotions/play-quit.png";
 
-// Also keep fallback to existing assets
-import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
-import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+// Kingdom-themed mascot characters (replacing old Ollie sticker style)
+import mascotWaving from "@/assets/mascot-emotions/kingdom-mascot-waving.png";
+import mascotCelebrating from "@/assets/mascot-emotions/kingdom-mascot-celebrating.png";
 
 export type MascotEmotion = 
   | "idle"
