@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Check, Lock, ChevronRight, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useButtonSounds } from "@/hooks/useButtonSounds";
 
 interface PhaseCardProps {
   id: string;
@@ -32,10 +33,19 @@ export const PhaseCard = ({
   onClick,
 }: PhaseCardProps) => {
   const progress = questCount > 0 ? Math.round((completedCount / questCount) * 100) : 0;
+  const { playTap, playSuccess } = useButtonSounds();
+
+  const handleClick = () => {
+    if (!isLocked) {
+      playTap();
+      if (isCompleted) playSuccess();
+    }
+    onClick();
+  };
 
   return (
     <motion.button
-      onClick={onClick}
+      onClick={handleClick}
       disabled={isLocked}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}

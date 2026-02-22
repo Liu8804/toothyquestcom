@@ -6,6 +6,7 @@ import { useAIEncouragement } from "@/hooks/useAIEncouragement";
 import { useToothyPhrases } from "@/hooks/useToothyPhrases";
 import { getRandomCelebration } from "@/config/toothyPhrases";
 import { useEffect, useState, useRef } from "react";
+import { useButtonSounds } from "@/hooks/useButtonSounds";
 
 interface RewardCelebrationProps {
   onPlayAgain: () => void;
@@ -33,6 +34,7 @@ export const RewardCelebration = ({
 }: RewardCelebrationProps) => {
   const { sayCelebration } = useToothyPhrases();
   const { getEncouragement, isLoading: isLoadingAI } = useAIEncouragement();
+  const { playCelebration, playSparkle, playSuccess } = useButtonSounds();
   const [celebrationMessage, setCelebrationMessage] = useState<string>("");
   const [shortTitle, setShortTitle] = useState<string>("Super Brusher!");
   const hasSpokenRef = useRef(false);
@@ -50,6 +52,10 @@ export const RewardCelebration = ({
       // Set a random title immediately
       setShortTitle(titles[Math.floor(Math.random() * titles.length)]);
       
+      // Play celebration sound cues
+      playCelebration();
+      setTimeout(() => playSparkle(), 300);
+      
       const result = await getEncouragement(childName, sessionType, 120);
       setCelebrationMessage(result.message);
       
@@ -61,7 +67,7 @@ export const RewardCelebration = ({
     };
 
     fetchMessage();
-  }, [childName, sessionType, getEncouragement, sayCelebration]);
+  }, [childName, sessionType, getEncouragement, sayCelebration, playCelebration, playSparkle]);
 
   return (
     <div className="relative text-center py-8 overflow-hidden">
@@ -220,15 +226,15 @@ export const RewardCelebration = ({
       >
         <div className="flex flex-col sm:flex-row gap-3">
           <Button
-            onClick={onPlayAgain}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl px-8 py-6 text-lg"
+            onClick={() => { playSuccess(); onPlayAgain(); }}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-2xl px-8 py-6 text-lg shadow-[0_4px_0_0_hsl(var(--primary)/0.4)] active:shadow-none active:translate-y-1"
           >
             🦷 Brush Again!
           </Button>
           <Button
             variant="outline"
-            onClick={onClose}
-            className="rounded-2xl px-8 py-6 text-lg"
+            onClick={() => { playSparkle(); onClose(); }}
+            className="rounded-2xl px-8 py-6 text-lg shadow-[0_3px_0_0_hsl(var(--border))] active:shadow-none active:translate-y-1"
           >
             All Done!
           </Button>
