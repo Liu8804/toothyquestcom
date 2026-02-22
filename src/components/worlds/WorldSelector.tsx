@@ -103,54 +103,67 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
     const phaseStories = getPhaseStories(selectedPhase);
 
     return (
-      <div className="space-y-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {phaseStories.map((story, index) => {
           if (!story) return null;
           const isCompleted = completedQuestIds.includes(story.id);
-          // Never show lock for admin/purchased users, even while loading
           const isLocked = !isUnlocked && !isAccessLoading && !story.isFree;
 
           return (
             <motion.button
               key={story.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.05 }}
               onClick={() => handleOpenStory(story.id)}
+              whileHover={!isLocked ? { scale: 1.05, y: -4 } : {}}
+              whileTap={!isLocked ? { scale: 0.95 } : {}}
               className={cn(
-                "w-full p-4 rounded-xl text-left flex items-center gap-4 transition-all",
-                "border-2 shadow-sm hover:shadow-md",
+                "relative rounded-2xl overflow-hidden aspect-square shadow-md transition-all",
+                "border-2",
                 isLocked
-                  ? "bg-muted/50 border-muted cursor-pointer"
+                  ? "border-muted opacity-60 grayscale"
                   : isCompleted
-                  ? "bg-mint/10 border-mint/30 hover:border-mint/50"
-                  : "bg-card border-border hover:border-primary/50"
+                  ? "border-mint/50 shadow-mint/20"
+                  : "border-primary/30 hover:border-primary/60 hover:shadow-lg"
               )}
             >
-              <div className="text-3xl">{story.emoji}</div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h5 className="font-semibold text-foreground truncate">
-                    {story.title}
-                  </h5>
-                  {isCompleted && (
-                    <span className="text-xs bg-mint/20 text-mint px-2 py-0.5 rounded-full">
-                      ✓
-                    </span>
-                  )}
-                  {isLocked && (
-                    <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
-                      🔒
-                    </span>
-                  )}
-                  {story.isFree && !isCompleted && (
-                    <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold">
-                      FREE
-                    </span>
-                  )}
+              {/* Quest Image */}
+              <img
+                src={story.illustrationPath}
+                alt={story.title}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+              />
+
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+
+              {/* Completed checkmark */}
+              {isCompleted && (
+                <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-mint flex items-center justify-center shadow-md">
+                  <span className="text-white text-sm font-bold">✓</span>
                 </div>
-                <p className="text-sm text-muted-foreground truncate">
-                  {story.lesson}
+              )}
+
+              {/* Lock overlay */}
+              {isLocked && (
+                <div className="absolute inset-0 bg-background/40 backdrop-blur-[2px] flex items-center justify-center">
+                  <span className="text-2xl">🔒</span>
+                </div>
+              )}
+
+              {/* FREE badge */}
+              {story.isFree && !isCompleted && !isLocked && (
+                <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  FREE
+                </div>
+              )}
+
+              {/* Title at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-2">
+                <p className="text-white text-xs font-bold drop-shadow-lg line-clamp-2 leading-tight">
+                  {story.title}
                 </p>
               </div>
             </motion.button>
@@ -178,24 +191,24 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
 
 
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  {isSpanish ? "¡Bienvenido a ToothyQuest!" : "Welcome to ToothyQuest!"}
+                  {isSpanish ? "🏰 Reino Dental" : "🏰 Tooth Kingdom"}
                 </h2>
 
                 <p className="text-muted-foreground max-w-xl mx-auto mb-2">
                   {isSpanish
-                    ? "Convierte las visitas dentales en aventuras divertidas."
-                    : "Turn dental visits into fun adventures."}
+                    ? "Explora mundos mágicos y completa misiones dentales."
+                    : "Explore magical worlds and complete dental quests."}
                 </p>
 
                 <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Shield className="w-4 h-4 text-mint" />
-                    {isSpanish ? "Seguro para niños" : "Kid-safe"}
+                    {isSpanish ? "74+ Misiones" : "74+ Quests"}
                   </span>
                   <span>•</span>
                   <span>{isSpanish ? "Sin anuncios" : "No ads"}</span>
                   <span>•</span>
-                  <span>{isSpanish ? "Reduce el miedo dental" : "Reduces dental fear"}</span>
+                  <span>{isSpanish ? "Edades 3-9" : "Ages 3-9"}</span>
                 </div>
               </div>
 
