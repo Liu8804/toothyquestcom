@@ -6,111 +6,111 @@
 
 @layer base {
   :root {
-    /* ToothyQuest PLAYFUL Color System - Bright, High-Saturation for Ages 3-6 */
-    --background: 45 70% 98%;
-    --foreground: 220 40% 20%;
+    /* ToothyQuest × Duolingo-Inspired — Bright, Clean, Playful */
+    --background: 0 0% 97%;
+    --foreground: 220 25% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 40% 20%;
+    --card-foreground: 220 25% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 40% 20%;
+    --popover-foreground: 220 25% 16%;
 
-    /* Vibrant Teal - Primary Action Color */
-    --primary: 174 80% 45%;
+    /* Vibrant Teal — Primary Action (Duolingo-green energy, dental-teal identity) */
+    --primary: 168 78% 42%;
     --primary-foreground: 0 0% 100%;
 
-    /* Sunny Orange - Warm & Exciting */
-    --secondary: 25 95% 55%;
+    /* Bright Sky Blue — Secondary / Info */
+    --secondary: 199 90% 55%;
     --secondary-foreground: 0 0% 100%;
 
-    /* Soft Lavender - Comforting */
-    --muted: 260 40% 96%;
-    --muted-foreground: 220 20% 45%;
+    /* Soft Gray — Muted backgrounds */
+    --muted: 220 14% 94%;
+    --muted-foreground: 220 10% 46%;
 
-    /* Bright Yellow - Rewards & Celebration */
-    --accent: 45 100% 55%;
-    --accent-foreground: 220 40% 20%;
+    /* Sunny Gold — Rewards, XP, Stars */
+    --accent: 42 100% 52%;
+    --accent-foreground: 30 60% 16%;
 
-    --destructive: 0 90% 55%;
+    --destructive: 4 82% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 25% 88%;
-    --input: 220 25% 88%;
-    --ring: 174 80% 45%;
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 168 78% 42%;
 
-    --radius: 1.5rem;
+    --radius: 1rem;
 
-    /* Custom ToothyQuest Playful Tokens */
-    --tooth-white: 45 40% 98%;
-    --bubble-blue: 200 90% 65%;
-    --mint-fresh: 160 70% 65%;
-    --candy-pink: 340 85% 70%;
-    --star-gold: 45 100% 50%;
-    --sparkle-purple: 280 80% 70%;
-    --lime-pop: 120 70% 55%;
-    
-    /* Vibrant Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(174 80% 45%) 0%, hsl(200 90% 65%) 100%);
-    --gradient-warm: linear-gradient(135deg, hsl(25 95% 55%) 0%, hsl(340 85% 70%) 100%);
-    --gradient-sky: linear-gradient(180deg, hsl(200 90% 85%) 0%, hsl(45 70% 98%) 100%);
-    --gradient-adventure: linear-gradient(135deg, hsl(280 80% 65%) 0%, hsl(200 90% 65%) 100%);
-    --gradient-celebration: linear-gradient(135deg, hsl(45 100% 55%) 0%, hsl(25 95% 55%) 50%, hsl(340 85% 70%) 100%);
-    --gradient-rainbow: linear-gradient(135deg, hsl(0 90% 65%) 0%, hsl(45 100% 55%) 25%, hsl(120 70% 55%) 50%, hsl(200 90% 65%) 75%, hsl(280 80% 70%) 100%);
-    
-    /* Enhanced Shadows */
-    --shadow-playful: 0 10px 40px -8px hsl(174 80% 45% / 0.4);
-    --shadow-card: 0 6px 25px -5px hsl(220 40% 20% / 0.12);
-    --shadow-float: 0 15px 50px -15px hsl(220 40% 20% / 0.18);
-    --shadow-glow: 0 0 30px hsl(45 100% 55% / 0.5);
+    /* Custom ToothyQuest Tokens */
+    --tooth-white: 40 30% 97%;
+    --bubble-blue: 199 90% 62%;
+    --mint-fresh: 160 60% 55%;
+    --candy-pink: 340 82% 65%;
+    --star-gold: 42 100% 50%;
+    --sparkle-purple: 270 72% 64%;
+    --lime-pop: 100 70% 50%;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 174 80% 45%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 260 40% 96%;
-    --sidebar-accent-foreground: 220 40% 20%;
-    --sidebar-border: 220 25% 88%;
-    --sidebar-ring: 174 80% 45%;
+    /* Clean Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(168 78% 42%) 0%, hsl(199 90% 55%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(24 92% 56%) 0%, hsl(340 82% 65%) 100%);
+    --gradient-sky: linear-gradient(180deg, hsl(199 90% 88%) 0%, hsl(0 0% 97%) 100%);
+    --gradient-adventure: linear-gradient(135deg, hsl(270 72% 60%) 0%, hsl(199 90% 55%) 100%);
+    --gradient-celebration: linear-gradient(135deg, hsl(42 100% 52%) 0%, hsl(24 92% 56%) 50%, hsl(340 82% 65%) 100%);
+    --gradient-rainbow: linear-gradient(135deg, hsl(4 82% 58%) 0%, hsl(42 100% 52%) 25%, hsl(100 70% 50%) 50%, hsl(199 90% 55%) 75%, hsl(270 72% 64%) 100%);
+
+    /* Duolingo-Inspired Shadows — clean, chunky, 3D-ish */
+    --shadow-playful: 0 4px 0 0 hsl(168 78% 32%);
+    --shadow-card: 0 3px 0 0 hsl(220 14% 82%), 0 2px 8px hsl(220 25% 16% / 0.06);
+    --shadow-float: 0 6px 0 0 hsl(220 14% 78%), 0 4px 16px hsl(220 25% 16% / 0.08);
+    --shadow-glow: 0 0 20px hsl(42 100% 52% / 0.45);
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 25% 16%;
+    --sidebar-primary: 168 78% 42%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 94%;
+    --sidebar-accent-foreground: 220 25% 16%;
+    --sidebar-border: 220 14% 88%;
+    --sidebar-ring: 168 78% 42%;
   }
 
   .dark {
-    --background: 220 40% 10%;
-    --foreground: 45 40% 95%;
+    --background: 220 30% 8%;
+    --foreground: 0 0% 94%;
 
-    --card: 220 35% 14%;
-    --card-foreground: 45 40% 95%;
+    --card: 220 25% 12%;
+    --card-foreground: 0 0% 94%;
 
-    --popover: 220 35% 14%;
-    --popover-foreground: 45 40% 95%;
+    --popover: 220 25% 12%;
+    --popover-foreground: 0 0% 94%;
 
-    --primary: 174 75% 50%;
-    --primary-foreground: 220 40% 10%;
+    --primary: 168 72% 48%;
+    --primary-foreground: 220 30% 8%;
 
-    --secondary: 25 85% 55%;
+    --secondary: 199 85% 52%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 25% 18%;
-    --muted-foreground: 220 20% 60%;
+    --muted: 220 20% 16%;
+    --muted-foreground: 220 12% 58%;
 
-    --accent: 45 95% 50%;
-    --accent-foreground: 220 40% 10%;
+    --accent: 42 95% 48%;
+    --accent-foreground: 220 30% 8%;
 
-    --destructive: 0 70% 45%;
+    --destructive: 4 70% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 25% 20%;
-    --input: 220 25% 20%;
-    --ring: 174 75% 50%;
+    --border: 220 20% 18%;
+    --input: 220 20% 18%;
+    --ring: 168 72% 48%;
 
-    --sidebar-background: 220 40% 10%;
-    --sidebar-foreground: 45 40% 95%;
-    --sidebar-primary: 174 75% 50%;
-    --sidebar-primary-foreground: 220 40% 10%;
-    --sidebar-accent: 220 25% 18%;
-    --sidebar-accent-foreground: 45 40% 95%;
-    --sidebar-border: 220 25% 20%;
-    --sidebar-ring: 174 75% 50%;
+    --sidebar-background: 220 30% 8%;
+    --sidebar-foreground: 0 0% 94%;
+    --sidebar-primary: 168 72% 48%;
+    --sidebar-primary-foreground: 220 30% 8%;
+    --sidebar-accent: 220 20% 16%;
+    --sidebar-accent-foreground: 0 0% 94%;
+    --sidebar-border: 220 20% 18%;
+    --sidebar-ring: 168 72% 48%;
   }
 }
 
