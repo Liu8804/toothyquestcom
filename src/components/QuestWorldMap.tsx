@@ -13,6 +13,7 @@ import { WORLDS, type World, type Phase } from "@/data/worldsConfig";
 import type { Story } from "@/data/stories";
 import cartoonToothFairy from "@/assets/cartoon-tooth-fairy.png";
 import questWorldMapBg from "@/assets/quest-world-map-bg.jpg";
+import treasureMapBg from "@/assets/treasure-map-bg.jpg";
 
 const QuestWorldMap = () => {
   const { t, i18n } = useTranslation();
@@ -140,12 +141,12 @@ const QuestWorldMap = () => {
 
   return (
     <section id="stories" className="py-12 relative overflow-hidden">
-      {/* World map background */}
+      {/* Treasure map background */}
       <div
-        className="absolute inset-0 opacity-10 dark:opacity-5 bg-cover bg-center bg-no-repeat pointer-events-none"
-        style={{ backgroundImage: `url(${questWorldMapBg})` }}
+        className="absolute inset-0 opacity-15 dark:opacity-8 bg-repeat pointer-events-none"
+        style={{ backgroundImage: `url(${treasureMapBg})`, backgroundSize: "600px" }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background/70 pointer-events-none" />
 
       {/* Progression Minimap */}
       <ProgressionMinimap
@@ -238,17 +239,17 @@ const QuestWorldMap = () => {
                   viewport={{ once: true }}
                   className="rounded-3xl overflow-hidden shadow-card border border-border/50"
                 >
-                {/* World Header */}
+                {/* World Header — game level select style */}
                 <motion.button
                   onClick={() => setExpandedWorld(isExpanded ? null : world.id)}
-                  className={`w-full flex items-center gap-4 p-5 bg-gradient-to-r ${world.color} text-white relative overflow-hidden`}
+                  className={`w-full flex items-center gap-4 p-6 md:p-8 bg-gradient-to-r ${world.color} text-white relative overflow-hidden min-h-[100px] md:min-h-[120px]`}
                   whileTap={{ scale: 0.99 }}
                 >
                   {/* Background image overlay with parallax */}
                   {world.backgroundImage && (
                     <>
                       <motion.div
-                        className="absolute inset-[-20%] bg-cover bg-center opacity-25"
+                        className="absolute inset-[-20%] bg-cover bg-center opacity-30"
                         style={{
                           backgroundImage: `url(${world.backgroundImage})`,
                           backgroundAttachment: "scroll",
@@ -258,20 +259,26 @@ const QuestWorldMap = () => {
                         viewport={{ once: false, amount: 0.5 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/25 to-transparent" />
                     </>
                   )}
 
-                  <span className="text-4xl relative z-10">{world.emoji}</span>
+                  <motion.span
+                    className="text-5xl md:text-6xl relative z-10 drop-shadow-lg"
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {world.emoji}
+                  </motion.span>
                   <div className="flex-1 text-left relative z-10">
-                    <h3 className="font-display text-xl font-bold">
+                    <h3 className="font-display text-xl md:text-2xl font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]">
                       {isEs ? world.nameEs : world.name}
                     </h3>
-                    <p className="text-white/80 text-sm">
+                    <p className="text-white/85 text-sm md:text-base drop-shadow-md">
                       {isEs ? world.descriptionEs : world.description}
                     </p>
                     {/* Progress bar */}
-                    <div className="mt-2 h-2 bg-white/20 rounded-full overflow-hidden max-w-xs">
+                    <div className="mt-3 h-2.5 bg-white/20 rounded-full overflow-hidden max-w-sm border border-white/10">
                       <motion.div
                         className="h-full bg-white/80 rounded-full"
                         initial={{ width: 0 }}
@@ -281,11 +288,11 @@ const QuestWorldMap = () => {
                     </div>
                   </div>
                   <div className="relative z-10 flex items-center gap-2">
-                    <span className="font-bold text-sm">{progress}%</span>
+                    <span className="font-bold text-lg">{progress}%</span>
                     {isExpanded ? (
-                      <ChevronUp className="w-5 h-5" />
+                      <ChevronUp className="w-6 h-6" />
                     ) : (
-                      <ChevronDown className="w-5 h-5" />
+                      <ChevronDown className="w-6 h-6" />
                     )}
                   </div>
                 </motion.button>
