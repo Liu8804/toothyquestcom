@@ -11,6 +11,7 @@ import { usePurchase } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
 import BraceyMascot from "@/components/BraceyMascot";
+import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
 
 interface Zone {
   id: string;
@@ -126,7 +127,7 @@ const DentalHelpersWorld = () => {
   };
 
   return (
-    <section id="dental-helpers-world" className="py-12 bg-gradient-to-b from-muted/30 via-background to-muted/30 overflow-hidden relative">
+    <ThemedSectionWrapper theme="ocean" id="dental-helpers-world" className="py-12">
       {/* Floating decorations removed for cleaner look */}
 
       <div className="container mx-auto px-4">
@@ -390,7 +391,7 @@ const DentalHelpersWorld = () => {
         isOpen={showPurchaseModal}
         onClose={() => setShowPurchaseModal(false)}
       />
-    </section>
+    </ThemedSectionWrapper>
   );
 };
 
