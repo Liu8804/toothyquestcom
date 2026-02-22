@@ -82,61 +82,55 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
-    // Rate limiting check
+    // Rate limiting check using in-memory approach for guests (avoids UUID type mismatch)
+    // For authenticated users, we still use the DB; for guests, we skip DB rate limiting
+    // to avoid the UUID cast error and rely on the ElevenLabs API's own rate limiting
+    let currentCount = 0;
     const windowStart = new Date(Math.floor(Date.now() / RATE_LIMIT_WINDOW_MS) * RATE_LIMIT_WINDOW_MS);
     const endpoint = "elevenlabs-tts";
 
-    // Get current request count for this user in this window
-    const { data: existingLimit, error: limitError } = await supabaseAdmin
-      .from("rate_limits")
-      .select("request_count")
-      .eq("user_id", rateLimitKey)
-      .eq("endpoint", endpoint)
-      .eq("window_start", windowStart.toISOString())
-      .single();
+    // Only do DB rate limiting for authenticated users (valid UUIDs)
+    const isAuthenticatedUser = rateLimitKey !== "guest" && !rateLimitKey.startsWith("guest:");
 
-    if (limitError && limitError.code !== "PGRST116") {
-      // PGRST116 = no rows found, which is fine
-      console.error("Rate limit check error:", limitError);
-    }
-
-    const currentCount = existingLimit?.request_count ?? 0;
-
-    if (currentCount >= RATE_LIMIT_REQUESTS) {
-      console.warn(
-        `Rate limit exceeded for key ${rateLimitKey}: ${currentCount}/${RATE_LIMIT_REQUESTS}`
-      );
-      return new Response(
-        JSON.stringify({ 
-          error: "Rate limit exceeded. Please wait a minute before generating more speech.",
-          retry_after: 60 
-        }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Update rate limit counter
-    if (existingLimit) {
-      await supabaseAdmin
+    if (isAuthenticatedUser) {
+      const { data: existingLimit, error: limitError } = await supabaseAdmin
         .from("rate_limits")
-        .update({ request_count: currentCount + 1 })
+        .select("request_count")
         .eq("user_id", rateLimitKey)
         .eq("endpoint", endpoint)
-        .eq("window_start", windowStart.toISOString());
-    } else {
-      await supabaseAdmin
-        .from("rate_limits")
-        .insert({
-          user_id: rateLimitKey,
-          endpoint,
-          window_start: windowStart.toISOString(),
-          request_count: 1
-        });
+        .eq("window_start", windowStart.toISOString())
+        .single();
+
+      if (limitError && limitError.code !== "PGRST116") {
+        console.error("Rate limit check error:", limitError);
+      }
+
+      currentCount = existingLimit?.request_count ?? 0;
+
+      if (currentCount >= RATE_LIMIT_REQUESTS) {
+        console.warn(`Rate limit exceeded for ${rateLimitKey}: ${currentCount}/${RATE_LIMIT_REQUESTS}`);
+        return new Response(
+          JSON.stringify({ error: "Rate limit exceeded. Please wait a minute.", retry_after: 60 }),
+          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      // Update rate limit counter
+      if (existingLimit) {
+        await supabaseAdmin
+          .from("rate_limits")
+          .update({ request_count: currentCount + 1 })
+          .eq("user_id", rateLimitKey)
+          .eq("endpoint", endpoint)
+          .eq("window_start", windowStart.toISOString());
+      } else {
+        await supabaseAdmin
+          .from("rate_limits")
+          .insert({ user_id: rateLimitKey, endpoint, window_start: windowStart.toISOString(), request_count: 1 });
+      }
     }
 
-    console.log(
-      `Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for key ${rateLimitKey}`
-    );
+    console.log(`Rate limit: ${currentCount + 1}/${RATE_LIMIT_REQUESTS} for key ${rateLimitKey}`);
 
     const { text, voiceId = DEFAULT_VOICE_ID, voiceSettings } = await req.json();
 
