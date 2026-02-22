@@ -75,11 +75,11 @@ export const AdventuresSection = () => {
 
   // Positions for floating nodes - scattered organically like game level select
   const nodePositions = [
-    { x: 10, y: 35 },
-    { x: 30, y: 62 },
-    { x: 50, y: 22 },
-    { x: 70, y: 55 },
-    { x: 85, y: 30 },
+    { x: 12, y: 35 },
+    { x: 32, y: 62 },
+    { x: 52, y: 22 },
+    { x: 72, y: 55 },
+    { x: 90, y: 30 },
   ];
 
   const handleAdventureClick = (action: string) => {
