@@ -381,6 +381,9 @@ export const HeroSection = () => {
           <img
             src={toothyQuestLogo}
             alt="ToothyQuest"
+            width={64}
+            height={64}
+            fetchPriority="high"
             className="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-lg"
           />
           
