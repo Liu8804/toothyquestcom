@@ -274,14 +274,41 @@ export const InteractiveQuizWrapper = ({
         )}
       </AnimatePresence>
 
-      {/* Character Section */}
-      <div className="p-4 flex justify-center border-b border-primary/10 bg-gradient-to-b from-white/50 to-transparent dark:from-white/5">
-        <QuizCharacterAnimated
-          characterId={characterId}
-          mood={characterMood}
-          message={characterMessage}
-          size="md"
-          enableVoice={true}
+      {/* Character Section with 3D depth */}
+      <div className="p-4 flex flex-col items-center border-b border-primary/10 bg-gradient-to-b from-white/50 to-transparent dark:from-white/5">
+        <motion.div
+          animate={
+            characterMood === "celebrating" || characterMood === "dancing"
+              ? { y: [0, -8, 0], scale: [1, 1.05, 1] }
+              : characterMood === "thinking"
+              ? { rotate: [0, -3, 3, 0] }
+              : characterMood === "encouraging"
+              ? { y: [0, -4, 0] }
+              : { y: [0, -3, 0] }
+          }
+          transition={{
+            duration: characterMood === "celebrating" ? 0.5 : 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="character-3d"
+        >
+          <QuizCharacterAnimated
+            characterId={characterId}
+            mood={characterMood}
+            message={characterMessage}
+            size="md"
+            enableVoice={true}
+          />
+        </motion.div>
+        {/* Ground shadow */}
+        <motion.div
+          animate={{
+            scaleX: characterMood === "celebrating" || characterMood === "dancing" ? [0.8, 1, 0.8] : [0.9, 1, 0.9],
+            opacity: [0.2, 0.35, 0.2],
+          }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="w-16 h-2 rounded-full bg-foreground/20 mt-1"
         />
       </div>
 
@@ -340,17 +367,17 @@ export const InteractiveQuizWrapper = ({
             exit={{ opacity: 0 }}
             className="space-y-3 mb-4"
           >
-            {activeQuiz.options.map((option, index) => {
+        {activeQuiz.options.map((option, index) => {
               const isSelected = selectedAnswer === index;
               const isCorrectAnswer = index === activeQuiz.correctIndex;
 
-              let buttonStyle = "bg-card hover:bg-muted border-border hover:border-primary/50 hover:shadow-md";
+              let buttonStyle = "bg-card hover:bg-muted border-2 border-border hover:border-primary/50 shadow-[0_3px_0_0_hsl(var(--border))] hover:shadow-[0_3px_0_0_hsl(var(--primary)/0.4)] active:translate-y-[2px] active:shadow-none";
               if (showResult && isSelected) {
                 buttonStyle = isCorrect
-                  ? "bg-accent/20 border-accent text-accent shadow-lg shadow-accent/20"
-                  : "bg-destructive/20 border-destructive text-destructive";
+                  ? "bg-accent/20 border-2 border-accent text-accent shadow-[0_3px_0_0_hsl(var(--accent))] animate-jelly-bounce"
+                  : "bg-destructive/20 border-2 border-destructive text-destructive shadow-[0_3px_0_0_hsl(var(--destructive))]";
               } else if (showResult && isCorrectAnswer && !isCorrect) {
-                buttonStyle = "bg-accent/20 border-accent text-accent";
+                buttonStyle = "bg-accent/20 border-2 border-accent text-accent shadow-[0_3px_0_0_hsl(var(--accent))]";
               }
 
               return (
@@ -423,9 +450,9 @@ export const InteractiveQuizWrapper = ({
             >
               {isCorrect ? (
                 <motion.div
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  className="p-4 rounded-xl bg-accent/20 border border-accent/30"
+                  initial={{ scale: 0.9, y: 10 }}
+                  animate={{ scale: 1, y: 0 }}
+                  className="p-4 rounded-xl bg-accent/20 border-2 border-accent/30 shadow-[0_4px_0_0_hsl(var(--accent)/0.3)]"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <motion.div

@@ -79,32 +79,56 @@ const RewardsPanel = ({ isOpen, onClose, childId }: RewardsPanelProps) => {
                   {/* Sparkle Meter */}
                   <SparkMeter totalPoints={totalPoints} showLevel />
 
-                  {/* Stats Row */}
+                  {/* Stats Row - chunky 3D cards */}
                   <div className="grid grid-cols-3 gap-3">
                     <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      className="bg-gradient-to-br from-star/10 to-accent/10 rounded-xl p-3 text-center"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-br from-star/10 to-accent/10 rounded-xl p-3 text-center border-2 border-star/20 shadow-[0_3px_0_0_hsl(var(--star-gold)/0.3)]"
                     >
-                      <Star className="w-6 h-6 text-star mx-auto mb-1" />
-                      <p className="font-display text-xl font-bold text-foreground">{questsCompleted}</p>
+                      <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 3, repeat: Infinity, ease: "linear" }}>
+                        <Star className="w-6 h-6 text-star mx-auto mb-1" />
+                      </motion.div>
+                      <motion.p
+                        key={questsCompleted}
+                        initial={{ scale: 1.3 }}
+                        animate={{ scale: 1 }}
+                        className="font-display text-xl font-bold text-foreground"
+                      >{questsCompleted}</motion.p>
                       <p className="text-xs text-muted-foreground">Quests</p>
                     </motion.div>
                     
                     <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      className="bg-gradient-to-br from-secondary/10 to-candy/10 rounded-xl p-3 text-center"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-br from-secondary/10 to-candy/10 rounded-xl p-3 text-center border-2 border-secondary/20 shadow-[0_3px_0_0_hsl(var(--secondary)/0.3)]"
                     >
-                      <Flame className="w-6 h-6 text-secondary mx-auto mb-1" />
-                      <p className="font-display text-xl font-bold text-foreground">{streak}</p>
+                      <motion.div animate={{ y: [0, -3, 0] }} transition={{ duration: 0.8, repeat: Infinity }}>
+                        <Flame className="w-6 h-6 text-secondary mx-auto mb-1" />
+                      </motion.div>
+                      <motion.p
+                        key={streak}
+                        initial={{ scale: 1.3 }}
+                        animate={{ scale: 1 }}
+                        className="font-display text-xl font-bold text-foreground"
+                      >{streak}</motion.p>
                       <p className="text-xs text-muted-foreground">Day Streak</p>
                     </motion.div>
                     
                     <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      className="bg-gradient-to-br from-primary/10 to-bubble/10 rounded-xl p-3 text-center"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="bg-gradient-to-br from-primary/10 to-bubble/10 rounded-xl p-3 text-center border-2 border-primary/20 shadow-[0_3px_0_0_hsl(var(--primary)/0.3)]"
                     >
-                      <Gift className="w-6 h-6 text-primary mx-auto mb-1" />
-                      <p className="font-display text-xl font-bold text-foreground">{unlockedBadges.length}</p>
+                      <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+                        <Gift className="w-6 h-6 text-primary mx-auto mb-1" />
+                      </motion.div>
+                      <motion.p
+                        key={unlockedBadges.length}
+                        initial={{ scale: 1.3 }}
+                        animate={{ scale: 1 }}
+                        className="font-display text-xl font-bold text-foreground"
+                      >{unlockedBadges.length}</motion.p>
                       <p className="text-xs text-muted-foreground">Badges</p>
                     </motion.div>
                   </div>
@@ -185,13 +209,15 @@ const RewardsPanel = ({ isOpen, onClose, childId }: RewardsPanelProps) => {
 
             {/* Footer */}
             <div className="sticky bottom-0 p-4 bg-card border-t border-border">
-              <Button
-                onClick={onClose}
-                className="w-full rounded-full font-display font-bold"
-                size="lg"
-              >
-                Keep Earning! ✨
-              </Button>
+              <motion.div whileTap={{ scale: 0.95 }}>
+                <Button
+                  onClick={onClose}
+                  className="w-full rounded-full font-display font-bold shadow-[0_4px_0_0_hsl(var(--primary)/0.4)] active:shadow-none active:translate-y-1"
+                  size="lg"
+                >
+                  Keep Earning! ✨
+                </Button>
+              </motion.div>
             </div>
           </motion.div>
         </motion.div>

@@ -44,12 +44,12 @@ export const PhaseCard = ({
       whileTap={!isLocked ? { scale: 0.98 } : {}}
       className={cn(
         "relative w-full p-5 rounded-2xl text-left transition-all duration-300",
-        "border-2 shadow-md overflow-hidden group",
+        "border-2 overflow-hidden group",
         isLocked
-          ? "bg-muted/30 border-muted-foreground/10 cursor-not-allowed"
+          ? "bg-muted/30 border-muted-foreground/10 cursor-not-allowed shadow-sm"
           : isCompleted
-          ? "bg-gradient-to-r from-mint/20 to-primary/20 border-mint/40"
-          : `${color} border-white/20 cursor-pointer hover:shadow-lg`
+          ? "bg-gradient-to-r from-mint/20 to-primary/20 border-mint/40 shadow-[0_4px_0_0_hsl(var(--mint)/0.4)]"
+          : `${color} border-white/20 cursor-pointer shadow-[0_4px_0_0_rgba(0,0,0,0.15)] hover:shadow-[0_6px_0_0_rgba(0,0,0,0.2)] active:shadow-[0_2px_0_0_rgba(0,0,0,0.15)] active:translate-y-[2px]`
       )}
     >
       {/* Phase number badge */}
@@ -89,16 +89,16 @@ export const PhaseCard = ({
             {description}
           </p>
 
-          {/* Progress */}
+          {/* Progress - chunky bar */}
           {!isLocked && (
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
+              <div className="flex-1 h-3 bg-white/20 rounded-full overflow-hidden border border-white/10">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.5 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
                   className={cn(
-                    "h-full rounded-full",
+                    "h-full rounded-full shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.1)]",
                     isCompleted ? "bg-mint" : "bg-white"
                   )}
                 />
@@ -112,11 +112,16 @@ export const PhaseCard = ({
             </div>
           )}
 
-          {/* Badge preview */}
+          {/* Badge preview with reward pop */}
           {isCompleted && (
-            <div className="mt-2 inline-flex items-center gap-1 bg-star/20 text-star px-2 py-0.5 rounded-full text-xs font-semibold">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", bounce: 0.5 }}
+              className="mt-2 inline-flex items-center gap-1 bg-star/20 text-star px-2 py-0.5 rounded-full text-xs font-semibold"
+            >
               🏆 {badgeName}
-            </div>
+            </motion.div>
           )}
         </div>
 
