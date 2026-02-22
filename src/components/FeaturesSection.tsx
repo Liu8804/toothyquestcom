@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
-import cartoonFeaturesHero from "@/assets/cartoon-features-hero.png";
-import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
-import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 export const FeaturesSection = () => {
   const { t } = useTranslation();
@@ -48,24 +45,9 @@ export const FeaturesSection = () => {
   ];
 
   return (
-    <ThemedSectionWrapper theme="sunset" id="features" className="py-12">
+    <section id="features" className="py-12 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-14">
-          {/* Interactive cartoon character */}
-          <InteractiveToothCharacter
-            src={cartoonFeaturesHero}
-            alt="Tooth Hero"
-            size="lg"
-            idleAnimation="bounce"
-            tips={[
-              "Games make learning fun! 🎮",
-              "Earn badges for brushing! 🏆",
-              "Toothy loves to play with you! 🎨",
-              "Set reminders so you never forget! ⏰",
-              "Parents can track your progress! 👨‍👩‍👧",
-            ]}
-          />
-
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("features.title")}
           </h2>
@@ -75,29 +57,19 @@ export const FeaturesSection = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {features.map((feature, index) => (
-            <motion.div
+          {features.map((feature) => (
+            <div
               key={feature.titleKey}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
               className="bg-card rounded-2xl p-5 shadow-card hover:shadow-float transition-shadow text-center"
             >
-              <motion.div
-                className="text-3xl mb-3"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-              >
-                {feature.icon}
-              </motion.div>
+              <div className="text-3xl mb-3">{feature.icon}</div>
               <h3 className="font-display text-base font-bold text-foreground mb-1">
                 {t(feature.titleKey)}
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
                 {t(feature.descriptionKey)}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
 
@@ -193,7 +165,7 @@ export const FeaturesSection = () => {
         isOpen={showQuiz}
         onClose={() => setShowQuiz(false)}
       />
-    </ThemedSectionWrapper>
+    </section>
   );
 };
 

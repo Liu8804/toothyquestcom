@@ -1,5 +1,5 @@
-import { useState, useMemo, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Map, Trophy, Lock, ChevronDown, ChevronUp, Sparkles, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useStories } from "@/hooks/useStories";
@@ -8,12 +8,9 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
-import { FloatingNode, TrailPath, RewardBurst, GlowBeacon, WorldTrailConnector, ProgressionMinimap, WorldCompletionCelebration } from "@/components/hybrid-ui";
+import { FloatingNode, TrailPath, RewardBurst, GlowBeacon, WorldTrailConnector, ProgressionMinimap } from "@/components/hybrid-ui";
 import { WORLDS, type World, type Phase } from "@/data/worldsConfig";
 import type { Story } from "@/data/stories";
-import cartoonToothFairy from "@/assets/cartoon-tooth-fairy.png";
-import questWorldMapBg from "@/assets/quest-world-map-bg.jpg";
-import treasureMapBg from "@/assets/treasure-map-bg.jpg";
 
 const QuestWorldMap = () => {
   const { t, i18n } = useTranslation();
@@ -22,8 +19,6 @@ const QuestWorldMap = () => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [expandedWorld, setExpandedWorld] = useState<string | null>("dental-castle");
   const [showRewardBurst, setShowRewardBurst] = useState(false);
-  const [celebratingWorld, setCelebratingWorld] = useState<string | null>(null);
-  const [previouslyCompleted, setPreviouslyCompleted] = useState<Set<string>>(new Set());
 
   const { questProgress, isQuestCompleted } = useQuestProgress();
   const { isPurchased, isContentLocked } = usePurchase();
@@ -34,23 +29,6 @@ const QuestWorldMap = () => {
     () => questProgress.map((q) => q.quest_id),
     [questProgress]
   );
-
-  // Detect newly completed worlds
-  useEffect(() => {
-    const completedWorldIds = new Set<string>();
-    WORLDS.forEach((w) => {
-      const allQuests = w.phases.flatMap((p) => p.questIds);
-      if (allQuests.length > 0 && allQuests.every((id) => completedQuestIds.includes(id))) {
-        completedWorldIds.add(w.id);
-      }
-    });
-    completedWorldIds.forEach((id) => {
-      if (!previouslyCompleted.has(id)) {
-        setCelebratingWorld(id);
-      }
-    });
-    setPreviouslyCompleted(completedWorldIds);
-  }, [completedQuestIds]);
 
   const storyMap = useMemo(() => {
     const map: Record<string, { story: Story; index: number }> = {};
@@ -140,14 +118,7 @@ const QuestWorldMap = () => {
   };
 
   return (
-    <section id="stories" className="py-12 relative overflow-hidden">
-      {/* Treasure map background */}
-      <div
-        className="absolute inset-0 opacity-15 dark:opacity-8 bg-repeat pointer-events-none"
-        style={{ backgroundImage: `url(${treasureMapBg})`, backgroundSize: "600px" }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background/70 pointer-events-none" />
-
+    <section id="stories" className="py-12 bg-gradient-to-b from-background via-muted/30 to-background">
       {/* Progression Minimap */}
       <ProgressionMinimap
         worlds={worldMinimapData}
@@ -155,24 +126,9 @@ const QuestWorldMap = () => {
         onWorldClick={handleMinimapClick}
       />
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-10">
-          {/* Animated cartoon character */}
-          <motion.div
-            className="flex justify-center mb-6"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <motion.img
-              src={cartoonToothFairy}
-              alt="Tooth Fairy Guide"
-              className="w-28 h-28 md:w-36 md:h-36 drop-shadow-lg"
-              whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-              transition={{ type: "spring", stiffness: 300 }}
-            />
-          </motion.div>
-
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("storyMode.title")}
           </h2>
@@ -239,57 +195,48 @@ const QuestWorldMap = () => {
                   viewport={{ once: true }}
                   className="rounded-3xl overflow-hidden shadow-card border border-border/50"
                 >
-                {/* World Header — immersive game level select */}
+                {/* World Header */}
                 <motion.button
                   onClick={() => setExpandedWorld(isExpanded ? null : world.id)}
-                  className={`w-full relative overflow-hidden min-h-[160px] md:min-h-[200px]`}
+                  className={`w-full flex items-center gap-4 p-5 bg-gradient-to-r ${world.color} text-white relative overflow-hidden`}
                   whileTap={{ scale: 0.99 }}
                 >
-                  {/* Full background image */}
+                  {/* Background image overlay */}
                   {world.backgroundImage && (
-                    <div
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110"
-                      style={{ backgroundImage: `url(${world.backgroundImage})` }}
-                    />
+                    <>
+                      <div
+                        className="absolute inset-0 bg-cover bg-center opacity-20"
+                        style={{ backgroundImage: `url(${world.backgroundImage})` }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+                    </>
                   )}
-                  {/* Gradient overlays */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${world.color} opacity-60`} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-                  {/* Content */}
-                  <div className="relative z-10 flex items-end gap-4 p-6 md:p-8 h-full">
-                    <motion.span
-                      className="text-6xl md:text-7xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
-                      animate={{ y: [0, -5, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      {world.emoji}
-                    </motion.span>
-                    <div className="flex-1">
-                      <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.6)]">
-                        {isEs ? world.nameEs : world.name}
-                      </h3>
-                      <p className="text-white/90 text-sm md:text-base drop-shadow-md mt-1">
-                        {isEs ? world.descriptionEs : world.description}
-                      </p>
-                      {/* Progress bar */}
-                      <div className="mt-3 h-3 bg-white/20 rounded-full overflow-hidden max-w-sm border border-white/20 backdrop-blur-sm">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-star via-white to-star rounded-full"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progress}%` }}
-                          transition={{ duration: 0.8 }}
-                        />
-                      </div>
+                  <span className="text-4xl relative z-10">{world.emoji}</span>
+                  <div className="flex-1 text-left relative z-10">
+                    <h3 className="font-display text-xl font-bold">
+                      {isEs ? world.nameEs : world.name}
+                    </h3>
+                    <p className="text-white/80 text-sm">
+                      {isEs ? world.descriptionEs : world.description}
+                    </p>
+                    {/* Progress bar */}
+                    <div className="mt-2 h-2 bg-white/20 rounded-full overflow-hidden max-w-xs">
+                      <motion.div
+                        className="h-full bg-white/80 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 0.8 }}
+                      />
                     </div>
-                    <div className="relative z-10 flex flex-col items-center gap-1">
-                      <span className="font-bold text-2xl text-white drop-shadow-lg">{progress}%</span>
-                      {isExpanded ? (
-                        <ChevronUp className="w-7 h-7 text-white" />
-                      ) : (
-                        <ChevronDown className="w-7 h-7 text-white" />
-                      )}
-                    </div>
+                  </div>
+                  <div className="relative z-10 flex items-center gap-2">
+                    <span className="font-bold text-sm">{progress}%</span>
+                    {isExpanded ? (
+                      <ChevronUp className="w-5 h-5" />
+                    ) : (
+                      <ChevronDown className="w-5 h-5" />
+                    )}
                   </div>
                 </motion.button>
 
@@ -357,31 +304,30 @@ const QuestWorldMap = () => {
                                     ? "locked"
                                     : "unlocked";
 
-                                    return (
+                                  return (
                                     <div key={questId} className="relative pb-8">
-                                       <FloatingNode
-                                         emoji={entry?.story.emoji || "❓"}
-                                         backgroundImage={entry?.story.illustrationPath}
-                                         status={questStatus as any}
-                                         delay={qIdx * 0.08}
-                                         floatIntensity={isCurrent ? 1.2 : 0.4}
-                                         size="md"
-                                         onClick={() => handleOpenStory(questId)}
-                                         label={
-                                           entry?.story.title
-                                             ? entry.story.title.length > 12
-                                               ? entry.story.title.slice(0, 12) + "…"
-                                               : entry.story.title
-                                             : questId
-                                         }
-                                         reward={
-                                           !isCompleted && entry
-                                             ? `+${(entry.index + 1) * 10}`
-                                             : undefined
-                                         }
-                                       />
-                                     </div>
-                                   );
+                                      <FloatingNode
+                                        emoji={entry?.story.emoji || "❓"}
+                                        status={questStatus as any}
+                                        delay={qIdx * 0.08}
+                                        floatIntensity={isCurrent ? 1.2 : 0.4}
+                                        size="md"
+                                        onClick={() => handleOpenStory(questId)}
+                                        label={
+                                          entry?.story.title
+                                            ? entry.story.title.length > 12
+                                              ? entry.story.title.slice(0, 12) + "…"
+                                              : entry.story.title
+                                            : questId
+                                        }
+                                        reward={
+                                          !isCompleted && entry
+                                            ? `+${(entry.index + 1) * 10}`
+                                            : undefined
+                                        }
+                                      />
+                                    </div>
+                                  );
                                 })}
                               </div>
                             </div>
@@ -431,31 +377,6 @@ const QuestWorldMap = () => {
         onClose={() => setShowPurchaseModal(false)}
       />
       <RewardBurst isActive={showRewardBurst} emoji="🌟" />
-
-      {/* World Completion Celebration */}
-      {(() => {
-        const worldIdx = WORLDS.findIndex((w) => w.id === celebratingWorld);
-        const world = worldIdx >= 0 ? WORLDS[worldIdx] : null;
-        const nextWorld = worldIdx >= 0 && worldIdx < WORLDS.length - 1 ? WORLDS[worldIdx + 1] : null;
-        return (
-          <WorldCompletionCelebration
-            isOpen={!!celebratingWorld}
-            worldName={world ? (isEs ? world.nameEs : world.name) : ""}
-            worldEmoji={world?.emoji || "🏆"}
-            nextWorldName={nextWorld ? (isEs ? nextWorld.nameEs : nextWorld.name) : undefined}
-            nextWorldEmoji={nextWorld?.emoji}
-            onClose={() => setCelebratingWorld(null)}
-            onGoToNextWorld={
-              nextWorld
-                ? () => {
-                    setExpandedWorld(nextWorld.id);
-                    document.getElementById(`world-${nextWorld.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-                  }
-                : undefined
-            }
-          />
-        );
-      })()}
     </section>
   );
 };

@@ -5,10 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Gamepad2 } from "lucide-react";
 import BraceyMascot from "@/components/BraceyMascot";
 import BracesFoodQuizGame from "@/components/games/BracesFoodQuizGame";
-import { FloatingNode, TrailPath } from "@/components/hybrid-ui";
-import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
-import cartoonBracey from "@/assets/cartoon-bracey-character.png";
-import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 interface BracesTip {
   id: string;
@@ -109,8 +105,8 @@ const BracesCareIllustration = ({ activeTip }: { activeTip: string }) => {
   );
 };
 
-// Tip Node Component - uses FloatingNode for discoverable world feel
-const TipNode = ({ 
+// Tip Card Component
+const TipCard = ({ 
   tip, 
   index, 
   isActive, 
@@ -124,17 +120,38 @@ const TipNode = ({
   t: (key: string) => string;
 }) => {
   return (
-    <div className="flex flex-col items-center gap-2">
-      <FloatingNode
-        emoji={tip.icon}
-        status={isActive ? "completed" : "active"}
-        delay={index * 0.1}
-        floatIntensity={isActive ? 1.0 : 0.5}
-        size="lg"
-        onClick={onClick}
-        label={t(tip.titleKey).length > 12 ? t(tip.titleKey).slice(0, 12) + "…" : t(tip.titleKey)}
-      />
-    </div>
+    <motion.div
+      onClick={onClick}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      whileHover={{ scale: 1.05, y: -6 }}
+      whileTap={{ scale: 0.97 }}
+      className={`
+        relative cursor-pointer rounded-2xl p-5 transition-all duration-300
+        ${isActive 
+          ? 'bg-gradient-to-br ' + tip.color + ' text-white shadow-float scale-105' 
+          : 'bg-card shadow-card hover:shadow-float'
+        }
+      `}
+    >
+      <motion.div
+        className="text-3xl mb-3"
+        animate={isActive ? { y: [0, -4, 0] } : {}}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        {tip.icon}
+      </motion.div>
+
+      <h3 className={`font-display text-lg font-bold mb-2 ${isActive ? 'text-white' : 'text-foreground'}`}>
+        {t(tip.titleKey)}
+      </h3>
+
+      <p className={`text-sm leading-relaxed ${isActive ? 'text-white/90' : 'text-muted-foreground'}`}>
+        {t(tip.descriptionKey)}
+      </p>
+    </motion.div>
   );
 };
 
@@ -146,32 +163,22 @@ const BracesCareSection = () => {
   const activeTipData = bracesTips.find(tip => tip.id === activeTip);
 
   return (
-    <ThemedSectionWrapper theme="crystal" id="braces-care" className="py-12">
+    <section id="braces-care" className="py-12 bg-gradient-to-b from-muted/30 to-background overflow-hidden relative">
+      {/* Floating mascots removed for cleaner look */}
+
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          {/* Interactive Bracey character */}
-          <InteractiveToothCharacter
-            src={cartoonBracey}
-            alt="Bracey character"
-            size="lg"
-            idleAnimation="wobble"
-            tips={[
-              "Braces make your smile perfect! 😁",
-              "Brush gently around the wires! 🪥",
-              "Avoid sticky candy with braces! 🍬",
-              "Wear your rubber bands! 💪",
-              "Your smile will be amazing! ✨",
-            ]}
-          />
+          {/* Centered Bracey at top */}
+          <div className="flex justify-center mb-6">
+            <BraceyMascot 
+              mood="excited" 
+              size="lg" 
+              message={t("bracesCare.welcome")}
+              showMessage={true}
+            />
+          </div>
 
-          <BraceyMascot 
-            mood="excited" 
-            size="sm" 
-            message={t("bracesCare.welcome")}
-            showMessage={true}
-          />
-
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 mt-4">
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("bracesCare.title")}{" "}
             <span className="text-primary">
               {t("bracesCare.titleHighlight")}
@@ -201,11 +208,11 @@ const BracesCareSection = () => {
             </div>
           </div>
 
-          {/* Tips as Floating Nodes */}
+          {/* Tips Grid */}
           <div className="order-1 lg:order-2">
-            <div className="flex flex-wrap gap-6 justify-center">
+            <div className="grid sm:grid-cols-2 gap-4">
               {bracesTips.map((tip, index) => (
-                <TipNode
+                <TipCard
                   key={tip.id}
                   tip={tip}
                   index={index}
@@ -277,7 +284,7 @@ const BracesCareSection = () => {
           </div>
         </div>
       </div>
-    </ThemedSectionWrapper>
+    </section>
   );
 };
 

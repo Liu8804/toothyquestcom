@@ -623,7 +623,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                       ))}
                     </div>
                     
-                    <div className="flex flex-wrap gap-6 justify-center">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {displayedGames.map((game, index) => (
                         <GameCard
                           key={game.id}

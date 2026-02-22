@@ -7,9 +7,6 @@ import SingAlongModal from "@/components/SingAlongModal";
 import ChatWithToothy from "@/components/ChatWithToothy";
 import GamesModal from "@/components/games/GamesModal";
 import DentalOfficeTour from "@/components/DentalOfficeTour";
-import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
-import cartoonExplorer from "@/assets/cartoon-toothy-explorer.png";
-import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 export const AdventuresSection = () => {
   const { t } = useTranslation();
@@ -109,22 +106,8 @@ export const AdventuresSection = () => {
 
   return (
     <>
-      <ThemedSectionWrapper theme="forest" id="adventures" className="py-12">
+      <section id="adventures" className="py-12 bg-background overflow-hidden">
         <div className="container mx-auto px-4">
-          {/* Interactive cartoon character mascot */}
-          <InteractiveToothCharacter
-            src={cartoonExplorer}
-            alt="Toothy Explorer"
-            size="lg"
-            idleAnimation="bounce"
-            tips={[
-              "Let's go on an adventure! 🗺️",
-              "Which quest should we try? 🎮",
-              "Sing along with me! 🎵",
-              "I love exploring the dental office! 🔍",
-              "Every adventure earns you stars! ⭐",
-            ]}
-          />
           <div className="text-center mb-14">
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               {t("adventures.title")}
@@ -258,7 +241,7 @@ export const AdventuresSection = () => {
             })}
           </div>
         </div>
-      </ThemedSectionWrapper>
+      </section>
 
       <RewardBurst isActive={burstActive} emoji="✨" position="center" />
       <GamesModal isOpen={isGameOpen} onClose={() => setIsGameOpen(false)} />

@@ -103,67 +103,54 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
     const phaseStories = getPhaseStories(selectedPhase);
 
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="space-y-3">
         {phaseStories.map((story, index) => {
           if (!story) return null;
           const isCompleted = completedQuestIds.includes(story.id);
+          // Never show lock for admin/purchased users, even while loading
           const isLocked = !isUnlocked && !isAccessLoading && !story.isFree;
 
           return (
             <motion.button
               key={story.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05 }}
               onClick={() => handleOpenStory(story.id)}
-              whileHover={!isLocked ? { scale: 1.05, y: -4 } : {}}
-              whileTap={!isLocked ? { scale: 0.95 } : {}}
               className={cn(
-                "relative rounded-2xl overflow-hidden aspect-square shadow-md transition-all",
-                "border-2",
+                "w-full p-4 rounded-xl text-left flex items-center gap-4 transition-all",
+                "border-2 shadow-sm hover:shadow-md",
                 isLocked
-                  ? "border-muted opacity-60 grayscale"
+                  ? "bg-muted/50 border-muted cursor-pointer"
                   : isCompleted
-                  ? "border-mint/50 shadow-mint/20"
-                  : "border-primary/30 hover:border-primary/60 hover:shadow-lg"
+                  ? "bg-mint/10 border-mint/30 hover:border-mint/50"
+                  : "bg-card border-border hover:border-primary/50"
               )}
             >
-              {/* Quest Image */}
-              <img
-                src={story.illustrationPath}
-                alt={story.title}
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-              />
-
-              {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-
-              {/* Completed checkmark */}
-              {isCompleted && (
-                <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-mint flex items-center justify-center shadow-md">
-                  <span className="text-white text-sm font-bold">✓</span>
+              <div className="text-3xl">{story.emoji}</div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h5 className="font-semibold text-foreground truncate">
+                    {story.title}
+                  </h5>
+                  {isCompleted && (
+                    <span className="text-xs bg-mint/20 text-mint px-2 py-0.5 rounded-full">
+                      ✓
+                    </span>
+                  )}
+                  {isLocked && (
+                    <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
+                      🔒
+                    </span>
+                  )}
+                  {story.isFree && !isCompleted && (
+                    <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold">
+                      FREE
+                    </span>
+                  )}
                 </div>
-              )}
-
-              {/* Lock overlay */}
-              {isLocked && (
-                <div className="absolute inset-0 bg-background/40 backdrop-blur-[2px] flex items-center justify-center">
-                  <span className="text-2xl">🔒</span>
-                </div>
-              )}
-
-              {/* FREE badge */}
-              {story.isFree && !isCompleted && !isLocked && (
-                <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
-                  FREE
-                </div>
-              )}
-
-              {/* Title at bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-2">
-                <p className="text-white text-xs font-bold drop-shadow-lg line-clamp-2 leading-tight">
-                  {story.title}
+                <p className="text-sm text-muted-foreground truncate">
+                  {story.lesson}
                 </p>
               </div>
             </motion.button>
@@ -191,29 +178,29 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
 
 
                 <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                  {isSpanish ? "🏰 Reino Dental" : "🏰 Tooth Kingdom"}
+                  {isSpanish ? "¡Bienvenido a ToothyQuest!" : "Welcome to ToothyQuest!"}
                 </h2>
 
                 <p className="text-muted-foreground max-w-xl mx-auto mb-2">
                   {isSpanish
-                    ? "Explora mundos mágicos y completa misiones dentales."
-                    : "Explore magical worlds and complete dental quests."}
+                    ? "Convierte las visitas dentales en aventuras divertidas."
+                    : "Turn dental visits into fun adventures."}
                 </p>
 
                 <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Shield className="w-4 h-4 text-mint" />
-                    {isSpanish ? "74+ Misiones" : "74+ Quests"}
+                    {isSpanish ? "Seguro para niños" : "Kid-safe"}
                   </span>
                   <span>•</span>
                   <span>{isSpanish ? "Sin anuncios" : "No ads"}</span>
                   <span>•</span>
-                  <span>{isSpanish ? "Edades 3-9" : "Ages 3-9"}</span>
+                  <span>{isSpanish ? "Reduce el miedo dental" : "Reduces dental fear"}</span>
                 </div>
               </div>
 
               {/* World Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 {WORLDS.map((world) => (
                   <WorldCard
                     key={world.id}
@@ -261,100 +248,39 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                 </p>
               </div>
 
-              {/* Phase Cards with Animated Trail */}
-              <div className="relative max-w-2xl mx-auto">
-                {/* Animated Trail Line connecting phases */}
-                <div className="absolute left-8 top-0 bottom-0 w-1 z-0">
-                  <div className="h-full w-full bg-gradient-to-b from-primary/20 via-secondary/20 to-star/20 rounded-full" />
-                  <motion.div
-                    className="absolute top-0 left-0 w-full bg-gradient-to-b from-primary via-secondary to-star rounded-full"
-                    initial={{ height: "0%" }}
-                    animate={{ height: `${Math.min(100, selectedWorld.phases.reduce((acc, p, i) => {
-                      const prog = getPhaseProgress(p.id, completedQuestIds);
-                      return acc + (prog / selectedWorld.phases.length);
-                    }, 0))}%` }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                  />
-                  {/* Animated traveler dot */}
-                  <motion.div
-                    className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-star shadow-lg shadow-star/50 z-10"
-                    animate={{ 
-                      top: ["0%", "100%", "0%"],
-                      scale: [1, 1.3, 1],
-                    }}
-                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-star/50"
-                      animate={{ scale: [1, 2, 1], opacity: [0.5, 0, 0.5] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    />
-                  </motion.div>
-                </div>
-
-                <div className="space-y-4">
+              {/* Phase Cards */}
+              <div className="space-y-4 max-w-2xl mx-auto">
                 {selectedWorld.phases.map((phase, index) => {
                   const progress = getPhaseProgress(phase.id, completedQuestIds);
                   const completed = isPhaseCompleted(phase.id, completedQuestIds);
+                  // Unlock next phase if previous is > 50% complete
                   const prevPhase = index > 0 ? selectedWorld.phases[index - 1] : null;
                   const prevProgress = prevPhase
                     ? getPhaseProgress(prevPhase.id, completedQuestIds)
                     : 100;
 
+                  // Admin accounts bypass progression locks. While access is still loading,
+                  // keep phases optimistically unlocked to avoid "looks locked" race conditions.
                   const isLocked = !isAdmin && !isAccessLoading && index > 0 && prevProgress < 50;
 
                   return (
-                    <motion.div
+                    <PhaseCard
                       key={phase.id}
-                      initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.15 }}
-                      className="relative pl-12"
-                    >
-                      {/* Trail node */}
-                      <div className="absolute left-6 top-6 z-10">
-                        <motion.div
-                          className={cn(
-                            "w-5 h-5 rounded-full border-3 shadow-md",
-                            completed 
-                              ? "bg-mint border-mint shadow-mint/30" 
-                              : isLocked 
-                              ? "bg-muted border-muted-foreground/30"
-                              : "bg-primary border-primary shadow-primary/30"
-                          )}
-                          animate={!isLocked && !completed ? {
-                            scale: [1, 1.2, 1],
-                            boxShadow: ["0 0 0 0 rgba(var(--primary), 0)", "0 0 0 8px rgba(var(--primary), 0.15)", "0 0 0 0 rgba(var(--primary), 0)"]
-                          } : {}}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          {completed && (
-                            <span className="flex items-center justify-center text-xs text-white">✓</span>
-                          )}
-                        </motion.div>
-                      </div>
-
-                      <PhaseCard
-                        id={phase.id}
-                        name={isSpanish ? phase.nameEs : phase.name}
-                        description={isSpanish ? phase.descriptionEs : phase.description}
-                        emoji={phase.emoji}
-                        badgeName={isSpanish ? phase.badgeNameEs : phase.badgeName}
-                        color={phase.color}
-                        questCount={phase.questIds.length}
-                        completedCount={phase.questIds.filter(id => completedQuestIds.includes(id)).length}
-                        isLocked={isLocked}
-                        isCompleted={completed}
-                        phaseNumber={index + 1}
-                        onClick={() => !isLocked && setSelectedPhase(phase)}
-                      />
-                    </motion.div>
+                      id={phase.id}
+                      name={isSpanish ? phase.nameEs : phase.name}
+                      description={isSpanish ? phase.descriptionEs : phase.description}
+                      emoji={phase.emoji}
+                      badgeName={isSpanish ? phase.badgeNameEs : phase.badgeName}
+                      color={phase.color}
+                      questCount={phase.questIds.length}
+                      completedCount={phase.questIds.filter(id => completedQuestIds.includes(id)).length}
+                      isLocked={isLocked}
+                      isCompleted={completed}
+                      phaseNumber={index + 1}
+                      onClick={() => !isLocked && setSelectedPhase(phase)}
+                    />
                   );
                 })}
-                </div>
-
-                {/* Trail end marker */}
-                <div className="flex justify-center mt-4 text-2xl">🏁</div>
               </div>
             </motion.div>
           )}

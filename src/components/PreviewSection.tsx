@@ -2,9 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import dentalOffice from "@/assets/friendly-dental-office.png";
-import cartoonDentistTooth from "@/assets/cartoon-dentist-tooth.png";
 import DentalOfficeTour from "@/components/DentalOfficeTour";
-import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 export const PreviewSection = () => {
   const [isTourOpen, setIsTourOpen] = useState(false);
@@ -13,23 +11,6 @@ export const PreviewSection = () => {
     <>
       <section id="games" className="py-12 bg-background overflow-hidden">
         <div className="container mx-auto px-4">
-          {/* Interactive character at top */}
-          <div className="text-center mb-8">
-            <InteractiveToothCharacter
-              src={cartoonDentistTooth}
-              alt="Dr. Tooth"
-              size="lg"
-              idleAnimation="float"
-              tips={[
-                "The dentist is your friend! 🏥",
-                "Dental chairs move like magic! ✨",
-                "You get stickers for being brave! 🌟",
-                "The mirror helps see your teeth! 🪞",
-                "Nothing to be scared of! 💪",
-              ]}
-            />
-          </div>
-
         <div className="flex flex-col lg:flex-row items-center gap-12">
           {/* Image */}
           <motion.div
