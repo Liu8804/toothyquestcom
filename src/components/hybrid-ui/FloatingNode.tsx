@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Star, Lock, Check, Sparkles } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 
 export type FloatingNodeStatus = "active" | "completed" | "unlocked" | "locked";
 
@@ -47,13 +48,16 @@ const FloatingNode = ({
   const isInteractive = status !== "locked";
   const s = sizeMap[size];
   const { playSound } = useGameSounds();
+  const { buttonPress, error: hapticError, success: hapticSuccess } = useHapticFeedback();
 
   const handleClick = () => {
     if (isInteractive) {
       playSound("tap");
+      buttonPress();
       onClick?.();
     } else {
       playSound("locked");
+      hapticError();
     }
   };
 
@@ -79,6 +83,7 @@ const FloatingNode = ({
     >
       {/* Floating bob animation wrapper */}
       <motion.div
+        className="will-change-transform"
         animate={
           floatIntensity > 0
             ? {

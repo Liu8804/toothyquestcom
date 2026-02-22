@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Map, Trophy, Lock, ChevronDown, ChevronUp, Sparkles, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useStories } from "@/hooks/useStories";
@@ -201,14 +201,21 @@ const QuestWorldMap = () => {
                   className={`w-full flex items-center gap-4 p-5 bg-gradient-to-r ${world.color} text-white relative overflow-hidden`}
                   whileTap={{ scale: 0.99 }}
                 >
-                  {/* Background image overlay */}
+                  {/* Background image overlay with parallax */}
                   {world.backgroundImage && (
                     <>
-                      <div
-                        className="absolute inset-0 bg-cover bg-center opacity-20"
-                        style={{ backgroundImage: `url(${world.backgroundImage})` }}
+                      <motion.div
+                        className="absolute inset-[-20%] bg-cover bg-center opacity-25"
+                        style={{
+                          backgroundImage: `url(${world.backgroundImage})`,
+                          backgroundAttachment: "scroll",
+                        }}
+                        initial={{ y: 0 }}
+                        whileInView={{ y: -10 }}
+                        viewport={{ once: false, amount: 0.5 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent" />
                     </>
                   )}
 

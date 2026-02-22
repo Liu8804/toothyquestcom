@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Sparkles, Trophy } from "lucide-react";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 
 interface RewardBurstProps {
   isActive: boolean;
@@ -26,12 +27,16 @@ const RewardBurst = ({
   badgeName,
 }: RewardBurstProps) => {
   const { playWinFanfare } = useGameSounds();
+  const { success: hapticSuccess, customHaptic } = useHapticFeedback();
 
   useEffect(() => {
     if (isActive) {
       playWinFanfare();
+      hapticSuccess();
+      // Celebratory haptic pattern
+      setTimeout(() => customHaptic([50, 30, 80, 30, 120]), 300);
     }
-  }, [isActive, playWinFanfare]);
+  }, [isActive, playWinFanfare, hapticSuccess, customHaptic]);
 
   return (
     <AnimatePresence>
