@@ -1,10 +1,9 @@
 import { forwardRef } from "react";
 import { motion } from "framer-motion";
-import { Sword, Map, Trophy, Scroll, Lock, CheckCircle, Smile, Sparkles } from "lucide-react";
+import { Sword, Map, Trophy, Scroll, Lock, CheckCircle, Smile } from "lucide-react";
 import type { Story } from "@/data/stories";
 import { FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { isBracesQuest } from "./BracesQuestEffects";
-import { GlowBeacon } from "@/components/hybrid-ui";
 
 interface StoryCardProps {
   story: Story;
@@ -12,12 +11,11 @@ interface StoryCardProps {
   onClick: () => void;
   isCompleted?: boolean;
   isLocked?: boolean;
-  isCurrent?: boolean;
 }
 
 const questIcons = [Sword, Map, Trophy, Scroll];
 
-const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(({ story, index, onClick, isCompleted = false, isLocked = false, isCurrent = false }, ref) => {
+const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(({ story, index, onClick, isCompleted = false, isLocked = false }, ref) => {
   const QuestIcon = questIcons[index % questIcons.length];
   const isFreeQuest = story.isFree === true || index < FREE_QUEST_LIMIT;
   const isBraces = isBracesQuest(story.id);
@@ -31,17 +29,8 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(({ story, index, on
       whileHover={{ scale: isLocked ? 1 : 1.03, y: isLocked ? 0 : -8 }}
       whileTap={{ scale: isLocked ? 1 : 0.98 }}
       onClick={onClick}
-      className={`cursor-pointer group relative ${isLocked ? 'opacity-75' : ''}`}
+      className={`cursor-pointer group ${isLocked ? 'opacity-75' : ''}`}
     >
-      {/* Active quest glow beacon */}
-      {isCurrent && !isCompleted && !isLocked && (
-        <GlowBeacon
-          isActive
-          variant="primary"
-          size={120}
-          className="-top-5 -left-5 z-0"
-        />
-      )}
       <div className={`relative bg-gradient-to-br from-card via-card to-primary/5 rounded-3xl overflow-hidden shadow-card hover:shadow-float transition-all duration-300 border-2 ${
         isCompleted 
           ? 'border-green-500/50 hover:border-green-500' 

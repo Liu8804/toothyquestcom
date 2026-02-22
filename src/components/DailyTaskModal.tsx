@@ -8,7 +8,6 @@ import { useDailyGreeting } from "@/hooks/useDailyGreeting";
 import BrushingTimerGame from "@/components/BrushingGame/BrushingTimerGame";
 import MascotWithExpression from "@/components/MascotWithExpression";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
-import { RewardBurst } from "@/components/hybrid-ui";
 
 interface DailyTaskModalProps {
   isOpen: boolean;
@@ -92,7 +91,6 @@ const DailyTaskModal = ({
   return (
     <>
       <ConfettiCelebration isActive={showConfetti} />
-      <RewardBurst isActive={showConfetti} xp={earnedXp || task?.xpReward || 0} emoji="🌟" />
       
       {/* Brushing Timer Game */}
       <BrushingTimerGame

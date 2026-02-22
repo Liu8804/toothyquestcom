@@ -4,8 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import AdventuresSection from "@/components/AdventuresSection";
-import QuestWorldMap from "@/components/QuestWorldMap";
-// StoryModeSection replaced by QuestWorldMap
+import StoryModeSection from "@/components/StoryModeSection";
 import DentalHelpersWorld from "@/components/DentalHelpersWorld";
 import BracesCareSection from "@/components/BracesCareSection";
 import FunFactsSection from "@/components/FunFactsSection";
@@ -228,8 +227,6 @@ const Index = () => {
         {/* Subtle floating sparkles background - reduced for cleaner look */}
         <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 
-        {/* Prototype links removed - hybrid style now integrated into main app */}
-
         {/* Simplified floating nav - bottom on mobile, top-right on desktop */}
         <div 
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-3 py-2 shadow-lg border border-border/50 transition-all duration-300 ${
@@ -307,7 +304,7 @@ const Index = () => {
         <FeaturesSection />
         
         <AdventuresSection />
-        <QuestWorldMap />
+        <StoryModeSection />
         <DentalHelpersWorld />
         <BracesCareSection />
         <FunFactsSection />

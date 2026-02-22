@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Map, Trophy, Lock, Sparkles } from "lucide-react";
+import { Map, Trophy, Lock } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
 import { useStories } from "@/hooks/useStories";
 import StoryCard from "@/components/StoryCard";
 import StoryViewer from "@/components/StoryViewer";
@@ -9,7 +8,6 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
-import { RewardBurst } from "@/components/hybrid-ui";
 
 const INITIAL_STORY_COUNT = 8;
 
@@ -19,16 +17,13 @@ const StoryModeSection = () => {
   const [selectedStoryIndex, setSelectedStoryIndex] = useState<number | null>(null);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [visibleCount, setVisibleCount] = useState(INITIAL_STORY_COUNT);
-  const [showRewardBurst, setShowRewardBurst] = useState(false);
+  
   const { questProgress, isQuestCompleted } = useQuestProgress();
   const { isPurchased, isContentLocked } = usePurchase();
   const { playSound } = useGameSounds();
   
   const completedQuestsCount = questProgress.length;
   const progressPercentage = (completedQuestsCount / stories.length) * 100;
-  
-  // Find the first uncompleted quest index for "current" indicator
-  const currentQuestIndex = stories.findIndex((s) => !isQuestCompleted(s.id));
 
   const handleOpenStory = (index: number) => {
     if (isContentLocked(index, 'quest')) {
@@ -97,23 +92,11 @@ const StoryModeSection = () => {
                 {completedQuestsCount}/{stories.length} {t("storyMode.complete")}
               </span>
             </div>
-            <div className="h-3 bg-muted rounded-full overflow-hidden border border-primary/20 relative">
-              <motion.div 
-                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full"
-                initial={{ width: 0 }}
-                whileInView={{ width: `${progressPercentage}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+            <div className="h-3 bg-muted rounded-full overflow-hidden border border-primary/20">
+              <div 
+                className="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-700"
+                style={{ width: `${progressPercentage}%` }}
               />
-              {/* Glowing dot at progress tip */}
-              {progressPercentage > 0 && progressPercentage < 100 && (
-                <motion.div
-                  className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary shadow-glow"
-                  style={{ left: `${progressPercentage}%` }}
-                  animate={{ scale: [1, 1.3, 1], opacity: [0.8, 1, 0.8] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-              )}
             </div>
             
             {/* Free quests indicator */}
@@ -136,7 +119,6 @@ const StoryModeSection = () => {
               onClick={() => handleOpenStory(index)}
               isCompleted={isQuestCompleted(story.id)}
               isLocked={isContentLocked(index, 'quest')}
-              isCurrent={index === currentQuestIndex}
             />
           ))}
         </div>

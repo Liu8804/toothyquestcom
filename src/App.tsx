@@ -31,7 +31,6 @@ import AIStories from "./pages/AIStories";
 import Clinics from "./pages/Clinics";
 import QuestMapDemo from "./pages/QuestMapDemo";
 import QuestFloatDemo from "./pages/QuestFloatDemo";
-import QuestHybridDemo from "./pages/QuestHybridDemo";
 
 // Component that unlocks AudioContext on first user interaction
 const AudioUnlocker = ({ children }: { children: React.ReactNode }) => {
@@ -81,7 +80,6 @@ const App = () => (
                     <Route path="/clinics" element={<Clinics />} />
                     <Route path="/quest-map-demo" element={<QuestMapDemo />} />
                     <Route path="/quest-float-demo" element={<QuestFloatDemo />} />
-                    <Route path="/quest-hybrid-demo" element={<QuestHybridDemo />} />
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
