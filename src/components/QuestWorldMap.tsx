@@ -8,7 +8,7 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
-import { FloatingNode, TrailPath, RewardBurst, GlowBeacon, WorldTrailConnector, ProgressionMinimap } from "@/components/hybrid-ui";
+import { FloatingNode, TrailPath, RewardBurst, GlowBeacon, WorldTrailConnector, ProgressionMinimap, WorldCompletionCelebration } from "@/components/hybrid-ui";
 import { WORLDS, type World, type Phase } from "@/data/worldsConfig";
 import type { Story } from "@/data/stories";
 
@@ -19,6 +19,8 @@ const QuestWorldMap = () => {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [expandedWorld, setExpandedWorld] = useState<string | null>("dental-castle");
   const [showRewardBurst, setShowRewardBurst] = useState(false);
+  const [celebratingWorld, setCelebratingWorld] = useState<string | null>(null);
+  const [previouslyCompleted, setPreviouslyCompleted] = useState<Set<string>>(new Set());
 
   const { questProgress, isQuestCompleted } = useQuestProgress();
   const { isPurchased, isContentLocked } = usePurchase();
@@ -29,6 +31,23 @@ const QuestWorldMap = () => {
     () => questProgress.map((q) => q.quest_id),
     [questProgress]
   );
+
+  // Detect newly completed worlds
+  useEffect(() => {
+    const completedWorldIds = new Set<string>();
+    WORLDS.forEach((w) => {
+      const allQuests = w.phases.flatMap((p) => p.questIds);
+      if (allQuests.length > 0 && allQuests.every((id) => completedQuestIds.includes(id))) {
+        completedWorldIds.add(w.id);
+      }
+    });
+    completedWorldIds.forEach((id) => {
+      if (!previouslyCompleted.has(id)) {
+        setCelebratingWorld(id);
+      }
+    });
+    setPreviouslyCompleted(completedWorldIds);
+  }, [completedQuestIds]);
 
   const storyMap = useMemo(() => {
     const map: Record<string, { story: Story; index: number }> = {};
@@ -384,6 +403,31 @@ const QuestWorldMap = () => {
         onClose={() => setShowPurchaseModal(false)}
       />
       <RewardBurst isActive={showRewardBurst} emoji="🌟" />
+
+      {/* World Completion Celebration */}
+      {(() => {
+        const worldIdx = WORLDS.findIndex((w) => w.id === celebratingWorld);
+        const world = worldIdx >= 0 ? WORLDS[worldIdx] : null;
+        const nextWorld = worldIdx >= 0 && worldIdx < WORLDS.length - 1 ? WORLDS[worldIdx + 1] : null;
+        return (
+          <WorldCompletionCelebration
+            isOpen={!!celebratingWorld}
+            worldName={world ? (isEs ? world.nameEs : world.name) : ""}
+            worldEmoji={world?.emoji || "🏆"}
+            nextWorldName={nextWorld ? (isEs ? nextWorld.nameEs : nextWorld.name) : undefined}
+            nextWorldEmoji={nextWorld?.emoji}
+            onClose={() => setCelebratingWorld(null)}
+            onGoToNextWorld={
+              nextWorld
+                ? () => {
+                    setExpandedWorld(nextWorld.id);
+                    document.getElementById(`world-${nextWorld.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }
+                : undefined
+            }
+          />
+        );
+      })()}
     </section>
   );
 };

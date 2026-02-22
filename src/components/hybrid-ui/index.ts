@@ -5,3 +5,4 @@ export { default as RewardBurst } from "./RewardBurst";
 export { default as GlowBeacon } from "./GlowBeacon";
 export { default as WorldTrailConnector } from "./WorldTrailConnector";
 export { default as ProgressionMinimap } from "./ProgressionMinimap";
+export { default as WorldCompletionCelebration } from "./WorldCompletionCelebration";
