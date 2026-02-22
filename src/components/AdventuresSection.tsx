@@ -73,12 +73,12 @@ export const AdventuresSection = () => {
     },
   ];
 
-  // Positions for floating nodes - scattered organically like game level select
+  // Positions for floating nodes in the adventure "world"
   const nodePositions = [
-    { x: 12, y: 35 },
-    { x: 32, y: 62 },
-    { x: 52, y: 22 },
-    { x: 72, y: 55 },
+    { x: 15, y: 30 },
+    { x: 35, y: 55 },
+    { x: 55, y: 25 },
+    { x: 75, y: 50 },
     { x: 90, y: 30 },
   ];
 
@@ -135,7 +135,7 @@ export const AdventuresSection = () => {
           </div>
 
           {/* Floating Node World - Desktop */}
-          <div className="hidden md:block relative w-full h-[420px] mb-8">
+          <div className="hidden md:block relative w-full h-[320px] mb-8">
             {/* Trail connections between nodes */}
             <TrailPath
               points={nodePositions}
