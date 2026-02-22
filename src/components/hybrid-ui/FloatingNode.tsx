@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, Lock, Check, Sparkles } from "lucide-react";
 import { LucideIcon } from "lucide-react";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 export type FloatingNodeStatus = "active" | "completed" | "unlocked" | "locked";
 
@@ -57,6 +58,16 @@ const FloatingNode = ({
 }: FloatingNodeProps) => {
   const isInteractive = status !== "locked";
   const s = sizeMap[size];
+  const { playSound } = useGameSounds();
+
+  const handleClick = () => {
+    if (isInteractive) {
+      playSound("tap");
+      onClick?.();
+    } else {
+      playSound("locked");
+    }
+  };
 
   return (
     <motion.div
@@ -90,7 +101,7 @@ const FloatingNode = ({
         )}
 
         <motion.button
-          onClick={isInteractive ? onClick : undefined}
+          onClick={handleClick}
           disabled={!isInteractive}
           className={`relative ${s.node} rounded-full flex items-center justify-center transition-all overflow-hidden ${
             status === "completed"

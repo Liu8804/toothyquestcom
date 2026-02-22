@@ -7,6 +7,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
+import { FloatingNode, RewardBurst, TrailPath } from "@/components/hybrid-ui";
 
 interface DentalEquipment {
   id: string;
@@ -101,44 +102,21 @@ interface EquipmentSpotProps {
 }
 
 const EquipmentSpot = ({ equipment, isActive, onClick, isExplored }: EquipmentSpotProps) => {
-  const sizeClasses = {
-    sm: "w-12 h-12 text-2xl",
-    md: "w-16 h-16 text-3xl",
-    lg: "w-20 h-20 text-4xl",
-  };
-
   return (
-    <motion.button
-      onClick={onClick}
-      className={`absolute transform -translate-x-1/2 -translate-y-1/2 ${sizeClasses[equipment.size]} 
-        rounded-full flex items-center justify-center cursor-pointer
-        ${isActive 
-          ? "bg-gradient-to-br from-yellow-400 to-orange-400 ring-4 ring-yellow-300 shadow-lg" 
-          : isExplored 
-            ? "bg-gradient-to-br from-green-400 to-emerald-500 shadow-md" 
-            : "bg-gradient-to-br from-pink-400 to-purple-500 shadow-card hover:shadow-lg"
-        }
-        transition-all duration-300`}
+    <div
+      className="absolute transform -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${equipment.position.x}%`, top: `${equipment.position.y}%` }}
-      whileHover={{ scale: 1.2 }}
-      whileTap={{ scale: 0.95 }}
-      animate={!isExplored && !isActive ? { 
-        scale: [1, 1.1, 1],
-        boxShadow: ["0 0 0 0 rgba(236, 72, 153, 0.4)", "0 0 0 10px rgba(236, 72, 153, 0)", "0 0 0 0 rgba(236, 72, 153, 0)"]
-      } : {}}
-      transition={{ duration: 2, repeat: Infinity }}
     >
-      <span className="drop-shadow-md">{equipment.emoji}</span>
-      {isExplored && (
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="absolute -top-1 -right-1 w-5 h-5 bg-white rounded-full flex items-center justify-center shadow-sm"
-        >
-          <span className="text-xs">✓</span>
-        </motion.div>
-      )}
-    </motion.button>
+      <FloatingNode
+        emoji={equipment.emoji}
+        status={isExplored ? "completed" : isActive ? "active" : "unlocked"}
+        size={equipment.size === "lg" ? "lg" : equipment.size === "md" ? "md" : "sm"}
+        delay={0}
+        floatIntensity={isExplored ? 0.3 : 0.8}
+        onClick={onClick}
+        label={equipment.name}
+      />
+    </div>
   );
 };
 
@@ -191,6 +169,8 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
   const progress = (exploredItems.size / dentalEquipment.length) * 100;
 
   return (
+    <>
+    <RewardBurst isActive={showCelebration} emoji="🦷" xp={50} />
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-4xl w-[95vw] h-[85vh] p-0 overflow-hidden bg-gradient-to-b from-sky-100 to-blue-200">
         <VisuallyHidden>
@@ -429,6 +409,7 @@ const DentalOfficeTour = ({ isOpen, onClose }: DentalOfficeTourProps) => {
         </AnimatePresence>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
 

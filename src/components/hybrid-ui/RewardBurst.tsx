@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Sparkles } from "lucide-react";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface RewardBurstProps {
   /** Whether the burst is active */
@@ -26,6 +28,14 @@ const RewardBurst = ({
   onComplete,
   position = "center",
 }: RewardBurstProps) => {
+  const { playWinFanfare } = useGameSounds();
+
+  useEffect(() => {
+    if (isActive) {
+      playWinFanfare();
+    }
+  }, [isActive, playWinFanfare]);
+
   return (
     <AnimatePresence>
       {isActive && (

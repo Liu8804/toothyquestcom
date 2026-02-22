@@ -4,7 +4,8 @@ import HeroSection from "@/components/HeroSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import AdventuresSection from "@/components/AdventuresSection";
-import StoryModeSection from "@/components/StoryModeSection";
+import QuestWorldMap from "@/components/QuestWorldMap";
+// StoryModeSection replaced by QuestWorldMap
 import DentalHelpersWorld from "@/components/DentalHelpersWorld";
 import BracesCareSection from "@/components/BracesCareSection";
 import FunFactsSection from "@/components/FunFactsSection";
@@ -306,7 +307,7 @@ const Index = () => {
         <FeaturesSection />
         
         <AdventuresSection />
-        <StoryModeSection />
+        <QuestWorldMap />
         <DentalHelpersWorld />
         <BracesCareSection />
         <FunFactsSection />

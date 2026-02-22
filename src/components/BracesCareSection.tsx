@@ -120,19 +120,29 @@ const TipCard = ({
   t: (key: string) => string;
 }) => {
   return (
-    <div
+    <motion.div
       onClick={onClick}
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      whileHover={{ scale: 1.05, y: -6 }}
+      whileTap={{ scale: 0.97 }}
       className={`
         relative cursor-pointer rounded-2xl p-5 transition-all duration-300
         ${isActive 
           ? 'bg-gradient-to-br ' + tip.color + ' text-white shadow-float scale-105' 
-          : 'bg-card shadow-card hover:shadow-float hover:-translate-y-1'
+          : 'bg-card shadow-card hover:shadow-float'
         }
       `}
     >
-      <div className="text-3xl mb-3">
+      <motion.div
+        className="text-3xl mb-3"
+        animate={isActive ? { y: [0, -4, 0] } : {}}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
         {tip.icon}
-      </div>
+      </motion.div>
 
       <h3 className={`font-display text-lg font-bold mb-2 ${isActive ? 'text-white' : 'text-foreground'}`}>
         {t(tip.titleKey)}
@@ -141,8 +151,7 @@ const TipCard = ({
       <p className={`text-sm leading-relaxed ${isActive ? 'text-white/90' : 'text-muted-foreground'}`}>
         {t(tip.descriptionKey)}
       </p>
-
-    </div>
+    </motion.div>
   );
 };
 
