@@ -6,6 +6,8 @@ import { Gamepad2 } from "lucide-react";
 import BraceyMascot from "@/components/BraceyMascot";
 import BracesFoodQuizGame from "@/components/games/BracesFoodQuizGame";
 import { FloatingNode, TrailPath } from "@/components/hybrid-ui";
+import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
+import cartoonBracey from "@/assets/cartoon-bracey-character.png";
 
 interface BracesTip {
   id: string;
@@ -143,22 +145,34 @@ const BracesCareSection = () => {
   const activeTipData = bracesTips.find(tip => tip.id === activeTip);
 
   return (
-    <section id="braces-care" className="py-12 bg-gradient-to-b from-muted/30 to-background overflow-hidden relative">
-      {/* Floating mascots removed for cleaner look */}
-
+    <ThemedSectionWrapper theme="crystal" id="braces-care" className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          {/* Centered Bracey at top */}
-          <div className="flex justify-center mb-6">
-            <BraceyMascot 
-              mood="excited" 
-              size="lg" 
-              message={t("bracesCare.welcome")}
-              showMessage={true}
+          {/* Cartoon Bracey character */}
+          <motion.div
+            className="flex justify-center mb-6"
+            initial={{ scale: 0, y: 30 }}
+            whileInView={{ scale: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", bounce: 0.5 }}
+          >
+            <motion.img
+              src={cartoonBracey}
+              alt="Bracey character"
+              className="w-24 h-24 md:w-32 md:h-32 drop-shadow-xl"
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
-          </div>
+          </motion.div>
 
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+          <BraceyMascot 
+            mood="excited" 
+            size="sm" 
+            message={t("bracesCare.welcome")}
+            showMessage={true}
+          />
+
+          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 mt-4">
             {t("bracesCare.title")}{" "}
             <span className="text-primary">
               {t("bracesCare.titleHighlight")}
@@ -264,7 +278,7 @@ const BracesCareSection = () => {
           </div>
         </div>
       </div>
-    </section>
+    </ThemedSectionWrapper>
   );
 };
 
