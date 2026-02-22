@@ -227,6 +227,16 @@ const Index = () => {
         {/* Subtle floating sparkles background - reduced for cleaner look */}
         <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 
+        {/* Phase 2 Prototype Links - Design Review Only */}
+        <div className="fixed top-3 left-3 z-50 flex flex-col gap-1.5">
+          <a href="/quest-float-demo" className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/90 text-primary-foreground rounded-full text-xs font-bold shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
+            🎈 Floating Quest Prototype
+          </a>
+          <a href="/quest-map-demo" className="flex items-center gap-1.5 px-3 py-1.5 bg-secondary/90 text-secondary-foreground rounded-full text-xs font-bold shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
+            🗺️ Trail Map Prototype
+          </a>
+        </div>
+
         {/* Simplified floating nav - bottom on mobile, top-right on desktop */}
         <div 
           className={`fixed bottom-4 left-1/2 -translate-x-1/2 md:bottom-auto md:left-auto md:translate-x-0 md:top-3 md:right-3 z-40 flex items-center gap-1.5 bg-card/95 backdrop-blur-md rounded-full px-3 py-2 shadow-lg border border-border/50 transition-all duration-300 ${
