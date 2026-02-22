@@ -14,8 +14,6 @@ import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useEntitlementStatus } from "@/hooks/useEntitlementStatus";
 import StoryViewer from "@/components/StoryViewer";
 import PurchaseModal from "@/components/PurchaseModal";
-import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
-import kingMascot from "@/assets/mascot-emotions/kingdom-mascot-waving.png";
 import { cn } from "@/lib/utils";
 
 interface WorldSelectorProps {
@@ -342,24 +340,8 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                 })}
                 </div>
 
-                {/* Kingdom mascot at bottom of trail */}
-                <motion.div
-                  className="flex justify-center mt-6"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.6, type: "spring" }}
-                >
-                  <InteractiveToothCharacter
-                    src={kingMascot}
-                    alt="Kingdom Guide"
-                    size="sm"
-                    tips={[
-                      "Complete each phase to unlock the next! 🔓",
-                      "You're doing amazing, brave explorer! ⭐",
-                      "Every quest makes your smile stronger! 💪",
-                    ]}
-                  />
-                </motion.div>
+                {/* Trail end marker */}
+                <div className="flex justify-center mt-4 text-2xl">🏁</div>
               </div>
             </motion.div>
           )}
