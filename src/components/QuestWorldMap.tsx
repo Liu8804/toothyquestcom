@@ -11,6 +11,8 @@ import PurchaseModal from "@/components/PurchaseModal";
 import { FloatingNode, TrailPath, RewardBurst, GlowBeacon, WorldTrailConnector, ProgressionMinimap, WorldCompletionCelebration } from "@/components/hybrid-ui";
 import { WORLDS, type World, type Phase } from "@/data/worldsConfig";
 import type { Story } from "@/data/stories";
+import cartoonToothFairy from "@/assets/cartoon-tooth-fairy.png";
+import questWorldMapBg from "@/assets/quest-world-map-bg.jpg";
 
 const QuestWorldMap = () => {
   const { t, i18n } = useTranslation();
@@ -137,7 +139,14 @@ const QuestWorldMap = () => {
   };
 
   return (
-    <section id="stories" className="py-12 bg-gradient-to-b from-background via-muted/30 to-background">
+    <section id="stories" className="py-12 relative overflow-hidden">
+      {/* World map background */}
+      <div
+        className="absolute inset-0 opacity-10 dark:opacity-5 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: `url(${questWorldMapBg})` }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/80 pointer-events-none" />
+
       {/* Progression Minimap */}
       <ProgressionMinimap
         worlds={worldMinimapData}
@@ -145,9 +154,24 @@ const QuestWorldMap = () => {
         onWorldClick={handleMinimapClick}
       />
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <div className="text-center mb-10">
+          {/* Animated cartoon character */}
+          <motion.div
+            className="flex justify-center mb-6"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.img
+              src={cartoonToothFairy}
+              alt="Tooth Fairy Guide"
+              className="w-28 h-28 md:w-36 md:h-36 drop-shadow-lg"
+              whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
+          </motion.div>
+
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("storyMode.title")}
           </h2>
