@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Heart, ChevronRight, Star } from "lucide-react";
+import { Shield, Heart, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useStories } from "@/hooks/useStories";
 import StoryCard from "@/components/StoryCard";
@@ -10,8 +10,8 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
-import BraceyMascot from "@/components/BraceyMascot";
 import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
+import cartoonDentalHelper from "@/assets/cartoon-dental-helper.png";
 
 interface Zone {
   id: string;
@@ -73,10 +73,8 @@ const DentalHelpersWorld = () => {
   const { isContentLocked } = usePurchase();
   const { playSound } = useGameSounds();
 
-  // Get all dental helpers world stories
   const dentalHelpersStories = stories.filter(s => s.world === "dental-helpers");
   
-  // Get stories for selected zone
   const getZoneStories = (zoneId: string) => {
     const zone = zones.find(z => z.id === zoneId);
     if (!zone) return [];
@@ -86,7 +84,6 @@ const DentalHelpersWorld = () => {
   const handleOpenStory = (storyId: string) => {
     const storyIndex = stories.findIndex(s => s.id === storyId);
     if (storyIndex === -1) return;
-    
     if (isContentLocked(storyIndex, 'quest')) {
       playSound("locked");
       setShowPurchaseModal(true);
@@ -96,9 +93,7 @@ const DentalHelpersWorld = () => {
     setSelectedStoryIndex(storyIndex);
   };
 
-  const handleCloseStory = () => {
-    setSelectedStoryIndex(null);
-  };
+  const handleCloseStory = () => setSelectedStoryIndex(null);
 
   const handleNextStory = () => {
     if (selectedStoryIndex !== null && selectedStoryIndex < stories.length - 1) {
@@ -128,31 +123,33 @@ const DentalHelpersWorld = () => {
 
   return (
     <ThemedSectionWrapper theme="ocean" id="dental-helpers-world" className="py-12">
-      {/* Floating decorations removed for cleaner look */}
-
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          {/* Bracey mascot */}
-          <div className="flex justify-center mb-6">
-            <BraceyMascot 
-              mood="excited" 
-              size="lg" 
-              message="Welcome to Dental Helpers! 🎉"
-              showMessage={true}
+          {/* Animated cartoon character */}
+          <motion.div
+            className="flex justify-center mb-6"
+            animate={{ y: [0, -8, 0], rotate: [0, 3, -3, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.img
+              src={cartoonDentalHelper}
+              alt="Dental Helper Character"
+              className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg"
+              whileHover={{ scale: 1.15, rotate: [0, -10, 10, 0] }}
+              transition={{ type: "spring", stiffness: 300 }}
             />
-          </div>
+          </motion.div>
 
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Dental Helpers
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Meet the friendly tools that help teeth grow straight, strong, and safe! 
-            Learn about braces, expanders, separators, and mouthguards in a fun and gentle way.
+            Meet the friendly tools that help teeth grow straight, strong, and safe!
           </p>
         </div>
 
-        {/* Zones as Floating Nodes */}
+        {/* Zones */}
         <AnimatePresence mode="wait">
           {!selectedZone ? (
             <motion.div
@@ -162,29 +159,21 @@ const DentalHelpersWorld = () => {
               exit={{ opacity: 0 }}
               className="max-w-4xl mx-auto"
             >
-              {/* Desktop: Scattered layout */}
+              {/* Desktop */}
               <div className="hidden md:block relative w-full h-[300px]">
                 <TrailPath
                   points={[
-                    { x: 15, y: 40 },
-                    { x: 40, y: 60 },
-                    { x: 65, y: 35 },
-                    { x: 88, y: 55 },
+                    { x: 15, y: 40 }, { x: 40, y: 60 },
+                    { x: 65, y: 35 }, { x: 88, y: 55 },
                   ]}
-                  width={100}
-                  height={100}
-                  variant="rainbow"
-                  strokeWidth={2}
-                  delay={0.3}
-                  showGlowDots={true}
+                  width={100} height={100} variant="rainbow"
+                  strokeWidth={2} delay={0.3} showGlowDots={true}
                   className="absolute inset-0 w-full h-full"
                 />
                 {zones.map((zone, index) => {
                   const positions = [
-                    { x: 15, y: 40 },
-                    { x: 40, y: 60 },
-                    { x: 65, y: 35 },
-                    { x: 88, y: 55 },
+                    { x: 15, y: 40 }, { x: 40, y: 60 },
+                    { x: 65, y: 35 }, { x: 88, y: 55 },
                   ];
                   const progress = getZoneProgress(zone);
                   const isComplete = progress.completed === progress.total && progress.total > 0;
@@ -204,10 +193,7 @@ const DentalHelpersWorld = () => {
                         delay={index * 0.15}
                         floatIntensity={0.7}
                         size="lg"
-                        onClick={() => {
-                          playSound("tap");
-                          setSelectedZone(zone.id);
-                        }}
+                        onClick={() => { playSound("tap"); setSelectedZone(zone.id); }}
                         label={zone.name}
                         reward={`${progress.completed}/${progress.total}`}
                         backgroundImage={zone.backgroundImage}
@@ -217,7 +203,7 @@ const DentalHelpersWorld = () => {
                 })}
               </div>
 
-              {/* Mobile: Zigzag trail */}
+              {/* Mobile */}
               <div className="md:hidden space-y-2">
                 {zones.map((zone, index) => {
                   const isEven = index % 2 === 0;
@@ -249,19 +235,13 @@ const DentalHelpersWorld = () => {
                           delay={index * 0.1}
                           floatIntensity={0.5}
                           size="md"
-                          onClick={() => {
-                            playSound("tap");
-                            setSelectedZone(zone.id);
-                          }}
+                          onClick={() => { playSound("tap"); setSelectedZone(zone.id); }}
                           backgroundImage={zone.backgroundImage}
                         />
                         <motion.div
                           className="flex-1 bg-card/80 backdrop-blur-sm rounded-2xl p-4 shadow-card border border-primary/10"
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => {
-                            playSound("tap");
-                            setSelectedZone(zone.id);
-                          }}
+                          onClick={() => { playSound("tap"); setSelectedZone(zone.id); }}
                         >
                           <h3 className="font-display text-base font-bold text-foreground">{zone.name}</h3>
                           <p className="text-xs text-muted-foreground">{zone.description}</p>
@@ -288,21 +268,16 @@ const DentalHelpersWorld = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
             >
-              {/* Back button */}
               <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                onClick={() => {
-                  playSound("tap");
-                  setSelectedZone(null);
-                }}
+                onClick={() => { playSound("tap"); setSelectedZone(null); }}
                 className="flex items-center gap-2 text-primary font-bold mb-6 hover:underline"
               >
                 <ChevronRight className="w-5 h-5 rotate-180" />
                 Back to Zones
               </motion.button>
 
-              {/* Zone title */}
               <div className="text-center mb-8">
                 <h3 className="font-display text-2xl font-bold text-foreground">
                   {zones.find(z => z.id === selectedZone)?.name}
@@ -312,9 +287,8 @@ const DentalHelpersWorld = () => {
                 </p>
               </div>
 
-              {/* Zone quests */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                {getZoneStories(selectedZone).map((story, index) => {
+                {getZoneStories(selectedZone).map((story) => {
                   if (!story) return null;
                   const storyIndex = stories.findIndex(s => s.id === story.id);
                   return (
@@ -333,7 +307,7 @@ const DentalHelpersWorld = () => {
           )}
         </AnimatePresence>
 
-        {/* All quests in order - shown at bottom */}
+        {/* All quests */}
         <div className="mt-16">
           <h3 className="font-display text-2xl font-bold text-center text-foreground mb-6">
             All Dental Helpers Quests
@@ -343,12 +317,8 @@ const DentalHelpersWorld = () => {
           </p>
           <div className="flex flex-wrap gap-6 justify-center">
             {[
-              "braces-helpers",
-              "tooth-separators", 
-              "dental-expanders",
-              "mouthguards-hero",
-              "dental-trauma",
-              "mouth-habits"
+              "braces-helpers", "tooth-separators", "dental-expanders",
+              "mouthguards-hero", "dental-trauma", "mouth-habits"
             ].map((questId, index) => {
               const story = stories.find(s => s.id === questId);
               if (!story) return null;
@@ -374,7 +344,6 @@ const DentalHelpersWorld = () => {
         </div>
       </div>
 
-      {/* Story Viewer Modal */}
       {selectedStoryIndex !== null && (
         <StoryViewer
           story={stories[selectedStoryIndex]}
@@ -386,7 +355,6 @@ const DentalHelpersWorld = () => {
         />
       )}
       
-      {/* Purchase Modal */}
       <PurchaseModal 
         isOpen={showPurchaseModal}
         onClose={() => setShowPurchaseModal(false)}

@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import FunFactCard from "@/components/FunFactCard";
 import { TrailPath } from "@/components/hybrid-ui";
 import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
+import cartoonFunFacts from "@/assets/cartoon-fun-facts-character.png";
 
 const factEmojis = ["🦷", "🚀", "🧚", "✨", "🐘", "👅"];
 
-// Scattered positions for desktop
 const desktopPositions = [
   { x: 10, y: 25 },
   { x: 35, y: 60 },
@@ -24,6 +24,21 @@ export const FunFactsSection = () => {
     <ThemedSectionWrapper theme="meadow" id="facts" className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-14">
+          {/* Animated cartoon character */}
+          <motion.div
+            className="flex justify-center mb-6"
+            animate={{ y: [0, -6, 0], rotate: [0, 2, -2, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.img
+              src={cartoonFunFacts}
+              alt="Fun Facts Scientist"
+              className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg"
+              whileHover={{ scale: 1.15 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            />
+          </motion.div>
+
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("funFacts.title")}
           </h2>
