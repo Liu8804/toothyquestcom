@@ -10,6 +10,8 @@ import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
 import { RewardBurst } from "@/components/hybrid-ui";
+import cartoonStoryTooth from "@/assets/cartoon-story-tooth.png";
+import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 const INITIAL_STORY_COUNT = 8;
 
@@ -69,6 +71,21 @@ const StoryModeSection = () => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
+          {/* Interactive story character */}
+          <InteractiveToothCharacter
+            src={cartoonStoryTooth}
+            alt="Story Teller Tooth"
+            size="lg"
+            idleAnimation="wobble"
+            tips={[
+              "Once upon a time in Tooth Kingdom... 📖",
+              "Every quest teaches a smile lesson! ✨",
+              "Collect stars on your adventure! ⭐",
+              "You're the hero of this story! 🦸",
+              "Ready for the next chapter? 🗺️",
+            ]}
+          />
+          
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("storyMode.title")}
           </h2>

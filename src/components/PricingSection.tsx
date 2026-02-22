@@ -8,6 +8,8 @@ import { useState } from "react";
 import PurchaseModal from "@/components/PurchaseModal";
 import PricingFAQ from "@/components/PricingFAQ";
 import SubscriptionManagement from "@/components/SubscriptionManagement";
+import cartoonTreasureTooth from "@/assets/cartoon-treasure-tooth.png";
+import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 const freeFeatures = [
   "5 FREE dental quests",
@@ -45,6 +47,18 @@ export const PricingSection = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
+          <InteractiveToothCharacter
+            src={cartoonTreasureTooth}
+            alt="Treasure Tooth"
+            size="lg"
+            idleAnimation="bounce"
+            tips={[
+              "Unlock ALL the adventures! 🗝️",
+              "50+ quests await you! 🎮",
+              "Badges, streaks, and rewards! 🏆",
+              "The best investment in smiles! 😁",
+            ]}
+          />
           <span className="inline-block bg-primary/20 text-primary px-4 py-2 rounded-full text-sm font-bold mb-4">
             💰 Simple Pricing
           </span>

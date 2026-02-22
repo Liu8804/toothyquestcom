@@ -9,6 +9,7 @@ import GamesModal from "@/components/games/GamesModal";
 import DentalOfficeTour from "@/components/DentalOfficeTour";
 import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
 import cartoonExplorer from "@/assets/cartoon-toothy-explorer.png";
+import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 export const AdventuresSection = () => {
   const { t } = useTranslation();
@@ -110,22 +111,20 @@ export const AdventuresSection = () => {
     <>
       <ThemedSectionWrapper theme="forest" id="adventures" className="py-12">
         <div className="container mx-auto px-4">
-          {/* Cartoon character mascot */}
-          <motion.div
-            className="flex justify-center mb-6"
-            initial={{ scale: 0, rotate: -20 }}
-            whileInView={{ scale: 1, rotate: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", bounce: 0.5 }}
-          >
-            <motion.img
-              src={cartoonExplorer}
-              alt="Toothy Explorer"
-              className="w-24 h-24 md:w-32 md:h-32 drop-shadow-xl"
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
+          {/* Interactive cartoon character mascot */}
+          <InteractiveToothCharacter
+            src={cartoonExplorer}
+            alt="Toothy Explorer"
+            size="lg"
+            idleAnimation="bounce"
+            tips={[
+              "Let's go on an adventure! 🗺️",
+              "Which quest should we try? 🎮",
+              "Sing along with me! 🎵",
+              "I love exploring the dental office! 🔍",
+              "Every adventure earns you stars! ⭐",
+            ]}
+          />
           <div className="text-center mb-14">
             <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
               {t("adventures.title")}

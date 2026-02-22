@@ -12,6 +12,7 @@ import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
 import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
 import cartoonDentalHelper from "@/assets/cartoon-dental-helper.png";
+import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 interface Zone {
   id: string;
@@ -126,20 +127,20 @@ const DentalHelpersWorld = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          {/* Animated cartoon character */}
-          <motion.div
-            className="flex justify-center mb-6"
-            animate={{ y: [0, -8, 0], rotate: [0, 3, -3, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <motion.img
-              src={cartoonDentalHelper}
-              alt="Dental Helper Character"
-              className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg"
-              whileHover={{ scale: 1.15, rotate: [0, -10, 10, 0] }}
-              transition={{ type: "spring", stiffness: 300 }}
-            />
-          </motion.div>
+          {/* Interactive cartoon character */}
+          <InteractiveToothCharacter
+            src={cartoonDentalHelper}
+            alt="Dental Helper Character"
+            size="lg"
+            idleAnimation="spin"
+            tips={[
+              "Braces guide your teeth to the perfect spot! 😁",
+              "Space makers are gentle helpers! ⭕",
+              "Mouth guards protect your smile during sports! 🛡️",
+              "Every dental tool is your friend! ❤️",
+              "You're so brave at the dentist! 💪",
+            ]}
+          />
 
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Dental Helpers

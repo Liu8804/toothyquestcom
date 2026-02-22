@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
 import cartoonFeaturesHero from "@/assets/cartoon-features-hero.png";
 import ThemedSectionWrapper from "@/components/ThemedSectionWrapper";
+import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
 
 export const FeaturesSection = () => {
   const { t } = useTranslation();
@@ -50,20 +51,20 @@ export const FeaturesSection = () => {
     <ThemedSectionWrapper theme="sunset" id="features" className="py-12">
       <div className="container mx-auto px-4">
         <div className="text-center mb-14">
-          {/* Animated cartoon character */}
-          <motion.div
-            className="flex justify-center mb-6"
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <motion.img
-              src={cartoonFeaturesHero}
-              alt="Tooth Hero"
-              className="w-24 h-24 md:w-32 md:h-32 drop-shadow-lg"
-              whileHover={{ scale: 1.15, rotate: [0, -5, 5, 0] }}
-              transition={{ type: "spring", stiffness: 300 }}
-            />
-          </motion.div>
+          {/* Interactive cartoon character */}
+          <InteractiveToothCharacter
+            src={cartoonFeaturesHero}
+            alt="Tooth Hero"
+            size="lg"
+            idleAnimation="bounce"
+            tips={[
+              "Games make learning fun! 🎮",
+              "Earn badges for brushing! 🏆",
+              "Toothy loves to play with you! 🎨",
+              "Set reminders so you never forget! ⏰",
+              "Parents can track your progress! 👨‍👩‍👧",
+            ]}
+          />
 
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             {t("features.title")}
