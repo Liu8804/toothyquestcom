@@ -239,61 +239,57 @@ const QuestWorldMap = () => {
                   viewport={{ once: true }}
                   className="rounded-3xl overflow-hidden shadow-card border border-border/50"
                 >
-                {/* World Header — game level select style */}
+                {/* World Header — immersive game level select */}
                 <motion.button
                   onClick={() => setExpandedWorld(isExpanded ? null : world.id)}
-                  className={`w-full flex items-center gap-4 p-6 md:p-8 bg-gradient-to-r ${world.color} text-white relative overflow-hidden min-h-[100px] md:min-h-[120px]`}
+                  className={`w-full relative overflow-hidden min-h-[160px] md:min-h-[200px]`}
                   whileTap={{ scale: 0.99 }}
                 >
-                  {/* Background image overlay with parallax */}
+                  {/* Full background image */}
                   {world.backgroundImage && (
-                    <>
-                      <motion.div
-                        className="absolute inset-[-20%] bg-cover bg-center opacity-30"
-                        style={{
-                          backgroundImage: `url(${world.backgroundImage})`,
-                          backgroundAttachment: "scroll",
-                        }}
-                        initial={{ y: 0 }}
-                        whileInView={{ y: -10 }}
-                        viewport={{ once: false, amount: 0.5 }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/25 to-transparent" />
-                    </>
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-110"
+                      style={{ backgroundImage: `url(${world.backgroundImage})` }}
+                    />
                   )}
+                  {/* Gradient overlays */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${world.color} opacity-60`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
 
-                  <motion.span
-                    className="text-5xl md:text-6xl relative z-10 drop-shadow-lg"
-                    animate={{ y: [0, -3, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    {world.emoji}
-                  </motion.span>
-                  <div className="flex-1 text-left relative z-10">
-                    <h3 className="font-display text-xl md:text-2xl font-bold drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]">
-                      {isEs ? world.nameEs : world.name}
-                    </h3>
-                    <p className="text-white/85 text-sm md:text-base drop-shadow-md">
-                      {isEs ? world.descriptionEs : world.description}
-                    </p>
-                    {/* Progress bar */}
-                    <div className="mt-3 h-2.5 bg-white/20 rounded-full overflow-hidden max-w-sm border border-white/10">
-                      <motion.div
-                        className="h-full bg-white/80 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progress}%` }}
-                        transition={{ duration: 0.8 }}
-                      />
+                  {/* Content */}
+                  <div className="relative z-10 flex items-end gap-4 p-6 md:p-8 h-full">
+                    <motion.span
+                      className="text-6xl md:text-7xl drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                      animate={{ y: [0, -5, 0] }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      {world.emoji}
+                    </motion.span>
+                    <div className="flex-1">
+                      <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.6)]">
+                        {isEs ? world.nameEs : world.name}
+                      </h3>
+                      <p className="text-white/90 text-sm md:text-base drop-shadow-md mt-1">
+                        {isEs ? world.descriptionEs : world.description}
+                      </p>
+                      {/* Progress bar */}
+                      <div className="mt-3 h-3 bg-white/20 rounded-full overflow-hidden max-w-sm border border-white/20 backdrop-blur-sm">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-star via-white to-star rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progress}%` }}
+                          transition={{ duration: 0.8 }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="relative z-10 flex items-center gap-2">
-                    <span className="font-bold text-lg">{progress}%</span>
-                    {isExpanded ? (
-                      <ChevronUp className="w-6 h-6" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6" />
-                    )}
+                    <div className="relative z-10 flex flex-col items-center gap-1">
+                      <span className="font-bold text-2xl text-white drop-shadow-lg">{progress}%</span>
+                      {isExpanded ? (
+                        <ChevronUp className="w-7 h-7 text-white" />
+                      ) : (
+                        <ChevronDown className="w-7 h-7 text-white" />
+                      )}
+                    </div>
                   </div>
                 </motion.button>
 

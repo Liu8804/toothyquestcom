@@ -24,9 +24,9 @@ interface FloatingNodeProps {
 }
 
 const sizeMap = {
-  sm: { node: "w-14 h-14", icon: "w-5 h-5", emoji: "text-2xl", label: "text-[10px]" },
-  md: { node: "w-[68px] h-[68px]", icon: "w-7 h-7", emoji: "text-3xl", label: "text-xs" },
-  lg: { node: "w-20 h-20", icon: "w-8 h-8", emoji: "text-4xl", label: "text-sm" },
+  sm: { node: "w-16 h-16", icon: "w-5 h-5", emoji: "text-2xl", label: "text-[10px]" },
+  md: { node: "w-20 h-20", icon: "w-7 h-7", emoji: "text-3xl", label: "text-xs" },
+  lg: { node: "w-24 h-24", icon: "w-8 h-8", emoji: "text-4xl", label: "text-sm" },
 };
 
 const FloatingNode = ({
