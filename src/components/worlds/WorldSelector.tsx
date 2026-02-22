@@ -14,6 +14,8 @@ import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useEntitlementStatus } from "@/hooks/useEntitlementStatus";
 import StoryViewer from "@/components/StoryViewer";
 import PurchaseModal from "@/components/PurchaseModal";
+import InteractiveToothCharacter from "@/components/InteractiveToothCharacter";
+import kingMascot from "@/assets/mascot-emotions/kingdom-mascot-waving.png";
 import { cn } from "@/lib/utils";
 
 interface WorldSelectorProps {
@@ -248,39 +250,116 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                 </p>
               </div>
 
-              {/* Phase Cards */}
-              <div className="space-y-4 max-w-2xl mx-auto">
+              {/* Phase Cards with Animated Trail */}
+              <div className="relative max-w-2xl mx-auto">
+                {/* Animated Trail Line connecting phases */}
+                <div className="absolute left-8 top-0 bottom-0 w-1 z-0">
+                  <div className="h-full w-full bg-gradient-to-b from-primary/20 via-secondary/20 to-star/20 rounded-full" />
+                  <motion.div
+                    className="absolute top-0 left-0 w-full bg-gradient-to-b from-primary via-secondary to-star rounded-full"
+                    initial={{ height: "0%" }}
+                    animate={{ height: `${Math.min(100, selectedWorld.phases.reduce((acc, p, i) => {
+                      const prog = getPhaseProgress(p.id, completedQuestIds);
+                      return acc + (prog / selectedWorld.phases.length);
+                    }, 0))}%` }}
+                    transition={{ duration: 1, delay: 0.3 }}
+                  />
+                  {/* Animated traveler dot */}
+                  <motion.div
+                    className="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-star shadow-lg shadow-star/50 z-10"
+                    animate={{ 
+                      top: ["0%", "100%", "0%"],
+                      scale: [1, 1.3, 1],
+                    }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 rounded-full bg-star/50"
+                      animate={{ scale: [1, 2, 1], opacity: [0.5, 0, 0.5] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
+                  </motion.div>
+                </div>
+
+                <div className="space-y-4">
                 {selectedWorld.phases.map((phase, index) => {
                   const progress = getPhaseProgress(phase.id, completedQuestIds);
                   const completed = isPhaseCompleted(phase.id, completedQuestIds);
-                  // Unlock next phase if previous is > 50% complete
                   const prevPhase = index > 0 ? selectedWorld.phases[index - 1] : null;
                   const prevProgress = prevPhase
                     ? getPhaseProgress(prevPhase.id, completedQuestIds)
                     : 100;
 
-                  // Admin accounts bypass progression locks. While access is still loading,
-                  // keep phases optimistically unlocked to avoid "looks locked" race conditions.
                   const isLocked = !isAdmin && !isAccessLoading && index > 0 && prevProgress < 50;
 
                   return (
-                    <PhaseCard
+                    <motion.div
                       key={phase.id}
-                      id={phase.id}
-                      name={isSpanish ? phase.nameEs : phase.name}
-                      description={isSpanish ? phase.descriptionEs : phase.description}
-                      emoji={phase.emoji}
-                      badgeName={isSpanish ? phase.badgeNameEs : phase.badgeName}
-                      color={phase.color}
-                      questCount={phase.questIds.length}
-                      completedCount={phase.questIds.filter(id => completedQuestIds.includes(id)).length}
-                      isLocked={isLocked}
-                      isCompleted={completed}
-                      phaseNumber={index + 1}
-                      onClick={() => !isLocked && setSelectedPhase(phase)}
-                    />
+                      initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.15 }}
+                      className="relative pl-12"
+                    >
+                      {/* Trail node */}
+                      <div className="absolute left-6 top-6 z-10">
+                        <motion.div
+                          className={cn(
+                            "w-5 h-5 rounded-full border-3 shadow-md",
+                            completed 
+                              ? "bg-mint border-mint shadow-mint/30" 
+                              : isLocked 
+                              ? "bg-muted border-muted-foreground/30"
+                              : "bg-primary border-primary shadow-primary/30"
+                          )}
+                          animate={!isLocked && !completed ? {
+                            scale: [1, 1.2, 1],
+                            boxShadow: ["0 0 0 0 rgba(var(--primary), 0)", "0 0 0 8px rgba(var(--primary), 0.15)", "0 0 0 0 rgba(var(--primary), 0)"]
+                          } : {}}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          {completed && (
+                            <span className="flex items-center justify-center text-xs text-white">✓</span>
+                          )}
+                        </motion.div>
+                      </div>
+
+                      <PhaseCard
+                        id={phase.id}
+                        name={isSpanish ? phase.nameEs : phase.name}
+                        description={isSpanish ? phase.descriptionEs : phase.description}
+                        emoji={phase.emoji}
+                        badgeName={isSpanish ? phase.badgeNameEs : phase.badgeName}
+                        color={phase.color}
+                        questCount={phase.questIds.length}
+                        completedCount={phase.questIds.filter(id => completedQuestIds.includes(id)).length}
+                        isLocked={isLocked}
+                        isCompleted={completed}
+                        phaseNumber={index + 1}
+                        onClick={() => !isLocked && setSelectedPhase(phase)}
+                      />
+                    </motion.div>
                   );
                 })}
+                </div>
+
+                {/* Kingdom mascot at bottom of trail */}
+                <motion.div
+                  className="flex justify-center mt-6"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.6, type: "spring" }}
+                >
+                  <InteractiveToothCharacter
+                    src={kingMascot}
+                    alt="Kingdom Guide"
+                    size="sm"
+                    tips={[
+                      "Complete each phase to unlock the next! 🔓",
+                      "You're doing amazing, brave explorer! ⭐",
+                      "Every quest makes your smile stronger! 💪",
+                    ]}
+                  />
+                </motion.div>
               </div>
             </motion.div>
           )}
