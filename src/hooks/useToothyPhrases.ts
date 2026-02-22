@@ -79,15 +79,8 @@ export const useToothyPhrases = () => {
       );
 
       if (!response.ok) {
-        // Check for quota errors specifically
-        if (response.status === 401) {
-          const errorData = await response.json().catch(() => ({}));
-          if (errorData?.error?.includes?.("quota") || errorData?.error?.includes?.("credits")) {
-            console.info("[ToothyPhrases] Voice quota exceeded - continuing silently");
-            return; // Gracefully continue without voice
-          }
-        }
-        console.warn("[ToothyPhrases] TTS request failed:", response.status);
+        // Gracefully handle all TTS failures (quota, payment, auth issues)
+        console.warn("[ToothyPhrases] TTS request failed:", response.status, "- continuing silently");
         return; // Continue without voice
       }
 
