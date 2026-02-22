@@ -8,32 +8,46 @@ const ToothKingdomGateway = () => {
 
   return (
     <section className="relative overflow-hidden">
-      {/* Full-width kingdom gateway illustration */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="relative w-full aspect-[16/7] md:aspect-[16/6] max-h-[400px] overflow-hidden rounded-b-3xl"
+        className="relative w-full max-w-4xl mx-auto px-4"
       >
-        <img
-          src={gatewayImage}
-          alt="Tooth Kingdom Gateway"
-          className="w-full h-full object-cover"
-        />
-        {/* Bottom gradient for text legibility */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+        {/* Castle gateway image */}
+        <div className="relative rounded-3xl overflow-hidden shadow-xl border-4 border-amber-300/50">
+          <img
+            src={gatewayImage}
+            alt="Tooth Kingdom Gateway"
+            className="w-full h-auto object-cover aspect-[16/9]"
+          />
+          {/* Bottom gradient for text */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-        {/* Title overlay */}
-        <div className="absolute bottom-4 md:bottom-6 left-0 right-0 text-center px-4">
-          <h2 className="font-display text-2xl md:text-4xl font-bold text-foreground drop-shadow-lg">
-            {isSpanish ? "Bienvenido al Reino Dental 👑" : "Welcome to the Tooth Kingdom 👑"}
-          </h2>
-          <p className="text-muted-foreground max-w-md mx-auto text-sm md:text-base mt-1 drop-shadow-md">
-            {isSpanish
-              ? "¡Explora mundos mágicos, completa misiones y conviértete en un Campeón Dental!"
-              : "Explore magical worlds, complete quests, and become a Dental Champion!"}
-          </p>
+          {/* Title overlay */}
+          <div className="absolute bottom-4 md:bottom-8 left-0 right-0 text-center px-4">
+            <motion.h2
+              className="font-display text-2xl md:text-4xl font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+            >
+              {isSpanish ? "Bienvenido al Reino Dental 👑" : "Welcome to the Tooth Kingdom 👑"}
+            </motion.h2>
+            <motion.p
+              className="text-white/90 max-w-md mx-auto text-sm md:text-base mt-1 drop-shadow-md"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              {isSpanish
+                ? "¡Explora mundos mágicos y completa misiones!"
+                : "Explore magical worlds and complete quests!"}
+            </motion.p>
+          </div>
         </div>
       </motion.div>
     </section>
