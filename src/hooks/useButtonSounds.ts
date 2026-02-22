@@ -44,7 +44,7 @@ const playTone = (
 };
 
 export const useButtonSounds = () => {
-  // Soft pop for button taps - higher pitched, very short
+  // Soft pop for button taps - gentle, non-fatiguing
   const playTap = useCallback(() => {
     if (isVoiceActive()) return;
     
@@ -52,10 +52,10 @@ export const useButtonSounds = () => {
     if (sfxVolume === 0) return;
     
     unlockAudioContext();
-    playTone(880, 0.1, "sine", sfxVolume * 0.4);
+    playTone(780, 0.08, "sine", sfxVolume * 0.22);
   }, []);
 
-  // Gentle click for toggles/switches - subtle tick
+  // Gentle click for toggles/switches - very subtle tick
   const playClick = useCallback(() => {
     if (isVoiceActive()) return;
     
@@ -63,10 +63,10 @@ export const useButtonSounds = () => {
     if (sfxVolume === 0) return;
     
     unlockAudioContext();
-    playTone(1200, 0.06, "sine", sfxVolume * 0.3);
+    playTone(1100, 0.05, "sine", sfxVolume * 0.18);
   }, []);
 
-  // Success chime - happy ascending two-note
+  // Success chime - warm two-note (small win: correct answer, task done)
   const playSuccess = useCallback(() => {
     if (isVoiceActive()) return;
     
@@ -75,9 +75,9 @@ export const useButtonSounds = () => {
     
     unlockAudioContext();
     
-    // C5 → E5 (major third = happy sound)
-    playTone(523, 0.15, "sine", sfxVolume * 0.35);
-    setTimeout(() => playTone(659, 0.18, "sine", sfxVolume * 0.4), 100);
+    // G4 → B4 (major third = warm, encouraging)
+    playTone(392, 0.14, "sine", sfxVolume * 0.25);
+    setTimeout(() => playTone(494, 0.16, "sine", sfxVolume * 0.28), 110);
   }, []);
 
   // Soft whoosh for navigation/transitions
@@ -97,26 +97,26 @@ export const useButtonSounds = () => {
       const gain = ctx.createGain();
       
       osc.type = "sine";
-      // Descending sweep for whoosh effect
-      osc.frequency.setValueAtTime(600, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.2);
+      osc.frequency.setValueAtTime(500, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + 0.18);
       
-      const vol = sfxVolume * 0.2;
+      const vol = sfxVolume * 0.12;
       gain.gain.setValueAtTime(0.001, ctx.currentTime);
       gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
       
       osc.connect(gain);
       gain.connect(ctx.destination);
       
       osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.25);
+      osc.stop(ctx.currentTime + 0.22);
     } catch {
       // Silent fail
     }
   }, []);
 
-  // Celebration sound - triumphant ascending arpeggio
+  // Celebration sound - triumphant ascending arpeggio (big win: quest complete, level up)
+  // Deliberately louder & richer than playSuccess so kids feel the difference
   const playCelebration = useCallback(() => {
     if (isVoiceActive()) return;
     
@@ -125,10 +125,10 @@ export const useButtonSounds = () => {
     
     unlockAudioContext();
     
-    // C5 → E5 → G5 → C6 (major arpeggio = very happy)
+    // C5 → E5 → G5 → C6 (full major arpeggio = triumphant)
     const notes = [523, 659, 784, 1047];
     notes.forEach((freq, i) => {
-      setTimeout(() => playTone(freq, 0.2, "triangle", sfxVolume * 0.35), i * 80);
+      setTimeout(() => playTone(freq, 0.22, "triangle", sfxVolume * 0.28), i * 90);
     });
   }, []);
 
@@ -184,7 +184,7 @@ export const useButtonSounds = () => {
     }
   }, []);
 
-  // Reward sparkle - quick high sparkle
+  // Reward sparkle - quick high sparkle (lighter than celebration)
   const playSparkle = useCallback(() => {
     if (isVoiceActive()) return;
     
@@ -193,10 +193,10 @@ export const useButtonSounds = () => {
     
     unlockAudioContext();
     
-    // High, quick sparkle notes
+    // High, quick sparkle notes - kept soft
     const notes = [1319, 1760, 2093]; // E6, A6, C7
     notes.forEach((freq, i) => {
-      setTimeout(() => playTone(freq, 0.1, "sine", sfxVolume * 0.25), i * 50);
+      setTimeout(() => playTone(freq, 0.08, "sine", sfxVolume * 0.15), i * 45);
     });
   }, []);
 
