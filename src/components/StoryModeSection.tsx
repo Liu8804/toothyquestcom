@@ -76,6 +76,9 @@ const StoryModeSection = () => {
             <img 
               src="/quiz/epic-tooth-quest.webp" 
               alt="Epic Tooth Quest Adventure" 
+              width={1024}
+              height={585}
+              loading="lazy"
               className="w-full h-auto object-cover"
             />
           </div>

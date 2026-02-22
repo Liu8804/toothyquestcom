@@ -24,6 +24,9 @@ export const PreviewSection = () => {
               <img
                 src={dentalOffice}
                 alt="A friendly, colorful dental office for kids"
+                width={1024}
+                height={576}
+                loading="lazy"
                 className="rounded-3xl shadow-float w-full"
               />
               {/* Floating badge */}
