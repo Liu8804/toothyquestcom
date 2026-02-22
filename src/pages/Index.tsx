@@ -227,18 +227,7 @@ const Index = () => {
         {/* Subtle floating sparkles background - reduced for cleaner look */}
         <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 
-        {/* Phase 2 Prototype Links - Design Review Only */}
-        <div className="fixed top-3 left-3 z-50 flex flex-col gap-1.5">
-          <a href="/quest-hybrid-demo" className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/90 text-primary-foreground rounded-full text-xs font-bold shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
-            ✨ Hybrid Quest Prototype
-          </a>
-          <a href="/quest-float-demo" className="flex items-center gap-1.5 px-3 py-1.5 bg-secondary/90 text-secondary-foreground rounded-full text-xs font-bold shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
-            🎈 Floating Quest
-          </a>
-          <a href="/quest-map-demo" className="flex items-center gap-1.5 px-3 py-1.5 bg-secondary/90 text-secondary-foreground rounded-full text-xs font-bold shadow-lg backdrop-blur-sm hover:scale-105 transition-transform">
-            🗺️ Trail Map
-          </a>
-        </div>
+        {/* Prototype links removed - hybrid style now integrated into main app */}
 
         {/* Simplified floating nav - bottom on mobile, top-right on desktop */}
         <div 
