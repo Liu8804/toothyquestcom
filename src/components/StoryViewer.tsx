@@ -196,12 +196,23 @@ const StoryViewer = ({
                   initial={{ scale: 0, rotate: -10 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", delay: 0.2, duration: 0.6 }}
-                  className="relative mb-6"
+                  className="relative mb-6 flex flex-col items-center"
                 >
-                  <img
-                    src={mascotWaving}
-                    alt="Toothy"
-                    className="w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-lg"
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="character-3d"
+                  >
+                    <img
+                      src={mascotWaving}
+                      alt="Toothy"
+                      className="w-32 h-32 md:w-40 md:h-40 object-contain"
+                    />
+                  </motion.div>
+                  <motion.div
+                    animate={{ scaleX: [0.8, 1, 0.8], opacity: [0.15, 0.3, 0.15] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="w-20 h-2 rounded-full bg-black/20 -mt-1"
                   />
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
@@ -250,14 +261,16 @@ const StoryViewer = ({
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.8 }}
                 >
-                  <Button
-                    onClick={handleStartStory}
-                    size="lg"
-                    className="rounded-full px-8 py-6 text-lg font-display font-bold bg-white text-primary hover:bg-white/90 shadow-float"
-                  >
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Start Quest!
-                  </Button>
+                  <motion.div whileTap={{ scale: 0.95 }}>
+                    <Button
+                      onClick={handleStartStory}
+                      size="lg"
+                      className="rounded-full px-8 py-6 text-lg font-display font-bold bg-white text-primary hover:bg-white/90 shadow-[0_4px_0_0_rgba(0,0,0,0.15)] active:shadow-none active:translate-y-1"
+                    >
+                      <Sparkles className="w-5 h-5 mr-2" />
+                      Start Quest!
+                    </Button>
+                  </motion.div>
                 </motion.div>
 
                 {/* Story counter */}
@@ -468,7 +481,7 @@ const StoryViewer = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20 mb-4"
+              className="p-4 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 border-2 border-primary/20 shadow-[0_3px_0_0_hsl(var(--primary)/0.15)] mb-4"
             >
               <div className="flex items-center gap-2 mb-2">
                 <Heart className="w-5 h-5 text-secondary fill-secondary" />
@@ -503,7 +516,7 @@ const StoryViewer = ({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="p-4 rounded-2xl bg-gradient-to-r from-star/20 to-secondary/20 border-2 border-star/30"
+              className="p-4 rounded-2xl bg-gradient-to-r from-star/20 to-secondary/20 border-2 border-star/30 shadow-[0_3px_0_0_hsl(var(--star-gold)/0.2)]"
             >
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles className="w-5 h-5 text-star" />
@@ -539,10 +552,16 @@ const StoryViewer = ({
                 className="mt-4"
               >
                 {questCompleted ? (
-                  <div className="flex items-center justify-center gap-2 p-4 bg-accent/20 rounded-2xl text-accent">
-                    <Trophy className="w-5 h-5" />
+                  <motion.div
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    className="flex items-center justify-center gap-2 p-4 bg-accent/20 rounded-2xl text-accent border-2 border-accent/30 shadow-[0_3px_0_0_hsl(var(--accent)/0.3)]"
+                  >
+                    <motion.div animate={{ rotate: [0, 15, -15, 0] }} transition={{ duration: 0.5, repeat: 2 }}>
+                      <Trophy className="w-5 h-5" />
+                    </motion.div>
                     <span className="font-display font-bold">Quest Completed! +10 XP</span>
-                  </div>
+                  </motion.div>
                 ) : !quizCompleted ? (
                   <div className="flex items-center justify-center gap-2 p-4 bg-muted rounded-2xl text-muted-foreground">
                     <Trophy className="w-5 h-5" />

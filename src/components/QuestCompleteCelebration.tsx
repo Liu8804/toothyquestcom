@@ -191,19 +191,27 @@ const QuestCompleteCelebration = ({
         </h2>
         <p className="text-white/90 text-lg mb-6">{questTitle}</p>
 
-        {/* XP earned */}
+        {/* XP earned - chunky 3D card */}
         <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: "spring" }}
-          className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-6"
+          initial={{ scale: 0, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.3, type: "spring", bounce: 0.5 }}
+          className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-6 border-2 border-white/30 shadow-[0_4px_0_0_rgba(0,0,0,0.15)]"
         >
           <div className="flex items-center justify-center gap-3">
-            <Star className="w-8 h-8 text-star fill-star" />
-            <span className="font-display text-4xl font-bold text-white">
+            <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
+              <Star className="w-8 h-8 text-star fill-star" />
+            </motion.div>
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 0.6, repeat: 3 }}
+              className="font-display text-4xl font-bold text-white"
+            >
               +{xpEarned} XP
-            </span>
-            <Star className="w-8 h-8 text-star fill-star" />
+            </motion.span>
+            <motion.div animate={{ rotate: [0, -360] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
+              <Star className="w-8 h-8 text-star fill-star" />
+            </motion.div>
           </div>
         </motion.div>
 
@@ -257,14 +265,16 @@ const QuestCompleteCelebration = ({
           </motion.div>
         </motion.div>
 
-        <Button
-          onClick={onClose}
-          size="lg"
-          className="bg-white text-primary hover:bg-white/90 rounded-full font-display font-bold shadow-card"
-        >
-          <Sparkles className="w-5 h-5 mr-2" />
-          Continue Adventure
-        </Button>
+        <motion.div whileTap={{ scale: 0.95 }}>
+          <Button
+            onClick={onClose}
+            size="lg"
+            className="bg-white text-primary hover:bg-white/90 rounded-full font-display font-bold shadow-[0_4px_0_0_rgba(0,0,0,0.15)] active:shadow-none active:translate-y-1"
+          >
+            <Sparkles className="w-5 h-5 mr-2" />
+            Continue Adventure
+          </Button>
+        </motion.div>
       </motion.div>
     </motion.div>
   );

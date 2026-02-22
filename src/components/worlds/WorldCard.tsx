@@ -33,11 +33,11 @@ export const WorldCard = ({
       whileTap={!isLocked ? { scale: 0.98 } : {}}
       className={cn(
         "relative w-full rounded-3xl text-left transition-all duration-300",
-        "border-2 shadow-lg overflow-hidden group",
+        "border-2 overflow-hidden group",
         "aspect-[4/3] md:aspect-[3/2]",
         isLocked
-          ? "bg-muted/50 border-muted-foreground/20 cursor-not-allowed opacity-70"
-          : "border-white/30 cursor-pointer hover:shadow-xl"
+          ? "bg-muted/50 border-muted-foreground/20 cursor-not-allowed opacity-70 shadow-md"
+          : "border-white/30 cursor-pointer shadow-[0_6px_0_0_rgba(0,0,0,0.15)] hover:shadow-[0_8px_0_0_rgba(0,0,0,0.2)] active:shadow-[0_2px_0_0_rgba(0,0,0,0.15)] active:translate-y-1"
       )}
     >
       {/* Background Image */}
@@ -101,18 +101,23 @@ export const WorldCard = ({
 
         {!isLocked && (
           <div className="flex items-center justify-between">
-            {/* Progress bar */}
+            {/* Progress bar - chunky Duolingo style */}
             <div className="flex-1 mr-4">
-              <div className="h-2 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
+              <div className="h-3 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="h-full bg-white rounded-full"
+                  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                  className="h-full bg-white rounded-full shadow-[inset_0_-2px_0_0_rgba(0,0,0,0.1)]"
                 />
               </div>
             </div>
-            <ChevronRight className="w-5 h-5 text-white" />
+            <motion.div
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <ChevronRight className="w-5 h-5 text-white" />
+            </motion.div>
           </div>
         )}
       </div>
