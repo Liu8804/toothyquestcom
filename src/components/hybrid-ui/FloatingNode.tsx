@@ -167,10 +167,12 @@ const FloatingNode = ({
 
           {/* Content */}
           <span className="relative z-10" style={{ filter: status !== "locked" ? "drop-shadow(0 2px 3px rgba(0,0,0,0.2))" : "none" }}>
-            {status === "completed" ? (
+            {status === "completed" && !backgroundImage ? (
               <Check className={`${s.icon} text-white`} strokeWidth={3} />
             ) : status === "locked" ? (
               <Lock className={`${s.icon} text-muted-foreground/50`} />
+            ) : backgroundImage ? (
+              null
             ) : Icon ? (
               <Icon className={`${s.icon} text-primary-foreground`} />
             ) : emoji ? (

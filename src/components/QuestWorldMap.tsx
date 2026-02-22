@@ -354,30 +354,31 @@ const QuestWorldMap = () => {
                                     ? "locked"
                                     : "unlocked";
 
-                                  return (
+                                    return (
                                     <div key={questId} className="relative pb-8">
-                                      <FloatingNode
-                                        emoji={entry?.story.emoji || "❓"}
-                                        status={questStatus as any}
-                                        delay={qIdx * 0.08}
-                                        floatIntensity={isCurrent ? 1.2 : 0.4}
-                                        size="md"
-                                        onClick={() => handleOpenStory(questId)}
-                                        label={
-                                          entry?.story.title
-                                            ? entry.story.title.length > 12
-                                              ? entry.story.title.slice(0, 12) + "…"
-                                              : entry.story.title
-                                            : questId
-                                        }
-                                        reward={
-                                          !isCompleted && entry
-                                            ? `+${(entry.index + 1) * 10}`
-                                            : undefined
-                                        }
-                                      />
-                                    </div>
-                                  );
+                                       <FloatingNode
+                                         emoji={entry?.story.emoji || "❓"}
+                                         backgroundImage={entry?.story.illustrationPath}
+                                         status={questStatus as any}
+                                         delay={qIdx * 0.08}
+                                         floatIntensity={isCurrent ? 1.2 : 0.4}
+                                         size="md"
+                                         onClick={() => handleOpenStory(questId)}
+                                         label={
+                                           entry?.story.title
+                                             ? entry.story.title.length > 12
+                                               ? entry.story.title.slice(0, 12) + "…"
+                                               : entry.story.title
+                                             : questId
+                                         }
+                                         reward={
+                                           !isCompleted && entry
+                                             ? `+${(entry.index + 1) * 10}`
+                                             : undefined
+                                         }
+                                       />
+                                     </div>
+                                   );
                                 })}
                               </div>
                             </div>
