@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Lock, ChevronRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useButtonSounds } from "@/hooks/useButtonSounds";
 
 interface WorldCardProps {
   id: string;
@@ -25,9 +26,19 @@ export const WorldCard = ({
   progress = 0,
   onClick,
 }: WorldCardProps) => {
+  const { playTap, playWhoosh } = useButtonSounds();
+
+  const handleClick = () => {
+    if (!isLocked) {
+      playTap();
+      playWhoosh();
+    }
+    onClick();
+  };
+
   return (
     <motion.button
-      onClick={onClick}
+      onClick={handleClick}
       disabled={isLocked}
       whileHover={!isLocked ? { scale: 1.02, y: -4 } : {}}
       whileTap={!isLocked ? { scale: 0.98 } : {}}

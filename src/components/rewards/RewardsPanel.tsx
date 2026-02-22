@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Trophy, Star, Flame, Gift, Sparkles, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import SparkMeter from "./SparkMeter";
 import TrophyCase from "./TrophyCase";
 import { useRewardsSystem } from "@/hooks/useRewardsSystem";
 import { LEVELS } from "@/data/rewardsConfig";
+import { useButtonSounds } from "@/hooks/useButtonSounds";
 
 interface RewardsPanelProps {
   isOpen: boolean;
@@ -13,6 +15,7 @@ interface RewardsPanelProps {
 }
 
 const RewardsPanel = ({ isOpen, onClose, childId }: RewardsPanelProps) => {
+  const { playSparkle, playCelebration } = useButtonSounds();
   const {
     totalPoints,
     currentLevel,
@@ -24,6 +27,13 @@ const RewardsPanel = ({ isOpen, onClose, childId }: RewardsPanelProps) => {
     questsCompleted,
     loading,
   } = useRewardsSystem(childId);
+
+  // Play sparkle sound when panel opens
+  useEffect(() => {
+    if (isOpen) {
+      playSparkle();
+    }
+  }, [isOpen, playSparkle]);
 
   return (
     <AnimatePresence>
