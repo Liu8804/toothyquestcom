@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
@@ -62,7 +62,9 @@ export const QuizCharacter = ({
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [isTapped, setIsTapped] = useState(false);
   const { playVoiceSound, playSynthSound } = useQuizSounds();
+  const controls = useAnimation();
 
   // Typewriter effect for speech bubble
   useEffect(() => {
@@ -259,15 +261,49 @@ export const QuizCharacter = ({
 
         {/* Main Character */}
         <motion.div
-          className={`${sizeClasses[size]} relative`}
+          className={`${sizeClasses[size]} relative cursor-pointer`}
           animate={getCharacterAnimation()}
+          onTap={() => {
+            setIsTapped(true);
+            controls.start({
+              scale: [1, 1.25, 0.9, 1.08, 1],
+              rotate: [0, -8, 8, -4, 0],
+              transition: { duration: 0.5 },
+            });
+            playSynthSound("pop");
+            setTimeout(() => setIsTapped(false), 600);
+          }}
         >
           <motion.img
             src={mood === "celebrating" || mood === "excited" ? mascotCelebrating : mascotWaving}
             alt="Toothy - Your Quiz Buddy"
-            className="w-full h-full object-contain drop-shadow-xl"
+            className="w-full h-full object-contain character-3d"
+            animate={controls}
             whileHover={{ scale: 1.1 }}
           />
+
+          {/* Tap reaction burst */}
+          {isTapped && (
+            <>
+              {["🌟", "⭐", "💫", "✨"].map((emoji, i) => (
+                <motion.span
+                  key={i}
+                  className="absolute text-base pointer-events-none"
+                  initial={{ opacity: 1, scale: 0 }}
+                  animate={{
+                    opacity: [1, 0],
+                    scale: [0, 1.5],
+                    x: Math.cos(i * 1.5) * 35,
+                    y: -30 + Math.sin(i * 1.5) * -15,
+                  }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  style={{ top: "30%", left: "30%" }}
+                >
+                  {emoji}
+                </motion.span>
+              ))}
+            </>
+          )}
 
           {/* Thinking bubbles */}
           {mood === "thinking" && (
@@ -275,7 +311,7 @@ export const QuizCharacter = ({
               {[...Array(3)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute rounded-full bg-white/80 dark:bg-gray-700/80"
+                  className="absolute rounded-full bg-card border-2 border-border"
                   style={{
                     width: 8 + i * 4,
                     height: 8 + i * 4,
@@ -300,14 +336,24 @@ export const QuizCharacter = ({
         {/* Glow effect based on mood */}
         <motion.div
           className={`absolute inset-0 rounded-full blur-xl -z-10 bg-gradient-radial ${
-            mood === "celebrating" ? "from-yellow-400/30 to-transparent" :
-            mood === "excited" ? "from-accent/30 to-transparent" :
-            mood === "encouraging" ? "from-green-400/30 to-transparent" :
+            mood === "celebrating" ? "from-accent/30 to-transparent" :
+            mood === "excited" ? "from-star/30 to-transparent" :
+            mood === "encouraging" ? "from-mint/30 to-transparent" :
             "from-primary/20 to-transparent"
           }`}
           animate={{
             scale: mood === "celebrating" || mood === "excited" ? [1, 1.3, 1] : [1, 1.1, 1],
             opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+
+        {/* Ground shadow */}
+        <motion.div
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3/4 h-2 rounded-full bg-foreground/10 blur-sm"
+          animate={{
+            scaleX: mood === "celebrating" || mood === "excited" ? [1, 1.3, 1] : [1, 1.1, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 2, repeat: Infinity }}
         />
