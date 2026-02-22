@@ -8,7 +8,7 @@ import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { usePurchase, FREE_QUEST_LIMIT } from "@/hooks/usePurchase";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import PurchaseModal from "@/components/PurchaseModal";
-import { FloatingNode, TrailPath, RewardBurst, GlowBeacon } from "@/components/hybrid-ui";
+import { FloatingNode, TrailPath, RewardBurst, GlowBeacon, WorldTrailConnector, ProgressionMinimap } from "@/components/hybrid-ui";
 import { WORLDS, type World, type Phase } from "@/data/worldsConfig";
 import type { Story } from "@/data/stories";
 
@@ -105,8 +105,27 @@ const QuestWorldMap = () => {
     0
   );
 
+  const worldMinimapData = WORLDS.map((w) => ({
+    id: w.id,
+    emoji: w.emoji,
+    name: isEs ? w.nameEs : w.name,
+    progress: getWorldProgress(w),
+  }));
+
+  const handleMinimapClick = (worldId: string) => {
+    setExpandedWorld(worldId);
+    document.getElementById(`world-${worldId}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   return (
     <section id="stories" className="py-12 bg-gradient-to-b from-background via-muted/30 to-background">
+      {/* Progression Minimap */}
+      <ProgressionMinimap
+        worlds={worldMinimapData}
+        activeWorldId={expandedWorld}
+        onWorldClick={handleMinimapClick}
+      />
+
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-10">
@@ -151,19 +170,31 @@ const QuestWorldMap = () => {
         </div>
 
         {/* World Accordion Map */}
-        <div className="space-y-4 max-w-5xl mx-auto">
-          {WORLDS.map((world) => {
+        <div className="space-y-0 max-w-5xl mx-auto">
+          {WORLDS.map((world, worldIdx) => {
             const isExpanded = expandedWorld === world.id;
             const progress = getWorldProgress(world);
+            const prevProgress = worldIdx > 0 ? getWorldProgress(WORLDS[worldIdx - 1]) : 0;
 
             return (
-              <motion.div
-                key={world.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="rounded-3xl overflow-hidden shadow-card border border-border/50"
-              >
+              <div key={world.id}>
+                {/* Inter-world trail connector */}
+                {worldIdx > 0 && (
+                  <WorldTrailConnector
+                    fromProgress={prevProgress}
+                    toProgress={progress}
+                    index={worldIdx}
+                    fromEmoji={WORLDS[worldIdx - 1].emoji}
+                    toEmoji={world.emoji}
+                  />
+                )}
+                <motion.div
+                  id={`world-${world.id}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="rounded-3xl overflow-hidden shadow-card border border-border/50"
+                >
                 {/* World Header */}
                 <motion.button
                   onClick={() => setExpandedWorld(isExpanded ? null : world.id)}
@@ -307,6 +338,7 @@ const QuestWorldMap = () => {
                   )}
                 </AnimatePresence>
               </motion.div>
+              </div>
             );
           })}
         </div>
