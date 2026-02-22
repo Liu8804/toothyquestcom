@@ -21,6 +21,7 @@ import FloatingSparkles from "@/components/FloatingSparkles";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import SplashScreen from "@/components/SplashScreen";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
+import SectionTrailConnector from "@/components/SectionTrailConnector";
 import DailyTaskModal from "@/components/DailyTaskModal";
 import StreakRecoveryModal from "@/components/StreakRecoveryModal";
 import DailyBonusModal from "@/components/DailyBonusModal";
@@ -281,6 +282,7 @@ const Index = () => {
         </div>
 
         <HeroSection />
+        <SectionTrailConnector fromEmoji="🦷" toEmoji="🌍" variant="primary" index={0} />
         <WorldSelector />
         
         {/* Visit Your Clinic CTA */}
@@ -303,14 +305,22 @@ const Index = () => {
           </Button>
         </div>
 
+        <SectionTrailConnector fromEmoji="🏥" toEmoji="💡" variant="warm" index={1} />
         <AboutSection />
+        <SectionTrailConnector fromEmoji="💡" toEmoji="⭐" variant="accent" index={2} />
         <FeaturesSection />
+        <SectionTrailConnector fromEmoji="⭐" toEmoji="🗺️" variant="rainbow" index={3} />
         
         <AdventuresSection />
+        <SectionTrailConnector fromEmoji="🗺️" toEmoji="📖" variant="primary" index={4} />
         <QuestWorldMap />
+        <SectionTrailConnector fromEmoji="📖" toEmoji="🦸" variant="warm" index={5} />
         <DentalHelpersWorld />
+        <SectionTrailConnector fromEmoji="🦸" toEmoji="😁" variant="accent" index={6} />
         <BracesCareSection />
+        <SectionTrailConnector fromEmoji="😁" toEmoji="🧠" variant="rainbow" index={7} />
         <FunFactsSection />
+        <SectionTrailConnector fromEmoji="🧠" toEmoji="🏥" variant="primary" index={8} />
         {/* Pricing moved to separate page - users explore app first */}
         <PreviewSection />
         <FooterSection />
