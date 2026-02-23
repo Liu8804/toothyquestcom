@@ -365,87 +365,88 @@ export const HeroSection = () => {
       <ConfettiCelebration isActive={showQuestCelebration || justCompleted} duration={3000} particleCount={60} />
 
       <TapSparkleArea className="relative">
-        <section className="relative h-[80vh] max-h-[720px] min-h-[500px] overflow-hidden flex flex-col">
-          {/* Hero background - banner image, bright and vivid */}
-          <div 
-            className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
-            style={{ 
-              backgroundImage: `url(${brushingBanner})`,
-              filter: 'saturate(1.15) brightness(1.1)',
-            }}
-          />
-          {/* Soft gradient overlay — minimal, lets the banner shine */}
-          <div 
-            className="absolute inset-0"
-            style={{ 
-              background: `linear-gradient(180deg, 
-                hsl(var(--background) / 0.7) 0%, 
-                hsl(var(--background) / 0.15) 30%, 
-                transparent 55%, 
-                hsl(var(--background) / 0.2) 80%, 
-                hsl(var(--background) / 0.7) 100%)`
-            }}
-          />
-        
-        {/* ToothyQuest Logo - Top left corner */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="absolute top-4 left-4 z-20 flex items-center gap-3"
-        >
-          <img
-            src={toothyQuestLogo}
-            alt="ToothyQuest"
-            width={64}
-            height={64}
-            fetchPriority="high"
-            className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-lg"
-          />
+        <section className="relative overflow-hidden flex flex-col">
+          {/* Banner image area — constrained height so faces aren't covered */}
+          <div className="relative h-[55vw] max-h-[380px] min-h-[220px]">
+            <div 
+              className="absolute inset-0 bg-cover bg-no-repeat"
+              style={{ 
+                backgroundImage: `url(${brushingBanner})`,
+                backgroundPosition: 'center 25%',
+                filter: 'saturate(1.15) brightness(1.1)',
+              }}
+            />
+            {/* Top gradient for readability */}
+            <div 
+              className="absolute inset-0"
+              style={{ 
+                background: `linear-gradient(180deg, 
+                  hsl(var(--background) / 0.5) 0%, 
+                  hsl(var(--background) / 0.05) 30%, 
+                  transparent 50%, 
+                  hsl(var(--background) / 0.3) 85%, 
+                  hsl(var(--background)) 100%)`
+              }}
+            />
           
-          {/* Music toggle button - subtle */}
-          <motion.button
-            onClick={() => {
-              toggleMusicMute();
-              playTap();
-            }}
-            className="p-2 rounded-full bg-card/80 shadow-md border border-border/50 hover:bg-card transition-colors"
-            whileTap={{ scale: 0.9 }}
-            title={musicMuted ? "Unmute background music" : "Mute background music"}
-          >
-            {musicMuted ? (
-              <VolumeX className="w-4 h-4 text-muted-foreground" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-primary" />
-            )}
-          </motion.button>
-        </motion.div>
-
-        {/* SUBHEADLINE — right below logo at top */}
-        <div className="relative z-10 pt-20 sm:pt-24 flex justify-center">
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="text-[10px] sm:text-xs md:text-sm text-white font-bold px-3 py-1 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
-          >
-            Games & stories for kids 3–9 🦷
-          </motion.p>
-        </div>
-        
-        {/* Spacer — lets kids' faces show in the middle */}
-        <div className="flex-1" />
-
-        <div className="relative z-10 pb-6 sm:pb-10 px-4">
-          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-
-            {/* Main Mascot - bottom-left, small, hidden on small mobile */}
+            {/* ToothyQuest Logo - Top left corner */}
             <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="absolute -bottom-4 -left-6 z-20 scale-[0.3] sm:scale-[0.4] origin-bottom-left hidden sm:block"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+              className="absolute top-3 left-3 z-20 flex items-center gap-2"
             >
+              <img
+                src={toothyQuestLogo}
+                alt="ToothyQuest"
+                width={64}
+                height={64}
+                fetchPriority="high"
+                className="w-10 h-10 md:w-14 md:h-14 object-contain drop-shadow-lg"
+              />
+              
+              {/* Music toggle button */}
+              <motion.button
+                onClick={() => {
+                  toggleMusicMute();
+                  playTap();
+                }}
+                className="p-1.5 rounded-full bg-card/80 shadow-md border border-border/50 hover:bg-card transition-colors"
+                whileTap={{ scale: 0.9 }}
+                title={musicMuted ? "Unmute background music" : "Mute background music"}
+              >
+                {musicMuted ? (
+                  <VolumeX className="w-3.5 h-3.5 text-muted-foreground" />
+                ) : (
+                  <Volume2 className="w-3.5 h-3.5 text-primary" />
+                )}
+              </motion.button>
+            </motion.div>
+
+            {/* SUBHEADLINE — below the baked-in title text */}
+            <div className="absolute bottom-[30%] sm:bottom-[35%] left-0 right-0 z-10 flex justify-center">
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="text-[9px] sm:text-xs md:text-sm text-white font-bold px-2.5 py-1 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
+              >
+                Games & stories for kids 3–9 🦷
+              </motion.p>
+            </div>
+          </div>
+
+          {/* CTA area — below the image, on solid background */}
+          <div className="relative z-10 -mt-6 px-4 pb-4">
+            <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+
+              {/* Main Mascot - hidden on mobile */}
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                className="absolute -bottom-4 -left-6 z-20 scale-[0.3] sm:scale-[0.4] origin-bottom-left hidden sm:block"
+              >
               {/* Enhanced wiggle glow effect - attention grabbing */}
               <AnimatePresence>
                 {isWiggling && (
