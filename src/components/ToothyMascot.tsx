@@ -24,11 +24,11 @@ const sizeClasses = {
 };
 
 const moodAnimations = {
-  idle: { y: [0, -8, 0], rotate: [0, 1, -1, 0] },
-  happy: { y: [0, -8, 0], scale: [1, 1.05, 1], rotate: [0, 2, -2, 0] },
-  excited: { y: [0, -15, 0], rotate: [0, 5, -5, 0], scale: [1, 1.1, 1] },
-  cheering: { y: [0, -20, 0], rotate: [0, 10, -10, 0], scale: [1, 1.12, 1] },
-  waving: { rotate: [0, 15, -15, 0], y: [0, -4, 0] },
+  idle: { y: [0, -2.5, 0], rotate: [0, 0.3, -0.3, 0] },
+  happy: { y: [0, -2.5, 0], scale: [1, 1.015, 1], rotate: [0, 0.6, -0.6, 0] },
+  excited: { y: [0, -4.5, 0], rotate: [0, 1.5, -1.5, 0], scale: [1, 1.03, 1] },
+  cheering: { y: [0, -6, 0], rotate: [0, 3, -3, 0], scale: [1, 1.035, 1] },
+  waving: { rotate: [0, 4.5, -4.5, 0], y: [0, -1.2, 0] },
 };
 
 const moodEmojis: Record<MascotMood, string> = {
@@ -59,8 +59,8 @@ export const ToothyMascot = ({
   const handleTap = useCallback(() => {
     setIsTapped(true);
     controls.start({
-      scale: [1, 1.2, 0.9, 1.05, 1],
-      rotate: [0, -10, 10, -5, 0],
+      scale: [1, 1.06, 0.97, 1.02, 1],
+      rotate: [0, -3, 3, -1.5, 0],
       transition: { duration: 0.5 },
     });
     onTap?.();
@@ -100,7 +100,7 @@ export const ToothyMascot = ({
             ...getBreathingAnimation(mood === "excited" || mood === "cheering" ? "excited" : "gentle").animate,
           }}
           transition={getBreathingAnimation(mood === "excited" || mood === "cheering" ? "excited" : "gentle").transition}
-          whileHover={{ scale: 1.08, rotate: [0, -3, 3, 0] }}
+          whileHover={{ scale: 1.03, rotate: [0, -1, 1, 0] }}
         />
 
         {/* Mood emoji indicator with pop-in */}
@@ -113,8 +113,8 @@ export const ToothyMascot = ({
             <motion.span
               className="text-lg"
               animate={{ 
-                scale: [1, 1.3, 1],
-                y: [0, -4, 0],
+                scale: [1, 1.1, 1],
+                y: [0, -1.2, 0],
               }}
               transition={{ duration: 0.8, repeat: Infinity }}
             >
@@ -133,9 +133,9 @@ export const ToothyMascot = ({
                 initial={{ opacity: 1, scale: 0 }}
                 animate={{
                   opacity: [1, 0],
-                  scale: [0, 1.5],
-                  x: (i - 1) * 30,
-                  y: -30 - i * 10,
+                  scale: [0, 1],
+                  x: (i - 1) * 15,
+                  y: -15 - i * 5,
                 }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 style={{ top: "20%", left: "40%" }}
@@ -158,9 +158,9 @@ export const ToothyMascot = ({
                   left: `${15 + Math.cos(i * 1.2) * 35}%`,
                 }}
                 animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0, 1.2, 0],
-                  y: [-5, -20],
+                  opacity: [0, 0.7, 0],
+                  scale: [0, 1, 0],
+                  y: [-2, -8],
                 }}
                 transition={{
                   duration: 0.9,
@@ -179,8 +179,8 @@ export const ToothyMascot = ({
       <motion.div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-3 rounded-full bg-primary/15 blur-sm -z-10"
         animate={{
-          scaleX: mood === "excited" || mood === "cheering" ? [1, 1.3, 1] : [1, 1.1, 1],
-          opacity: [0.4, 0.7, 0.4],
+          scaleX: mood === "excited" || mood === "cheering" ? [1, 1.08, 1] : [1, 1.03, 1],
+          opacity: [0.3, 0.5, 0.3],
         }}
         transition={{ duration: 2, repeat: Infinity }}
       />

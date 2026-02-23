@@ -84,52 +84,52 @@ const getEmotionImage = (emotion: MascotEmotion): string => {
 // Animation configs for each emotion
 const emotionAnimations: Record<MascotEmotion, { animate: object; transition: object }> = {
   idle: {
-    animate: { y: [0, -8, 0] },
-    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+    animate: { y: [0, -3, 0] },
+    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
   },
   wow: {
-    animate: { scale: [1, 1.06, 1], rotate: [0, -2, 2, 0] },
-    transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-  },
-  greatJob: {
-    animate: { y: [0, -6, 0], scale: [1, 1.04, 1] },
+    animate: { scale: [1, 1.02, 1], rotate: [0, -0.6, 0.6, 0] },
     transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
   },
+  greatJob: {
+    animate: { y: [0, -2, 0], scale: [1, 1.012, 1] },
+    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+  },
   oops: {
-    animate: { x: [-2, 2, -2], rotate: [-1, 1, -1] },
-    transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
-  },
-  gotIt: {
-    animate: { y: [0, -5, 0], scale: [1, 1.05, 1] },
-    transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-  },
-  help: {
-    animate: { scale: [1, 1.08, 1], y: [0, -5, 0] },
-    transition: { duration: 1.2, repeat: Infinity, ease: "easeInOut" },
-  },
-  loading: {
-    animate: { rotate: [0, 5, -5, 0], y: [0, -3, 0] },
+    animate: { x: [-0.6, 0.6, -0.6], rotate: [-0.3, 0.3, -0.3] },
     transition: { duration: 1, repeat: Infinity, ease: "easeInOut" },
   },
-  letsPlay: {
-    animate: { scale: [1, 1.04, 1], rotate: [0, 2, -2, 0] },
-    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+  gotIt: {
+    animate: { y: [0, -1.5, 0], scale: [1, 1.015, 1] },
+    transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
   },
-  levelUp: {
-    animate: { y: [0, -10, 0], scale: [1, 1.06, 1] },
-    transition: { duration: 1.2, repeat: Infinity, ease: "easeOut" },
-  },
-  playQuit: {
-    animate: { y: [0, -3, 0] },
-    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-  },
-  celebrating: {
-    animate: { y: [0, -8, 0], rotate: [0, 3, -3, 0], scale: [1, 1.04, 1] },
+  help: {
+    animate: { scale: [1, 1.025, 1], y: [0, -1.5, 0] },
     transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
   },
+  loading: {
+    animate: { rotate: [0, 1.5, -1.5, 0], y: [0, -1, 0] },
+    transition: { duration: 1.2, repeat: Infinity, ease: "easeInOut" },
+  },
+  letsPlay: {
+    animate: { scale: [1, 1.012, 1], rotate: [0, 0.6, -0.6, 0] },
+    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+  },
+  levelUp: {
+    animate: { y: [0, -3, 0], scale: [1, 1.02, 1] },
+    transition: { duration: 1.5, repeat: Infinity, ease: "easeOut" },
+  },
+  playQuit: {
+    animate: { y: [0, -1, 0] },
+    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+  },
+  celebrating: {
+    animate: { y: [0, -2.5, 0], rotate: [0, 1, -1, 0], scale: [1, 1.012, 1] },
+    transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+  },
   waving: {
-    animate: { y: [0, -8, 0], rotate: [0, -3, 3, 0] },
-    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+    animate: { y: [0, -2.5, 0], rotate: [0, -1, 1, 0] },
+    transition: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
   },
 };
 
@@ -153,8 +153,8 @@ const MascotEmotionState = forwardRef<HTMLDivElement, MascotEmotionStateProps>((
       ref={ref}
       className={`relative inline-flex items-center justify-center cursor-pointer ${className}`}
       onClick={onClick}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -191,9 +191,9 @@ const MascotEmotionState = forwardRef<HTMLDivElement, MascotEmotionStateProps>((
                     left: `${5 + Math.random() * 90}%`,
                   }}
                   animate={{
-                    opacity: [0, 1, 0],
-                    scale: [0.5, 1.2, 0.5],
-                    y: [-5, -25],
+                    opacity: [0, 0.7, 0],
+                    scale: [0.8, 1, 0.8],
+                    y: [-2, -10],
                   }}
                   transition={{
                     duration: 1.5,
@@ -215,8 +215,8 @@ const MascotEmotionState = forwardRef<HTMLDivElement, MascotEmotionStateProps>((
                 background: "radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%)",
               }}
               animate={{
-                opacity: [0.3, 0.6, 0.3],
-                scale: [1, 1.2, 1],
+                opacity: [0.2, 0.4, 0.2],
+                scale: [1, 1.06, 1],
               }}
               transition={{
                 duration: 1.5,

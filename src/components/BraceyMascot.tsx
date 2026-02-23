@@ -91,17 +91,17 @@ const BraceyMascot = ({
   const getAnimation = () => {
     switch (mood) {
       case "excited":
-        return { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] };
+        return { scale: [1, 1.03, 1], rotate: [0, 1.5, -1.5, 0] };
       case "celebrating":
-        return { y: [0, -10, 0], scale: [1, 1.1, 1] };
+        return { y: [0, -3, 0], scale: [1, 1.03, 1] };
       case "encouraging":
-        return { rotate: [0, 3, -3, 0], scale: [1, 1.05, 1] };
+        return { rotate: [0, 1, -1, 0], scale: [1, 1.015, 1] };
       case "thinking":
-        return { rotate: [-5, 5, -5], scale: [1, 1.02, 1] };
+        return { rotate: [-1.5, 1.5, -1.5], scale: [1, 1.006, 1] };
       case "winking":
-        return { scale: [1, 1.05, 1] };
+        return { scale: [1, 1.015, 1] };
       default:
-        return { y: [0, -5, 0] };
+        return { y: [0, -1.5, 0] };
     }
   };
 
@@ -149,13 +149,13 @@ const BraceyMascot = ({
             className="w-full h-full object-contain drop-shadow-lg"
             animate={getBreathingAnimation(mood === "excited" || mood === "celebrating" ? "excited" : "playful").animate}
             transition={getBreathingAnimation(mood === "excited" || mood === "celebrating" ? "excited" : "playful").transition}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.03 }}
           />
 
           {/* Pink bow/accessory for Bracey */}
           <motion.div
             className="absolute -top-2 -right-1 text-xl"
-            animate={{ rotate: [0, 10, -10, 0] }}
+            animate={{ rotate: [0, 3, -3, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
             🎀
@@ -166,8 +166,8 @@ const BraceyMascot = ({
         <motion.div
           className="absolute -bottom-1 -right-1 text-lg bg-white rounded-full p-0.5 shadow-sm"
           animate={{ 
-            scale: [1, 1.2, 1],
-            rotate: mood === "celebrating" ? [0, 15, -15, 0] : 0 
+            scale: [1, 1.06, 1],
+            rotate: mood === "celebrating" ? [0, 5, -5, 0] : 0 
           }}
           transition={{ duration: 0.8, repeat: Infinity }}
         >
@@ -206,7 +206,7 @@ const BraceyMascot = ({
         {mood === "encouraging" && (
           <motion.span
             className="absolute -left-2 top-1/2 -translate-y-1/2 text-lg"
-            animate={{ scale: [1, 1.3, 1], rotate: [0, -10, 0] }}
+            animate={{ scale: [1, 1.1, 1], rotate: [0, -3, 0] }}
             transition={{ duration: 0.8, repeat: Infinity }}
           >
             💪

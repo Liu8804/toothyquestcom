@@ -58,9 +58,9 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
                   top: `${15 + (i % 2) * 40}%`,
                 }}
                 animate={{
-                  y: [0, -20, 0],
-                  opacity: [0.3, 1, 0.3],
-                  scale: [0.8, 1.2, 0.8],
+                  y: [0, -8, 0],
+                  opacity: [0.3, 0.7, 0.3],
+                  scale: [0.9, 1.05, 0.9],
                 }}
                 transition={{
                   duration: 2,
@@ -119,7 +119,7 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
           >
             <motion.div
               className="px-6 py-3 bg-primary/10 rounded-full border-2 border-primary/30"
-              animate={{ scale: [1, 1.05, 1] }}
+              animate={{ scale: [1, 1.015, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
               <span className="text-lg font-bold text-primary">👆 Tap to start!</span>

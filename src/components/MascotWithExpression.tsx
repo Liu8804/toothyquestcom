@@ -43,15 +43,15 @@ const MascotWithExpression = ({
   const getAnimation = () => {
     switch (expression) {
       case "excited":
-        return { scale: [1, 1.1, 1], rotate: [0, 5, -5, 0], y: [0, -8, 0] };
+        return { scale: [1, 1.03, 1], rotate: [0, 1.5, -1.5, 0], y: [0, -2.5, 0] };
       case "cheering":
-        return { y: [0, -15, 0], scale: [1, 1.1, 1], rotate: [0, 3, -3, 0] };
+        return { y: [0, -4, 0], scale: [1, 1.03, 1], rotate: [0, 1, -1, 0] };
       case "celebrating":
-        return { rotate: [0, 10, -10, 0], scale: [1, 1.15, 1], y: [0, -10, 0] };
+        return { rotate: [0, 3, -3, 0], scale: [1, 1.04, 1], y: [0, -3, 0] };
       case "winking":
-        return { scale: [1, 1.05, 1], rotate: [0, 2, 0] };
+        return { scale: [1, 1.015, 1], rotate: [0, 0.6, 0] };
       default:
-        return { y: [0, -6, 0], rotate: [0, 1, -1, 0] };
+        return { y: [0, -2, 0], rotate: [0, 0.3, -0.3, 0] };
     }
   };
 
@@ -65,8 +65,8 @@ const MascotWithExpression = ({
   const handleTap = useCallback(() => {
     setIsTapped(true);
     controls.start({
-      scale: [1, 1.2, 0.9, 1.05, 1],
-      rotate: [0, -8, 8, -4, 0],
+      scale: [1, 1.06, 0.97, 1.02, 1],
+      rotate: [0, -2.5, 2.5, -1, 0],
       transition: { duration: 0.5 },
     });
     setTimeout(() => setIsTapped(false), 600);
@@ -102,7 +102,7 @@ const MascotWithExpression = ({
           alt="Toothy mascot"
           className="w-full h-full object-contain character-3d"
           animate={controls}
-          whileHover={{ scale: 1.08 }}
+          whileHover={{ scale: 1.03 }}
         />
         
         {/* Expression overlay with pop-in */}
@@ -110,9 +110,9 @@ const MascotWithExpression = ({
           className="absolute -top-1 -right-1 text-lg"
           initial={{ scale: 0 }}
           animate={{ 
-            scale: [1, 1.25, 1],
-            rotate: expression === "celebrating" ? [0, 15, -15, 0] : 0,
-            y: [0, -3, 0],
+            scale: [1, 1.08, 1],
+            rotate: expression === "celebrating" ? [0, 5, -5, 0] : 0,
+            y: [0, -1, 0],
           }}
           transition={{ duration: 0.8, repeat: Infinity }}
         >
@@ -129,9 +129,9 @@ const MascotWithExpression = ({
                 initial={{ opacity: 1, scale: 0 }}
                 animate={{
                   opacity: [1, 0],
-                  scale: [0, 1.4],
-                  x: (i - 1) * 25,
-                  y: -25 - i * 8,
+                  scale: [0, 1],
+                  x: (i - 1) * 15,
+                  y: -12 - i * 4,
                 }}
                 transition={{ duration: 0.45, delay: i * 0.07 }}
                 style={{ top: "25%", left: "35%" }}
@@ -154,9 +154,9 @@ const MascotWithExpression = ({
                   left: `${15 + Math.cos(i * 1.3) * 40}%`,
                 }}
                 animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0, 1.2, 0],
-                  y: [-5, -18],
+                  opacity: [0, 0.7, 0],
+                  scale: [0, 1, 0],
+                  y: [-2, -8],
                 }}
                 transition={{
                   duration: 0.9,
@@ -175,8 +175,8 @@ const MascotWithExpression = ({
       <motion.div
         className="w-3/4 h-2 rounded-full bg-foreground/10 blur-sm mt-1"
         animate={{
-          scaleX: [1, 1.15, 1],
-          opacity: [0.3, 0.5, 0.3],
+          scaleX: [1, 1.05, 1],
+          opacity: [0.2, 0.35, 0.2],
         }}
         transition={{ duration: 2, repeat: Infinity }}
       />

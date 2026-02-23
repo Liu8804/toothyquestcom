@@ -130,50 +130,50 @@ export const QuizCharacter = ({
     switch (mood) {
       case "thinking":
         return {
-          rotate: [-3, 3, -3],
-          y: [0, -5, 0],
-          transition: { duration: 2, repeat: Infinity, ease: easeInOut }
+          rotate: [-1, 1, -1],
+          y: [0, -2, 0],
+          transition: { duration: 2.5, repeat: Infinity, ease: easeInOut }
         };
       case "excited":
         return {
-          y: [0, -15, 0],
-          scale: [1, 1.1, 1],
-          transition: { duration: 0.5, repeat: Infinity }
+          y: [0, -5, 0],
+          scale: [1, 1.03, 1],
+          transition: { duration: 0.8, repeat: Infinity }
         };
       case "celebrating":
         return {
-          rotate: [0, 10, -10, 0],
-          y: [0, -20, 0],
-          scale: [1, 1.15, 1],
-          transition: { duration: 0.6, repeat: Infinity }
+          rotate: [0, 3, -3, 0],
+          y: [0, -6, 0],
+          scale: [1, 1.04, 1],
+          transition: { duration: 0.8, repeat: Infinity }
         };
       case "encouraging":
         return {
-          scale: [1, 1.05, 1],
-          y: [0, -8, 0],
-          transition: { duration: 1.5, repeat: Infinity, ease: easeInOut }
+          scale: [1, 1.015, 1],
+          y: [0, -2.5, 0],
+          transition: { duration: 1.8, repeat: Infinity, ease: easeInOut }
         };
       case "surprised":
         return {
-          scale: [1, 1.2, 1],
+          scale: [1, 1.06, 1],
           transition: { duration: 0.3, repeat: 0 }
         };
       case "waving":
         return {
-          rotate: [0, 15, -15, 15, 0],
-          transition: { duration: 1, repeat: Infinity }
+          rotate: [0, 5, -5, 5, 0],
+          transition: { duration: 1.2, repeat: Infinity }
         };
       case "dancing":
         return {
-          x: [-5, 5, -5],
-          y: [0, -10, 0],
-          rotate: [-5, 5, -5],
-          transition: { duration: 0.8, repeat: Infinity }
+          x: [-1.5, 1.5, -1.5],
+          y: [0, -3, 0],
+          rotate: [-1.5, 1.5, -1.5],
+          transition: { duration: 1, repeat: Infinity }
         };
       default:
         return {
-          y: [0, -8, 0],
-          transition: { duration: 3, repeat: Infinity, ease: easeInOut }
+          y: [0, -2.5, 0],
+          transition: { duration: 3.5, repeat: Infinity, ease: easeInOut }
         };
     }
   }, [mood]);
@@ -222,8 +222,8 @@ export const QuizCharacter = ({
               className="absolute -top-2 -right-2 z-20"
             >
               <motion.span
-                animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 0.6, repeat: 3 }}
+                animate={{ scale: [1, 1.1, 1], rotate: [0, 3, -3, 0] }}
+                transition={{ duration: 0.8, repeat: 3 }}
                 className="text-2xl drop-shadow-lg"
               >
                 {moodEmojis[mood]}
@@ -244,9 +244,9 @@ export const QuizCharacter = ({
                   left: `${20 + Math.cos(i) * 30}%`,
                 }}
                 animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0, 1.5, 0],
-                  y: [-10, -30],
+                  opacity: [0, 0.7, 0],
+                  scale: [0, 1, 0],
+                  y: [-5, -15],
                 }}
                 transition={{
                   duration: 1,
@@ -267,8 +267,8 @@ export const QuizCharacter = ({
           onTap={() => {
             setIsTapped(true);
             controls.start({
-              scale: [1, 1.25, 0.9, 1.08, 1],
-              rotate: [0, -8, 8, -4, 0],
+              scale: [1, 1.08, 0.95, 1.03, 1],
+              rotate: [0, -3, 3, -1.5, 0],
               transition: { duration: 0.5 },
             });
             playSynthSound("pop");
@@ -284,7 +284,7 @@ export const QuizCharacter = ({
               ...getBreathingAnimation(mood === "celebrating" || mood === "excited" ? "excited" : "gentle").animate,
             }}
             transition={getBreathingAnimation(mood === "celebrating" || mood === "excited" ? "excited" : "gentle").transition}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.03 }}
           />
 
           {/* Tap reaction burst */}
@@ -297,9 +297,9 @@ export const QuizCharacter = ({
                   initial={{ opacity: 1, scale: 0 }}
                   animate={{
                     opacity: [1, 0],
-                    scale: [0, 1.5],
-                    x: Math.cos(i * 1.5) * 35,
-                    y: -30 + Math.sin(i * 1.5) * -15,
+                    scale: [0, 1],
+                    x: Math.cos(i * 1.5) * 20,
+                    y: -15 + Math.sin(i * 1.5) * -8,
                   }}
                   transition={{ duration: 0.5, delay: i * 0.06 }}
                   style={{ top: "30%", left: "30%" }}
@@ -347,8 +347,8 @@ export const QuizCharacter = ({
             "from-primary/20 to-transparent"
           }`}
           animate={{
-            scale: mood === "celebrating" || mood === "excited" ? [1, 1.3, 1] : [1, 1.1, 1],
-            opacity: [0.5, 0.8, 0.5],
+            scale: mood === "celebrating" || mood === "excited" ? [1, 1.08, 1] : [1, 1.03, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -357,8 +357,8 @@ export const QuizCharacter = ({
         <motion.div
           className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3/4 h-2 rounded-full bg-foreground/10 blur-sm"
           animate={{
-            scaleX: mood === "celebrating" || mood === "excited" ? [1, 1.3, 1] : [1, 1.1, 1],
-            opacity: [0.3, 0.5, 0.3],
+            scaleX: mood === "celebrating" || mood === "excited" ? [1, 1.08, 1] : [1, 1.03, 1],
+            opacity: [0.2, 0.35, 0.2],
           }}
           transition={{ duration: 2, repeat: Infinity }}
         />
