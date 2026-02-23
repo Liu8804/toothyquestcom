@@ -366,26 +366,23 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative min-h-screen">
         <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
-          {/* Hero background - banner image, focused on character illustrations */}
+          {/* Hero background - banner image */}
           <div 
-            className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{ backgroundImage: `url(${brushingBanner})` }}
           />
-          {/* Gradient overlay: strong top to hide banner text, gentle middle, fade bottom */}
+          {/* Gradient overlay — strong top half to cover banner text, reveals characters at bottom */}
           <div 
             className="absolute inset-0"
             style={{ 
               background: `linear-gradient(180deg, 
                 hsl(var(--background)) 0%, 
-                hsl(var(--background) / 0.92) 25%, 
-                hsl(var(--background) / 0.75) 50%, 
-                hsl(var(--background) / 0.3) 75%, 
-                hsl(var(--background) / 0.85) 100%)`
+                hsl(var(--background)) 20%, 
+                hsl(var(--background) / 0.85) 40%, 
+                hsl(var(--background) / 0.3) 70%, 
+                hsl(var(--background) / 0.6) 100%)`
             }}
           />
-          
-          {/* Floating sparkles when completed - reduced count */}
-          {isCompleted && <FloatingSparkles count={8} />}
         
         {/* ToothyQuest Logo - Top left corner */}
         <motion.div
@@ -426,25 +423,25 @@ export const HeroSection = () => {
         <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
-            {/* HEADLINE - Clear value proposition */}
+            {/* HEADLINE */}
             <motion.h1
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white drop-shadow-lg mb-2 md:mb-3 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 md:mb-4 leading-tight drop-shadow-sm"
             >
-              Make dentist visits{" "}
-              <span className="text-primary">fun & fearless</span>
+              Dentist visits,{" "}
+              <span className="text-primary">made fun!</span>
             </motion.h1>
             
-            {/* SUBHEADLINE - Supporting benefit */}
+            {/* SUBHEADLINE */}
             <motion.p
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-base sm:text-lg md:text-xl text-white/90 drop-shadow mb-4 md:mb-6 max-w-lg px-2"
+              className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8 max-w-md px-2 font-medium"
             >
-              Games, stories & a friendly mascot help kids ages 3-9 feel brave
+              Interactive games & stories for kids ages 3–9
             </motion.p>
             
             {/* Main Mascot - Before/After visual transformation */}
@@ -766,27 +763,6 @@ export const HeroSection = () => {
               </AnimatePresence>
             </motion.div>
 
-            {/* Compact speech bubble - only when not completed */}
-            {!isCompleted && (
-              <motion.div
-                key={greeting.message}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
-                className="relative mb-4 px-4 py-2 bg-card/90 rounded-2xl shadow-md border border-primary/20 max-w-sm"
-              >
-                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-6 border-r-6 border-b-8 border-l-transparent border-r-transparent border-b-card/90" />
-                <p className="text-base md:text-lg font-semibold text-foreground flex items-center justify-center gap-2">
-                  <span>Let's have fun!</span>
-                  <motion.span 
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  >
-                    🎮
-                  </motion.span>
-                </p>
-              </motion.div>
-            )}
             
             {/* Completed state badge */}
             {isCompleted && (
@@ -845,36 +821,26 @@ export const HeroSection = () => {
                     </motion.span>
                   </Button>
                   
-                  {/* Secondary sign-up prompt - eye-catching with pulse */}
+                  {/* Sign up link */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-8 flex flex-col items-center gap-3"
+                    className="mt-4 flex items-center gap-3 text-base"
                   >
-                    <span className="text-base font-medium text-foreground/80">New here?</span>
-                    <div className="flex items-center gap-4">
-                      <motion.button
-                        onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
-                        className="relative inline-flex items-center gap-2 px-6 py-3 bg-accent/20 hover:bg-accent/30 border-2 border-accent rounded-full font-bold text-accent-foreground transition-all shadow-lg"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <motion.span
-                          className="absolute inset-0 rounded-full bg-accent/30"
-                          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0, 0.5] }}
-                          transition={{ duration: 1.5, repeat: Infinity }}
-                        />
-                        <span className="relative text-lg">✨ Sign up free</span>
-                      </motion.button>
-                      <span className="text-foreground/50 font-medium">or</span>
-                      <a
-                        href="/guest"
-                        className="font-bold text-lg text-secondary hover:text-secondary/80 underline underline-offset-4 transition-colors"
-                      >
-                        try as guest
-                      </a>
-                    </div>
+                    <button
+                      onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
+                      className="font-bold text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+                    >
+                      Sign up free
+                    </button>
+                    <span className="text-muted-foreground">·</span>
+                    <a
+                      href="/guest"
+                      className="font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      Try as guest
+                    </a>
                   </motion.div>
                 </>
               ) : (
@@ -918,64 +884,33 @@ export const HeroSection = () => {
               )}
             </motion.div>
 
-            {/* Tap to hear - more visible secondary action */}
-            {!isCompleted && (
-              <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                onClick={() => {
-                  unlockAudioContext();
-                  sayWelcome(greeting.message);
-                  resetIdleTimer();
-                }}
-                className="mt-6 text-base font-medium text-foreground/70 hover:text-primary transition-colors flex items-center gap-2 px-4 py-2 rounded-full bg-card/50 hover:bg-card/80 border border-primary/20"
-              >
-                🔊 Tap to hear Toothy speak
-              </motion.button>
-            )}
-
-            {/* Trust indicators - compact, below CTA - with better visibility */}
+            {/* Trust indicators - clean pills */}
             {!isCompleted && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-8 text-sm sm:text-base"
+                className="flex items-center justify-center gap-3 mt-6 text-sm"
               >
-                <span className="font-bold text-green-600 dark:text-green-400 flex items-center gap-2 bg-green-100 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
-                  ✅ Kid-Safe
-                </span>
-                <span className="font-bold text-red-600 dark:text-red-400 flex items-center gap-2 bg-red-100 dark:bg-red-900/30 px-3 py-1.5 rounded-full">
-                  🚫 No Ads
-                </span>
-                <span className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 px-3 py-1.5 rounded-full">
-                  ⭐ Ages 3-9
-                </span>
+                <span className="text-green-600 dark:text-green-400 font-semibold">✅ Kid-Safe</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-red-600 dark:text-red-400 font-semibold">🚫 No Ads</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-amber-600 dark:text-amber-400 font-semibold">⭐ Free</span>
               </motion.div>
             )}
           </div>
         </div>
 
-        {/* Scroll down indicator */}
+        {/* Scroll chevron */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          animate={{ opacity: 0.6 }}
           transition={{ delay: 1.2 }}
-          className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 cursor-pointer z-20"
-          onClick={() => {
-            const aboutSection = document.getElementById('about');
-            if (aboutSection) {
-              aboutSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20"
         >
-          <span className="text-xs text-muted-foreground/70 font-medium">Scroll to explore</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <ChevronDown className="w-6 h-6 text-muted-foreground/50" />
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+            <ChevronDown className="w-5 h-5 text-muted-foreground" />
           </motion.div>
         </motion.div>
 
