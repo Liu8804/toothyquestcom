@@ -423,8 +423,8 @@ export const HeroSection = () => {
         
         {/* Minimal decorative element - desktop only */}
 
-        <div className="container mx-auto px-4 pt-28 sm:pt-32 md:pt-36 pb-4 relative z-10">
-          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+        <div className="container mx-auto px-4 pt-24 sm:pt-28 md:pt-32 pb-4 relative z-10">
+          <div className="flex flex-col items-center text-center max-w-2xl mx-auto min-h-screen relative">
             
             {/* SUBHEADLINE — clean, readable over banner */}
             <motion.p
@@ -436,12 +436,16 @@ export const HeroSection = () => {
               Games & stories for kids 3–9 🦷
             </motion.p>
             
-            {/* Main Mascot - Before/After visual transformation */}
+            {/* Spacer to push CTA below kids' faces */}
+            <div className="flex-1 min-h-[50vh] sm:min-h-[55vh] md:min-h-[60vh]" />
+
+            {/* Main Mascot - positioned bottom-left, smaller */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="relative mb-2"
+              className="absolute bottom-44 left-2 sm:left-4 z-20"
+              style={{ transform: 'scale(0.55)' }}
             >
               {/* Enhanced wiggle glow effect - attention grabbing */}
               <AnimatePresence>
@@ -563,7 +567,7 @@ export const HeroSection = () => {
                       isIntroWaving ? "waving" :
                       "waving" // Always show waving state as default for visibility
                     }
-                    size="2xl"
+                    size="lg"
                     showSparkles={isCompleted || isWiggling}
                   />
                 </motion.div>
@@ -774,7 +778,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-              className="relative mt-4"
+              className="relative"
             >
               {!isCompleted ? (
                 <>
