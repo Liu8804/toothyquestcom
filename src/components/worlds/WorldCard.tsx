@@ -11,6 +11,7 @@ interface WorldCardProps {
   emoji: string;
   color: string;
   backgroundImage?: string;
+  videoBackground?: string;
   isLocked: boolean;
   progress?: number;
   onClick: () => void;
@@ -23,6 +24,7 @@ export const WorldCard = ({
   emoji,
   color,
   backgroundImage,
+  videoBackground,
   isLocked,
   progress = 0,
   onClick,
@@ -52,8 +54,22 @@ export const WorldCard = ({
           : "border-white/30 cursor-pointer shadow-[0_6px_0_0_rgba(0,0,0,0.15)] hover:shadow-[0_8px_0_0_rgba(0,0,0,0.2)] active:shadow-[0_2px_0_0_rgba(0,0,0,0.15)] active:translate-y-1"
       )}
     >
-      {/* Background Image */}
-      {backgroundImage && !isLocked && (
+      {/* Video or Image Background */}
+      {!isLocked && videoBackground ? (
+        <>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={videoBackground} type="video/mp4" />
+          </video>
+          {/* Specular highlight for depth */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/12 via-transparent to-transparent pointer-events-none z-[1]" />
+        </>
+      ) : backgroundImage && !isLocked ? (
         <>
           <div 
             className="absolute inset-0 bg-cover bg-center image-3d-card"
@@ -62,7 +78,7 @@ export const WorldCard = ({
           {/* Specular highlight for depth */}
           <div className="absolute inset-0 bg-gradient-to-br from-white/12 via-transparent to-transparent pointer-events-none z-[1]" />
         </>
-      )}
+      ) : null}
 
       {/* Gradient overlay for text readability */}
       {!isLocked && (

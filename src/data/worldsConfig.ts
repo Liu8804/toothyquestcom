@@ -23,6 +23,7 @@ export interface World {
   emoji: string;
   color: string;
   backgroundImage?: string;
+  videoBackground?: string;
   isLocked: boolean;
   phases: Phase[];
 }
@@ -163,6 +164,7 @@ export const WORLDS: World[] = [
     emoji: "🏰",
     color: "from-primary to-secondary",
     backgroundImage: "/worlds/dental-castle.webp",
+    videoBackground: "/worlds/dental-castle.mp4",
     isLocked: false,
     phases: [
       {
@@ -224,6 +226,7 @@ export const WORLDS: World[] = [
     emoji: "🦸",
     color: "from-pink-400 to-fuchsia-500",
     backgroundImage: "/worlds/brush-hero.webp",
+    videoBackground: "/worlds/brush-hero.mp4",
     isLocked: false,
     phases: [
       {
@@ -285,6 +288,7 @@ export const WORLDS: World[] = [
     emoji: "🍎",
     color: "from-mint to-primary",
     backgroundImage: "/worlds/food-cavities.webp",
+    videoBackground: "/worlds/food-cavities.mp4",
     isLocked: false,
     phases: [
       {
@@ -346,6 +350,7 @@ export const WORLDS: World[] = [
     emoji: "✨",
     color: "from-star to-accent",
     backgroundImage: "/worlds/braces-world.webp",
+    videoBackground: "/worlds/braces-world.mp4",
     isLocked: false,
     phases: [
       {

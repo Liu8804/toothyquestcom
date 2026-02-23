@@ -212,6 +212,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                     emoji={world.emoji}
                     color={world.color}
                     backgroundImage={world.backgroundImage}
+                    videoBackground={world.videoBackground}
                     isLocked={world.isLocked && !isUnlocked && !isAccessLoading}
                     progress={getWorldProgress(world)}
                     onClick={() => setSelectedWorld(world)}

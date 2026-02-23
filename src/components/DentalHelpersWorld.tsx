@@ -19,6 +19,7 @@ interface Zone {
   color: string;
   questIds: string[];
   backgroundImage: string;
+  videoBackground: string;
 }
 
 const zones: Zone[] = [
@@ -30,6 +31,7 @@ const zones: Zone[] = [
     color: "from-pink-500 to-purple-500",
     questIds: ["braces-helpers"],
     backgroundImage: "/dental-helpers/braces-zone.webp",
+    videoBackground: "/dental-helpers/braces-zone.mp4",
   },
   {
     id: "space-makers",
@@ -39,6 +41,7 @@ const zones: Zone[] = [
     color: "from-blue-500 to-cyan-500",
     questIds: ["tooth-separators", "dental-expanders"],
     backgroundImage: "/dental-helpers/space-makers.webp",
+    videoBackground: "/dental-helpers/space-makers.mp4",
   },
   {
     id: "tooth-protectors",
@@ -48,6 +51,7 @@ const zones: Zone[] = [
     color: "from-green-500 to-emerald-500",
     questIds: ["mouthguards-hero", "dental-trauma"],
     backgroundImage: "/dental-helpers/tooth-protectors.webp",
+    videoBackground: "/dental-helpers/tooth-protectors.mp4",
   },
   {
     id: "mouth-habits",
@@ -57,6 +61,7 @@ const zones: Zone[] = [
     color: "from-orange-500 to-amber-500",
     questIds: ["mouth-habits"],
     backgroundImage: "/dental-helpers/mouth-habits.webp",
+    videoBackground: "/dental-helpers/mouth-habits.mp4",
   },
 ];
 
@@ -173,12 +178,17 @@ const DentalHelpersWorld = () => {
                   >
                     <div 
                       className="relative rounded-3xl p-6 shadow-lg overflow-hidden min-h-[200px]"
-                      style={{
-                        backgroundImage: `url(${zone.backgroundImage})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
                     >
+                      {/* Video background */}
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover"
+                      >
+                        <source src={zone.videoBackground} type="video/mp4" />
+                      </video>
                       {/* Gradient overlay for text legibility */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                       
