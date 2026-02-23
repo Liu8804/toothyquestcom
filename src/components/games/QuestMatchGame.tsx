@@ -190,12 +190,18 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
       </div>
 
       {/* Card Grid */}
-      <div className={`flex-1 grid grid-cols-${gridCols} gap-2 md:gap-3`} style={{ gridTemplateColumns: `repeat(4, 1fr)` }}>
+      <div 
+        className="flex-1 grid gap-2 md:gap-3 mx-auto w-full"
+        style={{ 
+          gridTemplateColumns: `repeat(4, 1fr)`,
+          maxWidth: '340px'
+        }}
+      >
         {cards.map(card => (
           <motion.button
             key={card.uniqueId}
             onClick={() => handleCardClick(card.uniqueId)}
-            className={`aspect-square rounded-xl flex items-center justify-center text-3xl md:text-4xl transition-all duration-300 ${
+            className={`aspect-square rounded-xl flex items-center justify-center text-2xl md:text-4xl transition-all duration-300 ${
               card.isFlipped || card.isMatched
                 ? 'bg-primary/20 border-2 border-primary'
                 : 'bg-gradient-to-br from-green-400 to-emerald-500'
@@ -215,7 +221,7 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
                 {card.emoji}
               </motion.span>
             ) : (
-              <span>❓</span>
+              <span className="text-xl">❓</span>
             )}
           </motion.button>
         ))}

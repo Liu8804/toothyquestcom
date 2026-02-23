@@ -132,10 +132,10 @@ const DentalMemoryMatchGame = ({ game, onComplete }: DentalMemoryMatchGameProps)
 
       <div className="flex items-center justify-center h-full pt-12">
         <div 
-          className={`grid gap-2 md:gap-3`}
+          className="grid gap-2 md:gap-3 w-full mx-auto"
           style={{ 
-            gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`,
-            maxWidth: '400px'
+            gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
+            maxWidth: '340px'
           }}
         >
           {cards.map(card => (
@@ -144,12 +144,11 @@ const DentalMemoryMatchGame = ({ game, onComplete }: DentalMemoryMatchGameProps)
               whileHover={{ scale: card.isMatched ? 1 : 1.05 }}
               whileTap={{ scale: card.isMatched ? 1 : 0.95 }}
               onClick={() => handleCardClick(card.id)}
-              className={`aspect-square rounded-xl text-3xl md:text-4xl flex items-center justify-center transition-all ${
+              className={`aspect-square rounded-xl text-2xl md:text-4xl flex items-center justify-center transition-all ${
                 card.isFlipped || card.isMatched
                   ? 'bg-white dark:bg-card shadow-lg'
                   : 'bg-primary hover:bg-primary/90'
               } ${card.isMatched ? 'opacity-70' : ''}`}
-              style={{ minWidth: '60px', minHeight: '60px' }}
             >
               {card.isFlipped || card.isMatched ? card.emoji : '❓'}
             </motion.button>
