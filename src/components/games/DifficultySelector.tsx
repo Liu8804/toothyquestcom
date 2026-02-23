@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Game } from "@/data/games";
+import { gameImages } from "@/assets/games";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
@@ -43,9 +44,26 @@ export const DIFFICULTY_SETTINGS = DIFFICULTY_CONFIGS;
 
 const DifficultySelector = forwardRef<HTMLDivElement, DifficultySelectorProps>(
   ({ game, onSelectDifficulty }, ref) => {
+    const gameImage = gameImages[game.id];
+
     return (
       <div ref={ref} className="flex flex-col items-center justify-center h-full p-6 text-center">
-        <div className="text-6xl mb-4">{game.emoji}</div>
+        {/* Semi-3D Game Image or Emoji Fallback */}
+        {gameImage ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-28 h-28 md:w-32 md:h-32 mb-4 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card"
+          >
+            <img 
+              src={gameImage} 
+              alt={game.name} 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+        ) : (
+          <div className="text-6xl mb-4">{game.emoji}</div>
+        )}
         <h3 className="font-display text-2xl font-bold text-foreground mb-2">
           {game.name}
         </h3>
