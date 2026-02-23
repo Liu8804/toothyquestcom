@@ -366,21 +366,24 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative min-h-screen">
         <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
-          {/* Hero background - banner image */}
+          {/* Hero background - banner image, bright and vivid */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${brushingBanner})` }}
+            className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
+            style={{ 
+              backgroundImage: `url(${brushingBanner})`,
+              filter: 'saturate(1.15) brightness(1.1)',
+            }}
           />
-          {/* Gradient overlay — strong top half to cover banner text, reveals characters at bottom */}
+          {/* Soft gradient overlay — minimal, lets the banner shine */}
           <div 
             className="absolute inset-0"
             style={{ 
               background: `linear-gradient(180deg, 
-                hsl(var(--background)) 0%, 
-                hsl(var(--background)) 20%, 
-                hsl(var(--background) / 0.85) 40%, 
-                hsl(var(--background) / 0.3) 70%, 
-                hsl(var(--background) / 0.6) 100%)`
+                hsl(var(--background) / 0.6) 0%, 
+                hsl(var(--background) / 0.15) 35%, 
+                transparent 55%, 
+                hsl(var(--background) / 0.25) 80%, 
+                hsl(var(--background) / 0.7) 100%)`
             }}
           />
         
@@ -423,25 +426,14 @@ export const HeroSection = () => {
         <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
-            {/* HEADLINE */}
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 md:mb-4 leading-tight drop-shadow-sm"
-            >
-              Dentist visits,{" "}
-              <span className="text-primary">made fun!</span>
-            </motion.h1>
-            
-            {/* SUBHEADLINE */}
+            {/* SUBHEADLINE — clean, readable over banner */}
             <motion.p
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8 max-w-md px-2 font-medium"
+              transition={{ delay: 0.15 }}
+              className="text-base sm:text-lg md:text-xl text-white font-bold mb-4 md:mb-6 max-w-sm px-3 py-1.5 rounded-xl bg-foreground/30 backdrop-blur-sm drop-shadow-lg"
             >
-              Interactive games & stories for kids ages 3–9
+              Games & stories for kids 3–9 🦷
             </motion.p>
             
             {/* Main Mascot - Before/After visual transformation */}
@@ -826,18 +818,18 @@ export const HeroSection = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-4 flex items-center gap-3 text-base"
+                    className="mt-3 flex items-center gap-3 text-sm"
                   >
                     <button
                       onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
-                      className="font-bold text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+                      className="font-bold text-white hover:text-white/80 underline underline-offset-4 transition-colors drop-shadow-md"
                     >
                       Sign up free
                     </button>
-                    <span className="text-muted-foreground">·</span>
+                    <span className="text-white/60">·</span>
                     <a
                       href="/guest"
-                      className="font-medium text-muted-foreground hover:text-foreground transition-colors"
+                      className="font-medium text-white/80 hover:text-white transition-colors drop-shadow-md"
                     >
                       Try as guest
                     </a>
