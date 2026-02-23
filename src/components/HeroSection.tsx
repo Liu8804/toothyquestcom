@@ -366,20 +366,23 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative min-h-screen">
         <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
-          {/* Hero background image with gradient overlay */}
+          {/* Hero background - banner image, focused on character illustrations */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
-            style={{ backgroundImage: `url(${brushingBanner})`, filter: 'blur(12px) saturate(1.2)' }}
+            className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
+            style={{ backgroundImage: `url(${brushingBanner})` }}
           />
+          {/* Gradient overlay: strong top to hide banner text, gentle middle, fade bottom */}
           <div 
             className="absolute inset-0"
             style={{ 
-              background: 'linear-gradient(180deg, hsl(var(--background) / 0.9) 0%, hsl(var(--background) / 0.55) 40%, hsl(var(--background) / 0.45) 60%, hsl(var(--background) / 0.85) 100%)'
+              background: `linear-gradient(180deg, 
+                hsl(var(--background)) 0%, 
+                hsl(var(--background) / 0.92) 25%, 
+                hsl(var(--background) / 0.75) 50%, 
+                hsl(var(--background) / 0.3) 75%, 
+                hsl(var(--background) / 0.85) 100%)`
             }}
           />
-          
-          {/* Simplified animated background - reduced intensity */}
-          <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="light" />
           
           {/* Floating sparkles when completed - reduced count */}
           {isCompleted && <FloatingSparkles count={8} />}
@@ -428,7 +431,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-2 md:mb-3 leading-tight"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-white drop-shadow-lg mb-2 md:mb-3 leading-tight"
             >
               Make dentist visits{" "}
               <span className="text-primary">fun & fearless</span>
@@ -439,7 +442,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-base sm:text-lg md:text-xl text-muted-foreground mb-4 md:mb-6 max-w-lg px-2"
+              className="text-base sm:text-lg md:text-xl text-white/90 drop-shadow mb-4 md:mb-6 max-w-lg px-2"
             >
               Games, stories & a friendly mascot help kids ages 3-9 feel brave
             </motion.p>
