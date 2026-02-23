@@ -278,7 +278,15 @@ export const QuizCharacter = ({
             src={mood === "celebrating" || mood === "excited" ? mascotCelebrating : mascotWaving}
             alt="Toothy - Your Quiz Buddy"
             className="w-full h-full object-contain character-3d"
-            animate={controls}
+            animate={{
+              ...controls,
+              scaleY: [1, 1.02, 1],
+              scaleX: [1, 0.99, 1],
+            }}
+            transition={{
+              scaleY: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+              scaleX: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+            }}
             whileHover={{ scale: 1.1 }}
           />
 
