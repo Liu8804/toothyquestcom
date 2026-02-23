@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Check, X, Trophy, RotateCcw, Sparkles } from "lucide-react";
 import BraceyMascot from "@/components/BraceyMascot";
 import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
+import { gameImages } from "@/assets/games";
 
 interface FoodItem {
   id: string;
@@ -157,7 +158,13 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
     return (
       <div className="relative bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-3xl p-6 shadow-card max-w-lg mx-auto">
         <div className="text-center py-8">
-          <span className="text-6xl mb-4 block">🦷</span>
+          {gameImages['braces_food_quiz'] ? (
+            <div className="w-28 h-28 mx-auto mb-4 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card">
+              <img src={gameImages['braces_food_quiz']} alt="Braces Food Quiz" className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <span className="text-6xl mb-4 block">🦷</span>
+          )}
           <h3 className="font-display text-2xl font-bold text-foreground mb-2">Braces Food Quiz</h3>
           <p className="text-muted-foreground mb-6">Choose your difficulty level!</p>
           
