@@ -10,6 +10,7 @@ import InteractiveBubbles from "./InteractiveBubbles";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import DentalTipsChatbot from "@/components/DentalTipsChatbot";
+import BrushingMascotCompanion from "./BrushingMascotCompanion";
 import { useDailyChallenges } from "@/hooks/useDailyChallenges";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
@@ -186,8 +187,18 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
             </p>
           </div>
 
+          {/* Mascot Companion - always visible */}
+          <div className="flex justify-center pt-2 pb-0">
+            <BrushingMascotCompanion
+              phase={phase}
+              timeRemaining={timeRemaining}
+              totalTime={TOTAL_TIME}
+              currentQuadrant={currentQuadrant}
+            />
+          </div>
+
           {/* Content */}
-          <div className="p-6">
+          <div className="p-6 pt-2">
             {phase === "completed" ? (
               <RewardCelebration 
                 onPlayAgain={handleReset} 

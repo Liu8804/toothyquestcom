@@ -154,13 +154,45 @@ const QuestCompleteCelebration = ({
           ))}
         </div>
 
-        {/* Celebrating Mascot in corner */}
+        {/* Celebrating Mascot with crown glow & cape flutter */}
         <motion.div
           initial={{ opacity: 0, scale: 0, rotate: -20 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ delay: 0.3, type: "spring" }}
           className="absolute top-4 right-4"
         >
+          {/* Crown glow effect */}
+          <motion.div
+            className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-8 rounded-full pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse, rgba(255,215,0,0.6) 0%, rgba(255,215,0,0) 70%)",
+            }}
+            animate={{
+              opacity: [0.4, 1, 0.4],
+              scale: [0.9, 1.3, 0.9],
+            }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Cape flutter particles */}
+          {[...Array(4)].map((_, i) => (
+            <motion.span
+              key={`cape-${i}`}
+              className="absolute pointer-events-none text-sm"
+              style={{ bottom: `${10 + i * 8}%`, right: `-${5 + i * 4}px` }}
+              animate={{
+                x: [0, 8, -4, 0],
+                opacity: [0, 0.8, 0],
+                rotate: [0, 20, -10, 0],
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: i * 0.3,
+              }}
+            >
+              ✨
+            </motion.span>
+          ))}
           <MascotEmotionState
             emotion="greatJob"
             size="md"

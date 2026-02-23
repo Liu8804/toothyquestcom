@@ -42,6 +42,7 @@ import { LayoutDashboard, LogIn, MessageCircle, Trophy } from "lucide-react";
 import PremiumBadge from "@/components/PremiumBadge";
 import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 import { useClinics } from "@/hooks/useClinics";
+import DashboardMascotGreeting from "@/components/DashboardMascotGreeting";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -276,6 +277,16 @@ const Index = () => {
             </>
           )}
         </div>
+
+        {/* Dashboard Mascot Greeting - shows for logged in users */}
+        {user && selectedChild && (
+          <div className="fixed top-3 left-3 z-30">
+            <DashboardMascotGreeting
+              childName={selectedChild.name}
+              taskCompleted={taskCompleted}
+            />
+          </div>
+        )}
 
         <HeroSection />
         <WorldSelector />
