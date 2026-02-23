@@ -4,6 +4,7 @@ import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmo
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 // Character types for different story themes
 export type CharacterId = "toothy" | "bracey" | "captain-floss" | "sugar-bug" | "sparkle" | "molar-mike";
@@ -521,16 +522,16 @@ export const QuizCharacterAnimated = ({
         };
       case "excited":
         return {
-          y: [0, -15, 0],
-          scale: [1, 1.1, 1],
-          transition: { duration: 0.5, repeat: Infinity }
+          y: [0, -6, 0],
+          scale: [1, 1.04, 1],
+          transition: { duration: 1.2, repeat: Infinity, ease: easeInOut }
         };
       case "celebrating":
         return {
-          rotate: [0, 10, -10, 0],
-          y: [0, -20, 0],
-          scale: [1, 1.15, 1],
-          transition: { duration: 0.6, repeat: Infinity }
+          rotate: [0, 3, -3, 0],
+          y: [0, -8, 0],
+          scale: [1, 1.06, 1],
+          transition: { duration: 1.5, repeat: Infinity, ease: easeInOut }
         };
       case "encouraging":
         return {
@@ -673,32 +674,24 @@ export const QuizCharacterAnimated = ({
           </motion.div>
         )}
 
-        {/* Sparkle Effects for celebrating */}
+        {/* Subtle floating icons for celebrating */}
         {mood === "celebrating" && (
-          <>
-            {[...Array(8)].map((_, i) => (
-              <motion.span
-                key={i}
-                className="absolute text-2xl pointer-events-none"
-                style={{
-                  top: `${15 + Math.sin(i) * 35}%`,
-                  left: `${15 + Math.cos(i) * 35}%`,
-                }}
-                animate={{
-                  opacity: [0, 1, 0],
-                  scale: [0, 1.5, 0],
-                  y: [-10, -40],
-                }}
-                transition={{
-                  duration: 1.2,
-                  repeat: Infinity,
-                  delay: i * 0.12,
-                }}
-              >
-                ✨
-              </motion.span>
-            ))}
-          </>
+          <FloatingMicroIcons
+            icons={["✨", "⭐", "🎉", "🌟", "👑"]}
+            count={4}
+            speed={1}
+            iconSize="sm"
+          />
+        )}
+
+        {/* Subtle floating icons for thinking */}
+        {mood === "thinking" && (
+          <FloatingMicroIcons
+            icons={["💭", "🤔", "💡"]}
+            count={2}
+            speed={1.5}
+            iconSize="xs"
+          />
         )}
 
         {/* Sugar Bug specific: candy particles */}

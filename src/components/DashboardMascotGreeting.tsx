@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 interface DashboardMascotGreetingProps {
   childName?: string;
@@ -66,11 +67,12 @@ const DashboardMascotGreeting = ({
         )}
       </AnimatePresence>
 
-      {/* Mascot with idle breathing */}
+      {/* Mascot with subtle idle breathing */}
       <motion.div
-        initial={hasWaved ? { scale: 0, rotate: -30 } : undefined}
+        className="relative"
+        initial={hasWaved ? { scale: 0, rotate: -15 } : undefined}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: "spring", bounce: 0.5 }}
+        transition={{ type: "spring", bounce: 0.3 }}
         onClick={() => {
           setEmotion("celebrating");
           setShowGreeting(true);
@@ -81,6 +83,12 @@ const DashboardMascotGreeting = ({
           }, 2500);
         }}
       >
+        <FloatingMicroIcons
+          icons={taskCompleted ? ["⭐", "✨", "🌟"] : ["🦷", "✨", "💧"]}
+          count={3}
+          speed={1.5}
+          iconSize="xs"
+        />
         <MascotEmotionState
           emotion={emotion}
           size="sm"

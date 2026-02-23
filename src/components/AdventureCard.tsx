@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 interface AdventureCardProps {
   title: string;
@@ -70,6 +71,14 @@ export const AdventureCard = ({
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
         </>
       )}
+
+      {/* Subtle floating micro-icons */}
+      <FloatingMicroIcons
+        icons={["✨", "⭐", "🌟"]}
+        count={2}
+        speed={1.8}
+        iconSize="xs"
+      />
 
       {/* Content */}
       <div className={`relative z-10 p-6 h-full flex flex-col ${backgroundImage ? 'justify-end' : ''}`}>

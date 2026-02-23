@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 interface BrushingMascotCompanionProps {
   phase: "ready" | "countdown" | "playing" | "paused" | "completed";
@@ -109,23 +110,41 @@ const BrushingMascotCompanion = ({
         )}
       </AnimatePresence>
 
-      {/* Mascot with bounce on play */}
+      {/* Mascot with subtle idle sway */}
       <motion.div
+        className="relative"
         animate={
           phase === "playing"
-            ? { y: [0, -6, 0] }
+            ? { y: [0, -3, 0] }
             : phase === "completed"
-            ? { y: [0, -20, 0], rotate: [0, 10, -10, 0] }
+            ? { y: [0, -8, 0], scale: [1, 1.05, 1] }
             : {}
         }
         transition={
           phase === "playing"
-            ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" }
+            ? { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
             : phase === "completed"
-            ? { duration: 0.8, repeat: 3, ease: "easeOut" }
+            ? { duration: 1.2, repeat: 2, ease: "easeOut" }
             : {}
         }
       >
+        {/* Floating dental micro-icons around mascot */}
+        {phase === "playing" && (
+          <FloatingMicroIcons
+            icons={["🪥", "🦷", "✨", "💧", "⭐"]}
+            count={4}
+            speed={1.2}
+            iconSize="xs"
+          />
+        )}
+        {phase === "completed" && (
+          <FloatingMicroIcons
+            icons={["🎉", "⭐", "✨", "🏆", "👑"]}
+            count={5}
+            speed={0.8}
+            iconSize="sm"
+          />
+        )}
         <MascotEmotionState
           emotion={getEmotion()}
           size="md"
