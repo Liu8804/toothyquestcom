@@ -431,7 +431,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="text-sm sm:text-base md:text-lg text-white font-bold mb-3 md:mb-4 max-w-xs px-4 py-2 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
+              className="text-xs sm:text-sm md:text-base text-white font-bold mb-2 max-w-xs px-3 py-1.5 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
             >
               Games & stories for kids 3–9 🦷
             </motion.p>
@@ -441,7 +441,7 @@ export const HeroSection = () => {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="relative mb-4"
+              className="relative mb-2"
             >
               {/* Enhanced wiggle glow effect - attention grabbing */}
               <AnimatePresence>
@@ -774,7 +774,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-              className="relative"
+              className="relative mt-4"
             >
               {!isCompleted ? (
                 <>
@@ -794,7 +794,7 @@ export const HeroSection = () => {
                     onClick={handleStartQuest}
                     onMouseEnter={handleCTAHover}
                     onMouseLeave={() => setIsHoveringCTA(false)}
-                    className="relative text-xl sm:text-2xl md:text-3xl px-8 sm:px-12 md:px-16 py-6 sm:py-7 md:py-8 shadow-2xl hover:shadow-3xl font-extrabold tracking-tight"
+                    className="relative text-lg sm:text-xl md:text-2xl px-6 sm:px-10 md:px-14 py-5 sm:py-6 md:py-7 shadow-2xl hover:shadow-3xl font-extrabold tracking-tight"
                   >
                     <motion.span 
                       className="text-2xl sm:text-3xl mr-2 sm:mr-3"
@@ -818,7 +818,7 @@ export const HeroSection = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-3 flex items-center gap-2 text-sm"
+                    className="mt-3 flex items-center justify-center gap-2 text-sm w-full"
                   >
                     <button
                       onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
