@@ -19,7 +19,7 @@ const GameContainer = ({ gameId, children }: GameContainerProps) => {
     <div className="relative h-full w-full overflow-hidden">
       {/* Prominent semi-3D game image in top-right corner */}
       {gameImage && (
-        <div className="absolute top-3 right-3 z-[3] pointer-events-none">
+        <div className="absolute top-2 right-2 z-[3] pointer-events-none">
           <motion.div
             initial={{ opacity: 0, scale: 0.6, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -28,28 +28,28 @@ const GameContainer = ({ gameId, children }: GameContainerProps) => {
             <GameImage
               src={gameImage}
               alt=""
-              width={64}
-              height={64}
+              width={44}
+              height={44}
               enable3D
               loading="eager"
-              className="shadow-[0_6px_20px_-4px_hsl(var(--primary)/0.35)]"
+              className="shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.3)]"
             />
           </motion.div>
         </div>
       )}
-      {/* Background watermark - slightly more visible */}
+      {/* Background watermark */}
       {gameImage && (
         <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center">
           <motion.img
             src={gameImage}
             alt=""
-            width={256}
-            height={256}
+            width={180}
+            height={180}
             loading="lazy"
             decoding="async"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 0.08, scale: 1 }}
-            className="w-64 h-64 object-cover rounded-3xl blur-sm"
+            animate={{ opacity: 0.06, scale: 1 }}
+            className="w-44 h-44 object-cover rounded-3xl blur-sm"
           />
         </div>
       )}
