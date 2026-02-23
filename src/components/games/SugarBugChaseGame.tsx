@@ -102,16 +102,7 @@ const SugarBugChaseGame = ({ game, onComplete }: SugarBugChaseGameProps) => {
   }, [stopBackgroundMusic]);
 
   if (!difficulty) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-        <div className="text-6xl mb-4">{game.emoji}</div>
-        <h3 className="font-display text-2xl font-bold text-foreground mb-2">
-          {game.name}
-        </h3>
-        <p className="text-muted-foreground mb-6">{game.instructionsKids}</p>
-        <DifficultySelector game={game} onSelectDifficulty={handleDifficultySelect} />
-      </div>
-    );
+    return <DifficultySelector game={game} onSelectDifficulty={handleDifficultySelect} />;
   }
 
   return (
