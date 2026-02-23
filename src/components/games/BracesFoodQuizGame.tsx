@@ -160,7 +160,7 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
       <div className="relative bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-3xl p-6 shadow-card max-w-lg mx-auto">
         <div className="text-center py-8">
           {gameImages['braces_food_quiz'] ? (
-            <GameImage src={gameImages['braces_food_quiz']} alt="Braces Food Quiz" width={112} height={112} enable3D className="mx-auto mb-4" />
+            <GameImage src={gameImages['braces_food_quiz']} alt="Braces Food Quiz" width={72} height={72} enable3D className="mx-auto mb-4" />
           ) : (
             <span className="text-6xl mb-4 block">🦷</span>
           )}

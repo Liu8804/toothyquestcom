@@ -125,7 +125,7 @@ const PlaquePatrolGame = ({ game, onComplete }: PlaquePatrolGameProps) => {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
         {gameImage ? (
-          <GameImage src={gameImage} alt={game.name} width={112} height={112} enable3D className="mb-4 mx-auto" />
+          <GameImage src={gameImage} alt={game.name} width={72} height={72} enable3D className="mb-4 mx-auto" />
         ) : (
           <div className="text-6xl mb-4">{game.emoji}</div>
         )}

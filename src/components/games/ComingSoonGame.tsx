@@ -21,7 +21,7 @@ const ComingSoonGame = ({ game, onBack }: ComingSoonGameProps) => {
           transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
           className="mb-6"
         >
-          <GameImage src={gameImage} alt={game.name} width={128} height={128} enable3D />
+          <GameImage src={gameImage} alt={game.name} width={80} height={80} enable3D />
         </motion.div>
       ) : (
         <motion.div

@@ -54,20 +54,19 @@ const DifficultySelector = forwardRef<HTMLDivElement, DifficultySelectorProps>(
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-4"
+            className="mb-3"
           >
             <GameImage
               src={gameImage}
               alt={game.name}
-              width={112}
-              height={112}
+              width={72}
+              height={72}
               enable3D
               loading="eager"
-              className="mx-auto md:w-32 md:h-32"
             />
           </motion.div>
         ) : (
-          <div className="text-6xl mb-4">{game.emoji}</div>
+          <div className="text-5xl mb-3">{game.emoji}</div>
         )}
         <h3 className="font-display text-2xl font-bold text-foreground mb-2">
           {game.name}

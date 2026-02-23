@@ -30,12 +30,12 @@ const GameCard = forwardRef<HTMLDivElement, GameCardProps>(({ game, onClick, del
           <GameImage
             src={gameImage}
             alt={game.name}
-            width={120}
-            height={120}
-            className="mx-auto mb-3 shadow-md max-w-[120px]"
+            width={72}
+            height={72}
+            className="mx-auto mb-3 shadow-md"
           />
         ) : (
-          <div className="text-5xl mb-3 text-center">{game.emoji}</div>
+          <div className="text-4xl mb-3 text-center">{game.emoji}</div>
         )}
         
         {/* Game Name */}
