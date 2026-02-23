@@ -22,7 +22,7 @@ import { useHomeMusic } from "@/hooks/useHomeMusic";
 import { useButtonSounds } from "@/hooks/useButtonSounds";
 import { unlockAudioContext } from "@/hooks/useAudioManager";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
-import heroBackground from "@/assets/hero-background.png";
+import brushingBanner from "@/assets/marketing/banner-brushing-adventures.jpeg";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
@@ -366,22 +366,21 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative min-h-screen">
         <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
-          {/* Hero background - generated illustration */}
+          {/* Hero background - banner image */}
           <div 
-            className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
-            style={{ backgroundImage: `url(${heroBackground})` }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${brushingBanner})` }}
           />
-          {/* Smooth gradient blend into page background */}
+          {/* Gradient overlay — strong top half to cover banner text, reveals characters at bottom */}
           <div 
             className="absolute inset-0"
             style={{ 
               background: `linear-gradient(180deg, 
-                hsl(var(--background) / 0.95) 0%, 
-                hsl(var(--background) / 0.7) 20%, 
-                hsl(var(--background) / 0.3) 45%, 
-                hsl(var(--background) / 0.05) 65%, 
-                hsl(var(--background) / 0.6) 90%, 
-                hsl(var(--background)) 100%)`
+                hsl(var(--background)) 0%, 
+                hsl(var(--background)) 20%, 
+                hsl(var(--background) / 0.85) 40%, 
+                hsl(var(--background) / 0.3) 70%, 
+                hsl(var(--background) / 0.6) 100%)`
             }}
           />
         
@@ -429,12 +428,21 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-4 md:mb-6 leading-tight drop-shadow-md"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 md:mb-4 leading-tight drop-shadow-sm"
             >
-              Interactive games & stories
-              <br />
-              <span className="text-primary">for kids ages 3–9</span>
+              Dentist visits,{" "}
+              <span className="text-primary">made fun!</span>
             </motion.h1>
+            
+            {/* SUBHEADLINE */}
+            <motion.p
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-6 md:mb-8 max-w-md px-2 font-medium"
+            >
+              Interactive games & stories for kids ages 3–9
+            </motion.p>
             
             {/* Main Mascot - Before/After visual transformation */}
             <motion.div
