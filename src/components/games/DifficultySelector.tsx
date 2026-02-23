@@ -2,6 +2,7 @@ import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { Game } from "@/data/games";
 import { gameImages } from "@/assets/games";
+import GameImage from "./GameImage";
 
 export type Difficulty = "easy" | "medium" | "hard";
 
@@ -53,12 +54,16 @@ const DifficultySelector = forwardRef<HTMLDivElement, DifficultySelectorProps>(
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-28 h-28 md:w-32 md:h-32 mb-4 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card"
+            className="mb-4"
           >
-            <img 
-              src={gameImage} 
-              alt={game.name} 
-              className="w-full h-full object-cover"
+            <GameImage
+              src={gameImage}
+              alt={game.name}
+              width={112}
+              height={112}
+              enable3D
+              loading="eager"
+              className="mx-auto md:w-32 md:h-32"
             />
           </motion.div>
         ) : (

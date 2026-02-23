@@ -6,6 +6,7 @@ import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
 import { gameImages } from "@/assets/games";
 import { games, Game, globalGameText, allGames, gameCategories, GameCategory } from "@/data/games";
 import GameCard from "./GameCard";
+import GameImage from "./GameImage";
 import PlaquePatrolGame from "./PlaquePatrolGame";
 import ToothDefenderGame from "./ToothDefenderGame";
 import FlossHeroGame from "./FlossHeroGame";
@@ -487,9 +488,8 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                         initial={{ opacity: 0, scale: 0.5 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                        className="w-24 h-24 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card"
                       >
-                        <img src={gameImages[selectedGame.id]} alt={selectedGame.name} className="w-full h-full object-cover" />
+                        <GameImage src={gameImages[selectedGame.id]} alt={selectedGame.name} width={96} height={96} enable3D />
                       </motion.div>
                     )}
                     <MascotEmotionState 

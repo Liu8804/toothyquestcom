@@ -22,6 +22,10 @@ const GameContainer = ({ gameId, children }: GameContainerProps) => {
           <motion.img
             src={gameImage}
             alt=""
+            width={256}
+            height={256}
+            loading="lazy"
+            decoding="async"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 0.06, scale: 1 }}
             className="w-64 h-64 object-cover rounded-3xl blur-sm"

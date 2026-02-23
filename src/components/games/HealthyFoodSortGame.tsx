@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Game } from "@/data/games";
 import { gameImages } from "@/assets/games";
+import GameImage from "./GameImage";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
 import { Button } from "@/components/ui/button";
@@ -159,9 +160,7 @@ const HealthyFoodSortGame = ({ game, onComplete }: HealthyFoodSortGameProps) => 
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
         {gameImage ? (
-          <div className="w-28 h-28 mb-4 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card">
-            <img src={gameImage} alt={game.name} className="w-full h-full object-cover" />
-          </div>
+          <GameImage src={gameImage} alt={game.name} width={112} height={112} enable3D className="mb-4 mx-auto" />
         ) : (
           <div className="text-6xl mb-4">{game.emoji}</div>
         )}
