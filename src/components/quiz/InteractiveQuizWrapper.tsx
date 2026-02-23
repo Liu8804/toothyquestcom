@@ -10,6 +10,7 @@ import QuizCertificate from "./QuizCertificate";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
 import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 interface InteractiveQuizWrapperProps {
   quiz: StoryQuiz;
@@ -227,6 +228,14 @@ export const InteractiveQuizWrapper = ({
         animate={{ opacity: 1, y: 0 }}
         className="rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20 relative overflow-hidden"
       >
+        {/* Ambient floating micro-icons */}
+        <FloatingMicroIcons
+          icons={["🦷", "✨", "⭐", "💡"]}
+          count={3}
+          speed={1.3}
+          iconSize="xs"
+        />
+
         {/* Celebration Overlay */}
         <AnimatePresence>
           {showCelebration && (
@@ -316,9 +325,13 @@ export const InteractiveQuizWrapper = ({
       <div className="p-5">
         {/* Question header with progress indicator */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="p-2 rounded-full bg-primary/20">
+          <motion.div
+            className="p-2 rounded-full bg-primary/20"
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          >
             <HelpCircle className="w-5 h-5 text-primary" />
-          </div>
+          </motion.div>
           <span className="font-display font-bold text-primary text-lg">
             {t("stories.questQuestion")}
           </span>
