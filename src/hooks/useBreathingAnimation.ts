@@ -13,46 +13,46 @@ interface BreathingConfig {
 const breathingConfigs: Record<BreathingStyle, BreathingConfig> = {
   gentle: {
     animate: {
-      scaleY: [1, 1.02, 1],
-      scaleX: [1, 0.99, 1],
+      scaleY: [1, 1.006, 1],
+      scaleX: [1, 0.997, 1],
     },
     transition: {
-      duration: 2.8,
+      duration: 3.5,
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
   playful: {
     animate: {
-      scaleY: [1, 1.03, 1],
-      scaleX: [1, 0.98, 1],
-      rotate: [0, 0.5, -0.5, 0],
+      scaleY: [1, 1.009, 1],
+      scaleX: [1, 0.994, 1],
+      rotate: [0, 0.15, -0.15, 0],
     },
     transition: {
-      duration: 2.5,
+      duration: 3.2,
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
   excited: {
     animate: {
-      scaleY: [1, 1.04, 1],
-      scaleX: [1, 0.97, 1],
-      y: [0, -2, 0],
+      scaleY: [1, 1.012, 1],
+      scaleX: [1, 0.991, 1],
+      y: [0, -0.6, 0],
     },
     transition: {
-      duration: 1.8,
+      duration: 2.4,
       repeat: Infinity,
       ease: "easeInOut",
     },
   },
   subtle: {
     animate: {
-      scaleY: [1, 1.01, 1],
-      scaleX: [1, 0.995, 1],
+      scaleY: [1, 1.003, 1],
+      scaleX: [1, 0.998, 1],
     },
     transition: {
-      duration: 3.2,
+      duration: 4,
       repeat: Infinity,
       ease: "easeInOut",
     },
