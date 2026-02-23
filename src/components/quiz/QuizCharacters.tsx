@@ -2,12 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
-import boyBlueWaving from "@/assets/quiz/boy-blue-waving.jpeg";
-import girlPigtailsBows from "@/assets/quiz/girl-pigtails-bows.jpeg";
-import boyYellowCelebrating from "@/assets/quiz/boy-yellow-celebrating.jpeg";
-import girlPurpleWaving from "@/assets/quiz/girl-purple-waving.jpeg";
-import boyCharacter3 from "@/assets/quiz/boy-character-3.png";
-import girlCharacter1 from "@/assets/quiz/girl-character-1.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 // Character types for different story themes
@@ -295,7 +289,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   bracey: {
     name: "Bracey",
     emoji: "🎀",
-    imageSrc: girlPigtailsBows,
+    
     color: "from-pink-100 to-purple-100",
     gradientFrom: "from-pink-100",
     gradientTo: "to-purple-50",
@@ -307,7 +301,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "captain-floss": {
     name: "Captain Floss",
     emoji: "🦸",
-    imageSrc: boyCharacter3,
+    
     color: "from-yellow-100 to-orange-100",
     gradientFrom: "from-yellow-100",
     gradientTo: "to-amber-50",
@@ -319,7 +313,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "sugar-bug": {
     name: "Sugar Bug",
     emoji: "👾",
-    imageSrc: boyYellowCelebrating,
+    
     color: "from-purple-200 to-pink-200",
     gradientFrom: "from-purple-200",
     gradientTo: "to-pink-100",
@@ -332,7 +326,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   sparkle: {
     name: "Sparkle Star",
     emoji: "✨",
-    imageSrc: girlPurpleWaving,
+    
     color: "from-amber-100 to-yellow-100",
     gradientFrom: "from-amber-100",
     gradientTo: "to-yellow-50",
@@ -344,7 +338,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "molar-mike": {
     name: "Molar Mike",
     emoji: "💪",
-    imageSrc: boyBlueWaving,
+    
     color: "from-green-100 to-emerald-100",
     gradientFrom: "from-green-100",
     gradientTo: "to-emerald-50",
