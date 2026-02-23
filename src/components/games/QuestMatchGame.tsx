@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
+import { gameImages } from "@/assets/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
 
@@ -144,9 +145,16 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   }
 
   if (!gameStarted) {
+    const gameImage = gameImages[game.id];
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-        <div className="text-6xl mb-4">{game.emoji}</div>
+        {gameImage ? (
+          <div className="w-28 h-28 mb-4 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card">
+            <img src={gameImage} alt={game.name} className="w-full h-full object-cover" />
+          </div>
+        ) : (
+          <div className="text-6xl mb-4">{game.emoji}</div>
+        )}
         <h3 className="font-display text-2xl font-bold text-foreground mb-2">
           {game.name}
         </h3>
