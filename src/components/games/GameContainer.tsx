@@ -17,22 +17,22 @@ const GameContainer = ({ gameId, children }: GameContainerProps) => {
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {/* Prominent semi-3D game image in top-right corner */}
+      {/* Subtle semi-3D game image badge - bottom-right to avoid HUD overlap */}
       {gameImage && (
-        <div className="absolute top-2 right-2 z-[3] pointer-events-none">
+        <div className="absolute bottom-2 right-2 z-[3] pointer-events-none">
           <motion.div
-            initial={{ opacity: 0, scale: 0.6, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.2 }}
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 0.7, scale: 1 }}
+            transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.3 }}
           >
             <GameImage
               src={gameImage}
               alt=""
-              width={44}
-              height={44}
+              width={36}
+              height={36}
               enable3D
               loading="eager"
-              className="shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.3)]"
+              className="shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.2)]"
             />
           </motion.div>
         </div>
