@@ -365,7 +365,7 @@ export const HeroSection = () => {
       <ConfettiCelebration isActive={showQuestCelebration || justCompleted} duration={3000} particleCount={60} />
 
       <TapSparkleArea className="relative">
-        <section className="relative h-screen max-h-[800px] overflow-hidden flex items-end justify-center">
+        <section className="relative h-[80vh] max-h-[720px] min-h-[500px] overflow-hidden flex flex-col">
           {/* Hero background - banner image, bright and vivid */}
           <div 
             className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
@@ -379,10 +379,10 @@ export const HeroSection = () => {
             className="absolute inset-0"
             style={{ 
               background: `linear-gradient(180deg, 
-                hsl(var(--background) / 0.6) 0%, 
-                hsl(var(--background) / 0.15) 35%, 
+                hsl(var(--background) / 0.7) 0%, 
+                hsl(var(--background) / 0.15) 30%, 
                 transparent 55%, 
-                hsl(var(--background) / 0.25) 80%, 
+                hsl(var(--background) / 0.2) 80%, 
                 hsl(var(--background) / 0.7) 100%)`
             }}
           />
@@ -400,7 +400,7 @@ export const HeroSection = () => {
             width={64}
             height={64}
             fetchPriority="high"
-            className="w-14 h-14 md:w-16 md:h-16 object-contain drop-shadow-lg"
+            className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-lg"
           />
           
           {/* Music toggle button - subtle */}
@@ -420,28 +420,31 @@ export const HeroSection = () => {
             )}
           </motion.button>
         </motion.div>
+
+        {/* SUBHEADLINE — right below logo at top */}
+        <div className="relative z-10 pt-20 sm:pt-24 flex justify-center">
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="text-[10px] sm:text-xs md:text-sm text-white font-bold px-3 py-1 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
+          >
+            Games & stories for kids 3–9 🦷
+          </motion.p>
+        </div>
         
-        {/* Minimal decorative element - desktop only */}
+        {/* Spacer — lets kids' faces show in the middle */}
+        <div className="flex-1" />
 
-        <div className="container mx-auto px-4 pb-16 sm:pb-20 relative z-10">
+        <div className="relative z-10 pb-6 sm:pb-10 px-4">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-            
-            {/* SUBHEADLINE — clean, readable over banner */}
-            <motion.p
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
-              className="text-xs sm:text-sm md:text-base text-white font-bold mb-3 max-w-xs px-3 py-1.5 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
-            >
-              Games & stories for kids 3–9 🦷
-            </motion.p>
 
-            {/* Main Mascot - bottom-left, small */}
+            {/* Main Mascot - bottom-left, small, hidden on small mobile */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="absolute -bottom-12 -left-4 z-20 scale-[0.4] origin-bottom-left"
+              className="absolute -bottom-4 -left-6 z-20 scale-[0.3] sm:scale-[0.4] origin-bottom-left hidden sm:block"
             >
               {/* Enhanced wiggle glow effect - attention grabbing */}
               <AnimatePresence>
@@ -888,9 +891,8 @@ export const HeroSection = () => {
                 <span className="bg-amber-500/90 text-white font-bold px-3 py-1 rounded-full drop-shadow-md">⭐ Free</span>
               </motion.div>
             )}
+           </div>
           </div>
-          {/* Scroll chevron removed from bottom to save space */}
-        </div>
 
         {/* Scroll chevron - hidden on mobile */}
         <motion.div
