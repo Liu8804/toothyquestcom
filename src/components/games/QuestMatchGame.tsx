@@ -173,17 +173,17 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
   const gridCols = totalPairs <= 4 ? 4 : totalPairs <= 6 ? 4 : 4;
 
   return (
-    <div className="h-full w-full flex flex-col p-4">
+    <div className="h-full w-full flex flex-col p-4 overflow-auto">
       {/* HUD */}
       <div className="flex justify-between mb-4">
-        <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-          <span className="font-bold text-foreground">{t("games.moves")}: {moves}</span>
+        <div className="bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
+          <span className="font-bold text-foreground text-sm">{t("games.moves")}: {moves}</span>
         </div>
         <div className="bg-card/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-lg">
           <span className="text-xs font-medium text-muted-foreground capitalize">{difficulty}</span>
         </div>
-        <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
-          <span className="font-bold text-foreground">
+        <div className="bg-card/90 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg">
+          <span className="font-bold text-foreground text-sm">
             {t("games.matched")}: {matchedPairs}/{totalPairs}
           </span>
         </div>
@@ -191,10 +191,11 @@ const QuestMatchGame = ({ game, onComplete }: QuestMatchGameProps) => {
 
       {/* Card Grid */}
       <div 
-        className="flex-1 grid gap-2 md:gap-3 mx-auto w-full"
+        className="grid gap-2 mx-auto"
         style={{ 
           gridTemplateColumns: `repeat(4, 1fr)`,
-          maxWidth: '340px'
+          width: '100%',
+          maxWidth: '320px'
         }}
       >
         {cards.map(card => (

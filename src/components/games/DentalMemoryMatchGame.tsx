@@ -132,10 +132,10 @@ const DentalMemoryMatchGame = ({ game, onComplete }: DentalMemoryMatchGameProps)
 
       <div className="flex items-center justify-center h-full pt-12">
         <div 
-          className="grid gap-2 md:gap-3 w-full mx-auto"
+          className="grid gap-2 w-full mx-auto"
           style={{ 
             gridTemplateColumns: `repeat(${gridCols}, 1fr)`,
-            maxWidth: '340px'
+            maxWidth: '320px'
           }}
         >
           {cards.map(card => (
