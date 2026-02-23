@@ -3,6 +3,7 @@ import { Sparkles, ArrowLeft } from "lucide-react";
 import { Game } from "@/data/games";
 import { Button } from "@/components/ui/button";
 import { gameImages } from "@/assets/games";
+import GameImage from "./GameImage";
 
 interface ComingSoonGameProps {
   game: Game;
@@ -18,9 +19,9 @@ const ComingSoonGame = ({ game, onBack }: ComingSoonGameProps) => {
         <motion.div
           animate={{ scale: [1, 1.03, 1] }}
           transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-          className="w-32 h-32 mb-6 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card"
+          className="mb-6"
         >
-          <img src={gameImage} alt={game.name} className="w-full h-full object-cover" />
+          <GameImage src={gameImage} alt={game.name} width={128} height={128} enable3D />
         </motion.div>
       ) : (
         <motion.div

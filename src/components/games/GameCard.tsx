@@ -4,6 +4,7 @@ import { Lock, Play } from "lucide-react";
 import { Game, globalGameText } from "@/data/games";
 import { Button } from "@/components/ui/button";
 import { gameImages } from "@/assets/games";
+import GameImage from "./GameImage";
 
 interface GameCardProps {
   game: Game;
@@ -26,14 +27,13 @@ const GameCard = forwardRef<HTMLDivElement, GameCardProps>(({ game, onClick, del
       <div className="bg-card rounded-xl p-4 h-full flex flex-col image-specular">
         {/* Game Image or Emoji Fallback */}
         {gameImage ? (
-          <div className="w-full aspect-square max-w-[120px] mx-auto mb-3 rounded-xl overflow-hidden shadow-md">
-            <img 
-              src={gameImage} 
-              alt={game.name} 
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
+          <GameImage
+            src={gameImage}
+            alt={game.name}
+            width={120}
+            height={120}
+            className="mx-auto mb-3 shadow-md max-w-[120px]"
+          />
         ) : (
           <div className="text-5xl mb-3 text-center">{game.emoji}</div>
         )}
