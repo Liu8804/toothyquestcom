@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 
 interface AnimatedStoryImageProps {
   src: string;
@@ -432,7 +433,7 @@ export const AnimatedStoryImage = ({
         }}
       />
 
-      {/* Main animated image */}
+      {/* Main animated image with breathing */}
       <motion.img
         src={src}
         alt={alt}
@@ -443,9 +444,11 @@ export const AnimatedStoryImage = ({
         animate={{
           opacity: isLoaded ? 1 : 0,
           ...config.imageAnimation,
+          ...getBreathingAnimation("subtle").animate,
         }}
         transition={{
           opacity: { duration: 0.3 },
+          ...getBreathingAnimation("subtle").transition,
           ...Object.fromEntries(
             Object.keys(config.imageAnimation).map(key => [
               key,

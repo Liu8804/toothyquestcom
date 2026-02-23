@@ -71,16 +71,18 @@ const StoryModeSection = () => {
             {t("storyMode.subtitle")}
           </p>
           
-          {/* Epic Tooth Quest Hero Image */}
-          <div className="max-w-2xl mx-auto mb-6 rounded-2xl overflow-hidden shadow-card">
-            <img 
-              src="/quiz/epic-tooth-quest.webp" 
-              alt="Epic Tooth Quest Adventure" 
-              width={1024}
-              height={585}
-              loading="lazy"
+          {/* Epic Tooth Quest Hero Video */}
+          <div className="max-w-2xl mx-auto mb-6 rounded-2xl overflow-hidden shadow-card relative">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
               className="w-full h-auto object-cover"
-            />
+              poster="/quiz/epic-tooth-quest.webp"
+            >
+              <source src="/quiz/epic-tooth-quest-video.mp4" type="video/mp4" />
+            </video>
           </div>
           
           {/* Quest progress bar */}
