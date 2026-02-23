@@ -52,11 +52,11 @@ const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(({ story, index, on
         }`} />
         
         {/* Story illustration */}
-        <div className={`relative h-48 overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 ${isLocked ? 'grayscale' : ''}`}>
+        <div className={`relative h-48 overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 image-specular ${isLocked ? 'grayscale' : ''}`}>
           <img
             src={story.illustrationPath}
             alt={story.title}
-            className={`w-full h-full object-cover transition-transform duration-500 ${isLocked ? '' : 'group-hover:scale-110'}`}
+            className={`w-full h-full object-cover image-3d-card transition-transform duration-500 ${isLocked ? '' : 'group-hover:scale-110'}`}
             onError={(e) => {
               e.currentTarget.style.display = 'none';
               e.currentTarget.nextElementSibling?.classList.remove('hidden');

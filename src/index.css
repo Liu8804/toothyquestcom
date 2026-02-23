@@ -260,6 +260,76 @@
     transform: translateY(-2px);
   }
 
+  /* Semi-3D Image Styles — Dimensional cartoon effect */
+  .image-3d {
+    filter: 
+      drop-shadow(0 8px 6px hsl(220 25% 16% / 0.2))
+      drop-shadow(0 3px 2px hsl(220 25% 16% / 0.14))
+      contrast(1.05) saturate(1.1);
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+  .image-3d:hover {
+    filter: 
+      drop-shadow(0 12px 10px hsl(220 25% 16% / 0.25))
+      drop-shadow(0 5px 3px hsl(220 25% 16% / 0.16))
+      contrast(1.08) saturate(1.15);
+    transform: translateY(-3px) scale(1.02);
+  }
+
+  /* Semi-3D Card Image — for images inside cards with overflow hidden */
+  .image-3d-card {
+    filter: contrast(1.06) saturate(1.12) brightness(1.02);
+    transition: filter 0.4s ease, transform 0.5s ease;
+  }
+  .image-3d-card:hover {
+    filter: contrast(1.1) saturate(1.18) brightness(1.04);
+  }
+
+  /* Semi-3D background illustration effect */
+  .bg-3d-scene {
+    position: relative;
+  }
+  .bg-3d-scene::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      hsl(0 0% 100% / 0.08) 0%,
+      transparent 40%,
+      transparent 60%,
+      hsl(220 25% 16% / 0.12) 100%
+    );
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* Specular highlight overlay for images */
+  .image-specular {
+    position: relative;
+    overflow: hidden;
+  }
+  .image-specular::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      hsl(0 0% 100% / 0.18) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+    z-index: 1;
+    border-radius: inherit;
+    transition: opacity 0.3s ease;
+  }
+  .image-specular:hover::before {
+    opacity: 0.7;
+  }
+
   /* Micro-animations */
   @keyframes reward-pop {
     0% { transform: scale(0) rotate(-10deg); opacity: 0; }

@@ -56,16 +56,18 @@ export const AdventureCard = ({
       whileHover={{ scale: 1.05, y: -8 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className={`${!backgroundImage ? styles.bg : ''} rounded-3xl cursor-pointer shadow-float hover:shadow-playful transition-all duration-300 relative overflow-hidden min-h-[200px]`}
+      className={`${!backgroundImage ? styles.bg : ''} rounded-3xl cursor-pointer shadow-float hover:shadow-playful transition-all duration-300 relative overflow-hidden min-h-[200px] bg-3d-scene`}
     >
       {/* Background Image */}
       {backgroundImage && (
         <>
           <div 
-            className="absolute inset-0 bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center image-3d-card"
             style={{ backgroundImage: `url(${backgroundImage})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          {/* Specular highlight */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
         </>
       )}
 
