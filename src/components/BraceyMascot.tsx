@@ -146,6 +146,15 @@ const BraceyMascot = ({
             src={mascotBraces}
             alt="Bracey mascot with braces"
             className="w-full h-full object-contain drop-shadow-lg"
+            animate={{
+              scaleY: [1, 1.03, 1],
+              scaleX: [1, 0.98, 1],
+            }}
+            transition={{
+              duration: 2.8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
             whileHover={{ scale: 1.1 }}
           />
 

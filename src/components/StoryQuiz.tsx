@@ -294,9 +294,13 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-display font-bold text-sm">
+                  <motion.span
+                    className="w-8 h-8 rounded-full bg-muted flex items-center justify-center font-display font-bold text-sm"
+                    animate={{ scale: [1, 1.06, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: index * 0.3 }}
+                  >
                     {String.fromCharCode(65 + index)}
-                  </span>
+                  </motion.span>
                   <span className="flex-1">{option}</span>
                   {showResult && isSelected && (
                     <motion.div
