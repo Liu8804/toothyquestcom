@@ -364,8 +364,8 @@ export const HeroSection = () => {
       {/* Quest Completion Celebration */}
       <ConfettiCelebration isActive={showQuestCelebration || justCompleted} duration={3000} particleCount={60} />
 
-      <TapSparkleArea className="relative min-h-screen">
-        <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
+      <TapSparkleArea className="relative">
+        <section className="relative h-screen max-h-[800px] overflow-hidden flex items-end justify-center">
           {/* Hero background - banner image, bright and vivid */}
           <div 
             className="absolute inset-0 bg-cover bg-bottom bg-no-repeat"
@@ -423,29 +423,25 @@ export const HeroSection = () => {
         
         {/* Minimal decorative element - desktop only */}
 
-        <div className="container mx-auto px-4 pt-24 sm:pt-28 md:pt-32 pb-4 relative z-10">
-          <div className="flex flex-col items-center text-center max-w-2xl mx-auto min-h-screen relative">
+        <div className="container mx-auto px-4 pb-16 sm:pb-20 relative z-10">
+          <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
             {/* SUBHEADLINE — clean, readable over banner */}
             <motion.p
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="text-xs sm:text-sm md:text-base text-white font-bold mb-2 max-w-xs px-3 py-1.5 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
+              className="text-xs sm:text-sm md:text-base text-white font-bold mb-3 max-w-xs px-3 py-1.5 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
             >
               Games & stories for kids 3–9 🦷
             </motion.p>
-            
-            {/* Spacer to push CTA below kids' faces */}
-            <div className="flex-1 min-h-[50vh] sm:min-h-[55vh] md:min-h-[60vh]" />
 
-            {/* Main Mascot - positioned bottom-left, smaller */}
+            {/* Main Mascot - bottom-left, small */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="absolute bottom-44 left-2 sm:left-4 z-20"
-              style={{ transform: 'scale(0.55)' }}
+              className="absolute -bottom-12 -left-4 z-20 scale-[0.4] origin-bottom-left"
             >
               {/* Enhanced wiggle glow effect - attention grabbing */}
               <AnimatePresence>
@@ -798,7 +794,7 @@ export const HeroSection = () => {
                     onClick={handleStartQuest}
                     onMouseEnter={handleCTAHover}
                     onMouseLeave={() => setIsHoveringCTA(false)}
-                    className="relative text-lg sm:text-xl md:text-2xl px-6 sm:px-10 md:px-14 py-5 sm:py-6 md:py-7 shadow-2xl hover:shadow-3xl font-extrabold tracking-tight"
+                    className="relative text-base sm:text-lg md:text-xl px-5 sm:px-8 md:px-12 py-4 sm:py-5 md:py-6 shadow-2xl hover:shadow-3xl font-extrabold tracking-tight"
                   >
                     <motion.span 
                       className="text-2xl sm:text-3xl mr-2 sm:mr-3"
@@ -893,14 +889,15 @@ export const HeroSection = () => {
               </motion.div>
             )}
           </div>
+          {/* Scroll chevron removed from bottom to save space */}
         </div>
 
-        {/* Scroll chevron */}
+        {/* Scroll chevron - hidden on mobile */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.6 }}
           transition={{ delay: 1.2 }}
-          className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20"
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 hidden sm:block"
         >
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2, repeat: Infinity }}>
             <ChevronDown className="w-5 h-5 text-muted-foreground" />
