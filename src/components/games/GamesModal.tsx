@@ -50,6 +50,7 @@ import { usePurchase } from "@/hooks/usePurchase";
 import { useQuestProgress } from "@/hooks/useQuestProgress";
 import { useAdminStatus } from "@/hooks/useAdminStatus";
 import { useEntitlementStatus } from "@/hooks/useEntitlementStatus";
+import { useSessionMetrics } from "@/hooks/useSessionMetrics";
 
 interface GamesModalProps {
   isOpen: boolean;
@@ -89,6 +90,7 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
     entitlementCheckedAt,
   } = useEntitlementStatus();
   const { questProgress } = useQuestProgress();
+  const { recordGameStarted } = useSessionMetrics();
   const completedQuestsCount = questProgress.length;
   const { 
     achievements, 
@@ -204,10 +206,9 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       return;
     }
     playSound("tap");
-    // Trigger letsPlay mascot emotion when starting a game
     triggerLetsPlay();
-    // Start background music immediately from the user's click (mobile-friendly)
     startBackgroundMusic("happy");
+    recordGameStarted(game.id);
     setSelectedGame(game);
     fetchLeaderboard(game.id);
   };
