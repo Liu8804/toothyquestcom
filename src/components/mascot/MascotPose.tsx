@@ -139,7 +139,7 @@ const MascotPose = forwardRef<HTMLDivElement, MascotPoseProps>(({
         <img 
           src={getPoseImage(pose)} 
           alt={`Toothy mascot - ${pose} pose`}
-          className="w-full h-full object-contain drop-shadow-lg"
+          className="w-full h-full object-contain image-3d"
           style={{ imageRendering: "auto" }}
         />
 

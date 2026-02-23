@@ -18,9 +18,9 @@ const GameCard = forwardRef<HTMLDivElement, GameCardProps>(({ game, onClick, del
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.3 }}
-      className={`relative rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br ${game.color} p-1`}
+      className={`relative rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br ${game.color} p-1 bg-3d-scene`}
     >
-      <div className="bg-card rounded-xl p-4 h-full flex flex-col">
+      <div className="bg-card rounded-xl p-4 h-full flex flex-col image-specular">
         {/* Emoji Icon */}
         <div className="text-5xl mb-3 text-center">{game.emoji}</div>
         

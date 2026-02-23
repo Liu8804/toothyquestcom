@@ -47,6 +47,8 @@ const PlayfulBackground = ({
             ? "bg-gradient-to-b from-sparkle/10 via-star/10 to-bubble/10"
             : "bg-gradient-to-b from-bubble/10 via-primary/5 to-mint/10"
         }`} />
+        {/* Subtle specular overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent" />
       </div>
     );
   }

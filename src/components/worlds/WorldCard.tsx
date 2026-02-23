@@ -53,10 +53,14 @@ export const WorldCard = ({
     >
       {/* Background Image */}
       {backgroundImage && !isLocked && (
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${backgroundImage})` }}
-        />
+        <>
+          <div 
+            className="absolute inset-0 bg-cover bg-center image-3d-card"
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+          />
+          {/* Specular highlight for depth */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/12 via-transparent to-transparent pointer-events-none z-[1]" />
+        </>
       )}
 
       {/* Gradient overlay for text readability */}
