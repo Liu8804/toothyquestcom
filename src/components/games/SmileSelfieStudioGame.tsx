@@ -166,7 +166,7 @@ export const SmileSelfieStudioGame: React.FC<SmileSelfieStudioGameProps> = ({ on
   }
 
   return (
-    <div className="flex flex-col items-center gap-3 p-4 max-w-md mx-auto">
+    <div className="flex flex-col items-center gap-2 p-3 max-w-md mx-auto h-full overflow-auto">
       {/* Stats */}
       <div className="flex justify-between w-full bg-card rounded-lg p-3">
         <div className="text-lg font-bold">⭐ {score}</div>

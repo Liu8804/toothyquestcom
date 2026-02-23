@@ -181,17 +181,17 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
   const toothCount = placedElements.filter(e => e.side === 'tooth').length;
 
   return (
-    <div className="flex flex-col items-center gap-3 p-4">
+    <div className="flex flex-col items-center gap-2 p-3 h-full overflow-auto">
       {/* Stats */}
-      <div className="flex justify-between w-full max-w-md bg-card rounded-lg p-3">
-        <div className="text-lg font-bold">⭐ {score}</div>
-        <div className="text-lg font-bold">🎨 {placedElements.length} items</div>
+      <div className="flex justify-between w-full max-w-md bg-card rounded-lg p-2">
+        <div className="text-sm font-bold">⭐ {score}</div>
+        <div className="text-sm font-bold">🎨 {placedElements.length} items</div>
       </div>
 
       {/* Instructions */}
-      <div className="text-center bg-gradient-to-r from-orange-100 to-blue-100 dark:from-orange-900/30 dark:to-blue-900/30 rounded-xl p-3 max-w-md">
-        <p className="font-bold text-primary mb-1">🎨 Candy vs Teeth Battle!</p>
-        <p className="text-sm">
+      <div className="text-center bg-gradient-to-r from-orange-100 to-blue-100 dark:from-orange-900/30 dark:to-blue-900/30 rounded-xl p-2 max-w-md">
+        <p className="font-bold text-primary text-sm mb-1">🎨 Candy vs Teeth Battle!</p>
+        <p className="text-xs">
           {selectedElement 
             ? `👆 Tap a canvas to place your ${selectedElement.name}!`
             : `👇 Pick an item from the ${activeSide === 'candy' ? '🍬 candy' : '🦷 teeth'} section!`}
@@ -199,17 +199,17 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
       </div>
 
       {/* Art Canvases - Two Sides */}
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-2 items-center">
         {/* Candy Side */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-1 mb-2">
-            <span className="text-xl">🍬</span>
-            <span className="text-sm font-bold text-red-600">Candy Side</span>
-            <span className="bg-red-100 text-red-600 text-xs px-2 rounded-full">{candyCount}</span>
+          <div className="flex items-center justify-center gap-1 mb-1">
+            <span className="text-base">🍬</span>
+            <span className="text-xs font-bold text-red-600">Candy</span>
+            <span className="bg-red-100 text-red-600 text-[10px] px-1.5 rounded-full">{candyCount}</span>
           </div>
           <div
             onClick={(e) => handleCanvasClick('candy', e)}
-            className={`relative w-36 h-40 bg-gradient-to-br from-red-100 to-orange-200 dark:from-red-900/50 dark:to-orange-900/50 rounded-xl cursor-pointer overflow-hidden shadow-lg border-3 ${
+            className={`relative w-[130px] h-[140px] bg-gradient-to-br from-red-100 to-orange-200 dark:from-red-900/50 dark:to-orange-900/50 rounded-xl cursor-pointer overflow-hidden shadow-lg border-2 ${
               activeSide === 'candy' ? 'border-red-400 ring-2 ring-red-300' : 'border-red-200'
             }`}
           >
@@ -236,18 +236,18 @@ export const CandyVsToothArtGame: React.FC<CandyVsToothArtGameProps> = ({ onComp
           </div>
         </div>
 
-        <div className="text-4xl">⚔️</div>
+        <div className="text-2xl">⚔️</div>
 
         {/* Tooth Side */}
         <div className="text-center">
-          <div className="flex items-center justify-center gap-1 mb-2">
-            <span className="text-xl">🦷</span>
-            <span className="text-sm font-bold text-blue-600">Teeth Side</span>
-            <span className="bg-blue-100 text-blue-600 text-xs px-2 rounded-full">{toothCount}</span>
+          <div className="flex items-center justify-center gap-1 mb-1">
+            <span className="text-base">🦷</span>
+            <span className="text-xs font-bold text-blue-600">Teeth</span>
+            <span className="bg-blue-100 text-blue-600 text-[10px] px-1.5 rounded-full">{toothCount}</span>
           </div>
           <div
             onClick={(e) => handleCanvasClick('tooth', e)}
-            className={`relative w-36 h-40 bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/50 dark:to-cyan-900/50 rounded-xl cursor-pointer overflow-hidden shadow-lg border-3 ${
+            className={`relative w-[130px] h-[140px] bg-gradient-to-br from-blue-100 to-cyan-200 dark:from-blue-900/50 dark:to-cyan-900/50 rounded-xl cursor-pointer overflow-hidden shadow-lg border-2 ${
               activeSide === 'tooth' ? 'border-blue-400 ring-2 ring-blue-300' : 'border-blue-200'
             }`}
           >

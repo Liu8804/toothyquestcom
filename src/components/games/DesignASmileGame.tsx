@@ -43,13 +43,13 @@ const DesignASmileGame = ({ game, onComplete }: DesignASmileGameProps) => {
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-pink-100 to-purple-200 dark:from-pink-900 dark:to-purple-950 p-4">
-      <div className="flex flex-col items-center justify-start h-full pt-4 overflow-auto">
+    <div className="relative h-full w-full overflow-auto bg-gradient-to-b from-pink-100 to-purple-200 dark:from-pink-900 dark:to-purple-950 p-4">
+      <div className="flex flex-col items-center justify-start pt-2">
         <h3 className="text-xl font-bold text-foreground mb-4">🎨 Design Your Perfect Smile!</h3>
 
         {/* Preview */}
         <motion.div 
-          className="relative w-48 h-48 rounded-full flex items-center justify-center mb-6"
+          className="relative w-36 h-36 rounded-full flex items-center justify-center mb-4"
           style={{
             background: `linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)`,
           }}

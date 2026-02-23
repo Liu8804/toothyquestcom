@@ -144,7 +144,7 @@ const BuildASmileGame = ({ game, onComplete }: BuildASmileGameProps) => {
   }
 
   return (
-    <div className="h-full w-full flex flex-col p-6">
+    <div className="h-full w-full flex flex-col p-4 overflow-auto">
       {/* Progress */}
       <div className="flex justify-center gap-2 mb-4">
         {[...Array(maxSteps)].map((_, i) => (
