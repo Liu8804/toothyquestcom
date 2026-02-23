@@ -23,6 +23,7 @@ import { useButtonSounds } from "@/hooks/useButtonSounds";
 import { unlockAudioContext } from "@/hooks/useAudioManager";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
 import brushingBanner from "@/assets/marketing/banner-brushing-adventures.jpeg";
+import brushingBannerVideo from "@/assets/marketing/banner-brushing-adventures.mp4";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
@@ -368,14 +369,21 @@ export const HeroSection = () => {
         <section className="relative overflow-hidden flex flex-col">
           {/* Banner image area */}
           <div className="relative h-[60vw] sm:h-[50vw] md:h-[45vw] max-h-[550px] min-h-[240px]">
-            <div 
-              className="absolute inset-0 bg-cover bg-no-repeat"
+            {/* Animated video banner with static image fallback */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              poster={brushingBanner}
+              className="absolute inset-0 w-full h-full object-cover"
               style={{ 
-                backgroundImage: `url(${brushingBanner})`,
-                backgroundPosition: 'center 30%',
+                objectPosition: 'center 30%',
                 filter: 'saturate(1.15) brightness(1.1)',
               }}
-            />
+            >
+              <source src={brushingBannerVideo} type="video/mp4" />
+            </video>
             {/* Gradient overlay */}
             <div 
               className="absolute inset-0"
