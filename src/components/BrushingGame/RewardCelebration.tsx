@@ -1,7 +1,9 @@
 import { motion } from "framer-motion";
-import { Star, Trophy, Sparkles, MessageCircle, Loader2 } from "lucide-react";
+import { Star, Sparkles, MessageCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import goldTrophyImg from "@/assets/rewards/gold-tooth-trophy-v3.jpeg";
+import kawaiiStarImg from "@/assets/interactive/kawaii-star.jpeg";
 import { useAIEncouragement } from "@/hooks/useAIEncouragement";
 import { useToothyPhrases } from "@/hooks/useToothyPhrases";
 import { getRandomCelebration } from "@/config/toothyPhrases";
@@ -120,13 +122,14 @@ export const RewardCelebration = ({
         transition={{ type: "spring", duration: 0.8 }}
         className="mb-6"
       >
-        <div className="w-32 h-32 mx-auto bg-gradient-to-br from-star to-accent rounded-full flex items-center justify-center shadow-float">
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] }}
+        <div className="w-32 h-32 mx-auto rounded-full flex items-center justify-center shadow-float overflow-hidden">
+          <motion.img
+            src={goldTrophyImg}
+            alt="Gold Tooth Trophy"
+            className="w-full h-full object-cover"
+            animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.05, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <Trophy className="w-16 h-16 text-primary-foreground" />
-          </motion.div>
+          />
         </div>
       </motion.div>
       
@@ -144,12 +147,13 @@ export const RewardCelebration = ({
             animate={{ scale: 1, rotate: 0 }}
             transition={{ delay: 0.5 + i * 0.15, type: "spring" }}
           >
-            <motion.div
+            <motion.img
+              src={kawaiiStarImg}
+              alt="Star"
+              className="w-10 h-10 object-contain"
               animate={{ scale: [1, 1.2, 1], rotate: [0, 15, -15, 0] }}
               transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-            >
-              <Star className="w-10 h-10 text-star fill-star" />
-            </motion.div>
+            />
           </motion.div>
         ))}
       </motion.div>

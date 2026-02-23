@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
-import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
-import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import mascotWaving from "@/assets/quiz/boy-blue-waving.jpeg";
+import mascotCelebrating from "@/assets/quiz/boy-yellow-celebrating.jpeg";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 export type CharacterMood = 

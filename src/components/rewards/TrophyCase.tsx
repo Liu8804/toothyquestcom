@@ -1,6 +1,9 @@
 import { motion } from "framer-motion";
-import { Trophy, Lock, Sparkles } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import { ACHIEVEMENT_BADGES, TOOTH_PETS, type AchievementBadge, type ToothPet } from "@/data/rewardsConfig";
+import goldToothBadge from "@/assets/rewards/gold-tooth-badge-3.png";
+import blueShieldBadge from "@/assets/rewards/blue-shield-badge.jpeg";
+import goldToothCoin from "@/assets/rewards/gold-tooth-coin.jpeg";
 
 interface TrophyCaseProps {
   unlockedBadges: string[];
@@ -27,8 +30,8 @@ const TrophyCase = ({ unlockedBadges, unlockedPets, className = "" }: TrophyCase
     >
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="p-2 rounded-xl bg-gradient-to-br from-star to-accent">
-          <Trophy className="w-5 h-5 text-white" />
+        <div className="w-12 h-12 rounded-xl overflow-hidden shadow-md">
+          <img src={goldToothBadge} alt="Trophy" className="w-full h-full object-cover" />
         </div>
         <div>
           <h3 className="font-display font-bold text-foreground">Trophy Case</h3>

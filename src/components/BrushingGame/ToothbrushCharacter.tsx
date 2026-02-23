@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-
+import magicToothbrush from "@/assets/interactive/magic-toothbrush-v3.jpeg";
 interface ToothbrushCharacterProps {
   isActive: boolean;
   currentQuadrant: number;
@@ -46,45 +46,19 @@ export const ToothbrushCharacter = ({
         ease: "easeInOut",
       }}
     >
-      {/* Toothbrush body */}
+      {/* Toothbrush image */}
       <div className="relative">
-        {/* Handle */}
-        <div className="w-8 h-32 bg-gradient-to-b from-primary to-primary/80 rounded-full mx-auto shadow-lg">
-          {/* Grip pattern */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 space-y-1">
-            {[...Array(5)].map((_, i) => (
-              <div
-                key={i}
-                className="h-1 bg-primary-foreground/30 rounded-full"
-              />
-            ))}
-          </div>
-        </div>
-        
-        {/* Brush head */}
-        <div className="w-12 h-8 bg-card rounded-lg mx-auto -mt-1 shadow-md flex items-end justify-center pb-1 gap-0.5">
-          {/* Bristles */}
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="w-1 h-4 bg-gradient-to-b from-bubble to-mint rounded-full"
-              animate={isActive ? {
-                scaleY: [1, 0.8, 1],
-              } : {}}
-              transition={{
-                duration: 0.3,
-                delay: i * 0.05,
-                repeat: Infinity,
-              }}
-            />
-          ))}
-        </div>
+        <img
+          src={magicToothbrush}
+          alt="Magic Toothbrush"
+          className="w-20 h-32 object-contain drop-shadow-lg"
+        />
         
         {/* Sparkles when active */}
         {isActive && (
           <>
             <motion.div
-              className="absolute -top-2 -left-4 text-star text-xl"
+              className="absolute -top-2 -left-4 text-xl"
               animate={{
                 opacity: [0, 1, 0],
                 scale: [0.5, 1, 0.5],
@@ -95,7 +69,7 @@ export const ToothbrushCharacter = ({
               ✨
             </motion.div>
             <motion.div
-              className="absolute -top-4 -right-4 text-star text-lg"
+              className="absolute -top-4 -right-4 text-lg"
               animate={{
                 opacity: [0, 1, 0],
                 scale: [0.5, 1, 0.5],
@@ -107,17 +81,6 @@ export const ToothbrushCharacter = ({
             </motion.div>
           </>
         )}
-      </div>
-      
-      {/* Character face on handle */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 w-6 h-6 flex items-center justify-center">
-        <motion.span
-          className="text-lg"
-          animate={isActive ? { scale: [1, 1.2, 1] } : {}}
-          transition={{ duration: 0.5, repeat: Infinity }}
-        >
-          {isActive ? "😄" : "😊"}
-        </motion.span>
       </div>
     </motion.div>
   );
