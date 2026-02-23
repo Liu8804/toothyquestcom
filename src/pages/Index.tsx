@@ -43,10 +43,12 @@ import PremiumBadge from "@/components/PremiumBadge";
 import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 import { useClinics } from "@/hooks/useClinics";
 import DashboardMascotGreeting from "@/components/DashboardMascotGreeting";
+import { useSessionMetrics } from "@/hooks/useSessionMetrics";
 
 const Index = () => {
   const navigate = useNavigate();
   useAudioUnlock();
+  const { recordFirstAction } = useSessionMetrics();
 
   const { user, loading } = useAuth();
   const { isPurchased } = usePurchase();
@@ -224,7 +226,7 @@ const Index = () => {
       {/* Splash Screen */}
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       
-      <main className="min-h-screen relative">
+      <main className="min-h-screen relative" onClickCapture={recordFirstAction}>
         {/* Subtle floating sparkles background - reduced for cleaner look */}
         <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 

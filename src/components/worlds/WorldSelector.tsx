@@ -17,6 +17,7 @@ import PurchaseModal from "@/components/PurchaseModal";
 import { cn } from "@/lib/utils";
 import AnimatedVideoBackground from "@/components/ui/AnimatedVideoBackground";
 import worldKingdomVideo from "@/assets/marketing/world-kingdom-header.mp4";
+import { useSessionMetrics } from "@/hooks/useSessionMetrics";
 
 interface WorldSelectorProps {
   className?: string;
@@ -29,6 +30,7 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
   const { isPurchased, isCheckingPurchase } = usePurchase();
   const { isAdmin, isAdminLoading } = useAdminStatus();
   const { hasEntitlement, entitlementLoading } = useEntitlementStatus();
+  const { recordWorldEntry, recordFirstAction } = useSessionMetrics();
 
   // Wait for all access checks to complete before determining lock status
   const isAccessLoading = isCheckingPurchase || isAdminLoading || entitlementLoading;
@@ -215,7 +217,11 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                     videoBackground={world.videoBackground}
                     isLocked={world.isLocked && !isUnlocked && !isAccessLoading}
                     progress={getWorldProgress(world)}
-                    onClick={() => setSelectedWorld(world)}
+                    onClick={() => {
+                      setSelectedWorld(world);
+                      recordWorldEntry(world.id);
+                      recordFirstAction();
+                    }}
                   />
                 ))}
               </div>
