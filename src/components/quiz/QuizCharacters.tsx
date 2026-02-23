@@ -749,22 +749,23 @@ export const QuizCharacterAnimated = ({
           )}
         </motion.div>
 
-        {/* Thinking bubbles */}
+        {/* Thinking bubbles - animated with floating question marks */}
         {mood === "thinking" && (
           <>
             {[...Array(3)].map((_, i) => (
               <motion.div
-                key={i}
-                className="absolute rounded-full bg-white/90 dark:bg-gray-600/90 shadow-sm"
+                key={`bubble-${i}`}
+                className="absolute rounded-full bg-card shadow-md border border-border/30"
                 style={{
-                  width: 10 + i * 5,
-                  height: 10 + i * 5,
-                  right: -18 - i * 10,
-                  top: 8 + i * 12,
+                  width: 10 + i * 6,
+                  height: 10 + i * 6,
+                  right: -18 - i * 12,
+                  top: 8 + i * 14,
                 }}
                 animate={{ 
-                  opacity: [0.5, 1, 0.5],
-                  scale: [0.8, 1, 0.8]
+                  opacity: [0.4, 1, 0.4],
+                  scale: [0.7, 1.1, 0.7],
+                  y: [0, -3, 0],
                 }}
                 transition={{
                   duration: 1.5,
@@ -773,7 +774,37 @@ export const QuizCharacterAnimated = ({
                 }}
               />
             ))}
+            {/* Floating question mark */}
+            <motion.span
+              className="absolute -right-10 -top-2 text-xl pointer-events-none"
+              animate={{
+                opacity: [0, 1, 0],
+                y: [0, -15, -30],
+                rotate: [0, 15, -15, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            >
+              ❓
+            </motion.span>
           </>
+        )}
+
+        {/* Excited jump effect for correct answers */}
+        {(mood === "celebrating" || mood === "excited") && (
+          <motion.div
+            className="absolute -bottom-4 left-1/2 -translate-x-1/2 pointer-events-none"
+            animate={{
+              scaleX: [1, 1.3, 0.8, 1],
+              opacity: [0.3, 0.5, 0.2, 0.3],
+            }}
+            transition={{ duration: 0.8, repeat: Infinity }}
+          >
+            <div className="w-12 h-2 bg-foreground/10 rounded-full blur-sm" />
+          </motion.div>
         )}
       </div>
     </div>
