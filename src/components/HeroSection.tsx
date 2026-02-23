@@ -366,12 +366,17 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative min-h-screen">
         <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
-          {/* Hero background image */}
+          {/* Hero background image with gradient overlay */}
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
-            style={{ backgroundImage: `url(${brushingBanner})`, filter: 'blur(20px)' }}
+            style={{ backgroundImage: `url(${brushingBanner})`, filter: 'blur(12px) saturate(1.2)' }}
           />
-          <div className="absolute inset-0 bg-background/80" />
+          <div 
+            className="absolute inset-0"
+            style={{ 
+              background: 'linear-gradient(180deg, hsl(var(--background) / 0.9) 0%, hsl(var(--background) / 0.55) 40%, hsl(var(--background) / 0.45) 60%, hsl(var(--background) / 0.85) 100%)'
+            }}
+          />
           
           {/* Simplified animated background - reduced intensity */}
           <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="light" />
