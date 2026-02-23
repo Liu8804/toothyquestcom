@@ -15,6 +15,8 @@ import { useEntitlementStatus } from "@/hooks/useEntitlementStatus";
 import StoryViewer from "@/components/StoryViewer";
 import PurchaseModal from "@/components/PurchaseModal";
 import { cn } from "@/lib/utils";
+import AnimatedVideoBackground from "@/components/ui/AnimatedVideoBackground";
+import worldKingdomVideo from "@/assets/marketing/world-kingdom-header.mp4";
 
 interface WorldSelectorProps {
   className?: string;
@@ -237,16 +239,22 @@ export const WorldSelector = ({ className }: WorldSelectorProps) => {
                 {isSpanish ? "Volver a Mundos" : "Back to Worlds"}
               </Button>
 
-              {/* World Header */}
-              <div className="text-center mb-10">
-                <div className="text-6xl mb-4">{selectedWorld.emoji}</div>
-                <h2 className="font-display text-3xl font-bold text-foreground mb-2">
-                  {isSpanish ? selectedWorld.nameEs : selectedWorld.name}
-                </h2>
-                <p className="text-muted-foreground max-w-xl mx-auto">
-                  {isSpanish ? selectedWorld.descriptionEs : selectedWorld.description}
-                </p>
-              </div>
+              {/* World Header with Video Background */}
+              <AnimatedVideoBackground
+                videoSrc={worldKingdomVideo}
+                className="rounded-3xl mb-10 -mx-4 md:-mx-6"
+                overlayClassName="bg-gradient-to-t from-background via-background/60 to-background/30"
+              >
+                <div className="text-center py-10 px-4">
+                  <div className="text-6xl mb-4">{selectedWorld.emoji}</div>
+                  <h2 className="font-display text-3xl font-bold text-foreground mb-2">
+                    {isSpanish ? selectedWorld.nameEs : selectedWorld.name}
+                  </h2>
+                  <p className="text-muted-foreground max-w-xl mx-auto">
+                    {isSpanish ? selectedWorld.descriptionEs : selectedWorld.description}
+                  </p>
+                </div>
+              </AnimatedVideoBackground>
 
               {/* Phase Cards */}
               <div className="space-y-4 max-w-2xl mx-auto">

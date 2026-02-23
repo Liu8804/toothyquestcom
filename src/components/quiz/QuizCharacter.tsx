@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import mascotWaving from "@/assets/quiz/boy-blue-waving.jpeg";
 import mascotCelebrating from "@/assets/quiz/boy-yellow-celebrating.jpeg";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 
 export type CharacterMood = 
   | "idle" 
@@ -280,13 +281,9 @@ export const QuizCharacter = ({
             className="w-full h-full object-contain character-3d"
             animate={{
               ...controls,
-              scaleY: [1, 1.02, 1],
-              scaleX: [1, 0.99, 1],
+              ...getBreathingAnimation(mood === "celebrating" || mood === "excited" ? "excited" : "gentle").animate,
             }}
-            transition={{
-              scaleY: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-              scaleX: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-            }}
+            transition={getBreathingAnimation(mood === "celebrating" || mood === "excited" ? "excited" : "gentle").transition}
             whileHover={{ scale: 1.1 }}
           />
 

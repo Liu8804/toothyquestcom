@@ -11,6 +11,7 @@ import { stopHomeMusicGlobally } from "@/hooks/useRouteMusicController";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import storyIntroVideo from "@/assets/marketing/story-intro-hero.mp4";
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
@@ -189,8 +190,19 @@ const StoryViewer = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 bg-gradient-to-br from-primary/95 to-accent/95 rounded-3xl"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden"
               >
+                {/* Video background for story intro */}
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
+                >
+                  <source src={storyIntroVideo} type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/90 to-accent/90" />
                 {/* Toothy mascot */}
                 <motion.div
                   initial={{ scale: 0, rotate: -10 }}
@@ -199,8 +211,8 @@ const StoryViewer = ({
                   className="relative mb-6 flex flex-col items-center"
                 >
                   <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ y: [0, -6, 0], scaleY: [1, 1.02, 1], scaleX: [1, 0.99, 1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                     className="character-3d"
                   >
                     <img
