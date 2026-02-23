@@ -368,10 +368,10 @@ export const HeroSection = () => {
         <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
           {/* Hero background image */}
           <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${brushingBanner})` }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+            style={{ backgroundImage: `url(${brushingBanner})`, filter: 'blur(20px)' }}
           />
-          <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-background/80" />
           
           {/* Simplified animated background - reduced intensity */}
           <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="light" />
