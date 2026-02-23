@@ -196,7 +196,7 @@ export const ToothPuzzleAdventureGame: React.FC<ToothPuzzleAdventureGameProps> =
   const currentPuzzle = PUZZLE_SETS[puzzleIndex];
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
+    <div className="flex flex-col items-center gap-3 p-3 h-full overflow-auto">
       {/* Stats */}
       <div className="flex justify-between w-full max-w-xs bg-card rounded-lg p-3">
         <div className="text-lg font-bold">⭐ {score}</div>

@@ -211,7 +211,7 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
 
   return (
     <div 
-      className="flex flex-col items-center gap-4 p-4"
+      className="flex flex-col items-center gap-3 p-3 h-full overflow-auto"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -243,7 +243,7 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
               return (
                 <motion.div
                   key={`${x}-${y}`}
-                  className={`w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-bold shadow-sm ${
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl font-bold shadow-sm ${
                     isWall 
                       ? 'bg-amber-800 dark:bg-amber-900' 
                       : isGoal 
@@ -258,7 +258,7 @@ export const SugarRushMazeGame: React.FC<SugarRushMazeGameProps> = ({ onComplete
                     <motion.span
                       animate={{ scale: [1, 1.1, 1], rotate: [0, 5, -5, 0] }}
                       transition={{ repeat: Infinity, duration: 1 }}
-                      className="text-3xl"
+                      className="text-2xl"
                     >
                       🦷
                     </motion.span>
