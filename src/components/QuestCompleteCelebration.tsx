@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
 import { usePositiveSounds } from "@/hooks/usePositiveSounds";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 // Personalized celebration messages
 const CELEBRATION_MESSAGES = [
@@ -178,26 +179,13 @@ const QuestCompleteCelebration = ({
             }}
             transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* Cape flutter particles */}
-          {[...Array(4)].map((_, i) => (
-            <motion.span
-              key={`cape-${i}`}
-              className="absolute pointer-events-none text-sm"
-              style={{ bottom: `${10 + i * 8}%`, right: `-${5 + i * 4}px` }}
-              animate={{
-                x: [0, 8, -4, 0],
-                opacity: [0, 0.8, 0],
-                rotate: [0, 20, -10, 0],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                delay: i * 0.3,
-              }}
-            >
-              ✨
-            </motion.span>
-          ))}
+          {/* Gentle floating icons around mascot */}
+          <FloatingMicroIcons
+            icons={["✨", "👑", "⭐", "🏆"]}
+            count={4}
+            speed={1}
+            iconSize="sm"
+          />
           <MascotEmotionState
             emotion="greatJob"
             size="md"

@@ -87,16 +87,16 @@ const emotionAnimations: Record<MascotEmotion, { animate: object; transition: ob
     transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
   },
   wow: {
-    animate: { scale: [1, 1.15, 1], rotate: [0, -5, 5, 0] },
-    transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
+    animate: { scale: [1, 1.06, 1], rotate: [0, -2, 2, 0] },
+    transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
   },
   greatJob: {
-    animate: { y: [0, -15, 0], scale: [1, 1.1, 1] },
-    transition: { duration: 1, repeat: Infinity, ease: "easeInOut" },
+    animate: { y: [0, -6, 0], scale: [1, 1.04, 1] },
+    transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
   },
   oops: {
-    animate: { x: [-3, 3, -3], rotate: [-2, 2, -2] },
-    transition: { duration: 0.5, repeat: Infinity, ease: "easeInOut" },
+    animate: { x: [-2, 2, -2], rotate: [-1, 1, -1] },
+    transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
   },
   gotIt: {
     animate: { y: [0, -5, 0], scale: [1, 1.05, 1] },
@@ -111,20 +111,20 @@ const emotionAnimations: Record<MascotEmotion, { animate: object; transition: ob
     transition: { duration: 1, repeat: Infinity, ease: "easeInOut" },
   },
   letsPlay: {
-    animate: { scale: [1, 1.1, 1], rotate: [0, 3, -3, 0] },
-    transition: { duration: 1.2, repeat: Infinity, ease: "easeInOut" },
+    animate: { scale: [1, 1.04, 1], rotate: [0, 2, -2, 0] },
+    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
   },
   levelUp: {
-    animate: { y: [0, -20, 0], scale: [1, 1.15, 1] },
-    transition: { duration: 0.8, repeat: Infinity, ease: "easeOut" },
+    animate: { y: [0, -10, 0], scale: [1, 1.06, 1] },
+    transition: { duration: 1.2, repeat: Infinity, ease: "easeOut" },
   },
   playQuit: {
-    animate: { y: [0, -5, 0] },
-    transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+    animate: { y: [0, -3, 0] },
+    transition: { duration: 2, repeat: Infinity, ease: "easeInOut" },
   },
   celebrating: {
-    animate: { y: [0, -15, 0], rotate: [0, 10, -10, 0], scale: [1, 1.1, 1] },
-    transition: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
+    animate: { y: [0, -8, 0], rotate: [0, 3, -3, 0], scale: [1, 1.04, 1] },
+    transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
   },
   waving: {
     animate: { y: [0, -8, 0], rotate: [0, -3, 3, 0] },

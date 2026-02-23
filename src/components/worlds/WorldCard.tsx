@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Lock, ChevronRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useButtonSounds } from "@/hooks/useButtonSounds";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 interface WorldCardProps {
   id: string;
@@ -76,6 +77,17 @@ export const WorldCard = ({
       {/* Hover effect */}
       {!isLocked && (
         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+      )}
+
+      {/* Subtle floating micro-icons */}
+      {!isLocked && (
+        <FloatingMicroIcons
+          icons={["✨", "⭐", "🦷", "💫"]}
+          count={3}
+          speed={1.5}
+          iconSize="xs"
+          className="z-[2]"
+        />
       )}
 
       {/* Lock overlay */}
