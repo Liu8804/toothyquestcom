@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 // Character types for different story themes
 export type CharacterId = "toothy" | "bracey" | "captain-floss" | "sugar-bug" | "sparkle" | "molar-mike";
@@ -417,6 +418,7 @@ export const QuizCharacterAnimated = ({
   const [isTyping, setIsTyping] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
   const { playVoiceSound, playSynthSound } = useQuizSounds();
+  const { playThinkingPop, playCheer } = useMascotSounds();
 
   const character = CHARACTERS[characterId];
 
@@ -457,8 +459,14 @@ export const QuizCharacterAnimated = ({
     }
   }, [mood]);
 
-  // Trigger voice based on mood
+  // Trigger voice and synced sounds based on mood
   useEffect(() => {
+    if (mood === "thinking") {
+      playThinkingPop();
+    } else if (mood === "celebrating" || mood === "excited") {
+      playCheer();
+    }
+    
     if (!enableVoice) return;
     
     if (mood === "celebrating") {
@@ -468,7 +476,7 @@ export const QuizCharacterAnimated = ({
     } else if (mood === "encouraging") {
       playVoiceSound("incorrect");
     }
-  }, [mood, enableVoice, playVoiceSound]);
+  }, [mood, enableVoice, playVoiceSound, playThinkingPop, playCheer]);
 
   const getCharacterAnimation = useCallback((): {
     rotate?: number[];

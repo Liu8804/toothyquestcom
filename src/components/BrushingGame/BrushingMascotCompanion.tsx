@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 interface BrushingMascotCompanionProps {
   phase: "ready" | "countdown" | "playing" | "paused" | "completed";
@@ -32,6 +33,7 @@ const BrushingMascotCompanion = ({
 }: BrushingMascotCompanionProps) => {
   const [speechBubble, setSpeechBubble] = useState("");
   const [showBubble, setShowBubble] = useState(false);
+  const { playEncourageChime, playQuadrantChange, playWoohoo } = useMascotSounds();
 
   // Determine mascot emotion based on phase
   const getEmotion = (): MascotEmotion => {
@@ -57,20 +59,22 @@ const BrushingMascotCompanion = ({
       const phrase = BRUSHING_PHRASES[Math.floor(Math.random() * BRUSHING_PHRASES.length)];
       setSpeechBubble(phrase.text);
       setShowBubble(true);
+      playEncourageChime();
       const timer = setTimeout(() => setShowBubble(false), 2500);
       return () => clearTimeout(timer);
     }
-  }, [timeRemaining, phase, totalTime]);
+  }, [timeRemaining, phase, totalTime, playEncourageChime]);
 
   // Show quadrant transition message
   useEffect(() => {
     if (phase === "playing" && currentQuadrant < QUADRANT_PHRASES.length) {
       setSpeechBubble(QUADRANT_PHRASES[currentQuadrant]);
       setShowBubble(true);
+      playQuadrantChange();
       const timer = setTimeout(() => setShowBubble(false), 3000);
       return () => clearTimeout(timer);
     }
-  }, [currentQuadrant, phase]);
+  }, [currentQuadrant, phase, playQuadrantChange]);
 
   // Show message on phase change
   useEffect(() => {
@@ -83,8 +87,9 @@ const BrushingMascotCompanion = ({
     } else if (phase === "completed") {
       setSpeechBubble("AMAZING! Your teeth are sparkling! 🎉✨");
       setShowBubble(true);
+      playWoohoo();
     }
-  }, [phase]);
+  }, [phase, playWoohoo]);
 
   return (
     <div className="relative flex flex-col items-center">
