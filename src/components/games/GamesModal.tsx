@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft, Star, Trophy, Medal, Volume2, VolumeX, Crown, Lock, Unlock, Sparkles } from "lucide-react";
 import MascotEmotionState from "@/components/mascot/MascotEmotionState";
 import { useMascotEmotionContext } from "@/contexts/MascotEmotionContext";
+import { gameImages } from "@/assets/games";
 import { games, Game, globalGameText, allGames, gameCategories, GameCategory } from "@/data/games";
 import GameCard from "./GameCard";
 import PlaquePatrolGame from "./PlaquePatrolGame";
@@ -36,6 +37,7 @@ import EnamelMatchGame from "./EnamelMatchGame";
 import SmileSelfieStudioGame from "./SmileSelfieStudioGame";
 import CandyVsToothArtGame from "./CandyVsToothArtGame";
 import ConfettiCelebration from "@/components/ConfettiCelebration";
+import GameContainer from "./GameContainer";
 import DailyChallengeNotification from "@/components/DailyChallengeNotification";
 import PurchaseModal from "@/components/PurchaseModal";
 import { Button } from "@/components/ui/button";
@@ -224,68 +226,75 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
       onComplete: (won: boolean, stars: number) => handleGameComplete(won, stars, stars * 10),
     };
 
+    let gameContent;
     switch (selectedGame.id) {
       case "plaque_patrol":
-        return <PlaquePatrolGame {...gameProps} />;
+        gameContent = <PlaquePatrolGame {...gameProps} />; break;
       case "tooth_defender":
-        return <ToothDefenderGame {...gameProps} />;
+        gameContent = <ToothDefenderGame {...gameProps} />; break;
       case "floss_hero":
-        return <FlossHeroGame {...gameProps} />;
+        gameContent = <FlossHeroGame {...gameProps} />; break;
       case "sugar_bug_chase":
-        return <SugarBugChaseGame {...gameProps} />;
+        gameContent = <SugarBugChaseGame {...gameProps} />; break;
       case "build_a_smile":
-        return <BuildASmileGame {...gameProps} />;
+        gameContent = <BuildASmileGame {...gameProps} />; break;
       case "quest_match":
-        return <QuestMatchGame {...gameProps} />;
+        gameContent = <QuestMatchGame {...gameProps} />; break;
       case "tooth_fairy_run":
-        return <ToothFairyRunGame {...gameProps} />;
+        gameContent = <ToothFairyRunGame {...gameProps} />; break;
       case "healthy_food_sort":
-        return <HealthyFoodSortGame {...gameProps} />;
+        gameContent = <HealthyFoodSortGame {...gameProps} />; break;
       case "plaque_pop_party":
-        return <PlaquePopPartyGame {...gameProps} />;
+        gameContent = <PlaquePopPartyGame {...gameProps} />; break;
       case "mouthwash_splash":
-        return <MouthwashSplashGame {...gameProps} />;
+        gameContent = <MouthwashSplashGame {...gameProps} />; break;
       case "germ_blaster":
-        return <GermBlasterGame {...gameProps} />;
+        gameContent = <GermBlasterGame {...gameProps} />; break;
       case "tooth_trivia":
-        return <ToothTriviaGame {...gameProps} />;
+        gameContent = <ToothTriviaGame {...gameProps} />; break;
       case "dental_memory_match":
-        return <DentalMemoryMatchGame {...gameProps} />;
+        gameContent = <DentalMemoryMatchGame {...gameProps} />; break;
       case "brush_timer_challenge":
-        return <BrushTimerChallengeGame {...gameProps} />;
+        gameContent = <BrushTimerChallengeGame {...gameProps} />; break;
       case "morning_routine_race":
-        return <MorningRoutineRaceGame {...gameProps} />;
+        gameContent = <MorningRoutineRaceGame {...gameProps} />; break;
       case "nighttime_brush_quest":
-        return <NighttimeBrushQuestGame {...gameProps} />;
+        gameContent = <NighttimeBrushQuestGame {...gameProps} />; break;
       case "design_a_smile":
-        return <DesignASmileGame {...gameProps} />;
+        gameContent = <DesignASmileGame {...gameProps} />; break;
       case "tooth_fairy_treasure":
-        return <ToothFairyTreasureGame {...gameProps} />;
+        gameContent = <ToothFairyTreasureGame {...gameProps} />; break;
       case "plaque_detective":
-        return <PlaqueDetectiveGame {...gameProps} />;
+        gameContent = <PlaqueDetectiveGame {...gameProps} />; break;
       case "floss_sequence":
-        return <FlossSequenceGame {...gameProps} />;
+        gameContent = <FlossSequenceGame {...gameProps} />; break;
       case "super_smile_maker":
-        return <SuperSmileMakerGame {...gameProps} />;
+        gameContent = <SuperSmileMakerGame {...gameProps} />; break;
       case "sugar_rush_maze":
-        return <SugarRushMazeGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <SugarRushMazeGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "braces_builder":
-        return <BracesBuilderGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <BracesBuilderGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "tooth_puzzle_adventure":
-        return <ToothPuzzleAdventureGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <ToothPuzzleAdventureGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "build_your_smile_pro":
-        return <BuildYourSmileProGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <BuildYourSmileProGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "cavity_maze":
-        return <CavityMazeGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <CavityMazeGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "enamel_match":
-        return <EnamelMatchGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <EnamelMatchGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "smile_selfie_studio":
-        return <SmileSelfieStudioGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <SmileSelfieStudioGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       case "candy_vs_tooth_art":
-        return <CandyVsToothArtGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />;
+        gameContent = <CandyVsToothArtGame onComplete={(score) => handleGameComplete(true, Math.ceil(score / 30), score)} onClose={handleBackToGames} />; break;
       default:
-        return <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
+        gameContent = <ComingSoonGame game={selectedGame} onBack={handleBackToGames} />;
     }
+
+    return (
+      <GameContainer gameId={selectedGame.id}>
+        {gameContent}
+      </GameContainer>
+    );
   };
 
   const currentLeaderboard = selectedGame ? leaderboard[selectedGame.id] || [] : [];
@@ -470,8 +479,18 @@ const GamesModal = ({ isOpen, onClose, childId }: GamesModalProps) => {
                     </>
                   )}
 
-                  {/* Mascot emotion state for game result */}
-                  <div className="relative z-10 mb-4">
+                  {/* Game image + Mascot for result */}
+                  <div className="relative z-10 mb-4 flex flex-col items-center gap-3">
+                    {gameImages[selectedGame.id] && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                        className="w-24 h-24 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card"
+                      >
+                        <img src={gameImages[selectedGame.id]} alt={selectedGame.name} className="w-full h-full object-cover" />
+                      </motion.div>
+                    )}
                     <MascotEmotionState 
                       emotion={gameResult.won ? (gameResult.stars >= 3 ? "wow" : "greatJob") : "oops"} 
                       size="lg" 

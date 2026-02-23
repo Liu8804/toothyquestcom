@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Sparkles, ArrowLeft } from "lucide-react";
 import { Game } from "@/data/games";
 import { Button } from "@/components/ui/button";
+import { gameImages } from "@/assets/games";
 
 interface ComingSoonGameProps {
   game: Game;
@@ -9,22 +10,34 @@ interface ComingSoonGameProps {
 }
 
 const ComingSoonGame = ({ game, onBack }: ComingSoonGameProps) => {
+  const gameImage = gameImages[game.id];
+
   return (
     <div className="h-full flex flex-col items-center justify-center text-center p-6">
-      <motion.div
-        animate={{ 
-          scale: [1, 1.1, 1],
-          rotate: [0, 5, -5, 0]
-        }}
-        transition={{ 
-          duration: 2,
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
-        className="text-8xl mb-6"
-      >
-        {game.emoji}
-      </motion.div>
+      {gameImage ? (
+        <motion.div
+          animate={{ scale: [1, 1.03, 1] }}
+          transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+          className="w-32 h-32 mb-6 rounded-2xl overflow-hidden shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.3)] image-3d-card"
+        >
+          <img src={gameImage} alt={game.name} className="w-full h-full object-cover" />
+        </motion.div>
+      ) : (
+        <motion.div
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, -5, 0]
+          }}
+          transition={{ 
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+          className="text-8xl mb-6"
+        >
+          {game.emoji}
+        </motion.div>
+      )}
       
       <h2 className="font-display text-3xl font-bold text-foreground mb-2">
         {game.name}
