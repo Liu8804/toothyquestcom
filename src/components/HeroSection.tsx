@@ -423,7 +423,7 @@ export const HeroSection = () => {
         
         {/* Minimal decorative element - desktop only */}
 
-        <div className="container mx-auto px-4 py-4 md:py-8 relative z-10">
+        <div className="container mx-auto px-4 pt-28 sm:pt-32 md:pt-36 pb-4 relative z-10">
           <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
             
             {/* SUBHEADLINE — clean, readable over banner */}
@@ -431,7 +431,7 @@ export const HeroSection = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="text-base sm:text-lg md:text-xl text-white font-bold mb-4 md:mb-6 max-w-sm px-3 py-1.5 rounded-xl bg-foreground/30 backdrop-blur-sm drop-shadow-lg"
+              className="text-sm sm:text-base md:text-lg text-white font-bold mb-3 md:mb-4 max-w-xs px-4 py-2 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
             >
               Games & stories for kids 3–9 🦷
             </motion.p>
@@ -818,18 +818,17 @@ export const HeroSection = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-3 flex items-center gap-3 text-sm"
+                    className="mt-3 flex items-center gap-2 text-sm"
                   >
                     <button
                       onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
-                      className="font-bold text-white hover:text-white/80 underline underline-offset-4 transition-colors drop-shadow-md"
+                      className="font-bold text-white bg-primary/80 hover:bg-primary px-4 py-1.5 rounded-full transition-colors drop-shadow-md"
                     >
                       Sign up free
                     </button>
-                    <span className="text-white/60">·</span>
                     <a
                       href="/guest"
-                      className="font-medium text-white/80 hover:text-white transition-colors drop-shadow-md"
+                      className="font-semibold text-white bg-foreground/40 hover:bg-foreground/60 px-4 py-1.5 rounded-full transition-colors drop-shadow-md backdrop-blur-sm"
                     >
                       Try as guest
                     </a>
@@ -876,19 +875,17 @@ export const HeroSection = () => {
               )}
             </motion.div>
 
-            {/* Trust indicators - clean pills */}
+            {/* Trust indicators - visible pills with background */}
             {!isCompleted && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
-                className="flex items-center justify-center gap-3 mt-6 text-sm"
+                className="flex items-center justify-center gap-2 mt-4 text-xs sm:text-sm"
               >
-                <span className="text-green-600 dark:text-green-400 font-semibold">✅ Kid-Safe</span>
-                <span className="text-muted-foreground">·</span>
-                <span className="text-red-600 dark:text-red-400 font-semibold">🚫 No Ads</span>
-                <span className="text-muted-foreground">·</span>
-                <span className="text-amber-600 dark:text-amber-400 font-semibold">⭐ Free</span>
+                <span className="bg-green-600/90 text-white font-bold px-3 py-1 rounded-full drop-shadow-md">✅ Kid-Safe</span>
+                <span className="bg-red-600/90 text-white font-bold px-3 py-1 rounded-full drop-shadow-md">🚫 No Ads</span>
+                <span className="bg-amber-500/90 text-white font-bold px-3 py-1 rounded-full drop-shadow-md">⭐ Free</span>
               </motion.div>
             )}
           </div>
