@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import MascotEmotionState from "@/components/mascot/MascotEmotionState";
+import dashboardHeroVideo from "@/assets/marketing/dashboard-hero.mp4";
 
 interface SplashScreenProps {
   onComplete: () => void;
@@ -28,13 +29,24 @@ const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-b from-sky-100 via-sky-50 to-white cursor-pointer"
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center cursor-pointer overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
           onClick={handleClick}
         >
+          {/* Video background */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          >
+            <source src={dashboardHeroVideo} type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-sky-100/80 via-sky-50/70 to-white/90" />
           {/* Minimal floating sparkles */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-70">
             {[...Array(6)].map((_, i) => (

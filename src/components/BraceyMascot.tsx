@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import mascotBraces from "@/assets/mascot-sticker-braces.png";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 
 export type BraceyMood = "happy" | "excited" | "encouraging" | "celebrating" | "thinking" | "winking";
 
@@ -146,15 +147,8 @@ const BraceyMascot = ({
             src={mascotBraces}
             alt="Bracey mascot with braces"
             className="w-full h-full object-contain drop-shadow-lg"
-            animate={{
-              scaleY: [1, 1.03, 1],
-              scaleX: [1, 0.98, 1],
-            }}
-            transition={{
-              duration: 2.8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            animate={getBreathingAnimation(mood === "excited" || mood === "celebrating" ? "excited" : "playful").animate}
+            transition={getBreathingAnimation(mood === "excited" || mood === "celebrating" ? "excited" : "playful").transition}
             whileHover={{ scale: 1.1 }}
           />
 

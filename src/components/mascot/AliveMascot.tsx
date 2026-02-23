@@ -5,6 +5,7 @@ import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import mascotMain from "@/assets/mascot-sticker-main-v2.png";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 
 export type AliveMascotState = "idle" | "waving" | "cheering" | "excited" | "sad" | "dirty";
 
@@ -213,6 +214,8 @@ const AliveMascot = ({
               ? "drop-shadow(0 10px 20px rgba(100,100,100,0.3))"
               : "drop-shadow(0 15px 30px rgba(0,0,0,0.2))",
           }}
+          animate={getBreathingAnimation(state === "excited" || state === "cheering" ? "excited" : "subtle").animate}
+          transition={getBreathingAnimation(state === "excited" || state === "cheering" ? "excited" : "subtle").transition}
         />
         
         {/* Sparkle effects on tap */}

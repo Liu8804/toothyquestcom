@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { forwardRef } from "react";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 
 // Import all mascot emotion images
 import mascotWow from "@/assets/mascot-emotions/wow.png";
@@ -168,12 +169,14 @@ const MascotEmotionState = forwardRef<HTMLDivElement, MascotEmotionStateProps>((
           exit={{ opacity: 0, scale: 0.8 }}
           transition={animationConfig.transition}
         >
-          {/* Main mascot image */}
-          <img 
+          {/* Main mascot image with breathing */}
+          <motion.img 
             src={imageSrc} 
             alt={`Toothy mascot - ${emotion} emotion`}
             className="w-full h-full object-contain drop-shadow-lg"
             style={{ imageRendering: "auto" }}
+            animate={getBreathingAnimation(isCelebratory ? "excited" : "gentle").animate}
+            transition={getBreathingAnimation(isCelebratory ? "excited" : "gentle").transition}
           />
 
           {/* Sparkles for celebratory emotions */}

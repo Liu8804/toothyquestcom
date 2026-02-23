@@ -2,6 +2,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useState, useCallback } from "react";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 
 export type MascotMood = "idle" | "happy" | "excited" | "cheering" | "waving";
 
@@ -94,9 +95,12 @@ export const ToothyMascot = ({
           src={getMascotImage()}
           alt="Toothy - Your friendly dental buddy"
           className="w-full h-full object-contain image-3d"
-          animate={controls}
+          animate={{
+            ...controls,
+            ...getBreathingAnimation(mood === "excited" || mood === "cheering" ? "excited" : "gentle").animate,
+          }}
+          transition={getBreathingAnimation(mood === "excited" || mood === "cheering" ? "excited" : "gentle").transition}
           whileHover={{ scale: 1.08, rotate: [0, -3, 3, 0] }}
-          transition={{ duration: 0.3 }}
         />
 
         {/* Mood emoji indicator with pop-in */}
