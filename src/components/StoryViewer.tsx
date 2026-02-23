@@ -19,6 +19,7 @@ import VoiceSettingsModal from "./VoiceSettingsModal";
 import InteractiveQuizWrapper from "./quiz/InteractiveQuizWrapper";
 import AnimatedStoryImage from "./story/AnimatedStoryImage";
 import BracesQuestEffect, { BracesQuestReward, isBracesQuest } from "./BracesQuestEffects";
+import { getBreathingAnimation } from "@/hooks/useBreathingAnimation";
 interface StoryViewerProps {
   story: Story;
   currentIndex: number;
@@ -211,8 +212,14 @@ const StoryViewer = ({
                   className="relative mb-6 flex flex-col items-center"
                 >
                   <motion.div
-                    animate={{ y: [0, -6, 0], scaleY: [1, 1.02, 1], scaleX: [1, 0.99, 1] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ 
+                      y: [0, -6, 0], 
+                      ...getBreathingAnimation("playful").animate,
+                    }}
+                    transition={{ 
+                      duration: 2.5, repeat: Infinity, ease: "easeInOut",
+                      ...getBreathingAnimation("playful").transition,
+                    }}
                     className="character-3d"
                   >
                     <img
