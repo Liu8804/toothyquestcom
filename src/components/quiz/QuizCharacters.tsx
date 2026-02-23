@@ -2,6 +2,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
 import toothyMascot from "@/assets/mascot-sticker-main-v2.png";
+import boyBlueWaving from "@/assets/quiz/boy-blue-waving.jpeg";
+import girlPigtailsBows from "@/assets/quiz/girl-pigtails-bows.jpeg";
+import boyYellowCelebrating from "@/assets/quiz/boy-yellow-celebrating.jpeg";
+import girlPurpleWaving from "@/assets/quiz/girl-purple-waving.jpeg";
+import boyCharacter3 from "@/assets/quiz/boy-character-3.png";
+import girlCharacter1 from "@/assets/quiz/girl-character-1.png";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
 
 // Character types for different story themes
@@ -289,7 +295,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   bracey: {
     name: "Bracey",
     emoji: "🎀",
-    imageSrc: toothyMascot,
+    imageSrc: girlPigtailsBows,
     color: "from-pink-100 to-purple-100",
     gradientFrom: "from-pink-100",
     gradientTo: "to-purple-50",
@@ -301,7 +307,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "captain-floss": {
     name: "Captain Floss",
     emoji: "🦸",
-    imageSrc: toothyMascot,
+    imageSrc: boyCharacter3,
     color: "from-yellow-100 to-orange-100",
     gradientFrom: "from-yellow-100",
     gradientTo: "to-amber-50",
@@ -313,7 +319,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "sugar-bug": {
     name: "Sugar Bug",
     emoji: "👾",
-    imageSrc: toothyMascot,
+    imageSrc: boyYellowCelebrating,
     color: "from-purple-200 to-pink-200",
     gradientFrom: "from-purple-200",
     gradientTo: "to-pink-100",
@@ -326,7 +332,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   sparkle: {
     name: "Sparkle Star",
     emoji: "✨",
-    imageSrc: toothyMascot,
+    imageSrc: girlPurpleWaving,
     color: "from-amber-100 to-yellow-100",
     gradientFrom: "from-amber-100",
     gradientTo: "to-yellow-50",
@@ -338,7 +344,7 @@ export const CHARACTERS: Record<CharacterId, CharacterConfig> = {
   "molar-mike": {
     name: "Molar Mike",
     emoji: "💪",
-    imageSrc: toothyMascot,
+    imageSrc: boyBlueWaving,
     color: "from-green-100 to-emerald-100",
     gradientFrom: "from-green-100",
     gradientTo: "to-emerald-50",
@@ -722,14 +728,31 @@ export const QuizCharacterAnimated = ({
           </>
         )}
 
-        {/* Main Character - Using MascotEmotionState for consistent rendering */}
+        {/* Main Character - Use unique character image or MascotEmotionState for Toothy */}
         <motion.div animate={getCharacterAnimation()}>
-          <MascotEmotionState
-            emotion={getMascotEmotion()}
-            size={mascotSizeMap[size]}
-            animate={true}
-            showSparkles={mood === "celebrating" || mood === "excited"}
-          />
+          {characterId === "toothy" ? (
+            <MascotEmotionState
+              emotion={getMascotEmotion()}
+              size={mascotSizeMap[size]}
+              animate={true}
+              showSparkles={mood === "celebrating" || mood === "excited"}
+            />
+          ) : (
+            <div className={`${sizeClasses[size]} relative`}>
+              <img
+                src={character.imageSrc}
+                alt={character.name}
+                className="w-full h-full object-contain drop-shadow-lg character-3d"
+              />
+              {(mood === "celebrating" || mood === "excited") && (
+                <motion.div
+                  className="absolute inset-0 rounded-full blur-xl -z-10 bg-gradient-radial from-star/30 to-transparent"
+                  animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                />
+              )}
+            </div>
+          )}
         </motion.div>
 
         {/* Thinking bubbles */}
