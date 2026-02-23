@@ -423,8 +423,8 @@ export const HeroSection = () => {
               </motion.button>
             </motion.div>
 
-            {/* SUBHEADLINE — top area, right below baked-in title, above kids' heads */}
-            <div className="absolute top-[38%] sm:top-[36%] md:top-[34%] left-0 right-0 z-10 flex justify-center">
+            {/* SUBHEADLINE — just below baked-in title, above kids' heads */}
+            <div className="absolute top-[32%] sm:top-[30%] md:top-[28%] left-0 right-0 z-10 flex justify-center">
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -826,13 +826,13 @@ export const HeroSection = () => {
                   >
                     <button
                       onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
-                      className="font-bold text-white bg-primary/80 hover:bg-primary px-4 py-1.5 rounded-full transition-colors drop-shadow-md"
+                      className="font-bold text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-1.5 rounded-full transition-colors shadow-md"
                     >
                       Sign up free
                     </button>
                     <a
                       href="/guest"
-                      className="font-semibold text-white bg-foreground/40 hover:bg-foreground/60 px-4 py-1.5 rounded-full transition-colors drop-shadow-md backdrop-blur-sm"
+                      className="font-semibold text-foreground bg-muted hover:bg-muted/80 px-4 py-1.5 rounded-full transition-colors shadow-sm border border-border"
                     >
                       Try as guest
                     </a>
@@ -842,36 +842,31 @@ export const HeroSection = () => {
                 <motion.div 
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="flex flex-col items-center gap-4"
+                  className="flex flex-col items-center gap-2 sm:gap-3"
                 >
-                  {/* Shiny trophy with glow */}
+                  {/* Compact trophy */}
                   <motion.div
                     className="relative"
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
-                    <motion.div
-                      className="absolute inset-0 bg-yellow-300/40 rounded-full blur-xl -z-10"
-                      animate={{ scale: [1, 1.3, 1], opacity: [0.5, 0.8, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                    <span className="text-6xl">🏆</span>
+                    <span className="text-4xl sm:text-5xl">🏆</span>
                   </motion.div>
                   
-                  <p className="text-lg text-foreground font-bold">
+                  <p className="text-sm sm:text-base text-foreground font-bold">
                     Toothy is sparkling! 🎉 Come back tomorrow!
                   </p>
                   
                   <Button
                     variant="outline"
-                    size="lg"
+                    size="default"
                     onClick={() => {
                       const adventuresSection = document.getElementById('adventures');
                       if (adventuresSection) {
                         adventuresSection.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
-                    className="mt-2"
+                    className="mt-1"
                   >
                     Explore more games 🎮
                   </Button>
