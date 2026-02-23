@@ -22,6 +22,7 @@ import { useHomeMusic } from "@/hooks/useHomeMusic";
 import { useButtonSounds } from "@/hooks/useButtonSounds";
 import { unlockAudioContext } from "@/hooks/useAudioManager";
 import toothyQuestLogo from "@/assets/toothyquest-logo.png";
+import brushingBanner from "@/assets/marketing/banner-brushing-adventures.jpeg";
 
 export const HeroSection = () => {
   const { success } = useHapticFeedback();
@@ -364,7 +365,14 @@ export const HeroSection = () => {
       <ConfettiCelebration isActive={showQuestCelebration || justCompleted} duration={3000} particleCount={60} />
 
       <TapSparkleArea className="relative min-h-screen">
-        <section className="relative min-h-screen gradient-sky overflow-hidden flex items-center justify-center">
+        <section className="relative min-h-screen overflow-hidden flex items-center justify-center">
+          {/* Hero background image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${brushingBanner})` }}
+          />
+          <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+          
           {/* Simplified animated background - reduced intensity */}
           <PlayfulBackground variant={isCompleted ? "stars" : "bubbles"} intensity="light" />
           
