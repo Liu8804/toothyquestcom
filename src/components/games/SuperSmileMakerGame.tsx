@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { Game } from "@/data/games";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
+import GameImage from "./GameImage";
+import { gameImages } from "@/assets/games";
 
 interface SuperSmileMakerGameProps {
   game: Game;
@@ -130,6 +132,12 @@ const SuperSmileMakerGame = ({ game, onComplete }: SuperSmileMakerGameProps) => 
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-yellow-100 to-amber-200 dark:from-yellow-900 dark:to-amber-950 p-4">
+      {/* Semi-3D watermark */}
+      {gameImages[game.id] && (
+        <div className="absolute top-16 right-4 opacity-20 pointer-events-none z-0">
+          <GameImage src={gameImages[game.id]} alt="" width={80} height={80} enable3D />
+        </div>
+      )}
       <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">✨ {completedSteps.length}/{activeSteps.length}</span>

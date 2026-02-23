@@ -6,6 +6,8 @@ import { useGameSounds } from "@/hooks/useGameSounds";
 import { useMascotSounds } from "@/hooks/useMascotSounds";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import DifficultySelector, { Difficulty } from "./DifficultySelector";
+import GameImage from "./GameImage";
+import { gameImages } from "@/assets/games";
 import mascotCelebrating from "@/assets/mascot-sticker-celebrating-v2.png";
 import mascotMain from "@/assets/mascot-sticker-main-v2.png";
 
@@ -137,6 +139,12 @@ const BrushTimerChallengeGame = ({ game, onComplete }: BrushTimerChallengeGamePr
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-gradient-to-b from-blue-100 to-indigo-200 dark:from-blue-900 dark:to-indigo-950 p-4">
+      {/* Semi-3D watermark */}
+      {gameImages[game.id] && (
+        <div className="absolute top-16 right-4 opacity-20 pointer-events-none z-0">
+          <GameImage src={gameImages[game.id]} alt="" width={80} height={80} enable3D />
+        </div>
+      )}
       <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
         <div className="bg-card/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
           <span className="font-bold text-foreground">✅ {completedZones}/{config.zonesRequired}</span>

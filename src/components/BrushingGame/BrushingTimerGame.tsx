@@ -209,31 +209,70 @@ export const BrushingTimerGame = ({ isOpen, onClose }: BrushingTimerGameProps) =
               />
             ) : (
               <div className="flex flex-col items-center space-y-6">
-                {/* Progress Ring with Timer */}
-                <ProgressRing progress={progress} size={180}>
-                  <div className="text-center">
-                    {phase === "countdown" ? (
-                      <motion.span
-                        key={countdown}
-                        initial={{ scale: 2, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        className="font-display text-5xl font-bold text-primary"
-                      >
-                        {countdown}
-                      </motion.span>
-                    ) : (
-                      <>
-                        <span className="font-display text-4xl font-bold text-foreground">
-                          {formatTime(timeRemaining)}
-                        </span>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          remaining
-                        </p>
-                      </>
-                    )}
-                  </div>
-                </ProgressRing>
+                {/* Clock-style Progress Ring with Timer */}
+                <div className="relative">
+                  <ProgressRing progress={progress} size={200}>
+                    <div className="text-center relative">
+                      {phase === "countdown" ? (
+                        <motion.span
+                          key={countdown}
+                          initial={{ scale: 2, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          className="font-display text-5xl font-bold text-primary"
+                        >
+                          {countdown}
+                        </motion.span>
+                      ) : (
+                        <>
+                          <span className="font-display text-4xl font-bold text-foreground tabular-nums">
+                            {formatTime(timeRemaining)}
+                          </span>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            remaining
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </ProgressRing>
+
+                  {/* Clock tick marks around the ring */}
+                  <svg className="absolute inset-0 w-[200px] h-[200px] pointer-events-none" viewBox="0 0 200 200">
+                    {Array.from({ length: 12 }).map((_, i) => {
+                      const angle = (i * 30 - 90) * (Math.PI / 180);
+                      const x1 = 100 + Math.cos(angle) * 90;
+                      const y1 = 100 + Math.sin(angle) * 90;
+                      const x2 = 100 + Math.cos(angle) * 84;
+                      const y2 = 100 + Math.sin(angle) * 84;
+                      return (
+                        <line
+                          key={i}
+                          x1={x1} y1={y1} x2={x2} y2={y2}
+                          stroke="currentColor"
+                          strokeWidth={i % 3 === 0 ? 2.5 : 1}
+                          className="text-muted-foreground/50"
+                        />
+                      );
+                    })}
+                    {/* Animated clock hand */}
+                    {(phase === "playing" || phase === "paused") && (() => {
+                      const handAngle = ((1 - timeRemaining / TOTAL_TIME) * 360 - 90) * (Math.PI / 180);
+                      const hx = 100 + Math.cos(handAngle) * 70;
+                      const hy = 100 + Math.sin(handAngle) * 70;
+                      return (
+                        <line
+                          x1="100" y1="100" x2={hx} y2={hy}
+                          stroke="hsl(var(--primary))"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          className="transition-all duration-1000 ease-linear"
+                        />
+                      );
+                    })()}
+                    {/* Center dot */}
+                    <circle cx="100" cy="100" r="4" fill="hsl(var(--primary))" />
+                  </svg>
+                </div>
 
                 {/* Encouragement message */}
                 <AnimatePresence>
