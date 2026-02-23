@@ -366,25 +366,25 @@ export const HeroSection = () => {
 
       <TapSparkleArea className="relative">
         <section className="relative overflow-hidden flex flex-col">
-          {/* Banner image area — constrained height so faces aren't covered */}
-          <div className="relative h-[55vw] max-h-[380px] min-h-[220px]">
+          {/* Banner image area */}
+          <div className="relative h-[60vw] sm:h-[50vw] md:h-[45vw] max-h-[550px] min-h-[240px]">
             <div 
               className="absolute inset-0 bg-cover bg-no-repeat"
               style={{ 
                 backgroundImage: `url(${brushingBanner})`,
-                backgroundPosition: 'center 25%',
+                backgroundPosition: 'center 30%',
                 filter: 'saturate(1.15) brightness(1.1)',
               }}
             />
-            {/* Top gradient for readability */}
+            {/* Gradient overlay */}
             <div 
               className="absolute inset-0"
               style={{ 
                 background: `linear-gradient(180deg, 
-                  hsl(var(--background) / 0.5) 0%, 
-                  hsl(var(--background) / 0.05) 30%, 
-                  transparent 50%, 
-                  hsl(var(--background) / 0.3) 85%, 
+                  hsl(var(--background) / 0.4) 0%, 
+                  transparent 25%, 
+                  transparent 70%, 
+                  hsl(var(--background) / 0.6) 90%, 
                   hsl(var(--background)) 100%)`
               }}
             />
@@ -423,8 +423,8 @@ export const HeroSection = () => {
               </motion.button>
             </motion.div>
 
-            {/* SUBHEADLINE — below the baked-in title text */}
-            <div className="absolute bottom-[30%] sm:bottom-[35%] left-0 right-0 z-10 flex justify-center">
+            {/* SUBHEADLINE — top area, right below baked-in title, above kids' heads */}
+            <div className="absolute top-[38%] sm:top-[36%] md:top-[34%] left-0 right-0 z-10 flex justify-center">
               <motion.p
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -436,8 +436,8 @@ export const HeroSection = () => {
             </div>
           </div>
 
-          {/* CTA area — below the image, on solid background */}
-          <div className="relative z-10 -mt-6 px-4 pb-4">
+          {/* CTA area — fully below the image, no overlap */}
+          <div className="relative z-10 px-4 py-4 bg-background">
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
 
               {/* Main Mascot - hidden on mobile */}
