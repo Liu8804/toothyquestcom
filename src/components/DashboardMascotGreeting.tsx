@@ -59,7 +59,7 @@ const DashboardMascotGreeting = ({
             initial={{ opacity: 0, x: -20, scale: 0.8 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -10, scale: 0.9 }}
-            transition={{ type: "spring", bounce: 0.4 }}
+            transition={{ type: "spring", bounce: 0.15 }}
             className="bg-card text-foreground px-4 py-2 rounded-2xl text-sm font-bold shadow-card border border-border/50 max-w-[200px]"
           >
             {getGreeting(childName)}
@@ -72,7 +72,7 @@ const DashboardMascotGreeting = ({
         className="relative"
         initial={hasWaved ? { scale: 0, rotate: -15 } : undefined}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: "spring", bounce: 0.3 }}
+        transition={{ type: "spring", bounce: 0.12 }}
         onClick={() => {
           setEmotion("celebrating");
           setShowGreeting(true);
