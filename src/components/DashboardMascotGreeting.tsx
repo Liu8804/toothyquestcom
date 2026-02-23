@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import MascotEmotionState, { MascotEmotion } from "@/components/mascot/MascotEmotionState";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 interface DashboardMascotGreetingProps {
   childName?: string;
@@ -24,6 +25,7 @@ const DashboardMascotGreeting = ({
   const [showGreeting, setShowGreeting] = useState(false);
   const [hasWaved, setHasWaved] = useState(false);
   const [emotion, setEmotion] = useState<MascotEmotion>("idle");
+  const { playGreetingWave, playHappy } = useMascotSounds();
 
   // Wave greeting on first visit of the day
   useEffect(() => {
@@ -34,6 +36,7 @@ const DashboardMascotGreeting = ({
       setEmotion("waving");
       setShowGreeting(true);
       setHasWaved(true);
+      playGreetingWave();
       localStorage.setItem("mascot_greeting_date", today);
 
       const timer = setTimeout(() => {
@@ -71,6 +74,7 @@ const DashboardMascotGreeting = ({
         onClick={() => {
           setEmotion("celebrating");
           setShowGreeting(true);
+          playHappy();
           setTimeout(() => {
             setShowGreeting(false);
             setEmotion(taskCompleted ? "greatJob" : "idle");

@@ -6,6 +6,7 @@ import { useQuestVoice } from "@/hooks/useQuestVoice";
 import { useEffect, useState } from "react";
 import { isBracesQuest, getBracesQuestConfig } from "./BracesQuestEffects";
 import { usePositiveSounds } from "@/hooks/usePositiveSounds";
+import { useMascotSounds } from "@/hooks/useMascotSounds";
 
 // Personalized celebration messages
 const CELEBRATION_MESSAGES = [
@@ -52,6 +53,7 @@ const QuestCompleteCelebration = ({
 }: QuestCompleteCelebrationProps) => {
   const { speakQuestComplete, speakBadgeEarned, stop } = useQuestVoice();
   const { playQuestComplete, playRewardUnlocked } = usePositiveSounds();
+  const { playCrownGlow } = useMascotSounds();
   const bracesConfig = questId ? getBracesQuestConfig(questId) : null;
   const isBraces = questId ? isBracesQuest(questId) : false;
 
@@ -60,6 +62,9 @@ const QuestCompleteCelebration = ({
     if (isOpen) {
       // Play positive sound effect
       playQuestComplete();
+      
+      // Play crown glow chime with delay for the mascot entrance
+      setTimeout(() => playCrownGlow(), 400);
       
       // Speak celebration
       speakQuestComplete(questTitle, xpEarned);

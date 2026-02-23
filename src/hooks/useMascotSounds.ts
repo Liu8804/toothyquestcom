@@ -52,6 +52,21 @@ const MASCOT_SOUNDS = {
   
   // NEW: Tooth tap shine - quick sparkle for each tooth tap
   toothTapShine: { notes: [1319, 1568, 1760], durations: [0.04, 0.04, 0.08], type: "sine" as OscillatorType },
+  
+  // Crown glow chime - magical shimmering sound for quest celebration crown effect
+  crownGlow: { notes: [2093, 2637, 3136, 2637], durations: [0.06, 0.06, 0.08, 0.1], type: "sine" as OscillatorType },
+  
+  // Thinking bubble pop - soft bubbly pop for quiz thinking state
+  thinkingPop: { notes: [880, 1047], durations: [0.04, 0.06], type: "sine" as OscillatorType },
+  
+  // Encouragement chime - gentle two-note for brushing encouragement
+  encourageChime: { notes: [1047, 1319], durations: [0.06, 0.1], type: "triangle" as OscillatorType },
+  
+  // Quadrant transition - short ascending note for section change
+  quadrantChange: { notes: [659, 784, 988], durations: [0.05, 0.05, 0.08], type: "sine" as OscillatorType },
+  
+  // Greeting wave - warm hello for daily mascot greeting
+  greetingWave: { notes: [523, 659, 784, 880], durations: [0.08, 0.08, 0.08, 0.12], type: "sine" as OscillatorType },
 };
 
 type MascotSoundName = keyof typeof MASCOT_SOUNDS;
@@ -104,6 +119,11 @@ export const useMascotSounds = () => {
   const playSparkleChime = useCallback(() => playMascotSound("sparkleChime"), [playMascotSound]);
   const playWoohoo = useCallback(() => playMascotSound("woohoo"), [playMascotSound]);
   const playToothTapShine = useCallback(() => playMascotSound("toothTapShine"), [playMascotSound]);
+  const playCrownGlow = useCallback(() => playMascotSound("crownGlow"), [playMascotSound]);
+  const playThinkingPop = useCallback(() => playMascotSound("thinkingPop"), [playMascotSound]);
+  const playEncourageChime = useCallback(() => playMascotSound("encourageChime"), [playMascotSound]);
+  const playQuadrantChange = useCallback(() => playMascotSound("quadrantChange"), [playMascotSound]);
+  const playGreetingWave = useCallback(() => playMascotSound("greetingWave"), [playMascotSound]);
 
   return {
     playMascotSound,
@@ -125,11 +145,17 @@ export const useMascotSounds = () => {
     playBrushStart,
     playBrushComplete,
     playToothClean,
-    // NEW playful sounds
+    // Playful sounds
     playDing,
     playSparkleChime,
     playWoohoo,
     playToothTapShine,
+    // New animation-synced sounds
+    playCrownGlow,
+    playThinkingPop,
+    playEncourageChime,
+    playQuadrantChange,
+    playGreetingWave,
   };
 };
 
