@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import type { StoryQuiz } from "@/data/stories";
 import { useQuizSounds } from "@/hooks/useQuizSounds";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 interface StoryQuizProps {
   quiz: StoryQuiz;
   quiz2?: StoryQuiz;
@@ -132,6 +133,14 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
       animate={{ opacity: 1, y: 0 }}
       className="p-5 rounded-2xl bg-gradient-to-br from-bubble/30 to-primary/10 border-2 border-primary/20 relative overflow-hidden"
     >
+      {/* Ambient floating micro-icons */}
+      <FloatingMicroIcons
+        icons={["🦷", "✨", "❓", "💡"]}
+        count={3}
+        speed={1.2}
+        iconSize="xs"
+      />
+
       {/* Sparkle Effects */}
       <AnimatePresence>
         {showSparkles && (
@@ -205,9 +214,13 @@ const StoryQuizComponent = ({ quiz, quiz2, onComplete, isCompleted }: StoryQuizP
 
       {/* Question header with progress indicator */}
       <div className="flex items-center gap-2 mb-4">
-        <div className="p-2 rounded-full bg-primary/20">
+        <motion.div
+          className="p-2 rounded-full bg-primary/20"
+          animate={{ scale: [1, 1.08, 1] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        >
           <HelpCircle className="w-5 h-5 text-primary" />
-        </div>
+        </motion.div>
         <span className="font-display font-bold text-primary text-lg">{t("stories.questQuestion")}</span>
         {totalQuizzes > 1 && (
           <div className="ml-auto flex items-center gap-2">

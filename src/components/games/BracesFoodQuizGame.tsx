@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Check, X, Trophy, RotateCcw, Sparkles } from "lucide-react";
 import BraceyMascot from "@/components/BraceyMascot";
+import FloatingMicroIcons from "@/components/ui/FloatingMicroIcons";
 
 interface FoodItem {
   id: string;
@@ -203,6 +204,14 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
 
   return (
     <div className="relative bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 rounded-3xl p-6 shadow-card max-w-lg mx-auto">
+      {/* Ambient floating micro-icons */}
+      <FloatingMicroIcons
+        icons={["🦷", "🎀", "✨", "🍎"]}
+        count={3}
+        speed={1.4}
+        iconSize="xs"
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -322,8 +331,8 @@ const BracesFoodQuizGame = ({ onComplete, onClose }: BracesFoodQuizGameProps) =>
               {/* Food emoji */}
               <motion.div
                 className="text-7xl mb-4"
-                animate={!showExplanation ? { rotate: [0, 5, -5, 0] } : {}}
-                transition={{ duration: 2, repeat: Infinity }}
+                animate={!showExplanation ? { rotate: [0, 3, -3, 0], y: [0, -4, 0] } : {}}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               >
                 {currentFood.emoji}
               </motion.div>
