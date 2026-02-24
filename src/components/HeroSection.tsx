@@ -439,7 +439,7 @@ export const HeroSection = () => {
                 transition={{ delay: 0.15 }}
                 className="text-[9px] sm:text-xs md:text-sm text-white font-bold px-2.5 py-1 rounded-full bg-foreground/40 backdrop-blur-sm drop-shadow-lg"
               >
-                Games & stories for kids 3–9 🦷
+                Games &amp; stories that help kids ages 3–9 build healthy brushing habits 🦷✨
               </motion.p>
             </div>
           </div>
@@ -447,6 +447,16 @@ export const HeroSection = () => {
           {/* CTA area — fully below the image, no overlap */}
           <div className="relative z-10 px-4 py-4 bg-background">
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
+
+              {/* Headline */}
+              <motion.h1
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="font-display text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-foreground mb-2 leading-tight"
+              >
+                Make Brushing Teeth Fun — and Fear‑Free for Kids
+              </motion.h1>
 
               {/* Main Mascot - hidden on mobile */}
               <motion.div
@@ -825,26 +835,15 @@ export const HeroSection = () => {
                     </motion.span>
                   </Button>
                   
-                  {/* Sign up link */}
-                  <motion.div
+                  {/* Trust line under CTA */}
+                  <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-3 flex items-center justify-center gap-2 text-sm w-full"
+                    className="mt-3 text-xs sm:text-sm text-muted-foreground max-w-sm"
                   >
-                    <button
-                      onClick={() => window.dispatchEvent(new Event('toothyquest:openAuth'))}
-                      className="font-bold text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-1.5 rounded-full transition-colors shadow-md"
-                    >
-                      Sign up free
-                    </button>
-                    <a
-                      href="/guest"
-                      className="font-semibold text-foreground bg-muted hover:bg-muted/80 px-4 py-1.5 rounded-full transition-colors shadow-sm border border-border"
-                    >
-                      Try as guest
-                    </a>
-                  </motion.div>
+                    Created to help kids feel confident about brushing and dentist visits.
+                  </motion.p>
                 </>
               ) : (
                 <motion.div 
