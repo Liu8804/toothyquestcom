@@ -4,7 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import ExplainerSection from "@/components/ExplainerSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import ParentTrustSection from "@/components/ParentTrustSection";
-import AboutSection from "@/components/AboutSection";
+
 import FeaturesSection from "@/components/FeaturesSection";
 import AdventuresSection from "@/components/AdventuresSection";
 import StoryModeSection from "@/components/StoryModeSection";
@@ -337,7 +337,7 @@ const Index = () => {
         </div>
 
         <ParentTrustSection />
-        <AboutSection />
+        
         <FeaturesSection />
         
         <AdventuresSection />
