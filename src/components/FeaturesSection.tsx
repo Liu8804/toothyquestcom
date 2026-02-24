@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import VoicePersonalityQuiz from "./VoicePersonalityQuiz";
 
 export const FeaturesSection = () => {
@@ -18,60 +19,82 @@ export const FeaturesSection = () => {
 
   const features = [
     {
-      icon: "🎮",
-      titleKey: "features.funQuests.title",
-      descriptionKey: "features.funQuests.description",
+      icon: "🛡️",
+      title: "Safe & Kid-Friendly",
+      description: "Ad-free, secure, and designed specifically for kids ages 3–9.",
     },
     {
-      icon: "🏆",
-      titleKey: "features.earnRewards.title",
-      descriptionKey: "features.earnRewards.description",
+      icon: "❤️",
+      title: "Learning Through Play",
+      description: "Games, stories, and colorful animations make brushing feel fun — not forced.",
     },
     {
-      icon: "🎨",
-      titleKey: "features.friendlyGuide.title",
-      descriptionKey: "features.friendlyGuide.description",
-    },
-    {
-      icon: "⏰",
-      titleKey: "features.reminders.title",
-      descriptionKey: "features.reminders.description",
+      icon: "⭐",
+      title: "50+ Quests & Rewards",
+      description: "Kids stay motivated with stars, badges, and exciting challenges.",
     },
     {
       icon: "👨‍👩‍👧",
-      titleKey: "features.parentDashboard.title",
-      descriptionKey: "features.parentDashboard.description",
+      title: "Parent Dashboard",
+      description: "Parents can easily track progress, habits, and milestones.",
     },
   ];
+
+  const handleStartAdventure = () => {
+    window.dispatchEvent(new Event("toothyquest:openAuth"));
+  };
 
   return (
     <section id="features" className="py-12 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-14">
+        {/* Section Title */}
+        <div className="text-center mb-6">
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            {t("features.title")}
+            🦷 What's Inside ToothyQuest?
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t("features.subtitle")}
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Join Toothy and friends on fun quests that turn brushing, flossing, and healthy habits into a game. Kids earn rewards, beat sugar bugs, and build confidence — all in a safe, playful world.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {features.map((feature) => (
-            <div
-              key={feature.titleKey}
+        {/* Feature Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+          {features.map((feature, i) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
               className="bg-card rounded-2xl p-5 shadow-card hover:shadow-float transition-shadow text-center"
             >
               <div className="text-3xl mb-3">{feature.icon}</div>
               <h3 className="font-display text-base font-bold text-foreground mb-1">
-                {t(feature.titleKey)}
+                {feature.title}
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {t(feature.descriptionKey)}
+                {feature.description}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
+
+        {/* Secondary CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="text-center mt-8"
+        >
+          <Button
+            onClick={handleStartAdventure}
+            size="lg"
+            className="rounded-full px-8 py-3 font-display font-bold text-sm sm:text-base shadow-lg"
+          >
+            🚀 Start the Adventure
+          </Button>
+        </motion.div>
 
         {/* Voice Personality Quiz Card */}
         <motion.div
