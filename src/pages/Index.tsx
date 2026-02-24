@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import HeroSection from "@/components/HeroSection";
+import ExplainerSection from "@/components/ExplainerSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
+import ParentTrustSection from "@/components/ParentTrustSection";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import AdventuresSection from "@/components/AdventuresSection";
@@ -291,6 +294,26 @@ const Index = () => {
         )}
 
         <HeroSection />
+
+        {/* Secondary actions — below the fold so they don't compete with main CTA */}
+        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-center gap-2 text-sm">
+          <button
+            onClick={() => setShowAuth(true)}
+            className="font-bold text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-1.5 rounded-full transition-colors shadow-md"
+          >
+            Sign up free
+          </button>
+          <a
+            href="/guest"
+            className="font-semibold text-foreground bg-muted hover:bg-muted/80 px-4 py-1.5 rounded-full transition-colors shadow-sm border border-border"
+          >
+            Try as guest
+          </a>
+        </div>
+
+        <ExplainerSection />
+        <HowItWorksSection />
+
         <WorldSelector />
         
         {/* Visit Your Clinic CTA */}
@@ -313,6 +336,7 @@ const Index = () => {
           </Button>
         </div>
 
+        <ParentTrustSection />
         <AboutSection />
         <FeaturesSection />
         
