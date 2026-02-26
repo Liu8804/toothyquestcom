@@ -192,7 +192,7 @@ const StoryViewer = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 md:p-8 rounded-3xl overflow-y-auto"
               >
                 {/* Solid gradient background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent" />
@@ -201,7 +201,7 @@ const StoryViewer = ({
                   initial={{ scale: 0, rotate: -10 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ type: "spring", delay: 0.2, duration: 0.6 }}
-                  className="relative mb-6 flex flex-col items-center"
+                  className="relative mb-3 md:mb-6 flex flex-col items-center"
                 >
                   <motion.div
                     animate={{ 
@@ -217,7 +217,7 @@ const StoryViewer = ({
                     <img
                       src={mascotWaving}
                       alt="Toothy"
-                      className="w-32 h-32 md:w-40 md:h-40 object-contain"
+                      className="w-24 h-24 md:w-40 md:h-40 object-contain"
                     />
                   </motion.div>
                   <motion.div
@@ -239,7 +239,7 @@ const StoryViewer = ({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="relative max-w-md bg-white rounded-3xl p-6 shadow-float mb-6"
+                  className="relative max-w-md bg-white rounded-3xl p-4 md:p-6 shadow-float mb-3 md:mb-6"
                 >
                   {/* Speech bubble tail */}
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white" />
@@ -258,9 +258,9 @@ const StoryViewer = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.6 }}
-                  className="text-center mb-6"
+                  className="text-center mb-3 md:mb-6"
                 >
-                  <span className="text-5xl mb-2 block">{story.emoji}</span>
+                  <span className="text-4xl md:text-5xl mb-2 block">{story.emoji}</span>
                   <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
                     {story.title}
                   </h3>
