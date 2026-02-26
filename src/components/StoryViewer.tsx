@@ -11,7 +11,7 @@ import { stopHomeMusicGlobally } from "@/hooks/useRouteMusicController";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
-import storyIntroVideo from "@/assets/marketing/story-intro-hero.mp4";
+
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
@@ -173,7 +173,8 @@ const StoryViewer = ({
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-card rounded-3xl shadow-float"
+          className="relative w-full max-w-3xl max-h-[90vh] bg-card rounded-3xl shadow-float"
+          style={{ overflow: showIntro ? 'hidden' : 'auto' }}
         >
           {/* Close button */}
           <button
@@ -191,19 +192,10 @@ const StoryViewer = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden min-h-full"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden"
               >
-                {/* Video background for story intro */}
-                <video
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="absolute inset-0 w-full h-full object-cover"
-                >
-                  <source src={storyIntroVideo} type="video/mp4" />
-                </video>
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/90 to-accent/90" />
+                {/* Solid gradient background */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent" />
                 {/* Toothy mascot */}
                 <motion.div
                   initial={{ scale: 0, rotate: -10 }}
@@ -306,7 +298,7 @@ const StoryViewer = ({
           </AnimatePresence>
 
           {/* Story illustration - now animated! */}
-          <div className={`relative h-64 md:h-80 overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/20 to-bubble/30 ${showIntro ? 'invisible' : ''}`}>
+          <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/20 to-bubble/30">
             <AnimatedStoryImage
               src={story.illustrationPath}
               alt={story.title}
@@ -327,7 +319,7 @@ const StoryViewer = ({
           </div>
 
           {/* Content */}
-          <div className={`p-6 md:p-8 ${showIntro ? 'invisible' : ''}`}>
+          <div className="p-6 md:p-8">
             {/* Title and Audio Controls */}
             <div className="flex items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
