@@ -327,7 +327,7 @@ const StoryViewer = ({
           </div>
 
           {/* Content */}
-          <div className="p-6 md:p-8">
+          <div className={`p-6 md:p-8 ${showIntro ? 'invisible' : ''}`}>
             {/* Title and Audio Controls */}
             <div className="flex items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
