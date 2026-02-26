@@ -640,32 +640,32 @@ const StoryViewer = ({
           </div>
         </motion.div>
       </motion.div>
-
-      {/* Celebration Modal */}
-      <QuestCompleteCelebration
-        isOpen={showCelebration}
-        questTitle={story.title}
-        questId={story.id}
-        xpEarned={celebrationData.xp}
-        newBadges={celebrationData.badges}
-        onClose={() => setShowCelebration(false)}
-      />
-
-      {/* Voice Settings Modal */}
-      <VoiceSettingsModal
-        isOpen={showVoiceSettings}
-        onClose={() => setShowVoiceSettings(false)}
-      />
-      
-      {/* Braces Quest Reward Popup */}
-      {showBracesReward && (
-        <BracesQuestReward
-          questId={story.id}
-          isOpen={showBracesReward}
-          onClose={() => setShowBracesReward(false)}
-        />
-      )}
     </AnimatePresence>
+
+    {/* Celebration Modal */}
+    <QuestCompleteCelebration
+      isOpen={showCelebration}
+      questTitle={story.title}
+      questId={story.id}
+      xpEarned={celebrationData.xp}
+      newBadges={celebrationData.badges}
+      onClose={() => setShowCelebration(false)}
+    />
+
+    {/* Voice Settings Modal */}
+    <VoiceSettingsModal
+      isOpen={showVoiceSettings}
+      onClose={() => setShowVoiceSettings(false)}
+    />
+    
+    {/* Braces Quest Reward Popup */}
+    {showBracesReward && (
+      <BracesQuestReward
+        questId={story.id}
+        isOpen={showBracesReward}
+        onClose={() => setShowBracesReward(false)}
+      />
+    )}
     </>
   );
 };
