@@ -173,8 +173,7 @@ const StoryViewer = ({
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
           transition={{ type: "spring", duration: 0.5 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-3xl max-h-[90vh] bg-card rounded-3xl shadow-float"
-          style={{ overflow: showIntro ? 'hidden' : 'auto' }}
+          className="relative w-full max-w-3xl max-h-[90vh] bg-card rounded-3xl shadow-float overflow-auto"
         >
           {/* Close button */}
           <button
@@ -192,13 +191,13 @@ const StoryViewer = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-start p-4 md:p-8 rounded-3xl overflow-y-auto"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 md:p-8 rounded-3xl overflow-y-auto"
               >
                 {/* Solid gradient background */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent" />
 
                 {/* Intro content wrapper */}
-                <div className="relative z-10 w-full max-w-md min-h-full flex flex-col items-center pt-10 pb-4">
+                <div className="relative z-10 w-full max-w-md flex flex-col items-center py-4">
                   {/* Toothy mascot */}
                   <motion.div
                     initial={{ scale: 0, rotate: -10 }}
@@ -220,20 +219,15 @@ const StoryViewer = ({
                       <img
                         src={mascotWaving}
                         alt="Toothy"
-                        className="w-24 h-24 md:w-40 md:h-40 object-contain"
+                        className="w-16 h-16 md:w-40 md:h-40 object-contain"
                       />
                     </motion.div>
-                    <motion.div
-                      animate={{ scaleX: [0.8, 1, 0.8], opacity: [0.15, 0.3, 0.15] }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                      className="w-20 h-2 rounded-full bg-black/20 -mt-1"
-                    />
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ repeat: Infinity, duration: 2 }}
                       className="absolute -top-2 -right-2"
                     >
-                      <Sparkles className="w-8 h-8 text-star" />
+                      <Sparkles className="w-6 h-6 text-star" />
                     </motion.div>
                   </motion.div>
 
@@ -242,7 +236,7 @@ const StoryViewer = ({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="relative max-w-md bg-white rounded-3xl p-4 md:p-6 shadow-float mb-3 md:mb-6"
+                    className="relative max-w-md bg-white rounded-2xl p-3 md:p-6 shadow-float mb-2 md:mb-6"
                   >
                     {/* Speech bubble tail */}
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 border-b-8 border-l-transparent border-r-transparent border-b-white" />
@@ -251,7 +245,7 @@ const StoryViewer = ({
                       <MessageCircle className="w-5 h-5 text-primary" />
                       <span className="font-display font-bold text-primary">Toothy says:</span>
                     </div>
-                    <p className="text-lg md:text-xl text-foreground/90 font-medium text-center">
+                    <p className="text-base md:text-xl text-foreground/90 font-medium text-center">
                       "{story.toothyIntro}"
                     </p>
                   </motion.div>
@@ -261,10 +255,10 @@ const StoryViewer = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
-                    className="text-center mb-4"
+                    className="text-center mb-2"
                   >
-                    <span className="text-4xl md:text-5xl mb-2 block">{story.emoji}</span>
-                    <h3 className="font-display text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+                    <span className="text-3xl md:text-5xl mb-1 block">{story.emoji}</span>
+                    <h3 className="font-display text-xl md:text-3xl font-bold text-white drop-shadow-lg">
                       {story.title}
                     </h3>
                   </motion.div>
@@ -274,7 +268,7 @@ const StoryViewer = ({
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8 }}
-                    className="mt-auto sticky bottom-3 w-full flex justify-center pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+                    className="w-full flex justify-center pt-2 pb-2"
                   >
                     <motion.div whileTap={{ scale: 0.95 }}>
                       <Button
