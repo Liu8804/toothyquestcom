@@ -191,7 +191,7 @@ const StoryViewer = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center p-8 rounded-3xl overflow-hidden min-h-full"
               >
                 {/* Video background for story intro */}
                 <video
@@ -306,7 +306,7 @@ const StoryViewer = ({
           </AnimatePresence>
 
           {/* Story illustration - now animated! */}
-          <div className="relative h-64 md:h-80 overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/20 to-bubble/30">
+          <div className={`relative h-64 md:h-80 overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/20 to-bubble/30 ${showIntro ? 'invisible' : ''}`}>
             <AnimatedStoryImage
               src={story.illustrationPath}
               alt={story.title}
@@ -327,7 +327,7 @@ const StoryViewer = ({
           </div>
 
           {/* Content */}
-          <div className="p-6 md:p-8">
+          <div className={`p-6 md:p-8 ${showIntro ? 'invisible' : ''}`}>
             {/* Title and Audio Controls */}
             <div className="flex items-center justify-between gap-3 mb-6">
               <div className="flex items-center gap-3">
