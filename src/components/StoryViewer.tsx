@@ -11,7 +11,7 @@ import { stopHomeMusicGlobally } from "@/hooks/useRouteMusicController";
 import { useEffect, useState } from "react";
 import type { Story } from "@/data/stories";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
-import storyIntroVideo from "@/assets/marketing/story-intro-hero.mp4";
+
 import QuestCompleteCelebration from "./QuestCompleteCelebration";
 import ConfettiCelebration from "./ConfettiCelebration";
 import DailyChallengeNotification from "./DailyChallengeNotification";
