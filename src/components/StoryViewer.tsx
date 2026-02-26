@@ -176,7 +176,6 @@ const StoryViewer = ({
           className="relative w-full max-w-3xl max-h-[90vh] bg-card rounded-3xl shadow-float"
           style={{ overflow: showIntro ? 'hidden' : 'auto' }}
         >
-        >
           {/* Close button */}
           <button
             onClick={onClose}
