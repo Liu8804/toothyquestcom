@@ -48,6 +48,8 @@ const ClinicCard = ({
             size="icon"
             variant="ghost"
             className="shrink-0"
+            aria-label={isFav ? "Remove clinic from favorites" : "Save clinic as favorite"}
+            aria-pressed={isFav}
             onClick={(e) => { e.stopPropagation(); onToggleFav(); }}
           >
             <Heart className={`w-5 h-5 ${isFav ? "fill-red-500 text-red-500" : "text-muted-foreground"}`} />
@@ -109,11 +111,11 @@ const ClinicProfile = ({
     >
       {/* Header */}
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" onClick={onBack}>
+        <Button variant="ghost" size="icon" aria-label="Back to clinic list" onClick={onBack}>
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <h2 className="text-xl font-bold text-foreground flex-1 truncate">{clinic.name}</h2>
-        <Button size="icon" variant="ghost" onClick={onToggleFav}>
+        <Button size="icon" variant="ghost" aria-label={isFav ? "Remove clinic from favorites" : "Save clinic as favorite"} aria-pressed={isFav} onClick={onToggleFav}>
           <Heart className={`w-5 h-5 ${isFav ? "fill-red-500 text-red-500" : "text-muted-foreground"}`} />
         </Button>
       </div>
@@ -268,7 +270,7 @@ const Clinics = () => {
       {/* Header */}
       <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
         <div className="flex items-center gap-3 max-w-2xl mx-auto">
-          <Button variant="ghost" size="icon" onClick={() => selectedClinic ? setSelectedClinic(null) : navigate("/")}>
+          <Button variant="ghost" size="icon" aria-label={selectedClinic ? "Back to clinic list" : "Back to home"} onClick={() => selectedClinic ? setSelectedClinic(null) : navigate("/")}>
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div className="flex items-center gap-2">

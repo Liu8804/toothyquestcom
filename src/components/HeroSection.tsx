@@ -422,6 +422,7 @@ export const HeroSection = () => {
                 className="p-1.5 rounded-full bg-card/80 shadow-md border border-border/50 hover:bg-card transition-colors"
                 whileTap={{ scale: 0.9 }}
                 title={musicMuted ? "Unmute background music" : "Mute background music"}
+                aria-label={musicMuted ? "Unmute background music" : "Mute background music"}
               >
                 {musicMuted ? (
                   <VolumeX className="w-3.5 h-3.5 text-muted-foreground" />

@@ -96,13 +96,13 @@ const Contact = () => {
               <CheckCircle className="w-10 h-10 text-primary" />
             </div>
             <h1 className="font-display text-3xl font-bold text-foreground mb-4">
-              {t('contactPage.success.title', 'Message Sent! 🎉')}
+              {t('contactPage.success.title', 'Almost there — finish in your email app ✉️')}
             </h1>
             <p className="text-muted-foreground mb-8">
-              {t('contactPage.success.message', "Thank you for reaching out. We'll get back to you as soon as possible!")}
+              {t('contactPage.success.message', "We opened your email app with the message pre-filled. It hasn't been sent yet — press send there and we'll reply as soon as we can.")}
             </p>
             <Button onClick={() => setIsSuccess(false)} variant="outline">
-              {t('contactPage.form.submit', 'Send Another Message')}
+              {t('contactPage.form.submit', 'Write Another Message')}
             </Button>
           </div>
         </div>

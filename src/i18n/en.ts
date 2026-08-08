@@ -12,7 +12,7 @@ export const en = {
     continue: "Continue",
     startAdventure: "Start Adventure",
     meetToothy: "Meet Toothy",
-    learnMore: "Learn More",
+    learnMore: "Learn more about dental adventures",
     unlockAll: "Unlock All",
     free: "FREE",
     locked: "Locked",

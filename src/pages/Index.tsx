@@ -392,6 +392,7 @@ const Index = () => {
         {/* Floating Chat Button */}
         <Button
           onClick={() => setShowDentalChat(true)}
+          aria-label="Open dental tips chat"
           className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-primary to-secondary hover:scale-110 transition-transform"
           size="icon"
         >
