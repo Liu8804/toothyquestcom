@@ -32,6 +32,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Guest = lazy(() => import("./pages/Guest"));
 const AIStories = lazy(() => import("./pages/AIStories"));
 const Clinics = lazy(() => import("./pages/Clinics"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 
 // Component that unlocks AudioContext on first user interaction
 const AudioUnlocker = ({ children }: { children: React.ReactNode }) => {
