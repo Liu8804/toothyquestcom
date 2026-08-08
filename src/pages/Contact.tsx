@@ -8,6 +8,7 @@ import { ArrowLeft, Mail, Send, CheckCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import Seo from "@/components/Seo";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
@@ -96,13 +97,13 @@ const Contact = () => {
               <CheckCircle className="w-10 h-10 text-primary" />
             </div>
             <h1 className="font-display text-3xl font-bold text-foreground mb-4">
-              {t('contactPage.success.title', 'Message Sent! 🎉')}
+              {t('contactPage.success.title', 'Almost there — finish in your email app ✉️')}
             </h1>
             <p className="text-muted-foreground mb-8">
-              {t('contactPage.success.message', "Thank you for reaching out. We'll get back to you as soon as possible!")}
+              {t('contactPage.success.message', "We opened your email app with the message pre-filled. It hasn't been sent yet — press send there and we'll reply as soon as we can.")}
             </p>
             <Button onClick={() => setIsSuccess(false)} variant="outline">
-              {t('contactPage.form.submit', 'Send Another Message')}
+              {t('contactPage.form.submit', 'Write Another Message')}
             </Button>
           </div>
         </div>
@@ -112,6 +113,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <Seo title="Contact ToothyQuest — Support for Parents" description="Questions about quests, subscriptions or your child's account? Get in touch with the ToothyQuest team." path="/contact" />
       <div className="container mx-auto px-4 py-8">
         <Link to="/">
           <Button variant="ghost" className="mb-6 gap-2">
@@ -194,9 +196,13 @@ const Contact = () => {
               <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
                 <Send className="w-4 h-4" />
                 {isSubmitting 
-                  ? t('contactPage.form.sending', 'Sending...') 
-                  : t('contactPage.form.submit', 'Send Message')}
+                  ? t('contactPage.form.sending', 'Opening your email app...') 
+                  : t('contactPage.form.submit', 'Compose in Email App')}
               </Button>
+              <p className="text-xs text-muted-foreground text-center">
+                {t('contactPage.form.mailtoHint', 'This opens your email app with the message pre-filled — you still need to press send there.')}
+              </p>
+
             </form>
           </div>
 

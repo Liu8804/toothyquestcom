@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useStoryNarration } from "@/hooks/useStoryNarration";
 import { useTranslation } from "react-i18next";
+import Seo from "@/components/Seo";
 
 const AGE_RANGES = [
   { value: "3-5", label: "Ages 3-5", emoji: "🧸" },
@@ -84,6 +85,7 @@ const AIStories = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Seo title="AI Dental Stories for Kids — ToothyQuest" description="Generate personalized stories that prepare kids for first visits, cleanings, fillings and wiggly teeth." path="/ai-stories" jsonLd={{"@context":"https://schema.org","@type":"Article","headline":"AI Dental Stories for Kids","about":"Children's dental health","publisher":{"@type":"Organization","name":"ToothyQuest"}}} />
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-sm border-b border-border">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">

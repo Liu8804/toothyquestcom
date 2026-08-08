@@ -47,6 +47,7 @@ import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 import { useClinics } from "@/hooks/useClinics";
 import DashboardMascotGreeting from "@/components/DashboardMascotGreeting";
 import { useSessionMetrics } from "@/hooks/useSessionMetrics";
+import Seo from "@/components/Seo";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -230,6 +231,7 @@ const Index = () => {
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       
       <main className="min-h-screen relative" onClickCapture={recordFirstAction}>
+        <Seo title="ToothyQuest - Make Brushing Fun for Kids Ages 3-9!" description="Kids ages 3-9 learn brushing and flossing through 50+ playful quests with Toothy. Start with 5 free quests." path="/" jsonLd={{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"ToothyQuest","url":"https://toothyquest.com","logo":"https://toothyquest.com/app-icon.png"},{"@type":"WebSite","name":"ToothyQuest","url":"https://toothyquest.com"}]}} />
         {/* Subtle floating sparkles background - reduced for cleaner look */}
         <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 
@@ -392,6 +394,7 @@ const Index = () => {
         {/* Floating Chat Button */}
         <Button
           onClick={() => setShowDentalChat(true)}
+          aria-label="Open dental tips chat"
           className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full shadow-lg bg-gradient-to-r from-primary to-secondary hover:scale-110 transition-transform"
           size="icon"
         >

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Shield, Lock, Eye, Users, Mail, Trash2, Globe, Link as LinkIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import Seo from "@/components/Seo";
 
 const PrivacyPolicy = () => {
   const { i18n } = useTranslation();
@@ -9,6 +10,7 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <Seo title="Privacy Policy — ToothyQuest" description="How ToothyQuest collects, uses and protects family data, written for parents of children ages 3-9." path="/privacy" />
       <div className="container max-w-4xl mx-auto px-4 py-8">
         <Link to="/">
           <Button variant="ghost" className="mb-6 gap-2">
