@@ -194,9 +194,13 @@ const Contact = () => {
               <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
                 <Send className="w-4 h-4" />
                 {isSubmitting 
-                  ? t('contactPage.form.sending', 'Sending...') 
-                  : t('contactPage.form.submit', 'Send Message')}
+                  ? t('contactPage.form.sending', 'Opening your email app...') 
+                  : t('contactPage.form.submit', 'Compose in Email App')}
               </Button>
+              <p className="text-xs text-muted-foreground text-center">
+                {t('contactPage.form.mailtoHint', 'This opens your email app with the message pre-filled — you still need to press send there.')}
+              </p>
+
             </form>
           </div>
 
