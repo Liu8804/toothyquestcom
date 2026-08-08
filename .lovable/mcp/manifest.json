@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://xaqfvjcmtbhdnaasqbyd.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "toothyquest-adventures",
+      "version": "0.1.0",
+      "title": "ToothyQuest Adventures"
+    },
+    "tools": [
+      {
+        "name": "list_children",
+        "title": "List children",
+        "description": "List the child profiles belonging to the signed-in parent account.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_brushing_history",
+        "title": "Get brushing history",
+        "description": "Get recent brushing sessions for one of the signed-in parent's children.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "child_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The child's id, from list_children."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "How many recent sessions to return (default 20, max 100)."
+            }
+          },
+          "required": [
+            "child_id",
+            "limit"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_child_progress",
+        "title": "Get child progress",
+        "description": "Get quest completions, game scores and total XP for one of the signed-in parent's children.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "child_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The child's id, from list_children."
+            }
+          },
+          "required": [
+            "child_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_streak",
+        "title": "Get brushing streak",
+        "description": "Get the signed-in user's current and longest brushing streak.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "log_brushing_session",
+        "title": "Log brushing session",
+        "description": "Record a completed brushing session for one of the signed-in parent's children.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "child_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The child's id, from list_children."
+            },
+            "duration_seconds": {
+              "type": "integer",
+              "description": "How long the child brushed, in seconds (1-600)."
+            },
+            "session_type": {
+              "type": "string",
+              "description": "Session type, e.g. morning, evening or manual."
+            }
+          },
+          "required": [
+            "child_id",
+            "duration_seconds",
+            "session_type"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

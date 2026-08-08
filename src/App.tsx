@@ -32,6 +32,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Guest = lazy(() => import("./pages/Guest"));
 const AIStories = lazy(() => import("./pages/AIStories"));
 const Clinics = lazy(() => import("./pages/Clinics"));
+const OAuthConsent = lazy(() => import("./pages/OAuthConsent"));
 
 // Component that unlocks AudioContext on first user interaction
 const AudioUnlocker = ({ children }: { children: React.ReactNode }) => {
@@ -80,6 +81,7 @@ const App = () => (
                       <Route path="/app-store-checklist" element={<AppStoreChecklist />} />
                       <Route path="/ai-stories" element={<AIStories />} />
                       <Route path="/clinics" element={<Clinics />} />
+                      <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                       <Route path="*" element={<NotFound />} />
                     </Routes>
