@@ -113,6 +113,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <Seo title="Contact ToothyQuest — Support for Parents" description="Questions about quests, subscriptions or your child's account? Get in touch with the ToothyQuest team." path="/contact" />
       <div className="container mx-auto px-4 py-8">
         <Link to="/">
           <Button variant="ghost" className="mb-6 gap-2">

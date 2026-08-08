@@ -231,6 +231,7 @@ const Index = () => {
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       
       <main className="min-h-screen relative" onClickCapture={recordFirstAction}>
+        <Seo title="ToothyQuest - Make Brushing Fun for Kids Ages 3-9!" description="Kids ages 3-9 learn brushing and flossing through 50+ playful quests with Toothy. Start with 5 free quests." path="/" jsonLd={{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"ToothyQuest","url":"https://toothyquest.com","logo":"https://toothyquest.com/app-icon.png"},{"@type":"WebSite","name":"ToothyQuest","url":"https://toothyquest.com"}]}} />
         {/* Subtle floating sparkles background - reduced for cleaner look */}
         <FloatingSparkles count={3} className="fixed inset-0 z-0 opacity-30" />
 

@@ -15,6 +15,7 @@ const About = () => {
   
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
+      <Seo title="About ToothyQuest — Our Mission for Kids' Dental Health" description="Meet the team behind ToothyQuest and learn how we turn brushing into a daily adventure for kids ages 3-9." path="/about" />
       <div className="container mx-auto px-4 py-8">
         <Link to="/">
           <Button variant="ghost" className="mb-6 gap-2">
