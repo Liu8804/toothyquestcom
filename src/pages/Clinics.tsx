@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Heart, MapPin, Phone, Globe, Clock, Star, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import mascotWaving from "@/assets/mascot-sticker-waving-v2.png";
+import Seo from "@/components/Seo";
 
 const ClinicCard = ({
   clinic,

@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useTranslation } from "react-i18next";
+import Seo from "@/components/Seo";
 
 const About = () => {
   const { t } = useTranslation();

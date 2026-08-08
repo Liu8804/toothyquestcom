@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Shield, Lock, Eye, Users, Mail, Trash2, Globe, Link as LinkIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import Seo from "@/components/Seo";
 
 const PrivacyPolicy = () => {
   const { i18n } = useTranslation();

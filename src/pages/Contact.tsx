@@ -8,6 +8,7 @@ import { ArrowLeft, Mail, Send, CheckCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import Seo from "@/components/Seo";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),

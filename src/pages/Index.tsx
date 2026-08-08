@@ -47,6 +47,7 @@ import OwnerDiagnosticsPanel from "@/components/admin/OwnerDiagnosticsPanel";
 import { useClinics } from "@/hooks/useClinics";
 import DashboardMascotGreeting from "@/components/DashboardMascotGreeting";
 import { useSessionMetrics } from "@/hooks/useSessionMetrics";
+import Seo from "@/components/Seo";
 
 const Index = () => {
   const navigate = useNavigate();

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useStoryNarration } from "@/hooks/useStoryNarration";
 import { useTranslation } from "react-i18next";
+import Seo from "@/components/Seo";
 
 const AGE_RANGES = [
   { value: "3-5", label: "Ages 3-5", emoji: "🧸" },
